@@ -1,0 +1,46 @@
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import publicRoutes from "./routes/publicRoutes";
+import Login from "./pages/Login/Login";
+import UserLayout from "./components/layout/userLayout/UserLayout";
+import Register from "./pages/Register/Register";
+import AuthenLayout from "./components/layout/authenLayout/AuthenLayout";
+import AdminLayout from "./components/layout/adminLayout/AdminLayout";
+import adminRoutes from "./routes/privateRoutes/adminRoutes";
+
+function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        {/* Authen layout */}
+        <Route element={<AuthenLayout />}>
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+        </Route>
+
+        {/* Public routes */}
+        <Route element={<UserLayout />}>
+          {publicRoutes.map((route, index) => (
+            <Route
+              key={index}
+              path={route.path}
+              element={<route.component />}
+            />
+          ))}
+        </Route>
+
+        {/* Admin routes */}
+        <Route element={<AdminLayout />}>
+          {adminRoutes.map((route, index) => (
+            <Route
+              key={index}
+              path={route.path}
+              element={<route.component />}
+            />
+          ))}
+        </Route>
+      </Routes>
+    </BrowserRouter>
+  );
+}
+
+export default App;
