@@ -7,11 +7,20 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupButton,
+  InputGroupInput,
+} from "@/components/ui/input-group";
 import { Label } from "@/components/ui/label";
+import { Eye, EyeOff, Lock, Mail } from "lucide-react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 function Login() {
+  const [isShowPassword, setIsShowPassword] = useState(false);
+
   const navigate = useNavigate();
 
   return (
@@ -25,21 +34,40 @@ function Login() {
           <div className="flex flex-col gap-6">
             <div className="grid gap-2">
               <Label htmlFor="email">Email</Label>
-              <Input id="email" type="email" placeholder="Email" required />
+              <InputGroup>
+                <InputGroupInput id="email" type="email" placeholder="Email" />
+                <InputGroupAddon align="inline-start">
+                  <Mail />
+                </InputGroupAddon>
+              </InputGroup>
             </div>
             <div className="grid gap-2">
               <div className="flex items-center">
                 <Label htmlFor="pasword">Password</Label>
-                <a href="#" className="text-blue-500 cursor-pointer hover:underline ml-auto">
+                <a
+                  href="#"
+                  className="text-blue-500 cursor-pointer hover:underline ml-auto"
+                >
                   Forgot password?
                 </a>
               </div>
-              <Input
-                id="pasword"
-                type="password"
-                placeholder="Password"
-                required
-              />
+              <InputGroup>
+                <InputGroupInput
+                  type={isShowPassword ? "text" : "password"}
+                  id="password"
+                  placeholder="Password"
+                />
+                <InputGroupAddon align="inline-start">
+                  <Lock />
+                </InputGroupAddon>
+                <InputGroupAddon align="inline-end">
+                  <InputGroupButton
+                    onClick={() => setIsShowPassword(!isShowPassword)}
+                  >
+                    {isShowPassword ? <Eye /> : <EyeOff />}
+                  </InputGroupButton>
+                </InputGroupAddon>
+              </InputGroup>
             </div>
           </div>
         </form>

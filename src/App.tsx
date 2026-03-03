@@ -6,6 +6,8 @@ import Register from "./pages/Register/Register";
 import AuthenLayout from "./components/layout/authenLayout/AuthenLayout";
 import AdminLayout from "./components/layout/adminLayout/AdminLayout";
 import adminRoutes from "./routes/privateRoutes/adminRoutes";
+import LandlordLayout from "./components/layout/landlordLayout/LandlordLayout";
+import landlordRoutes from "./routes/privateRoutes/landlordRoutes";
 
 function App() {
   return (
@@ -31,6 +33,17 @@ function App() {
         {/* Admin routes */}
         <Route element={<AdminLayout />}>
           {adminRoutes.map((route, index) => (
+            <Route
+              key={index}
+              path={route.path}
+              element={<route.component />}
+            />
+          ))}
+        </Route>
+
+        {/* Landlord routes */}
+        <Route element={<LandlordLayout />}>
+          {landlordRoutes.map((route, index) => (
             <Route
               key={index}
               path={route.path}

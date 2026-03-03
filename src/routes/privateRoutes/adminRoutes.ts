@@ -1,7 +1,7 @@
-import Dashboard from "../../pages/Admin/Dashboard/Dashboard";
+import AdminDashboard from "@/pages/Admin/AdminDashboard/AdminDashboard"
 
 const adminRoutes = [
-    {path: '/admin/dashboard', component: Dashboard}
+    {path: '/admin/dashboard', component: AdminDashboard}
 ]
 
 export default adminRoutes
