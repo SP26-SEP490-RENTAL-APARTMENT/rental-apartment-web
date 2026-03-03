@@ -21,7 +21,7 @@ function Header() {
           variant={"ghost"}
           onClick={() => navigate("/register")}
         >
-          Sign In
+          Sign Up
         </Button>
         <Button className="cursor-pointer" onClick={() => navigate("/login")}>
           Login
