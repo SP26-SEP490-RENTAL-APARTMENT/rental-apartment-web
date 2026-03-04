@@ -7,6 +7,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { MapPin, Star } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 interface ApartmentCardProps {
   image: string;
@@ -25,8 +26,12 @@ function ApartmentCard({
   rate,
   price,
 }: ApartmentCardProps) {
+  const navigate = useNavigate();
   return (
-    <Card className="overflow-hidden hover:shadow-xl transition duration-300 pt-0 cursor-pointer">
+    <Card
+      onClick={() => navigate("/apartment-detail")}
+      className="overflow-hidden hover:shadow-xl transition duration-300 pt-0 cursor-pointer"
+    >
       <img src={image} alt={name} className="w-full h-52 object-cover" />
 
       <CardHeader>

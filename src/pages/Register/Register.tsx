@@ -23,7 +23,7 @@ function Register() {
   return (
     <Card className="w-full max-w-sm">
       <CardHeader className="text-center">
-        <CardTitle>Welcome to Booking</CardTitle>
+        <CardTitle>Welcome to VStay</CardTitle>
         <CardDescription>Register your account to continue</CardDescription>
       </CardHeader>
       <CardContent>

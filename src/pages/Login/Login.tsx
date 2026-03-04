@@ -26,7 +26,7 @@ function Login() {
   return (
     <Card className="w-full max-w-sm">
       <CardHeader className="text-center">
-        <CardTitle>Welcome back to Booking</CardTitle>
+        <CardTitle>Welcome back to VStay</CardTitle>
         <CardDescription>Sign in to your account to continue</CardDescription>
       </CardHeader>
       <CardContent>
