@@ -13,7 +13,7 @@ function Header() {
         <span>
           <Building2 color="blue" size={35} />
         </span>
-        <span className="text-blue-700 font-bold text-3xl">Booking</span>
+        <span className="text-blue-700 font-bold text-3xl">VStay</span>
       </span>
       <span className="flex gap-3 items-center">
         <Button

@@ -1,4 +1,5 @@
-import ApartmentCard from "../../components/ui/ApartmentCard";
+import ApartmentCard from "@/components/ui/ApartmentCard";
+import AddApartmentDialog from "./components/AddApartmentDialog";
 
 const data = [
   {
@@ -44,22 +45,27 @@ const data = [
   },
 ];
 
-function Home() {
+function ApartmentManagement() {
   return (
-    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-      {data.map((d) => (
-        <ApartmentCard
-          key={d.id}
-          description={d.desciption}
-          image={d.image}
-          location={d.location}
-          name={d.name}
-          price={d.price}
-          rate={d.rate}
-        />
-      ))}
+    <div>
+      <div className="flex justify-end mb-10">
+        <AddApartmentDialog />
+      </div>
+      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {data.map((d) => (
+          <ApartmentCard
+            key={d.id}
+            description={d.desciption}
+            image={d.image}
+            location={d.location}
+            name={d.name}
+            price={d.price}
+            rate={d.rate}
+          />
+        ))}
+      </div>
     </div>
   );
 }
 
-export default Home;
+export default ApartmentManagement;
