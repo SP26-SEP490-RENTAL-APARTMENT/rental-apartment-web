@@ -7,7 +7,7 @@ function Footer() {
         <div>
           <h3 className="text-xl font-semibold mb-2">About Us</h3>
           <p className="text-sm">
-            BookingWeb helps you find the best apartments and spaces for your
+            VStay helps you find the best apartments and spaces for your
             needs. Browse, book, and enjoy your stay with us.
           </p>
         </div>
@@ -58,7 +58,7 @@ function Footer() {
       </div>
 
       <div className="border-t border-gray-700 mt-8 pt-4 text-center text-sm">
-        © {new Date().getFullYear()} BookingWeb. All rights reserved.
+        © {new Date().getFullYear()} VStay. All rights reserved.
       </div>
     </footer>
   );

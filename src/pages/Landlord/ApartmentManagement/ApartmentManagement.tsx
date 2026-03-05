@@ -1,4 +1,4 @@
-import ApartmentCard from "@/components/ui/ApartmentCard";
+import ApartmentCard from "@/components/ui/apartmentCard/ApartmentCard";
 import AddApartmentDialog from "./components/AddApartmentDialog";
 
 const data = [

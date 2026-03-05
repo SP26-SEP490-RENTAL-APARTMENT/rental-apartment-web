@@ -1,10 +1,11 @@
 import {
   LayoutDashboard,
-  Home,
   CalendarCheck,
   Wallet,
   MessageCircle,
   Settings,
+  User,
+  Box,
 } from "lucide-react";
 
 export const adminNavList = [
@@ -14,9 +15,14 @@ export const adminNavList = [
     icon: LayoutDashboard,
   },
   {
-    title: "Apartments",
-    url: "/admin/apartments",
-    icon: Home,
+    title: "Users",
+    url: "/admin/users",
+    icon: User,
+  },
+  {
+    title: "Subscription Plans",
+    url: "/admin/subscription-plans",
+    icon: Box,
   },
   {
     title: "Bookings",
