@@ -1,5 +1,6 @@
 import ApartmentInfo from "./components/ApartmentInfo";
 import BookingBox from "./components/BookingBox";
+import CommentSection from "./components/CommentSection";
 import ImageCarousel from "./components/ImageCarousel";
 
 const detail = {
@@ -19,23 +20,75 @@ const detail = {
   numberOfReviews: 100,
   host: {
     name: "Long Le",
-    avatarUrl: "https://ipwatchdog.com/wp-content/uploads/2018/03/pepe-the-frog-1272162_640.jpg",
+    avatarUrl:
+      "https://ipwatchdog.com/wp-content/uploads/2018/03/pepe-the-frog-1272162_640.jpg",
   },
+  guest: [
+    {
+      name: "Guest 1",
+      avatarUrl:
+        "https://ipwatchdog.com/wp-content/uploads/2018/03/pepe-the-frog-1272162_640.jpg",
+      comment:
+        "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Atque nesciunt maxime blanditiis, hic distinctio quidem, recusandae fugiat ea dolore, quia ratione enim nemo cum amet dignissimos nulla itaque cupiditate quos.",
+      time: "2024-10-01",
+      rate: 5,
+    },
+    {
+      name: "Guest 2",
+      avatarUrl:
+        "https://ipwatchdog.com/wp-content/uploads/2018/03/pepe-the-frog-1272162_640.jpg",
+      comment:
+        "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Atque nesciunt maxime blanditiis, hic distinctio quidem, recusandae fugiat ea dolore, quia ratione enim nemo cum amet dignissimos nulla itaque cupiditate quos.",
+      time: "2024-10-01",
+      rate: 5,
+    },
+    {
+      name: "Guest 3",
+      avatarUrl:
+        "https://ipwatchdog.com/wp-content/uploads/2018/03/pepe-the-frog-1272162_640.jpg",
+      comment:
+        "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Atque nesciunt maxime blanditiis, hic distinctio quidem, recusandae fugiat ea dolore, quia ratione enim nemo cum amet dignissimos nulla itaque cupiditate quos.",
+      time: "2024-10-01",
+      rate: 5,
+    },
+    {
+      name: "Guest 4",
+      avatarUrl:
+        "https://ipwatchdog.com/wp-content/uploads/2018/03/pepe-the-frog-1272162_640.jpg",
+      comment:
+        "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Atque nesciunt maxime blanditiis, hic distinctio quidem, recusandae fugiat ea dolore, quia ratione enim nemo cum amet dignissimos nulla itaque cupiditate quos.",
+      time: "2024-10-01",
+      rate: 3,
+    },
+  ],
 };
 function ApartmentDetail() {
   return (
     <div className="px-20">
       <h1 className="text-3xl mb-3 font-medium">{detail.name}</h1>
       <ImageCarousel images={detail.images} />
-      <div className="flex mt-10 gap-2">
+      <div className="flex mt-10 gap-2 border-b pb-10">
         <div className="basis-2/3">
-          <ApartmentInfo description={detail.description} host={detail.host} location={detail.location} price={detail.price} />
+          <ApartmentInfo
+            description={detail.description}
+            host={detail.host}
+            location={detail.location}
+            price={detail.price}
+          />
         </div>
 
-        <div className="basis-1/3 relative">
+        <aside className="basis-1/3 relative">
           <div className="sticky top-10">
             <BookingBox />
           </div>
+        </aside>
+      </div>
+      <div>
+        <h1 className="text-center font-bold text-2xl">Comments Section</h1>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-25 mt-6">
+          {detail.guest.map((guest, index) => (
+            <CommentSection key={index} guest={guest} />
+          ))}
         </div>
       </div>
     </div>

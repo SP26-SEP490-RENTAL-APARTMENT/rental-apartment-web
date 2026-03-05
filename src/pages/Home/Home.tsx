@@ -1,4 +1,4 @@
-import ApartmentCard from "../../components/ui/ApartmentCard";
+import ApartmentCard from "../../components/ui/apartmentCard/ApartmentCard";
 
 const data = [
   {
@@ -18,9 +18,10 @@ const data = [
       "https://thuanducphat.com/Files/39/thie%CC%82%CC%81t%20ke%CC%82%CC%81%20penthouses%20%C4%91e%CC%A3p-3.jpg",
     price: 10,
     name: "Penhouse 1",
-    location: "123",
+    location: "TP.Hồ Chí Minh",
     rate: 4,
-    desciption: "hello",
+    desciption:
+      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos modi expedita iure nostrum maxime aliquam temporibus labore, excepturi quia distinctio consequatur cum recusandae nihil delectus error ipsum enim odit assumenda?",
   },
   {
     id: 3,
@@ -28,9 +29,10 @@ const data = [
       "https://thuanducphat.com/Files/39/thie%CC%82%CC%81t%20ke%CC%82%CC%81%20penthouses%20%C4%91e%CC%A3p-3.jpg",
     price: 10,
     name: "Penhouse 1",
-    location: "123",
+    location: "TP.Hồ Chí Minh",
     rate: 4,
-    desciption: "hello",
+    desciption:
+      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos modi expedita iure nostrum maxime aliquam temporibus labore, excepturi quia distinctio consequatur cum recusandae nihil delectus error ipsum enim odit assumenda?",
   },
   {
     id: 4,
@@ -38,9 +40,10 @@ const data = [
       "https://thuanducphat.com/Files/39/thie%CC%82%CC%81t%20ke%CC%82%CC%81%20penthouses%20%C4%91e%CC%A3p-3.jpg",
     price: 10,
     name: "Penhouse 1",
-    location: "123",
+    location: "TP.Hồ Chí Minh",
     rate: 4,
-    desciption: "hello",
+    desciption:
+      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos modi expedita iure nostrum maxime aliquam temporibus labore, excepturi quia distinctio consequatur cum recusandae nihil delectus error ipsum enim odit assumenda?",
   },
 ];
 

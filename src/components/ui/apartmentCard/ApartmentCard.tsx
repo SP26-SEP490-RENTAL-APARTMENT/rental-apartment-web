@@ -44,18 +44,14 @@ function ApartmentCard({
         </CardDescription>
       </CardHeader>
 
-      <CardContent>
+      <CardContent className="border-b pb-2">
         <p className="text-sm text-gray-600 line-clamp-2">{description}</p>
 
         <div className="flex items-center mt-2">
-          <span className="text-yellow-500">
-            <Star />
-          </span>
+          <Star className="text-yellow-500 fill-yellow-500" />
           <span className="text-2xl ml-2 font-bold">{rate}</span>
         </div>
       </CardContent>
-
-      <hr />
 
       <CardFooter className="font-semibold text-primary text-lg flex justify-end gap-2">
         <span className="text-blue-500 text-2xl">$ {price}</span>
