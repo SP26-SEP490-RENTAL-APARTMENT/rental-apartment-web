@@ -21,7 +21,7 @@ function AdminSideBar() {
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupLabel>
-            {state === "expanded" && "Landlord Panel"}
+            {state === "expanded" && "Admin Panel"}
           </SidebarGroupLabel>
 
           <SidebarGroupContent>

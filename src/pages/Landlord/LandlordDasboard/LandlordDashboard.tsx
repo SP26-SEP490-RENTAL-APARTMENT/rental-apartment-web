@@ -1,5 +1,5 @@
 import { CalendarIcon, DollarSignIcon, HomeIcon } from "lucide-react";
-import DashboardCard from "./components/DashboardCard";
+import DashboardCard from "../../../components/ui/dashboardCard/DashboardCard";
 
 const data = [
   { title: "Total Properties", value: 10, Icon: HomeIcon },
