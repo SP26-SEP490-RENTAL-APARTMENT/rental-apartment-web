@@ -1,5 +1,12 @@
 import { Button } from "@/components/ui/button";
 import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
   Popover,
   PopoverContent,
   PopoverTrigger,
@@ -14,24 +21,24 @@ function UserAction({ user }: Props) {
   const handleDelete = () => {
     window.alert(`Delete user ${user.id}`);
   };
-
-//   const handleViewDetail = () => {
-//     window.alert(`View detail of user ${user.id}`);
-//   };
   return (
     <div className="flex gap-2">
-      <Popover>
-        <PopoverTrigger>
+      <Dialog>
+        <DialogTrigger asChild>
           <Button size="sm" variant="outline">
             <Eye />
           </Button>
-        </PopoverTrigger>
-        <PopoverContent>
+        </DialogTrigger>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>User Details</DialogTitle>
+          </DialogHeader>
           <p>{user.id}</p>
           <p>{user.name}</p>
           <p>{user.email}</p>
-        </PopoverContent>
-      </Popover>
+        </DialogContent>
+      </Dialog>
+
       <Popover>
         <PopoverTrigger>
           <Button size="sm" variant="destructive">
