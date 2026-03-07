@@ -83,7 +83,7 @@ function Login() {
       <CardFooter className="flex flex-col">
         <Button className="w-full mb-5 cursor-pointer">{auth("login")}</Button>
         <div className="flex justify-center items-center">
-          <p>Don't have an account?</p>
+          <p className="text-sm text-muted-foreground">{auth("question")}</p>
           <Button
             onClick={() => navigate("/register")}
             className="text-blue-500 cursor-pointer"

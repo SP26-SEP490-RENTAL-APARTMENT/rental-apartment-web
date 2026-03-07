@@ -1,3 +1,5 @@
+import { useTranslation } from "react-i18next";
+
 interface ApartmentInfoProps {
   description: string;
   host: {
@@ -13,6 +15,7 @@ function ApartmentInfo({
   location,
   price,
 }: ApartmentInfoProps) {
+  const {t: apartment} = useTranslation("apartment");
   return (
     <div className="space-y-8 px-6 py-8">
       <div className="flex items-center gap-4 pb-6 border-b">
@@ -22,14 +25,14 @@ function ApartmentInfo({
           alt={host.name}
         />
         <div>
-          <p className="text-sm text-gray-500">Hosted by</p>
+          <p className="text-sm text-gray-500">{apartment("hostedBy")}</p>
           <p className="text-xl font-semibold text-gray-900">{host.name}</p>
         </div>
       </div>
 
       <div className="space-y-2">
         <h3 className="text-lg font-semibold text-gray-900">
-          About this place
+          {apartment("aboutThisPlace")}
         </h3>
         <p className="text-gray-600 leading-relaxed">{description}</p>
       </div>

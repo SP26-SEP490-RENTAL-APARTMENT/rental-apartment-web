@@ -6,9 +6,11 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
+  DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import i18next from "i18next";
@@ -16,7 +18,9 @@ import { useTranslation } from "react-i18next";
 
 function Header() {
   const navigate = useNavigate();
-  const {t} = useTranslation()
+  const { t } = useTranslation();
+  const { t: auth } = useTranslation("auth");
+  const { t: account } = useTranslation("account");
 
   const [language, setLanguage] = useState(() => {
     return localStorage.getItem("i18nextLng") || "en";
@@ -47,26 +51,67 @@ function Header() {
                 value={language}
                 onValueChange={setLanguage}
               >
-                <DropdownMenuRadioItem onClick={() => i18next.changeLanguage('en')} value="en">
-                  English
+                <DropdownMenuRadioItem
+                  onClick={() => i18next.changeLanguage("en")}
+                  value="en"
+                >
+                  <div className="flex justify-between items-center w-full">
+                    <span>English</span>
+                    <img
+                      className="w-6 h-6 rounded-full object-cover"
+                      src="/src/assets/EN-Flag.png"
+                      alt="English"
+                    />
+                  </div>
                 </DropdownMenuRadioItem>
-                <DropdownMenuRadioItem onClick={() => i18next.changeLanguage('vi')} value="vi">
-                  Việt Nam
+                <DropdownMenuRadioItem
+                  onClick={() => i18next.changeLanguage("vi")}
+                  value="vi"
+                >
+                  <div className="flex justify-between items-center w-full gap-3">
+                    <span>Việt Nam</span>
+                    <img
+                      className="w-6 h-6 rounded-full object-cover"
+                      src="/src/assets/VN-Flag.png"
+                      alt="Vietnamese"
+                    />
+                  </div>
                 </DropdownMenuRadioItem>
               </DropdownMenuRadioGroup>
             </DropdownMenuGroup>
           </DropdownMenuContent>
         </DropdownMenu>
+
+        <DropdownMenu>
+          <DropdownMenuTrigger>
+            <img
+            className="w-12 h-12 rounded-full object-cover border-2 cursor-pointer"
+              src="https://ipwatchdog.com/wp-content/uploads/2018/03/pepe-the-frog-1272162_640.jpg"
+              alt="Avatar"
+            />
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuGroup>
+              <DropdownMenuLabel>{account("myAccount")}</DropdownMenuLabel>
+              <DropdownMenuItem onClick={() => navigate('/tenant/profile')}>{account("profile")}</DropdownMenuItem>
+            </DropdownMenuGroup>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem>
+              {auth("logout")}
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+
         <div className="flex gap-3 items-center">
           <Button
             className="cursor-pointer"
             variant={"ghost"}
             onClick={() => navigate("/register")}
           >
-            Sign Up
+            {auth("register")}
           </Button>
           <Button className="cursor-pointer" onClick={() => navigate("/login")}>
-            Login
+            {auth("login")}
           </Button>
         </div>
       </div>

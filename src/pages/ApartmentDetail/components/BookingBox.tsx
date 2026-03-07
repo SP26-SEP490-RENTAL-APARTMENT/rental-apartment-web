@@ -3,11 +3,12 @@ import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import * as Popover from "@radix-ui/react-popover";
 import { useState } from "react";
-import { formatDate } from "@/utils";
+import { useFormatDate } from "@/utils";
 
 function BookingBox() {
   const [checkIn, setCheckIn] = useState<Date | undefined>(undefined);
   const [checkOut, setCheckOut] = useState<Date | undefined>(undefined);
+  const formatDate = useFormatDate();
 
   const isPastDate = (date: Date) => {
     const today = new Date();
