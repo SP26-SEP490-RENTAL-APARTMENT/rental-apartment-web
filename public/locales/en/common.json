@@ -1,5 +1,6 @@
 {
     "welcome": "Welcome to {{appName}}",
     "loginDescription": "Sign in to your account to continue",
+    "registerDescription": "Register your account to continue",
     "language": "Select language"
 }

@@ -8,12 +8,14 @@ import AdminLayout from "./components/layout/adminLayout/AdminLayout";
 import adminRoutes from "./routes/privateRoutes/adminRoutes";
 import LandlordLayout from "./components/layout/landlordLayout/LandlordLayout";
 import landlordRoutes from "./routes/privateRoutes/landlordRoutes";
+import TenantLayout from "./components/layout/tenantLayout/TenantLayout";
+import { tenantRoutes } from "./routes/privateRoutes/tenantRoutes";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Authen layout */}
+        {/* Auth layout */}
         <Route element={<AuthenLayout />}>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
@@ -44,6 +46,17 @@ function App() {
         {/* Landlord routes */}
         <Route element={<LandlordLayout />}>
           {landlordRoutes.map((route, index) => (
+            <Route
+              key={index}
+              path={route.path}
+              element={<route.component />}
+            />
+          ))}
+        </Route>
+
+        {/* Tenant routes */}
+        <Route element={<TenantLayout />}>
+          {tenantRoutes.map((route, index) => (
             <Route
               key={index}
               path={route.path}
