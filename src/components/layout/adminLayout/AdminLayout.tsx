@@ -1,15 +1,24 @@
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { Outlet } from "react-router-dom";
-import SideBar from "./SideBar";
+import AdminSideBar from "./AdminSideBar";
 
 function AdminLayout() {
   return (
-    <div className="flex min-h-screen bg-gray-100">
-      <SideBar />
+    <SidebarProvider>
+      <div className="flex min-h-screen w-full">
+        <AdminSideBar />
 
-      <main className="flex-1 p-6 overflow-auto">
-        <Outlet />
-      </main>
-    </div>
+        <main className="flex-1">
+          <div className="p-4">
+            <SidebarTrigger />
+          </div>
+
+          <div className="p-6">
+            <Outlet />
+          </div>
+        </main>
+      </div>
+    </SidebarProvider>
   );
 }
 
