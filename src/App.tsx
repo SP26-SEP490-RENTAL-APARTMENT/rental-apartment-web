@@ -1,72 +1,117 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import publicRoutes from "./routes/publicRoutes";
-import Login from "./pages/Login/Login";
-import UserLayout from "./components/layout/userLayout/UserLayout";
-import Register from "./pages/Register/Register";
-import AuthenLayout from "./components/layout/authenLayout/AuthenLayout";
-import AdminLayout from "./components/layout/adminLayout/AdminLayout";
-import adminRoutes from "./routes/privateRoutes/adminRoutes";
-import LandlordLayout from "./components/layout/landlordLayout/LandlordLayout";
-import landlordRoutes from "./routes/privateRoutes/landlordRoutes";
-import TenantLayout from "./components/layout/tenantLayout/TenantLayout";
-import { tenantRoutes } from "./routes/privateRoutes/tenantRoutes";
+import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
+import { ROUTES } from "./constants/routes";
+import { ProtectedRoute } from "./components/ProtectedRoute";
 
-function App() {
+// Pages - Auth
+import Login from "./pages/Login/Login";
+import Register from "./pages/Register/Register";
+
+// Pages - Public
+import Home from "./pages/Home/Home";
+import ApartmentDetail from "./pages/ApartmentDetail/ApartmentDetail";
+
+// Pages - Admin
+import AdminDashboard from "./pages/Admin/AdminDashboard/AdminDashboard";
+import UserManagement from "./pages/Admin/UserManagement/UserManagement";
+import SubsciptionPlan from "./pages/Admin/SubsciptionPlan/SubsciptionPlan";
+
+// Pages - Landlord
+import LandlordDashboard from "./pages/Landlord/LandlordDasboard/LandlordDashboard";
+import ApartmentManagement from "./pages/Landlord/ApartmentManagement/ApartmentManagement";
+
+// Pages - Tenant
+import Profile from "./pages/Tenant/Profile/Profile";
+
+// Layouts
+import AuthenLayout from "./components/layout/authenLayout/AuthenLayout";
+import UserLayout from "./components/layout/userLayout/UserLayout";
+import AdminLayout from "./components/layout/adminLayout/AdminLayout";
+import LandlordLayout from "./components/layout/landlordLayout/LandlordLayout";
+import TenantLayout from "./components/layout/tenantLayout/TenantLayout";
+
+/**
+ * App Component - Simplified routing setup
+ * All routes defined inline here for clarity
+ */
+export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Auth layout */}
+        {/* ========== Auth Routes ========== */}
         <Route element={<AuthenLayout />}>
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
+          <Route path={ROUTES.LOGIN} element={<Login />} />
+          <Route path={ROUTES.REGISTER} element={<Register />} />
         </Route>
 
-        {/* Public routes */}
+        {/* ========== Public Routes ========== */}
         <Route element={<UserLayout />}>
-          {publicRoutes.map((route, index) => (
-            <Route
-              key={index}
-              path={route.path}
-              element={<route.component />}
-            />
-          ))}
+          <Route path={ROUTES.HOME} element={<Home />} />
+          <Route path={ROUTES.APARTMENT_DETAIL} element={<ApartmentDetail />} />
         </Route>
 
-        {/* Admin routes */}
+        {/* ========== Admin Routes ========== */}
         <Route element={<AdminLayout />}>
-          {adminRoutes.map((route, index) => (
-            <Route
-              key={index}
-              path={route.path}
-              element={<route.component />}
-            />
-          ))}
+          <Route
+            path={ROUTES.ADMIN_DASHBOARD}
+            element={
+              <ProtectedRoute requiredRoles={["ADMIN"]}>
+                <AdminDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path={ROUTES.ADMIN_USERS}
+            element={
+              <ProtectedRoute requiredRoles={["ADMIN"]}>
+                <UserManagement />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path={ROUTES.ADMIN_SUBSCRIPTION_PLANS}
+            element={
+              <ProtectedRoute requiredRoles={["ADMIN"]}>
+                <SubsciptionPlan />
+              </ProtectedRoute>
+            }
+          />
         </Route>
 
-        {/* Landlord routes */}
+        {/* ========== Landlord Routes ========== */}
         <Route element={<LandlordLayout />}>
-          {landlordRoutes.map((route, index) => (
-            <Route
-              key={index}
-              path={route.path}
-              element={<route.component />}
-            />
-          ))}
+          <Route
+            path={ROUTES.LANDLORD_DASHBOARD}
+            element={
+              <ProtectedRoute requiredRoles={["LANDLORD"]}>
+                <LandlordDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path={ROUTES.LANDLORD_APARTMENTS}
+            element={
+              <ProtectedRoute requiredRoles={["LANDLORD"]}>
+                <ApartmentManagement />
+              </ProtectedRoute>
+            }
+          />
         </Route>
 
-        {/* Tenant routes */}
+        {/* ========== Tenant Routes ========== */}
         <Route element={<TenantLayout />}>
-          {tenantRoutes.map((route, index) => (
-            <Route
-              key={index}
-              path={route.path}
-              element={<route.component />}
-            />
-          ))}
+          <Route
+            path={ROUTES.TENANT_PROFILE}
+            element={
+              <ProtectedRoute requiredRoles={["TENANT"]}>
+                <Profile />
+              </ProtectedRoute>
+            }
+          />
         </Route>
+
+        {/* ========== Fallback - Unknown routes ========== */}
+        <Route path="*" element={<Navigate to={ROUTES.HOME} replace />} />
       </Routes>
     </BrowserRouter>
   );
 }
-
-export default App;
