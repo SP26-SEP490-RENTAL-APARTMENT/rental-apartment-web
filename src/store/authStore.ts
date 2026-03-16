@@ -3,28 +3,49 @@ import { persist } from "zustand/middleware";
 
 interface User {
   id: string;
-  name: string;
+  fullName: string;
   email: string;
+  role: string;
 }
 
 interface AuthStore {
   user: User | null;
-  token: string | null;
+  accessToken: string | null;
+  refreshToken: string | null;
   isAuthenticated: boolean;
-  login: (user: User, token: string) => void;
+  login: (user: User, accessToken: string, refreshToken: string) => void;
   logout: () => void;
+  setToken: (accessToken: string) => void
 }
 
 export const useAuthStore = create<AuthStore>()(
   persist(
     (set) => ({
       user: null,
-      token: null,
+      accessToken: null,
+      refreshToken: null,
       isAuthenticated: false,
 
-      login: (user, token) => set({ user, token, isAuthenticated: true }),
+      login: (user, accessToken, refreshToken) =>
+        set({
+          user,
+          accessToken,
+          refreshToken,
+          isAuthenticated: true,
+        }),
 
-      logout: () => set({ user: null, token: null, isAuthenticated: false }),
+      logout: () =>
+        set({
+          user: null,
+          accessToken: null,
+          refreshToken: null,
+          isAuthenticated: false,
+        }),
+
+      setToken: (accessToken) =>
+        set({
+          accessToken,
+        }),
     }),
     {
       name: "auth-storage",
