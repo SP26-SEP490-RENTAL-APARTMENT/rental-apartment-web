@@ -15,7 +15,7 @@ export const landlordNavList = [
   },
   {
     title: "Apartments",
-    url: "/landlord/apartment",
+    url: "/landlord/apartments",
     icon: Home,
   },
   {

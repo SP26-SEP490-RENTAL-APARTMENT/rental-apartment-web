@@ -1,5 +1,4 @@
 import { NavLink } from "react-router-dom";
-
 import {
   Sidebar,
   SidebarContent,
@@ -14,8 +13,17 @@ import {
 } from "@/components/ui/sidebar";
 import { landlordNavList } from "./landlordNavList";
 import { LogOut } from "lucide-react";
+import { useAuthStore } from "@/store/authStore";
 function LandlordSideBar() {
-  const { state } = useSidebar(); // collapsed | expanded
+  const { state } = useSidebar();
+  const { logout } = useAuthStore();
+
+  const handleLogout = () => {
+    logout();
+    localStorage.removeItem("auth-storage");
+    window.location.href = "/";
+  };
+
   return (
     <Sidebar collapsible="icon">
       <SidebarContent>
@@ -53,7 +61,7 @@ function LandlordSideBar() {
       <SidebarFooter>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton>
+            <SidebarMenuButton onClick={handleLogout}>
               <LogOut className="h-4 w-4" />
               {state === "expanded" && <span>Logout</span>}
             </SidebarMenuButton>

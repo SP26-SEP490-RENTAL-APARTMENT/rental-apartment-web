@@ -10,7 +10,7 @@ import { useAuthStore } from "@/store/authStore";
  * Set to false during development to skip auth checks
  * Set to true when API is ready for production
  */
-export const AUTH_ENABLED = false;
+export const AUTH_ENABLED = true;
 
 /**
  * Interface for route access configuration
@@ -43,7 +43,7 @@ export const isAuthenticated = (): boolean => {
   }
 
   try {
-    const token = useAuthStore.getState().token;
+    const token = useAuthStore.getState().accessToken;
     const user = useAuthStore.getState().user;
     return !!(token && user);
   } catch {
