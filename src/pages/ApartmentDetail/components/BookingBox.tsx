@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import * as Popover from "@radix-ui/react-popover";
 import { useState } from "react";
-import { useFormatDate } from "@/utils";
+import { useFormatDate } from "@/utils/utils";
 
 function BookingBox() {
   const [checkIn, setCheckIn] = useState<Date | undefined>(undefined);

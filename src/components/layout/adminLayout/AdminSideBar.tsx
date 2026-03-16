@@ -14,8 +14,17 @@ import {
 } from "@/components/ui/sidebar";
 import { LogOut } from "lucide-react";
 import { adminNavList } from "./adminNavList";
+import { useAuthStore } from "@/store/authStore";
 function AdminSideBar() {
-  const { state } = useSidebar(); // collapsed | expanded
+  const { state } = useSidebar();
+  const { logout } = useAuthStore();
+
+  const handleLogout = () => {
+    logout();
+    localStorage.removeItem("auth-storage");
+    window.location.href = "/";
+  };
+
   return (
     <Sidebar collapsible="icon">
       <SidebarContent>
@@ -53,7 +62,7 @@ function AdminSideBar() {
       <SidebarFooter>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton>
+            <SidebarMenuButton onClick={handleLogout}>
               <LogOut className="h-4 w-4" />
               {state === "expanded" && <span>Logout</span>}
             </SidebarMenuButton>

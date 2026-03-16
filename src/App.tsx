@@ -54,7 +54,7 @@ export default function App() {
           <Route
             path={ROUTES.ADMIN_DASHBOARD}
             element={
-              <ProtectedRoute requiredRoles={["ADMIN"]}>
+              <ProtectedRoute requiredRoles={["admin"]}>
                 <AdminDashboard />
               </ProtectedRoute>
             }
@@ -62,7 +62,7 @@ export default function App() {
           <Route
             path={ROUTES.ADMIN_USERS}
             element={
-              <ProtectedRoute requiredRoles={["ADMIN"]}>
+              <ProtectedRoute requiredRoles={["admin"]}>
                 <UserManagement />
               </ProtectedRoute>
             }
@@ -70,7 +70,7 @@ export default function App() {
           <Route
             path={ROUTES.ADMIN_SUBSCRIPTION_PLANS}
             element={
-              <ProtectedRoute requiredRoles={["ADMIN"]}>
+              <ProtectedRoute requiredRoles={["admin"]}>
                 <SubsciptionPlan />
               </ProtectedRoute>
             }
@@ -82,7 +82,7 @@ export default function App() {
           <Route
             path={ROUTES.LANDLORD_DASHBOARD}
             element={
-              <ProtectedRoute requiredRoles={["LANDLORD"]}>
+              <ProtectedRoute requiredRoles={["landlord"]}>
                 <LandlordDashboard />
               </ProtectedRoute>
             }
@@ -90,7 +90,7 @@ export default function App() {
           <Route
             path={ROUTES.LANDLORD_APARTMENTS}
             element={
-              <ProtectedRoute requiredRoles={["LANDLORD"]}>
+              <ProtectedRoute requiredRoles={["landlord"]}>
                 <ApartmentManagement />
               </ProtectedRoute>
             }
@@ -102,7 +102,7 @@ export default function App() {
           <Route
             path={ROUTES.TENANT_PROFILE}
             element={
-              <ProtectedRoute requiredRoles={["TENANT"]}>
+              <ProtectedRoute requiredRoles={["tenant"]}>
                 <Profile />
               </ProtectedRoute>
             }
