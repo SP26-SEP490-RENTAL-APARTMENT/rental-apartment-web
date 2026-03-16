@@ -20,6 +20,7 @@ import {
 } from "@/schemas/registerSchema";
 import { authApi } from "@/services/publicApi/authApi";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Controller } from "react-hook-form";
 import { Eye, EyeOff, Lock, Mail, Phone, UserRound } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -35,6 +36,7 @@ function Register() {
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors, isSubmitting },
   } = useForm<RegisterFormData>({
     resolver: zodResolver(registerSchema),
@@ -43,7 +45,10 @@ function Register() {
 
   const onSubmit = async (registerData: RegisterFormData) => {
     try {
-      await authApi.register({...registerData, phone: String(registerData.phone)});
+      await authApi.register({
+        ...registerData,
+        phone: String(registerData.phone),
+      });
       toast.success(auth("registerSuccess"));
     } catch (error: any) {
       toast.error(error.response?.data?.message || auth("registerFailed"));
@@ -119,38 +124,49 @@ function Register() {
               ) : null}
             </div>
 
-            <RadioGroup
+            <Controller
+              name="role"
+              control={control}
               defaultValue="tenant"
-              className="grid grid-cols-1 lg:grid-cols-2 gap-4"
-              {...register("role")}
-            >
-              <label className="border rounded-lg p-4 cursor-pointer hover:bg-accent transition-colors peer-data-[state=checked]:border-primary">
-                <div className="flex items-start justify-between gap-4">
-                  <div>
-                    <p className="font-medium">{auth("tenant")}</p>
-                    <p className="text-sm text-muted-foreground">
-                      {auth("tenantDescription")}
-                    </p>
-                  </div>
-                  <RadioGroupItem value="tenant" id="tenant" className="peer" />
-                </div>
-              </label>
-              <label className="border rounded-lg p-4 cursor-pointer hover:bg-accent transition-colors peer-data-[state=checked]:border-primary">
-                <div className="flex items-start justify-between gap-4">
-                  <div>
-                    <p className="font-medium">{auth("landlord")}</p>
-                    <p className="text-sm text-muted-foreground">
-                      {auth("landlordDescription")}
-                    </p>
-                  </div>
-                  <RadioGroupItem
-                    value="landlord"
-                    id="landlord"
-                    className="peer"
-                  />
-                </div>
-              </label>
-            </RadioGroup>
+              render={({ field }) => (
+                <RadioGroup
+                  value={field.value}
+                  onValueChange={field.onChange}
+                  className="grid grid-cols-1 lg:grid-cols-2 gap-4"
+                >
+                  <label className="border rounded-lg p-4 cursor-pointer hover:bg-accent transition-colors peer-data-[state=checked]:border-primary">
+                    <div className="flex items-start justify-between gap-4">
+                      <div>
+                        <p className="font-medium">{auth("tenant")}</p>
+                        <p className="text-sm text-muted-foreground">
+                          {auth("tenantDescription")}
+                        </p>
+                      </div>
+                      <RadioGroupItem
+                        value="tenant"
+                        id="tenant"
+                        className="peer"
+                      />
+                    </div>
+                  </label>
+                  <label className="border rounded-lg p-4 cursor-pointer hover:bg-accent transition-colors peer-data-[state=checked]:border-primary">
+                    <div className="flex items-start justify-between gap-4">
+                      <div>
+                        <p className="font-medium">{auth("landlord")}</p>
+                        <p className="text-sm text-muted-foreground">
+                          {auth("landlordDescription")}
+                        </p>
+                      </div>
+                      <RadioGroupItem
+                        value="landlord"
+                        id="landlord"
+                        className="peer"
+                      />
+                    </div>
+                  </label>
+                </RadioGroup>
+              )}
+            />
 
             <div className="grid gap-2">
               <Label htmlFor="password">{auth("password")}</Label>
@@ -179,7 +195,11 @@ function Register() {
               ) : null}
             </div>
           </div>
-          <Button type="submit" disabled={isSubmitting} className="w-full mb-5 cursor-pointer">
+          <Button
+            type="submit"
+            disabled={isSubmitting}
+            className="w-full mb-5 cursor-pointer"
+          >
             {auth("register")}
           </Button>
         </form>
