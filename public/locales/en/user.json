@@ -1,0 +1,13 @@
+{
+    "userId": "User ID",
+    "name": "Full name",
+    "email": "Email",
+    "phone": "Phone number",
+    "role": "Role",
+    "verified": "Verified",
+    "userDetails": "User details",
+    "userDetailsDescription": "View detailed information for this user.",
+    "userManagement": "User Management",
+    "createUser": "Create User",
+    "updateUser": "Update User"
+}

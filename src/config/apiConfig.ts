@@ -28,7 +28,7 @@ privateApi.interceptors.request.use((config) => {
 })
 
 privateApi.interceptors.response.use(
-  (response) => response.data,
+  (response) => response,
   async (error) => {
     const originalRequest = error.config
 
