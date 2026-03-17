@@ -2,7 +2,6 @@ import type { ColumnDef } from "@tanstack/react-table";
 import {
   flexRender,
   getCoreRowModel,
-  getPaginationRowModel,
   useReactTable,
 } from "@tanstack/react-table";
 import {
@@ -14,21 +13,49 @@ import {
   TableRow,
 } from "../table";
 import { Button } from "../button";
+import { Skeleton } from "../skeleton";
+
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  total?: number;
+  page?: number;
+  limit?: number;
+  onPageChange?: (page: number) => void;
+  loading?: boolean;
 }
+
 function DataTable<TData, TValue>({
   columns,
   data,
+  total,
+  page = 1,
+  limit = 10,
+  onPageChange,
+  loading = false,
 }: DataTableProps<TData, TValue>) {
-  // eslint-disable-next-line react-hooks/incompatible-library
+  const isServerSide = !!onPageChange;
+
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
+    manualPagination: isServerSide,
+    pageCount: isServerSide ? Math.ceil((total || 0) / limit) : undefined,
+    state: isServerSide
+      ? { pagination: { pageIndex: page - 1, pageSize: limit } }
+      : undefined,
+    onPaginationChange: isServerSide
+      ? (updater) => {
+          const newState =
+            typeof updater === "function"
+              ? updater({ pageIndex: page - 1, pageSize: limit })
+              : updater;
+          onPageChange?.(newState.pageIndex + 1);
+        }
+      : undefined,
   });
+
   return (
     <div className="overflow-hidden rounded-md border">
       <Table>
@@ -51,7 +78,18 @@ function DataTable<TData, TValue>({
           ))}
         </TableHeader>
         <TableBody>
-          {table.getRowModel().rows?.length ? (
+          {loading ? (
+            // Skeleton loading rows
+            Array.from({ length: limit }).map((_, idx) => (
+              <TableRow key={`skeleton-${idx}`}>
+                {columns.map((column) => (
+                  <TableCell key={column.id || idx}>
+                    <Skeleton className="h-6 w-full" />
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))
+          ) : table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => (
               <TableRow
                 key={row.id}
@@ -82,6 +120,9 @@ function DataTable<TData, TValue>({
         >
           Previous
         </Button>
+        <span className="text-sm">
+          Page {page} of {Math.ceil((total || 0) / limit)}
+        </span>
         <Button
           variant="outline"
           size="sm"

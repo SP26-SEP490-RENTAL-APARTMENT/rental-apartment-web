@@ -1,0 +1,13 @@
+{
+    "userId": "ID người dùng",
+    "name": "Tên",
+    "email": "Email",
+    "phone": "Số điện thoại",
+    "role": "Vai trò",
+    "verified": "Đã xác minh",
+    "userDetails": "Chi tiết người dùng",
+    "userDetailsDescription": "Xem thông tin chi tiết cho người dùng này.",
+    "userManagement": "Quản lý người dùng",
+    "createUser": "Tạo người dùng",
+    "updateUser": "Cập nhật người dùng"
+}
