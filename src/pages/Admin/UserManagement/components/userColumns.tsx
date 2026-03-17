@@ -1,34 +1,38 @@
 import type { ColumnDef } from "@tanstack/react-table";
+import type { User } from "@/types/user";
 import UserAction from "./UserAction";
 
-export type User = {
-  id: string;
-  name: string;
-  email: string;
-  role: string;
-};
-
-export const userColumns: ColumnDef<User>[] = [
+export const userColumns = (
+  onDelete: (userId: string) => void,
+  onEdit: (user: User) => void,
+): ColumnDef<User>[] => [
   {
-    accessorKey: "name",
+    accessorKey: "fullName",
     header: "Name",
   },
   {
     accessorKey: "email",
     header: "Email",
   },
+  // {
+  //   accessorKey: "phone",
+  //   header: "Phone",
+  // },
   {
     accessorKey: "role",
     header: "Role",
   },
+  // {
+  //   accessorKey: "identityVerified",
+  //   header: "Verified",
+  //   cell: ({ getValue }) => (getValue() ? "Yes" : "No"),
+  // },
   {
     id: "actions",
     header: "Actions",
     cell: ({ row }) => {
-
-      const user = row.original
-
-      return <UserAction user={user} />
+      const user = row.original;
+      return <UserAction user={user} onDelete={onDelete} onEdit={onEdit} />;
     },
   },
 ];
