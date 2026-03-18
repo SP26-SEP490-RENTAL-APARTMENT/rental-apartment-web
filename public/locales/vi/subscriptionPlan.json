@@ -1,0 +1,15 @@
+{
+    "subscriptionName": "Tên gói đăng ký",
+    "subscriptionFeature": "Tính năng đăng ký",
+    "subscriptionPlanDescription": "Mô tả gói đăng ký",
+    "subscriptionPriceMonthly": "Giá đăng ký (hàng tháng)",
+    "subscriptionPriceAnnual": "Giá đăng ký (annual)",
+    "maxApartments": "Số lượng căn hộ tối đa",
+    "maxApartmentsPerApartment": "Số lượng căn hộ tối đa mỗi căn hộ",
+    "isActive": "Khả dụng",
+    "subscriptionDetails": "Chi tiết gói đăng ký",
+    "subscriptionDetailsDescription": "Ở đây bạn có thể xem chi tiết của gói đăng ký.",
+    "subsriptionManagement": "Quản lý gói đăng ký",
+    "createSubscriptionPlan": "Tạo gói đăng ký",
+    "editSubscriptionPlan": "Chỉnh sửa gói đăng ký"
+}

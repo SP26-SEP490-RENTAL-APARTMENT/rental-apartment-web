@@ -1,0 +1,48 @@
+import type { SubscriptionPlan } from "@/types/subscriptionPlan";
+import type { ColumnDef } from "@tanstack/react-table";
+import SubscriptionPlanAction from "./SubscriptionPlanAction";
+import { useTranslation } from "react-i18next";
+
+export const SubscriptionPlanColumns = (
+  onDelete: (planId: string) => void,
+  onEdit: (subscriptionPlan: SubscriptionPlan) => void,
+): ColumnDef<SubscriptionPlan>[] => {
+  const { t } = useTranslation("subscriptionPlan");
+  const { t: commonTranslation } = useTranslation("common");
+
+  return [
+    {
+      accessorKey: "name",
+      header: t("subscriptionName") || "Name",
+    },
+    {
+      accessorKey: "priceMonthly",
+      header: t("subscriptionPriceMonthly") || "Monthly Price",
+    },
+    {
+      accessorKey: "priceAnnual",
+      header: t("subscriptionPriceAnnual") || "Annual Price",
+    },
+    {
+      accessorKey: "maxApartments",
+      header: t("maxApartments") || "Max Apartments",
+    },
+    {
+      accessorKey: "maxApartmentsPerApartment",
+      header: t("maxApartmentsPerApartment") || "Max Apartments Per Apartment",
+    },
+    // {
+    //   accessorKey: "identityVerified",
+    //   header: "Verified",
+    //   cell: ({ getValue }) => (getValue() ? "Yes" : "No"),
+    // },
+    {
+      id: "actions",
+      header: commonTranslation("actions") || "Actions",
+      cell: ({ row }) => {
+        const subscriptionPlan = row.original;
+        return <SubscriptionPlanAction subscriptionPlan={subscriptionPlan} onDelete={onDelete} onEdit={onEdit} />;
+      },
+    },
+  ];
+};
