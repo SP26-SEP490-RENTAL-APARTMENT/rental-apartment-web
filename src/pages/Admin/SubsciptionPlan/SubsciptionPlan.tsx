@@ -12,6 +12,7 @@ import type {
   UpdateSubscriptionPlanFormData,
 } from "@/schemas/subscriptionPlanSchema";
 import SubscriptionPlanForm from "./components/SubscriptionPlanForm";
+import SubscriptionPlanFilter from "./components/SubscriptionPlanFilter";
 
 function SubsciptionPlan() {
   const { t: subscriptionPlanTranslation } = useTranslation("subscriptionPlan");
@@ -19,9 +20,9 @@ function SubsciptionPlan() {
   const [page, setPage] = useState(1);
   const [pageSize] = useState(5);
   const [total, setTotal] = useState(0);
-  const [search] = useState("");
-  const [sortBy] = useState<keyof SubscriptionPlan>("name");
-  const [sortOrder] = useState<"asc" | "desc">("asc");
+  const [search, setSearch] = useState("");
+  const [sortBy, setSortBy] = useState<keyof SubscriptionPlan>("name");
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
   const [loading, setLoading] = useState(false);
 
   // Form state
@@ -109,6 +110,7 @@ function SubsciptionPlan() {
 
   useEffect(() => {
     fetchSubscriptionPlans();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, pageSize, search, sortBy, sortOrder]);
 
   const handlePageChange = (newPage: number) => {
@@ -126,6 +128,15 @@ function SubsciptionPlan() {
           {subscriptionPlanTranslation("createSubscriptionPlan")}
         </Button>
       </div>
+
+      <SubscriptionPlanFilter
+        onSearchChange={setSearch}
+        onSortByChange={setSortBy}
+        onSortOrderChange={setSortOrder}
+        search={search}
+        sortBy={sortBy}
+        sortOrder={sortOrder}
+      />
 
       <DataTable
         columns={SubscriptionPlanColumns(

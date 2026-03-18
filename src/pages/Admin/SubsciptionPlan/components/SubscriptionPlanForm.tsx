@@ -101,10 +101,10 @@ function SubscriptionPlanForm({
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-[500px]">
+      <DialogContent className="sm:max-w-106.25">
         <DialogHeader>
           <DialogTitle>
-            {isCreate ? sub("create") : sub("update")}
+            {isCreate ? sub("createSubscriptionPlan") : sub("editSubscriptionPlan")}
           </DialogTitle>
         </DialogHeader>
 
@@ -113,7 +113,7 @@ function SubscriptionPlanForm({
 
             {/* NAME */}
             <div className="grid gap-2">
-              <Label>{sub("name")}</Label>
+              <Label>{sub("subscriptionName")}</Label>
               <Input {...register("name")} />
               {errors.name && (
                 <p className="text-sm text-destructive">
@@ -124,7 +124,7 @@ function SubscriptionPlanForm({
 
             {/* DESCRIPTION */}
             <div className="grid gap-2">
-              <Label>{sub("description")}</Label>
+              <Label>{sub("subscriptionPlanDescription")}</Label>
               <Input {...register("description")} />
               {errors.description && (
                 <p className="text-sm text-destructive">
@@ -135,7 +135,7 @@ function SubscriptionPlanForm({
 
             {/* PRICE MONTHLY */}
             <div className="grid gap-2">
-              <Label>{sub("priceMonthly")}</Label>
+              <Label>{sub("subscriptionPriceMonthly")}</Label>
               <Input
                 type="number"
                 {...register("priceMonthly", { valueAsNumber: true })}
@@ -149,7 +149,7 @@ function SubscriptionPlanForm({
 
             {/* PRICE ANNUAL */}
             <div className="grid gap-2">
-              <Label>{sub("priceAnnual")}</Label>
+              <Label>{sub("subscriptionPriceAnnual")}</Label>
               <Input
                 type="number"
                 {...register("priceAnnual", { valueAsNumber: true })}
@@ -177,7 +177,7 @@ function SubscriptionPlanForm({
 
             {/* FEATURES */}
             <div className="grid gap-2">
-              <Label>{sub("features")}</Label>
+              <Label>{sub("subscriptionFeature")}</Label>
               <Input {...register("features")} />
               {errors.features && (
                 <p className="text-sm text-destructive">
