@@ -20,7 +20,7 @@ function UserManagement() {
   const [data, setData] = useState<User[]>([]);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
-  const [pageSize] = useState(5); // fixed limit for now
+  const [pageSize] = useState(5);
   const [total, setTotal] = useState(0);
   const [search, setSearch] = useState("");
   const [sortBy, setSortBy] = useState<keyof User>("fullName");
@@ -70,7 +70,7 @@ function UserManagement() {
       toast.error(
         error.response?.data?.message || userTranslation("createUserFailed"),
       );
-      throw error; // Re-throw to let form handle loading state
+      throw error;
     }
   };
 
@@ -85,6 +85,7 @@ function UserManagement() {
       toast.error(
         error.response?.data?.message || userTranslation("updateUserFailed"),
       );
+      throw error;
     }
   };
 
