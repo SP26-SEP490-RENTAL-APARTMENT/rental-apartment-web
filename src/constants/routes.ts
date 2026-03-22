@@ -12,7 +12,7 @@ export const AUTH_ROUTES = {
 // Public Routes
 export const PUBLIC_ROUTES = {
   HOME: "/",
-  APARTMENT_DETAIL: "/apartment-detail",
+  APARTMENT_DETAIL: "/apartment-detail/:id",
 } as const;
 
 // Admin Routes
