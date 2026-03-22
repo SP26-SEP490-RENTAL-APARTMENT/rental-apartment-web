@@ -1,4 +1,10 @@
 {
     "hostedBy": "Hosted by",
-    "aboutThisPlace": "About this place"
+    "aboutThisPlace": "About this place",
+    "location": "Location",
+    "pricePerNight": "Price per night",
+    "isPetAllowed": "Is pet allowed",
+    "maxOccupants": "Max occupants",
+    "allowPets": "Allow",
+    "notAllowPets": "Not Allow"
 }

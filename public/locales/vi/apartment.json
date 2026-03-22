@@ -1,4 +1,10 @@
 {
     "hostedBy": "Chủ nhà",
-    "aboutThisPlace": "Giới thiệu về nơi này"
+    "aboutThisPlace": "Giới thiệu về nơi này",
+    "location": "Địa điểm",
+    "pricePerNight": "Giá mỗi đêm",
+    "isPetAllowed": "Cho phép giữ thú cưng",
+    "maxOccupants": "Số người tối đa",
+    "allowPets": "Cho phép",
+    "notAllowPets": "Không cho phép"
 }

@@ -1,3 +1,11 @@
+import {
+  CircleCheck,
+  CircleX,
+  HandCoins,
+  MapPin,
+  PawPrint,
+  Users,
+} from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 interface ApartmentInfoProps {
@@ -6,16 +14,22 @@ interface ApartmentInfoProps {
     name: string;
     avatarUrl: string;
   };
-  location: string;
+  address: string;
+  district: string;
   price: number;
+  maxOccupants: number;
+  isPetAllowed: boolean;
 }
 function ApartmentInfo({
   description,
   host,
-  location,
+  address,
+  district,
   price,
+  maxOccupants,
+  isPetAllowed,
 }: ApartmentInfoProps) {
-  const {t: apartment} = useTranslation("apartment");
+  const { t: apartment } = useTranslation("apartment");
   return (
     <div className="space-y-8 px-6 py-8">
       <div className="flex items-center gap-4 pb-6 border-b">
@@ -39,12 +53,70 @@ function ApartmentInfo({
 
       <div className="grid grid-cols-2 gap-6">
         <div className="space-y-1">
-          <p className="text-sm font-medium text-gray-500">Location</p>
-          <p className="text-gray-900 font-semibold">{location}</p>
+          <div className="flex items-end gap-2">
+            <p className="text-sm font-medium text-gray-500">
+              <MapPin />
+            </p>
+            <p className="font-medium text-gray-500">{apartment("location")}</p>
+          </div>
+
+          <div className="flex gap-1">
+            <p className="font-bold text-xl">{address},</p>
+            <p className="font-bold text-xl">{district}</p>
+          </div>
         </div>
         <div className="space-y-1">
-          <p className="text-sm font-medium text-gray-500">Price per night</p>
-          <p className="text-2xl font-bold text-blue-600">${price}</p>
+          <div className="flex items-end gap-2">
+            <p className="text-sm font-medium text-gray-500">
+              <HandCoins />
+            </p>
+            <p className="font-medium text-gray-500">
+              {apartment("pricePerNight")}
+            </p>
+          </div>
+          <p className="text-2xl font-bold text-blue-600">
+            {price.toLocaleString("vi-VN")}
+          </p>
+        </div>
+        <div className="space-y-1">
+          <div className="flex items-end gap-2">
+            <p className="text-sm font-medium text-gray-500">
+              <PawPrint />
+            </p>
+            <p className="font-medium text-gray-500">
+              {apartment("isPetAllowed")}
+            </p>
+          </div>
+          <p className="font-bold">
+            {isPetAllowed === true ? (
+              <div className="flex items-end gap-2">
+                <p className="text-xl">{apartment("allowPets")}</p>
+                <p>
+                  <CircleCheck />
+                </p>
+              </div>
+            ) : (
+              <div className="flex items-end gap-2">
+                <p className="text-xl">{apartment("notAllowPets")}</p>
+                <p>
+                  <CircleX />
+                </p>
+              </div>
+            )}
+          </p>
+        </div>
+        <div className="space-y-1">
+          <div className="flex items-end gap-2">
+            <p className="text-sm font-medium text-gray-500">
+              <Users />
+            </p>
+            <p className="font-medium text-gray-500">
+              {apartment("maxOccupants")}
+            </p>
+          </div>
+          <p className="font-bold text-xl">
+            {maxOccupants}
+          </p>
         </div>
       </div>
     </div>
