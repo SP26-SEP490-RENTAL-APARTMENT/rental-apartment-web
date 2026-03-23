@@ -28,6 +28,7 @@ import UserLayout from "./components/layout/userLayout/UserLayout";
 import AdminLayout from "./components/layout/adminLayout/AdminLayout";
 import LandlordLayout from "./components/layout/landlordLayout/LandlordLayout";
 import TenantLayout from "./components/layout/tenantLayout/TenantLayout";
+import AmenityManagement from "./pages/Admin/AmenityManagement/AmenityManagement";
 
 /**
  * App Component - Simplified routing setup
@@ -72,6 +73,14 @@ export default function App() {
             element={
               <ProtectedRoute requiredRoles={["admin"]}>
                 <SubsciptionPlan />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path={ROUTES.ADMIN_AMENITIES}
+            element={
+              <ProtectedRoute requiredRoles={["admin"]}>
+                <AmenityManagement />
               </ProtectedRoute>
             }
           />
