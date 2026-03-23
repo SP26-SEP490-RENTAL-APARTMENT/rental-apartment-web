@@ -11,12 +11,13 @@ import type { User } from "@/types/user";
 
 export interface responseData<T> {
   data: dataProp<T>;
-  totalCount: number;
+  
   pageSize: number;
   page: number;
 }
 export interface dataProp<T> {
   items: T[];
+  totalCount: number;
 }
 
 export const userManagementApi = {
