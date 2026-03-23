@@ -2,6 +2,7 @@ import {
   LayoutDashboard,
   User,
   Box,
+  Blocks,
 } from "lucide-react";
 
 export const adminNavList = [
@@ -19,6 +20,11 @@ export const adminNavList = [
     title: "Subscription Plans",
     url: "/admin/subscription-plans",
     icon: Box,
+  },
+  {
+    title: "Amenities",
+    url: "/admin/amenities",
+    icon: Blocks,
   },
   // {
   //   title: "Bookings",
