@@ -1,69 +1,148 @@
-// import ApartmentCard from "@/components/ui/apartmentCard/ApartmentCard";
-import AddApartmentDialog from "./components/AddApartmentDialog";
-
-// const data = [
-//   {
-//     id: 1,
-//     image:
-//       "https://thuanducphat.com/Files/39/thie%CC%82%CC%81t%20ke%CC%82%CC%81%20penthouses%20%C4%91e%CC%A3p-3.jpg",
-//     price: 10,
-//     name: "Penhouse 1",
-//     location: "TP.Hồ Chí Minh",
-//     rate: 4,
-//     desciption:
-//       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos modi expedita iure nostrum maxime aliquam temporibus labore, excepturi quia distinctio consequatur cum recusandae nihil delectus error ipsum enim odit assumenda?",
-//   },
-//   {
-//     id: 2,
-//     image:
-//       "https://thuanducphat.com/Files/39/thie%CC%82%CC%81t%20ke%CC%82%CC%81%20penthouses%20%C4%91e%CC%A3p-3.jpg",
-//     price: 10,
-//     name: "Penhouse 1",
-//     location: "123",
-//     rate: 4,
-//     desciption: "hello",
-//   },
-//   {
-//     id: 3,
-//     image:
-//       "https://thuanducphat.com/Files/39/thie%CC%82%CC%81t%20ke%CC%82%CC%81%20penthouses%20%C4%91e%CC%A3p-3.jpg",
-//     price: 10,
-//     name: "Penhouse 1",
-//     location: "123",
-//     rate: 4,
-//     desciption: "hello",
-//   },
-//   {
-//     id: 4,
-//     image:
-//       "https://thuanducphat.com/Files/39/thie%CC%82%CC%81t%20ke%CC%82%CC%81%20penthouses%20%C4%91e%CC%A3p-3.jpg",
-//     price: 10,
-//     name: "Penhouse 1",
-//     location: "123",
-//     rate: 4,
-//     desciption: "hello",
-//   },
-// ];
+import DataTable from "@/components/ui/dataTable/DataTable";
+import { Button } from "@/components/ui/button";
+import { apartmentManagementApi } from "@/services/privateApi/landlordApi";
+import type { Apartment } from "@/types/apartment";
+import {
+  type CreateApartmentFormData,
+  type UpdateApartmentFormData,
+} from "@/schemas/apartmentSchema";
+import { useCallback, useEffect, useState } from "react";
+import { ApartmentColumns } from "./components/ApartmentColumns";
+import ApartmentForm from "./components/ApartmentForm";
+import { toast } from "sonner";
 
 function ApartmentManagement() {
+  const [apartmentList, setApartmentList] = useState<Apartment[]>([]);
+  const [page, setPage] = useState<number>(1);
+  const [pageSize] = useState<number>(5);
+  const [total, setTotal] = useState<number>(0);
+  const [search] = useState<string>("");
+  const [sortBy] = useState<string>("");
+  const [sortOrder] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const [isFormOpen, setIsFormOpen] = useState<boolean>(false);
+  const [formMode, setFormMode] = useState<"create" | "update">("create");
+  const [selectedApartment, setSelectedApartment] = useState<Apartment | null>(
+    null,
+  );
+
+  const fetchApartmentList = useCallback(async () => {
+    setLoading(true);
+    try {
+      const response = await apartmentManagementApi.getApartments({
+        page,
+        pageSize,
+        search,
+        sortBy,
+        sortOrder,
+      });
+      setApartmentList(response.data.items);
+      setTotal(response.data.totalCount);
+    } catch (error: unknown) {
+      console.log(error);
+      toast.error("Failed to fetch apartments");
+    } finally {
+      setLoading(false);
+    }
+  }, [page, pageSize, search, sortBy, sortOrder]);
+
+  useEffect(() => {
+    fetchApartmentList();
+  }, [fetchApartmentList]);
+
+  const handlePageChange = (newPage: number) => {
+    setPage(newPage);
+  };
+
+  const handleAddNew = () => {
+    setFormMode("create");
+    setSelectedApartment(null);
+    setIsFormOpen(true);
+  };
+
+  const handleEdit = (apartment: Apartment) => {
+    setFormMode("update");
+    setSelectedApartment(apartment);
+    setIsFormOpen(true);
+  };
+
+  const handleCreateApartment = async (
+    data: CreateApartmentFormData | UpdateApartmentFormData,
+  ) => {
+    try {
+      await apartmentManagementApi.createApartment(data as unknown as FormData);
+      console.log(data);
+
+      toast.success("Apartment created successfully");
+      fetchApartmentList();
+    } catch (error: unknown) {
+      console.log(error);
+      const errorMessage = error instanceof Error ? error.message : "Failed to create apartment";
+      toast.error(errorMessage);
+      throw error;
+    }
+  };
+
+  const handleUpdateApartment = async (
+    data: CreateApartmentFormData | UpdateApartmentFormData,
+  ) => {
+    if (!selectedApartment) return;
+
+    try {
+      await apartmentManagementApi.updateApartment(
+        data,
+        selectedApartment.apartmentId,
+      );
+      toast.success("Apartment updated successfully");
+      fetchApartmentList();
+    } catch (error: unknown) {
+      console.log(error);
+      const errorMessage = error instanceof Error ? error.message : "Failed to update apartment";
+      toast.error(errorMessage);
+      throw error;
+    }
+  };
+
+  const handleDeleteApartment = async (apartmentId: string) => {
+    try {
+      await apartmentManagementApi.deleteApartment(apartmentId);
+      toast.success("Apartment deleted successfully");
+      fetchApartmentList();
+    } catch (error: unknown) {
+      console.log(error);
+      const errorMessage = error instanceof Error ? error.message : "Failed to delete apartment";
+      toast.error(errorMessage);
+    }
+  };
+
   return (
-    <div>
-      <div className="flex justify-end mb-10">
-        <AddApartmentDialog />
+    <div className="space-y-4">
+      <div className="flex justify-end mb-4">
+        <Button onClick={handleAddNew} className="cursor-pointer">
+          Add New Apartment
+        </Button>
       </div>
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {/* {data.map((d) => (
-          <ApartmentCard
-            key={d.id}
-            
-            image={d.image}
-            location={d.location}
-            name={d.name}
-            price={d.price}
-            rate={d.rate}
-          />
-        ))} */}
-      </div>
+
+      <DataTable
+        columns={ApartmentColumns(handleDeleteApartment, handleEdit)}
+        data={apartmentList}
+        limit={pageSize}
+        loading={loading}
+        page={page}
+        total={total}
+        onPageChange={handlePageChange}
+      />
+
+      <ApartmentForm
+        isOpen={isFormOpen}
+        onClose={() => setIsFormOpen(false)}
+        onSubmit={
+          formMode === "create" ? handleCreateApartment : handleUpdateApartment
+        }
+        apartment={selectedApartment}
+        mode={formMode}
+      />
     </div>
   );
 }
