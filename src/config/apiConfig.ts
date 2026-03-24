@@ -5,16 +5,10 @@ const BASE_URL = import.meta.env.VITE_BASE_API_URL
 
 const publicApi = axios.create({
     baseURL: BASE_URL,
-    headers: {
-    'Content-Type': 'application/json'
-  }
 })
 
 const privateApi = axios.create({
-    baseURL: BASE_URL,
-    headers: {
-    'Content-Type': 'application/json'
-  }
+    baseURL: BASE_URL
 })
 
 privateApi.interceptors.request.use((config) => {

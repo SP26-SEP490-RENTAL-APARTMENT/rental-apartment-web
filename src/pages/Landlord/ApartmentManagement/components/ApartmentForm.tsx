@@ -1,0 +1,412 @@
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  createApartmentSchema,
+  updateApartmentSchema,
+  type CreateApartmentFormData,
+  type UpdateApartmentFormData,
+} from "@/schemas/apartmentSchema";
+import type { Apartment } from "@/types/apartment";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+
+export interface ApartmentFormProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onSubmit: (
+    data: CreateApartmentFormData | UpdateApartmentFormData,
+  ) => Promise<void>;
+  apartment: Partial<Apartment> | null;
+  mode: "create" | "update";
+}
+
+function ApartmentForm({
+  isOpen,
+  onClose,
+  onSubmit,
+  apartment,
+  mode,
+}: ApartmentFormProps) {
+  const isCreate = mode === "create";
+  const schema = isCreate ? createApartmentSchema : updateApartmentSchema;
+
+  const [preview, setPreview] = useState<string[]>([]);
+  const [selectedFiles, setSelectedFiles] = useState<FileList | null>(null);
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm({
+    resolver: zodResolver(schema),
+    mode: "onTouched",
+    defaultValues: isCreate
+      ? {
+          title: "",
+          description: "",
+          maxOccupants: 1,
+          isPetAllowed: false,
+          address: "",
+          district: "",
+          city: "",
+          latitude: 0,
+          longitude: 0,
+          basePricePerNight: 0,
+        }
+      : undefined,
+  });
+
+  // Reset form when dialog opens/closes or apartment changes
+  useEffect(() => {
+    if (!isOpen) {
+      return;
+    }
+
+    if (isCreate) {
+      reset({
+        title: "",
+        description: "",
+        maxOccupants: 1,
+        isPetAllowed: false,
+        address: "",
+        district: "",
+        city: "",
+        latitude: 0,
+        longitude: 0,
+        basePricePerNight: 0,
+      });
+      queueMicrotask(() => {
+        setPreview([]);
+        setSelectedFiles(null);
+      });
+    } else if (apartment) {
+      reset({
+        title: apartment.title || "",
+        description: apartment.description || "",
+        maxOccupants: apartment.maxOccupants || 1,
+        isPetAllowed: apartment.isPetAllowed || false,
+        address: apartment.address || "",
+        district: apartment.district || "",
+        city: apartment.city || "",
+        latitude: apartment.latitude || 0,
+        longitude: apartment.longitude || 0,
+        basePricePerNight: apartment.basePricePerNight || 0,
+      });
+      queueMicrotask(() => {
+        setPreview(apartment.photos || []);
+        setSelectedFiles(null);
+      });
+    }
+  }, [apartment, mode, reset, isCreate, isOpen]);
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+    if (files) {
+      setSelectedFiles(files);
+      // Create preview URLs
+      const previews = Array.from(files).map((file) =>
+        URL.createObjectURL(file),
+      );
+      setPreview(previews);
+    }
+  };
+
+  const handleFormSubmit = async (
+    data: CreateApartmentFormData | UpdateApartmentFormData,
+  ) => {
+    try {
+      if (isCreate) {
+        // Create mode: use FormData for file upload
+        const formData = new FormData();
+
+        // Add form fields
+        formData.append("title", String(data.title));
+        formData.append("description", String(data.description));
+        formData.append("maxOccupants", String(data.maxOccupants));
+        formData.append("isPetAllowed", String(data.isPetAllowed));
+        formData.append("address", String(data.address));
+        formData.append("district", String(data.district));
+        formData.append("city", String(data.city));
+        formData.append("latitude", String(data.latitude));
+        formData.append("longitude", String(data.longitude));
+        formData.append("basePricePerNight", String(data.basePricePerNight));
+
+        // Add photos
+        if (selectedFiles) {
+          Array.from(selectedFiles).forEach((file) => {
+            formData.append("photos", file);
+          });
+        }
+
+        await onSubmit(
+          formData as unknown as
+            | CreateApartmentFormData
+            | UpdateApartmentFormData,
+        );
+      } else {
+        // Update mode: use regular form data (JSON)
+        await onSubmit(data);
+      }
+
+      reset();
+      setPreview([]);
+      setSelectedFiles(null);
+      onClose();
+    } catch {
+      // Error handling is done in the parent component
+    }
+  };
+
+  const handleClose = () => {
+    reset();
+    setPreview([]);
+    setSelectedFiles(null);
+    onClose();
+  };
+
+  return (
+    <Dialog open={isOpen} onOpenChange={handleClose}>
+      <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle>
+            {isCreate ? "Add New Apartment" : "Edit Apartment"}
+          </DialogTitle>
+        </DialogHeader>
+
+        <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
+          <div className="grid gap-4 py-4">
+            {/* TITLE */}
+            <div className="grid gap-2">
+              <Label htmlFor="title">Title *</Label>
+              <Input
+                id="title"
+                placeholder="Apartment title"
+                {...register("title")}
+              />
+              {errors.title && (
+                <p className="text-sm text-destructive">
+                  {errors.title.message}
+                </p>
+              )}
+            </div>
+
+            {/* DESCRIPTION */}
+            <div className="grid gap-2">
+              <Label htmlFor="description">Description *</Label>
+              <Textarea
+                id="description"
+                placeholder="Apartment description"
+                {...register("description")}
+              />
+              {errors.description && (
+                <p className="text-sm text-destructive">
+                  {errors.description.message}
+                </p>
+              )}
+            </div>
+
+            {/* GRID: MAX OCCUPANTS & PRICE */}
+            <div className="grid grid-cols-2 gap-4">
+              <div className="grid gap-2">
+                <Label htmlFor="maxOccupants">Max Occupants *</Label>
+                <Input
+                  id="maxOccupants"
+                  type="number"
+                  placeholder="10"
+                  {...register("maxOccupants", { valueAsNumber: true })}
+                />
+                {errors.maxOccupants && (
+                  <p className="text-sm text-destructive">
+                    {errors.maxOccupants.message}
+                  </p>
+                )}
+              </div>
+
+              <div className="grid gap-2">
+                <Label htmlFor="basePricePerNight">
+                  Base Price per Night *
+                </Label>
+                <Input
+                  id="basePricePerNight"
+                  type="number"
+                  placeholder="100000"
+                  {...register("basePricePerNight", { valueAsNumber: true })}
+                />
+                {errors.basePricePerNight && (
+                  <p className="text-sm text-destructive">
+                    {errors.basePricePerNight.message}
+                  </p>
+                )}
+              </div>
+            </div>
+
+            {/* ADDRESS */}
+            <div className="grid gap-2">
+              <Label htmlFor="address">Address *</Label>
+              <Input
+                id="address"
+                placeholder="Street address"
+                {...register("address")}
+              />
+              {errors.address && (
+                <p className="text-sm text-destructive">
+                  {errors.address.message}
+                </p>
+              )}
+            </div>
+
+            {/* GRID: DISTRICT & CITY */}
+            <div className="grid grid-cols-2 gap-4">
+              <div className="grid gap-2">
+                <Label htmlFor="district">District *</Label>
+                <Input
+                  id="district"
+                  placeholder="District"
+                  {...register("district")}
+                />
+                {errors.district && (
+                  <p className="text-sm text-destructive">
+                    {errors.district.message}
+                  </p>
+                )}
+              </div>
+
+              <div className="grid gap-2">
+                <Label htmlFor="city">City *</Label>
+                <Input id="city" placeholder="City" {...register("city")} />
+                {errors.city && (
+                  <p className="text-sm text-destructive">
+                    {errors.city.message}
+                  </p>
+                )}
+              </div>
+            </div>
+
+            {/* GRID: LATITUDE & LONGITUDE */}
+            <div className="grid grid-cols-2 gap-4">
+              <div className="grid gap-2">
+                <Label htmlFor="latitude">Latitude *</Label>
+                <Input
+                  id="latitude"
+                  type="number"
+                  step="0.000001"
+                  placeholder="21.0285"
+                  {...register("latitude", { valueAsNumber: true })}
+                />
+                {errors.latitude && (
+                  <p className="text-sm text-destructive">
+                    {errors.latitude.message}
+                  </p>
+                )}
+              </div>
+
+              <div className="grid gap-2">
+                <Label htmlFor="longitude">Longitude *</Label>
+                <Input
+                  id="longitude"
+                  type="number"
+                  step="0.000001"
+                  placeholder="105.8542"
+                  {...register("longitude", { valueAsNumber: true })}
+                />
+                {errors.longitude && (
+                  <p className="text-sm text-destructive">
+                    {errors.longitude.message}
+                  </p>
+                )}
+              </div>
+            </div>
+
+            {/* PET ALLOWED */}
+            <div className="grid gap-2">
+              <Label
+                htmlFor="isPetAllowed"
+                className="flex items-center gap-3 cursor-pointer"
+              >
+                <input
+                  id="isPetAllowed"
+                  type="checkbox"
+                  className="w-4 h-4"
+                  {...register("isPetAllowed")}
+                />
+                <span>Allow pets</span>
+              </Label>
+            </div>
+
+            {/* PHOTOS - ONLY FOR CREATE */}
+            {isCreate && (
+              <div className="grid gap-2">
+                <Label htmlFor="photos">Upload Photos</Label>
+                <Input
+                  id="photos"
+                  type="file"
+                  multiple
+                  accept="image/*"
+                  onChange={handleFileChange}
+                />
+                <p className="text-xs text-muted-foreground">
+                  You can upload multiple photos. Only available when creating.
+                </p>
+              </div>
+            )}
+
+            {/* PHOTO PREVIEW */}
+            {preview.length > 0 && (
+              <div className="grid gap-2">
+                <Label>Photo Preview</Label>
+                <div className="grid grid-cols-3 gap-2">
+                  {preview.map((src, idx) => (
+                    <div
+                      key={idx}
+                      className="w-full h-24 rounded-lg overflow-hidden bg-muted"
+                    >
+                      <img
+                        src={src}
+                        alt={`preview-${idx}`}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+
+          <DialogFooter>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={handleClose}
+              disabled={isSubmitting}
+            >
+              Cancel
+            </Button>
+
+            <Button type="submit" disabled={isSubmitting}>
+              {isSubmitting
+                ? isCreate
+                  ? "Creating..."
+                  : "Updating..."
+                : isCreate
+                  ? "Create Apartment"
+                  : "Update Apartment"}
+            </Button>
+          </DialogFooter>
+        </form>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+export default ApartmentForm;

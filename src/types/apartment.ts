@@ -1,3 +1,5 @@
+import type { Amenity } from "./amenity";
+
 export interface Apartment {
   apartmentId: string;
   landlordId: string;
@@ -15,6 +17,7 @@ export interface Apartment {
   createdAt: string;
   photos: string[];
   room: Room;
+  amenities: Amenity[];
 }
 
 export interface Room {
