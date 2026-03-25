@@ -77,3 +77,19 @@ export const amenityManagementApi = {
   ): Promise<ApiResponse<null>> =>
     apiConfig.privateApi.put(`/amenities/${amenityId}`, data),
 };
+
+export const nearbyAttractionManagementApi = {
+  getAllNearbyAttractions: (
+    params: ParamsProp,
+  ): Promise<ApiResponse<responseData<Amenity>>> =>
+    apiConfig.privateApi.get("/amenities", { params }),
+  deleteNearbyAttraction: (amenityId: string): Promise<ApiResponse<null>> =>
+    apiConfig.privateApi.delete(`/amenities/${amenityId}`),
+  createNearbyAttraction: (data: CreateAmenityFormData): Promise<ApiResponse<null>> =>
+    apiConfig.privateApi.post("/amenities", data),
+  updateNearbyAttraction: (
+    amenityId: string,
+    data: Partial<Amenity>,
+  ): Promise<ApiResponse<null>> =>
+    apiConfig.privateApi.put(`/amenities/${amenityId}`, data),
+};

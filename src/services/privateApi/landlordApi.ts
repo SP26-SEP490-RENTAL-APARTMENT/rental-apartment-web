@@ -14,4 +14,6 @@ export const apartmentManagementApi = {
         apiConfig.privateApi.put(`/apartments/${id}`, data),
     deleteApartment: (id: string): Promise<ApiResponse<null>> =>
         apiConfig.privateApi.delete(`/apartments/${id}`),
+    addAmenityToApartment: (apartmentId: string, amenityIds: string[]): Promise<ApiResponse<null>> =>
+        apiConfig.privateApi.post(`/apartments/${apartmentId}/amenities`, amenityIds)
 }

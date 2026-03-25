@@ -1,7 +1,7 @@
 import DataTable from "@/components/ui/dataTable/DataTable";
 import { amenityManagementApi } from "@/services/privateApi/adminApi";
 import type { Amenity } from "@/types/amenity";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { AmenityColumns } from "./components/AmenityColumns";
 import { toast } from "sonner";
 import type {
@@ -12,49 +12,31 @@ import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import AmenityForm from "./components/AmenityForm";
 import { useTranslation } from "react-i18next";
+import useAmenity from "@/hooks/useAmenity";
 
 function AmenityManagement() {
-  const {t: amemityTranslate} = useTranslation("amenity");
-  const [amenities, setAmenities] = useState<Amenity[]>([]);
+  const { t: amemityTranslate } = useTranslation("amenity");
   const [page, setPage] = useState(1);
-  const [total, setTotal] = useState(0);
   const [pageSize] = useState(5);
   const [sortBy] = useState<keyof Amenity>("amenityId");
   const [sortOrder] = useState<"asc" | "desc">("asc");
   const [search] = useState("");
-  const [loading, setLoading] = useState(false);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [selectedAmenity, setSelectedAmenity] = useState<Amenity | null>(null);
   const [formMode, setFormMode] = useState<"create" | "update">("create");
 
-  const fetchAmeneties = async () => {
-    setLoading(true);
-    try {
-      const response = await amenityManagementApi.getAllAmenities({
-        page,
-        pageSize,
-        search,
-        sortBy,
-        sortOrder,
-      });
-      const data = response.data.data.items;
-      setTotal(response.data.data.totalCount);
-      setAmenities(data);
-    } catch (error) {
-      console.error("Error fetching amenities:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-  useEffect(() => {
-    fetchAmeneties();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page, pageSize, search, sortBy, sortOrder]);
+  const { amenities, total, loading, refetch } = useAmenity({
+    page,
+    pageSize,
+    search,
+    sortBy,
+    sortOrder,
+  });
 
   const handleDeleteAmenity = async (amenityId: string) => {
     try {
       await amenityManagementApi.deleteAmenity(amenityId);
-      fetchAmeneties();
+      refetch();
       toast.success("Amenity deleted successfully");
     } catch (error) {
       toast.error("Failed to delete amenity");
@@ -64,7 +46,7 @@ function AmenityManagement() {
   const handleCreateAmenity = async (data: CreateAmenityFormData) => {
     try {
       await amenityManagementApi.createAmenity(data);
-      fetchAmeneties();
+      refetch();
       toast.success("Amenity created successfully");
     } catch (error) {
       toast.error("Failed to create amenity");
@@ -78,7 +60,7 @@ function AmenityManagement() {
         selectedAmenity?.amenityId,
         data,
       );
-      fetchAmeneties();
+      refetch();
       toast.success("Amenity update successfully");
     } catch (error) {
       toast.error("Failed to update amenity");
