@@ -21,6 +21,7 @@ export const ADMIN_ROUTES = {
   USERS: "/admin/users",
   SUBSCRIPTION_PLANS: "/admin/subscription-plans",
   AMENITIES: "/admin/amenities",
+  NEARBY_ATTRACTIONS: "/admin/nearby-attractions",
 } as const;
 
 // Landlord Routes
@@ -57,6 +58,7 @@ export const ROUTES = {
   ADMIN_USERS: ADMIN_ROUTES.USERS,
   ADMIN_SUBSCRIPTION_PLANS: ADMIN_ROUTES.SUBSCRIPTION_PLANS,
   ADMIN_AMENITIES: ADMIN_ROUTES.AMENITIES,
+  ADMIN_NEARBY_ATTRACTIONS: ADMIN_ROUTES.NEARBY_ATTRACTIONS,
 
   // Landlord
   LANDLORD_DASHBOARD: LANDLORD_ROUTES.DASHBOARD,
