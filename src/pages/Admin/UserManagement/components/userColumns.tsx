@@ -14,19 +14,10 @@ export const userColumns = (
     accessorKey: "email",
     header: "Email",
   },
-  // {
-  //   accessorKey: "phone",
-  //   header: "Phone",
-  // },
   {
     accessorKey: "role",
     header: "Role",
   },
-  // {
-  //   accessorKey: "identityVerified",
-  //   header: "Verified",
-  //   cell: ({ getValue }) => (getValue() ? "Yes" : "No"),
-  // },
   {
     id: "actions",
     header: "Actions",
