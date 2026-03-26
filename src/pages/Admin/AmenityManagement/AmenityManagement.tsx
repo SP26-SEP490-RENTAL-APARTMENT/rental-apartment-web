@@ -31,6 +31,7 @@ function AmenityManagement() {
     search,
     sortBy,
     sortOrder,
+    enable: true,
   });
 
   const handleDeleteAmenity = async (amenityId: string) => {

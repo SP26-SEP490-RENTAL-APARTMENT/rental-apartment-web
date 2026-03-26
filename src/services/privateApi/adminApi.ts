@@ -1,9 +1,8 @@
 import { apiConfig } from "@/config/apiConfig";
-import type {
-  CreateAmenityFormData,
-} from "@/schemas/amenitySchema";
+import type { CreateAmenityFormData } from "@/schemas/amenitySchema";
 import type { Amenity } from "@/types/amenity";
 import type { ApiResponse } from "@/types/api";
+import type { NearbyAttraction } from "@/types/nearbyAttraction";
 import type { PaginationResponse } from "@/types/paginationResponse";
 import type { ParamsProp } from "@/types/params";
 import type { SubscriptionPlan } from "@/types/subscriptionPlan";
@@ -11,7 +10,7 @@ import type { User } from "@/types/user";
 
 export interface responseData<T> {
   data: dataProp<T>;
-  
+
   pageSize: number;
   page: number;
 }
@@ -81,15 +80,17 @@ export const amenityManagementApi = {
 export const nearbyAttractionManagementApi = {
   getAllNearbyAttractions: (
     params: ParamsProp,
-  ): Promise<ApiResponse<responseData<Amenity>>> =>
-    apiConfig.privateApi.get("/amenities", { params }),
-  deleteNearbyAttraction: (amenityId: string): Promise<ApiResponse<null>> =>
-    apiConfig.privateApi.delete(`/amenities/${amenityId}`),
-  createNearbyAttraction: (data: CreateAmenityFormData): Promise<ApiResponse<null>> =>
-    apiConfig.privateApi.post("/amenities", data),
-  updateNearbyAttraction: (
-    amenityId: string,
-    data: Partial<Amenity>,
+  ): Promise<ApiResponse<PaginationResponse<NearbyAttraction>>> =>
+    apiConfig.privateApi.get("/NearbyAttraction", { params }),
+  deleteNearbyAttraction: (attractionId: string): Promise<ApiResponse<null>> =>
+    apiConfig.privateApi.delete(`/NearbyAttraction/${attractionId}`),
+  createNearbyAttraction: (
+    data: Partial<NearbyAttraction>,
   ): Promise<ApiResponse<null>> =>
-    apiConfig.privateApi.put(`/amenities/${amenityId}`, data),
+    apiConfig.privateApi.post("/NearbyAttraction", data),
+  updateNearbyAttraction: (
+    attractionId: string,
+    data: Partial<NearbyAttraction>,
+  ): Promise<ApiResponse<null>> =>
+    apiConfig.privateApi.put(`/NearbyAttraction/${attractionId}`, data),
 };

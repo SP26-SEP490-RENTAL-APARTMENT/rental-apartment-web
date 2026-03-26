@@ -29,6 +29,7 @@ import AdminLayout from "./components/layout/adminLayout/AdminLayout";
 import LandlordLayout from "./components/layout/landlordLayout/LandlordLayout";
 import TenantLayout from "./components/layout/tenantLayout/TenantLayout";
 import AmenityManagement from "./pages/Admin/AmenityManagement/AmenityManagement";
+import NearbyAttractions from "./pages/Admin/NearbyAttractions/NearbyAttractions";
 
 /**
  * App Component - Simplified routing setup
@@ -81,6 +82,14 @@ export default function App() {
             element={
               <ProtectedRoute requiredRoles={["admin"]}>
                 <AmenityManagement />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path={ROUTES.ADMIN_NEARBY_ATTRACTIONS}
+            element={
+              <ProtectedRoute requiredRoles={["admin"]}>
+                <NearbyAttractions />
               </ProtectedRoute>
             }
           />
