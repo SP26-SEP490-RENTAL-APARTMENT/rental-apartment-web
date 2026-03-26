@@ -2,27 +2,21 @@ import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import { ROUTES } from "./constants/routes";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 
-// Pages - Auth
 import Login from "./pages/Login/Login";
 import Register from "./pages/Register/Register";
 
-// Pages - Public
 import Home from "./pages/Home/Home";
 import ApartmentDetail from "./pages/ApartmentDetail/ApartmentDetail";
 
-// Pages - Admin
 import AdminDashboard from "./pages/Admin/AdminDashboard/AdminDashboard";
 import UserManagement from "./pages/Admin/UserManagement/UserManagement";
 import SubsciptionPlan from "./pages/Admin/SubsciptionPlan/SubsciptionPlan";
 
-// Pages - Landlord
 import LandlordDashboard from "./pages/Landlord/LandlordDasboard/LandlordDashboard";
 import ApartmentManagement from "./pages/Landlord/ApartmentManagement/ApartmentManagement";
 
-// Pages - Tenant
 import Profile from "./pages/Tenant/Profile/Profile";
 
-// Layouts
 import AuthenLayout from "./components/layout/authenLayout/AuthenLayout";
 import UserLayout from "./components/layout/userLayout/UserLayout";
 import AdminLayout from "./components/layout/adminLayout/AdminLayout";
@@ -30,6 +24,7 @@ import LandlordLayout from "./components/layout/landlordLayout/LandlordLayout";
 import TenantLayout from "./components/layout/tenantLayout/TenantLayout";
 import AmenityManagement from "./pages/Admin/AmenityManagement/AmenityManagement";
 import NearbyAttractions from "./pages/Admin/NearbyAttractions/NearbyAttractions";
+import PackageItemManagement from "./pages/Admin/PackageItem/PackageItemManagement";
 
 /**
  * App Component - Simplified routing setup
@@ -90,6 +85,14 @@ export default function App() {
             element={
               <ProtectedRoute requiredRoles={["admin"]}>
                 <NearbyAttractions />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path={ROUTES.ADMIN_PACKAGE_ITEMS}
+            element={
+              <ProtectedRoute requiredRoles={["admin"]}>
+                <PackageItemManagement />
               </ProtectedRoute>
             }
           />

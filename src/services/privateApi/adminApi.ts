@@ -3,6 +3,7 @@ import type { CreateAmenityFormData } from "@/schemas/amenitySchema";
 import type { Amenity } from "@/types/amenity";
 import type { ApiResponse } from "@/types/api";
 import type { NearbyAttraction } from "@/types/nearbyAttraction";
+import type { PackageItem } from "@/types/package";
 import type { PaginationResponse } from "@/types/paginationResponse";
 import type { ParamsProp } from "@/types/params";
 import type { SubscriptionPlan } from "@/types/subscriptionPlan";
@@ -93,4 +94,20 @@ export const nearbyAttractionManagementApi = {
     data: Partial<NearbyAttraction>,
   ): Promise<ApiResponse<null>> =>
     apiConfig.privateApi.put(`/NearbyAttraction/${attractionId}`, data),
+};
+
+export const packageItemManagementApi = {
+  getAllPackageItems: (
+    params: ParamsProp,
+  ): Promise<ApiResponse<PaginationResponse<PackageItem>>> =>
+    apiConfig.privateApi.get("/PackageItem", { params }),
+  deletePackageItem: (packageItemId: string): Promise<ApiResponse<null>> =>
+    apiConfig.privateApi.delete(`/PackageItem/${packageItemId}`),
+  createPackageItem: (data: Partial<PackageItem>): Promise<ApiResponse<null>> =>
+    apiConfig.privateApi.post("/PackageItem", data),
+  updatePackageItem: (
+    packageItemId: string,
+    data: Partial<PackageItem>,
+  ): Promise<ApiResponse<null>> =>
+    apiConfig.privateApi.put(`/PackageItem/${packageItemId}`, data),
 };
