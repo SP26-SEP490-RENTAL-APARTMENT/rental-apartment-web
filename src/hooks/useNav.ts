@@ -36,6 +36,10 @@ export function useNav() {
       () => navigate(ROUTES.ADMIN_NEARBY_ATTRACTIONS),
       [navigate],
     ),
+    goAdminPackageItems: useCallback(
+      () => navigate(ROUTES.ADMIN_PACKAGE_ITEMS),
+      [navigate],
+    ),
 
     // Landlord
     goLandlordDashboard: useCallback(
