@@ -21,11 +21,23 @@ export function useNav() {
     // Specific shortcuts
     goHome: useCallback(() => navigate(ROUTES.HOME), [navigate]),
     goLogin: useCallback(() => navigate(ROUTES.LOGIN), [navigate]),
+
+    // Admin
     goAdminDashboard: useCallback(
       () => navigate(ROUTES.ADMIN_DASHBOARD),
       [navigate],
     ),
     goAdminUsers: useCallback(() => navigate(ROUTES.ADMIN_USERS), [navigate]),
+    goAdminAmenities: useCallback(
+      () => navigate(ROUTES.ADMIN_AMENITIES),
+      [navigate],
+    ),
+    goAdminNearbyAttractions: useCallback(
+      () => navigate(ROUTES.ADMIN_NEARBY_ATTRACTIONS),
+      [navigate],
+    ),
+
+    // Landlord
     goLandlordDashboard: useCallback(
       () => navigate(ROUTES.LANDLORD_DASHBOARD),
       [navigate],

@@ -3,6 +3,7 @@ import {
   User,
   Box,
   Blocks,
+  RollerCoaster,
 } from "lucide-react";
 
 export const adminNavList = [
@@ -26,24 +27,9 @@ export const adminNavList = [
     url: "/admin/amenities",
     icon: Blocks,
   },
-  // {
-  //   title: "Bookings",
-  //   url: "/admin/bookings",
-  //   icon: CalendarCheck,
-  // },
-  // {
-  //   title: "Earnings",
-  //   url: "/admin/earnings",
-  //   icon: Wallet,
-  // },
-  // {
-  //   title: "Messages",
-  //   url: "/admin/messages",
-  //   icon: MessageCircle,
-  // },
-  // {
-  //   title: "Settings",
-  //   url: "/admin/settings",
-  //   icon: Settings,
-  // },
+  {
+    title: "Nearby Attractions",
+    url: "/admin/nearby-attractions",
+    icon: RollerCoaster,
+  },
 ];
