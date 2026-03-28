@@ -78,7 +78,8 @@ function ApartmentManagement() {
       fetchApartmentList();
     } catch (error: unknown) {
       console.log(error);
-      const errorMessage = error instanceof Error ? error.message : "Failed to create apartment";
+      const errorMessage =
+        error instanceof Error ? error.message : "Failed to create apartment";
       toast.error(errorMessage);
       throw error;
     }
@@ -98,7 +99,8 @@ function ApartmentManagement() {
       fetchApartmentList();
     } catch (error: unknown) {
       console.log(error);
-      const errorMessage = error instanceof Error ? error.message : "Failed to update apartment";
+      const errorMessage =
+        error instanceof Error ? error.message : "Failed to update apartment";
       toast.error(errorMessage);
       throw error;
     }
@@ -111,8 +113,29 @@ function ApartmentManagement() {
       fetchApartmentList();
     } catch (error: unknown) {
       console.log(error);
-      const errorMessage = error instanceof Error ? error.message : "Failed to delete apartment";
+      const errorMessage =
+        error instanceof Error ? error.message : "Failed to delete apartment";
       toast.error(errorMessage);
+    }
+  };
+
+  const handleAddAmenity = async (
+    apartmentId: string,
+    selectedAmenities: string[],
+  ) => {
+    try {
+      await apartmentManagementApi.addAmenityToApartment(
+        apartmentId,
+        selectedAmenities,
+      );
+      toast.success("Amenities added successfully");
+      fetchApartmentList();
+    } catch (error: unknown) {
+      console.log(error);
+      const errorMessage =
+        error instanceof Error ? error.message : "Failed to add amenities";
+      toast.error(errorMessage);
+      throw error;
     }
   };
 
@@ -125,7 +148,11 @@ function ApartmentManagement() {
       </div>
 
       <DataTable
-        columns={ApartmentColumns(handleDeleteApartment, handleEdit)}
+        columns={ApartmentColumns(
+          handleDeleteApartment,
+          handleEdit,
+          handleAddAmenity,
+        )}
         data={apartmentList}
         limit={pageSize}
         loading={loading}

@@ -5,6 +5,7 @@ import ApartmentAction from "./ApartmentAction";
 export const ApartmentColumns = (
   onDelete: (id: string) => void,
   onEdit: (apartment: Apartment) => void,
+  onAddAmenity: (apartmentId: string, amenities: string[]) => Promise<void>,
 ): ColumnDef<Apartment>[] => [
   {
     accessorKey: "title",
@@ -28,7 +29,14 @@ export const ApartmentColumns = (
     header: "Actions",
     cell: ({ row }) => {
       const apartment = row.original;
-      return <ApartmentAction apartment={apartment} onEdit={onEdit} onDelete={onDelete}  />;
+      return (
+        <ApartmentAction
+          apartment={apartment}
+          onEdit={onEdit}
+          onDelete={onDelete}
+          onAddAmenity={onAddAmenity}
+        />
+      );
     },
   },
 ];
