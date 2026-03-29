@@ -119,6 +119,7 @@ function PackageManagement() {
         onSubmit={handleUpdatePackage}
         packages={selectedPackage}
         mode={formMode}
+        apartment={null}
       />
       <Dialog
         open={apartmentDetailDialogOpen}

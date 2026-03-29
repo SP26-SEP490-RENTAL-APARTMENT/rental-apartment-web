@@ -2,7 +2,6 @@ import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -16,6 +15,7 @@ import {
   type CreatePackageFormData,
   type UpdatePackageFormData,
 } from "@/schemas/packageSchema";
+import type { Apartment } from "@/types/apartment";
 import type { Package } from "@/types/package";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
@@ -27,8 +27,16 @@ export interface Props {
   onSubmit: (data: CreatePackageFormData | UpdatePackageFormData) => void;
   packages: Partial<Package> | null;
   mode: "create" | "update";
+  apartment: Apartment | null;
 }
-function PackageForm({ isOpen, onSubmit, onClose, packages, mode }: Props) {
+function PackageForm({
+  isOpen,
+  onSubmit,
+  onClose,
+  packages,
+  mode,
+  apartment,
+}: Props) {
   const isCreate = mode === "create";
   const schema = isCreate ? createPackageSchema : updatePackageSchema;
   const {
@@ -45,12 +53,12 @@ function PackageForm({ isOpen, onSubmit, onClose, packages, mode }: Props) {
   const watchedIsActive = watch("isActive");
 
   useEffect(() => {
-    if (isCreate) {
+    if (isCreate && apartment) {
       reset({
         name: "",
         description: "",
         price: 0,
-        apartmentId: "",
+        apartmentId: apartment?.apartmentId || "",
         currency: "",
         maxBookings: 0,
         isActive: true,
@@ -93,18 +101,12 @@ function PackageForm({ isOpen, onSubmit, onClose, packages, mode }: Props) {
             {isCreate ? "Create Package" : "Edit Package"}
           </DialogTitle>
         </DialogHeader>
-        <DialogDescription>Hello</DialogDescription>
-
         <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
           <div className="grid gap-4 py-4">
             {/* NAME */}
             <div className="grid gap-2">
               <Label>Apartment</Label>
-              <Input
-                disabled={!isCreate}
-                type="text"
-                {...register("apartmentId")}
-              />
+              <Input disabled type="text" {...register("apartmentId")} />
               {errors.apartmentId && (
                 <p className="text-sm text-destructive">
                   {errors.apartmentId.message}

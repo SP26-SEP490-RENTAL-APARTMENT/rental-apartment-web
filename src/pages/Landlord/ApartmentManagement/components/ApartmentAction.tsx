@@ -9,7 +9,15 @@ import {
 } from "@/components/ui/dialog";
 import { Checkbox } from "@/components/ui/checkbox";
 import type { Apartment } from "@/types/apartment";
-import { Blocks, Eye, Trash2, UserRoundPen, X, Loader2 } from "lucide-react";
+import {
+  Blocks,
+  Eye,
+  Trash2,
+  UserRoundPen,
+  X,
+  Loader2,
+  Package,
+} from "lucide-react";
 import { useState } from "react";
 import useAmenity from "@/hooks/useAmenity";
 import ApartmentDetailDialog from "@/components/ui/apartmentDetailDialog/ApartmentDetailDialog";
@@ -19,8 +27,15 @@ interface Props {
   onDelete: (id: string) => void;
   onEdit: (apartment: Apartment) => void;
   onAddAmenity: (apartmentId: string, amenities: string[]) => Promise<void>;
+  onAddPackage: (apartment: Apartment) => void;
 }
-function ApartmentAction({ apartment, onEdit, onDelete, onAddAmenity }: Props) {
+function ApartmentAction({
+  apartment,
+  onEdit,
+  onDelete,
+  onAddAmenity,
+  onAddPackage,
+}: Props) {
   const [selectedAmenities, setSelectedAmenities] = useState<string[]>([]);
   const [loadingSubmit, setLoadingSubmit] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -236,6 +251,15 @@ function ApartmentAction({ apartment, onEdit, onDelete, onAddAmenity }: Props) {
           </div>
         </DialogContent>
       </Dialog>
+
+      <Button
+        size="sm"
+        variant="outline"
+        onClick={() => onAddPackage(apartment)}
+        className="cursor-pointer"
+      >
+        <Package />
+      </Button>
     </div>
   );
 }

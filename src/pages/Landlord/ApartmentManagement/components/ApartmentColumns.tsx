@@ -6,6 +6,7 @@ export const ApartmentColumns = (
   onDelete: (id: string) => void,
   onEdit: (apartment: Apartment) => void,
   onAddAmenity: (apartmentId: string, amenities: string[]) => Promise<void>,
+  onAddPackage: (apartment: Apartment) => void,
 ): ColumnDef<Apartment>[] => [
   {
     accessorKey: "title",
@@ -35,6 +36,7 @@ export const ApartmentColumns = (
           onEdit={onEdit}
           onDelete={onDelete}
           onAddAmenity={onAddAmenity}
+          onAddPackage={onAddPackage}
         />
       );
     },
