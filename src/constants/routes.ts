@@ -23,6 +23,7 @@ export const ADMIN_ROUTES = {
   AMENITIES: "/admin/amenities",
   NEARBY_ATTRACTIONS: "/admin/nearby-attractions",
   PACKAGE_ITEMS: "/admin/package-items",
+  PACKAGE: '/admin/packages',
 } as const;
 
 // Landlord Routes
@@ -61,6 +62,7 @@ export const ROUTES = {
   ADMIN_AMENITIES: ADMIN_ROUTES.AMENITIES,
   ADMIN_NEARBY_ATTRACTIONS: ADMIN_ROUTES.NEARBY_ATTRACTIONS,
   ADMIN_PACKAGE_ITEMS: ADMIN_ROUTES.PACKAGE_ITEMS,
+  ADMIN_PACKAGE: ADMIN_ROUTES.PACKAGE,
 
   // Landlord
   LANDLORD_DASHBOARD: LANDLORD_ROUTES.DASHBOARD,

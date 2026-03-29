@@ -10,6 +10,9 @@ import { useCallback, useEffect, useState } from "react";
 import { ApartmentColumns } from "./components/ApartmentColumns";
 import ApartmentForm from "./components/ApartmentForm";
 import { toast } from "sonner";
+import type { CreatePackageFormData, UpdatePackageFormData } from "@/schemas/packageSchema";
+import { packageManagementApi } from "@/services/privateApi/adminApi";
+import PackageForm from "@/pages/Admin/PackageManagement/components/PackageForm";
 
 function ApartmentManagement() {
   const [apartmentList, setApartmentList] = useState<Apartment[]>([]);
@@ -26,6 +29,13 @@ function ApartmentManagement() {
   const [selectedApartment, setSelectedApartment] = useState<Apartment | null>(
     null,
   );
+
+  const [isPackageFormOpen, setIsPackageFormOpen] = useState<boolean>(false);
+  const [packageFormMode, setPackageFormMode] = useState<"create" | "update">(
+    "create",
+  );
+  const [selectedApartmentForPackage, setSelectedApartmentForPackage] =
+    useState<Apartment | null>(null);
 
   const fetchApartmentList = useCallback(async () => {
     setLoading(true);
@@ -47,26 +57,6 @@ function ApartmentManagement() {
     }
   }, [page, pageSize, search, sortBy, sortOrder]);
 
-  useEffect(() => {
-    fetchApartmentList();
-  }, [fetchApartmentList]);
-
-  const handlePageChange = (newPage: number) => {
-    setPage(newPage);
-  };
-
-  const handleAddNew = () => {
-    setFormMode("create");
-    setSelectedApartment(null);
-    setIsFormOpen(true);
-  };
-
-  const handleEdit = (apartment: Apartment) => {
-    setFormMode("update");
-    setSelectedApartment(apartment);
-    setIsFormOpen(true);
-  };
-
   const handleCreateApartment = async (
     data: CreateApartmentFormData | UpdateApartmentFormData,
   ) => {
@@ -78,7 +68,8 @@ function ApartmentManagement() {
       fetchApartmentList();
     } catch (error: unknown) {
       console.log(error);
-      const errorMessage = error instanceof Error ? error.message : "Failed to create apartment";
+      const errorMessage =
+        error instanceof Error ? error.message : "Failed to create apartment";
       toast.error(errorMessage);
       throw error;
     }
@@ -98,7 +89,8 @@ function ApartmentManagement() {
       fetchApartmentList();
     } catch (error: unknown) {
       console.log(error);
-      const errorMessage = error instanceof Error ? error.message : "Failed to update apartment";
+      const errorMessage =
+        error instanceof Error ? error.message : "Failed to update apartment";
       toast.error(errorMessage);
       throw error;
     }
@@ -111,9 +103,73 @@ function ApartmentManagement() {
       fetchApartmentList();
     } catch (error: unknown) {
       console.log(error);
-      const errorMessage = error instanceof Error ? error.message : "Failed to delete apartment";
+      const errorMessage =
+        error instanceof Error ? error.message : "Failed to delete apartment";
       toast.error(errorMessage);
     }
+  };
+
+  const handleAddAmenity = async (
+    apartmentId: string,
+    selectedAmenities: string[],
+  ) => {
+    try {
+      await apartmentManagementApi.addAmenityToApartment(
+        apartmentId,
+        selectedAmenities,
+      );
+      toast.success("Amenities added successfully");
+      fetchApartmentList();
+    } catch (error: unknown) {
+      console.log(error);
+      const errorMessage =
+        error instanceof Error ? error.message : "Failed to add amenities";
+      toast.error(errorMessage);
+      throw error;
+    }
+  };
+  const handleAddPackage = async (data: CreatePackageFormData | UpdatePackageFormData) => {
+    try {
+      const packageData = {
+        ...data,
+        apartmentId: selectedApartmentForPackage?.apartmentId,
+      };
+      await packageManagementApi.createPackage(packageData);
+      toast.success("Package created successfully");
+      setIsPackageFormOpen(false);
+      setSelectedApartmentForPackage(null);
+      fetchApartmentList();
+    } catch (error: unknown) {
+      console.log(error);
+      const errorMessage =
+        error instanceof Error ? error.message : "Failed to create package";
+      toast.error(errorMessage);
+    }
+  };
+
+  useEffect(() => {
+    fetchApartmentList();
+  }, [fetchApartmentList]);
+
+  const handlePageChange = (newPage: number) => {
+    setPage(newPage);
+  };
+  const handleAddNew = () => {
+    setFormMode("create");
+    setSelectedApartment(null);
+    setIsFormOpen(true);
+  };
+
+  const handleEdit = (apartment: Apartment) => {
+    setFormMode("update");
+    setSelectedApartment(apartment);
+    setIsFormOpen(true);
+  };
+  const triggerAddPackage = (apartment: Apartment) => {
+    setPackageFormMode("create");
+    setSelectedApartmentForPackage(apartment);
+    setIsPackageFormOpen(true);
+    console.log(apartment.apartmentId);
   };
 
   return (
@@ -125,7 +181,12 @@ function ApartmentManagement() {
       </div>
 
       <DataTable
-        columns={ApartmentColumns(handleDeleteApartment, handleEdit)}
+        columns={ApartmentColumns(
+          handleDeleteApartment,
+          handleEdit,
+          handleAddAmenity,
+          triggerAddPackage,
+        )}
         data={apartmentList}
         limit={pageSize}
         loading={loading}
@@ -142,6 +203,22 @@ function ApartmentManagement() {
         }
         apartment={selectedApartment}
         mode={formMode}
+      />
+
+      <PackageForm
+        isOpen={isPackageFormOpen}
+        onClose={() => {
+          setIsPackageFormOpen(false);
+          setSelectedApartmentForPackage(null);
+        }}
+        mode={packageFormMode}
+        packages={
+          packageFormMode === "create"
+            ? { apartmentId: selectedApartmentForPackage?.apartmentId }
+            : null
+        }
+        onSubmit={handleAddPackage}
+        apartment={selectedApartmentForPackage}
       />
     </div>
   );
