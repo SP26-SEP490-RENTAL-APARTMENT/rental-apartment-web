@@ -5,6 +5,7 @@ import {
   Blocks,
   RollerCoaster,
   Ungroup,
+  Package,
 } from "lucide-react";
 
 export const adminNavList = [
@@ -32,6 +33,11 @@ export const adminNavList = [
     title: "Nearby Attractions",
     url: "/admin/nearby-attractions",
     icon: RollerCoaster,
+  },
+  {
+    title: "Package",
+    url: "/admin/packages",
+    icon: Package,
   },
   {
     title: "Package Items",

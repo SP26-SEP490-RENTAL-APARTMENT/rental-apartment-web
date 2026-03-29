@@ -25,6 +25,7 @@ import TenantLayout from "./components/layout/tenantLayout/TenantLayout";
 import AmenityManagement from "./pages/Admin/AmenityManagement/AmenityManagement";
 import NearbyAttractions from "./pages/Admin/NearbyAttractions/NearbyAttractions";
 import PackageItemManagement from "./pages/Admin/PackageItem/PackageItemManagement";
+import PackageManagement from "./pages/Admin/PackageManagement/PackageManagement";
 
 /**
  * App Component - Simplified routing setup
@@ -93,6 +94,14 @@ export default function App() {
             element={
               <ProtectedRoute requiredRoles={["admin"]}>
                 <PackageItemManagement />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path={ROUTES.ADMIN_PACKAGE}
+            element={
+              <ProtectedRoute requiredRoles={["admin"]}>
+                <PackageManagement />
               </ProtectedRoute>
             }
           />

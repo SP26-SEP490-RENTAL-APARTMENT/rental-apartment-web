@@ -40,6 +40,10 @@ export function useNav() {
       () => navigate(ROUTES.ADMIN_PACKAGE_ITEMS),
       [navigate],
     ),
+    goAdminPackage: useCallback(
+      () => navigate(ROUTES.ADMIN_PACKAGE),
+      [navigate],
+    ),
 
     // Landlord
     goLandlordDashboard: useCallback(
