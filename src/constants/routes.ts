@@ -30,6 +30,7 @@ export const ADMIN_ROUTES = {
 export const LANDLORD_ROUTES = {
   DASHBOARD: "/landlord/dashboard",
   APARTMENTS: "/landlord/apartments",
+  ROOMS: '/landlord/rooms',
 } as const;
 
 // Tenant Routes
@@ -67,6 +68,7 @@ export const ROUTES = {
   // Landlord
   LANDLORD_DASHBOARD: LANDLORD_ROUTES.DASHBOARD,
   LANDLORD_APARTMENTS: LANDLORD_ROUTES.APARTMENTS,
+  LANDLORD_ROOMS: LANDLORD_ROUTES.ROOMS,
 
   // Tenant
   TENANT_PROFILE: TENANT_ROUTES.PROFILE,

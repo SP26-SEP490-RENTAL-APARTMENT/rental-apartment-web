@@ -1,0 +1,11 @@
+{
+    "title": "Room Information",
+    "description": "Detailed information about the room, including amenities and features.",
+    "roomType": "Room Type",
+    "bedType": "Bed Type",
+    "size": "Size",
+    "bathroom": "Bathroom",
+    "privateBathroom": "Private Bathroom",
+    "sharedBathroom": "Shared Bathroom",
+    "createdAt": "Created At"
+}

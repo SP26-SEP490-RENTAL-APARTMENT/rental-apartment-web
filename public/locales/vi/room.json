@@ -1,0 +1,11 @@
+{
+    "title": "Thông Tin Phòng",
+    "description": "Detailed information about the room, including amenities and features.",
+    "roomType": "Loại Phòng",
+    "bedType": "Loại Giường",
+    "size": "Kích thước",
+    "bathroom": "Phòng tắm",
+    "privateBathroom": "Phòng tắm riêng",
+    "sharedBathroom": "Phòng tắm chung",
+    "createdAt": "Tạo lúc"
+}

@@ -26,6 +26,7 @@ import AmenityManagement from "./pages/Admin/AmenityManagement/AmenityManagement
 import NearbyAttractions from "./pages/Admin/NearbyAttractions/NearbyAttractions";
 import PackageItemManagement from "./pages/Admin/PackageItem/PackageItemManagement";
 import PackageManagement from "./pages/Admin/PackageManagement/PackageManagement";
+import RoomManagement from "./pages/Landlord/RoomManagement/RoomManagement";
 
 /**
  * App Component - Simplified routing setup
@@ -122,6 +123,14 @@ export default function App() {
             element={
               <ProtectedRoute requiredRoles={["landlord"]}>
                 <ApartmentManagement />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path={ROUTES.LANDLORD_ROOMS}
+            element={
+              <ProtectedRoute requiredRoles={["landlord"]}>
+                <RoomManagement />
               </ProtectedRoute>
             }
           />

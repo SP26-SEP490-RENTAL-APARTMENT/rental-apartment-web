@@ -25,9 +25,14 @@ export interface Room {
   apartmentId: string;
   title: string;
   description: string;
-  roomType: string;
-  bedType: string;
+  roomType:
+    | "private_single"
+    | "private_double"
+    | "shared_bed"
+    | "studio"
+    | "other";
+  bedType: "single" | "double" | "queen" | "king" | "bunk" | "shared";
   sizeSqm: number;
-  isPrivateBathroom: string;
+  isPrivateBathroom: boolean;
   createdAt: string;
 }
