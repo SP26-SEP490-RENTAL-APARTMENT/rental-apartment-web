@@ -17,6 +17,7 @@ import {
   X,
   Loader2,
   Package,
+  Home,
 } from "lucide-react";
 import { useState } from "react";
 import useAmenity from "@/hooks/useAmenity";
@@ -28,6 +29,7 @@ interface Props {
   onEdit: (apartment: Apartment) => void;
   onAddAmenity: (apartmentId: string, amenities: string[]) => Promise<void>;
   onAddPackage: (apartment: Apartment) => void;
+  onCreateRoom: (apartment: Apartment) => void;
 }
 function ApartmentAction({
   apartment,
@@ -35,6 +37,7 @@ function ApartmentAction({
   onDelete,
   onAddAmenity,
   onAddPackage,
+  onCreateRoom,
 }: Props) {
   const [selectedAmenities, setSelectedAmenities] = useState<string[]>([]);
   const [loadingSubmit, setLoadingSubmit] = useState(false);
@@ -259,6 +262,15 @@ function ApartmentAction({
         className="cursor-pointer"
       >
         <Package />
+      </Button>
+
+      <Button
+        size="sm"
+        variant="outline"
+        onClick={() => onCreateRoom(apartment)}
+        className="cursor-pointer bg-blue-500 text-white"
+      >
+        <Home />
       </Button>
     </div>
   );

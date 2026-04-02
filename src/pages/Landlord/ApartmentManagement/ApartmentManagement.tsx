@@ -1,6 +1,9 @@
 import DataTable from "@/components/ui/dataTable/DataTable";
 import { Button } from "@/components/ui/button";
-import { apartmentManagementApi } from "@/services/privateApi/landlordApi";
+import {
+  apartmentManagementApi,
+  roomManagementApi,
+} from "@/services/privateApi/landlordApi";
 import type { Apartment } from "@/types/apartment";
 import {
   type CreateApartmentFormData,
@@ -10,9 +13,14 @@ import { useCallback, useEffect, useState } from "react";
 import { ApartmentColumns } from "./components/ApartmentColumns";
 import ApartmentForm from "./components/ApartmentForm";
 import { toast } from "sonner";
-import type { CreatePackageFormData, UpdatePackageFormData } from "@/schemas/packageSchema";
+import type {
+  CreatePackageFormData,
+  UpdatePackageFormData,
+} from "@/schemas/packageSchema";
 import { packageManagementApi } from "@/services/privateApi/adminApi";
 import PackageForm from "@/pages/Admin/PackageManagement/components/PackageForm";
+import RoomForm from "../RoomManagement/components/RoomForm";
+import type { CreateRoomFormData, UpdateRoomFormData } from "@/schemas/roomSchema";
 
 function ApartmentManagement() {
   const [apartmentList, setApartmentList] = useState<Apartment[]>([]);
@@ -24,18 +32,23 @@ function ApartmentManagement() {
   const [sortOrder] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
 
-  const [isFormOpen, setIsFormOpen] = useState<boolean>(false);
   const [formMode, setFormMode] = useState<"create" | "update">("create");
-  const [selectedApartment, setSelectedApartment] = useState<Apartment | null>(
-    null,
+  const [roomFormMode, setRoomFormMode] = useState<"create" | "update">(
+    "create",
   );
-
-  const [isPackageFormOpen, setIsPackageFormOpen] = useState<boolean>(false);
   const [packageFormMode, setPackageFormMode] = useState<"create" | "update">(
     "create",
   );
+  const [selectedApartment, setSelectedApartment] = useState<Apartment | null>(
+    null,
+  );
   const [selectedApartmentForPackage, setSelectedApartmentForPackage] =
     useState<Apartment | null>(null);
+  const [isOpen, setIsOpen] = useState({
+    apartmentForm: false,
+    packageForm: false,
+    roomForm: false,
+  });
 
   const fetchApartmentList = useCallback(async () => {
     setLoading(true);
@@ -128,7 +141,9 @@ function ApartmentManagement() {
       throw error;
     }
   };
-  const handleAddPackage = async (data: CreatePackageFormData | UpdatePackageFormData) => {
+  const handleAddPackage = async (
+    data: CreatePackageFormData | UpdatePackageFormData,
+  ) => {
     try {
       const packageData = {
         ...data,
@@ -136,13 +151,32 @@ function ApartmentManagement() {
       };
       await packageManagementApi.createPackage(packageData);
       toast.success("Package created successfully");
-      setIsPackageFormOpen(false);
+      setIsOpen((prev) => ({ ...prev, packageForm: false }));
       setSelectedApartmentForPackage(null);
       fetchApartmentList();
     } catch (error: unknown) {
       console.log(error);
       const errorMessage =
         error instanceof Error ? error.message : "Failed to create package";
+      toast.error(errorMessage);
+    }
+  };
+  const handleCreateRoom = async (
+    data: CreateRoomFormData | UpdateRoomFormData,
+  ) => {
+    try {
+      const roomData = {
+        ...data,
+        apartmentId: selectedApartmentForPackage?.apartmentId,
+      };
+      await roomManagementApi.createRoom(roomData);
+      toast.success("Room created successfully");
+      setIsOpen((prev) => ({ ...prev, roomForm: false }));
+      setSelectedApartmentForPackage(null);
+      fetchApartmentList();
+    } catch (error: unknown) {
+      const errorMessage =
+        error instanceof Error ? error.message : "Failed to create room";
       toast.error(errorMessage);
     }
   };
@@ -157,19 +191,23 @@ function ApartmentManagement() {
   const handleAddNew = () => {
     setFormMode("create");
     setSelectedApartment(null);
-    setIsFormOpen(true);
+    setIsOpen((prev) => ({ ...prev, apartmentForm: true }));
   };
 
   const handleEdit = (apartment: Apartment) => {
     setFormMode("update");
     setSelectedApartment(apartment);
-    setIsFormOpen(true);
+    setIsOpen((prev) => ({ ...prev, apartmentForm: true }));
   };
   const triggerAddPackage = (apartment: Apartment) => {
     setPackageFormMode("create");
     setSelectedApartmentForPackage(apartment);
-    setIsPackageFormOpen(true);
-    console.log(apartment.apartmentId);
+    setIsOpen((prev) => ({ ...prev, packageForm: true }));
+  };
+  const triggerCreateRoom = (apartment: Apartment) => {
+    setRoomFormMode("create");
+    setSelectedApartmentForPackage(apartment);
+    setIsOpen((prev) => ({ ...prev, roomForm: true }));
   };
 
   return (
@@ -186,6 +224,7 @@ function ApartmentManagement() {
           handleEdit,
           handleAddAmenity,
           triggerAddPackage,
+          triggerCreateRoom,
         )}
         data={apartmentList}
         limit={pageSize}
@@ -196,8 +235,8 @@ function ApartmentManagement() {
       />
 
       <ApartmentForm
-        isOpen={isFormOpen}
-        onClose={() => setIsFormOpen(false)}
+        isOpen={isOpen.apartmentForm}
+        onClose={() => setIsOpen((prev) => ({ ...prev, apartmentForm: false }))}
         onSubmit={
           formMode === "create" ? handleCreateApartment : handleUpdateApartment
         }
@@ -206,9 +245,9 @@ function ApartmentManagement() {
       />
 
       <PackageForm
-        isOpen={isPackageFormOpen}
+        isOpen={isOpen.packageForm}
         onClose={() => {
-          setIsPackageFormOpen(false);
+          setIsOpen((prev) => ({ ...prev, packageForm: false }));
           setSelectedApartmentForPackage(null);
         }}
         mode={packageFormMode}
@@ -219,6 +258,22 @@ function ApartmentManagement() {
         }
         onSubmit={handleAddPackage}
         apartment={selectedApartmentForPackage}
+      />
+
+      <RoomForm
+        isOpen={isOpen.roomForm}
+        mode={roomFormMode}
+        onClose={() => {
+          setIsOpen((prev) => ({ ...prev, roomForm: false }));
+          setSelectedApartmentForPackage(null);
+        }}
+        room={
+          roomFormMode === "create"
+            ? { apartmentId: selectedApartmentForPackage?.apartmentId }
+            : null
+        }
+        apartment={selectedApartmentForPackage}
+        onSubmit={handleCreateRoom}
       />
     </div>
   );

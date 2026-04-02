@@ -3,8 +3,9 @@
     "aboutThisPlace": "Giới thiệu về nơi này",
     "location": "Địa điểm",
     "pricePerNight": "Giá mỗi đêm",
-    "isPetAllowed": "Cho phép giữ thú cưng",
+    "isPetAllowed": "Thú cưng",
     "maxOccupants": "Số người tối đa",
     "allowPets": "Cho phép",
-    "notAllowPets": "Không cho phép"
+    "notAllowPets": "Không cho phép",
+    "amenities": "Tiện nghi"
 }
