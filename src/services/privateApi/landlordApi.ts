@@ -1,6 +1,7 @@
 import { apiConfig } from "@/config/apiConfig";
 import type { UpdateApartmentFormData } from "@/schemas/apartmentSchema";
-import type { Apartment } from "@/types/apartment";
+import type { UpdateRoomFormData } from "@/schemas/roomSchema";
+import type { Apartment, Room } from "@/types/apartment";
 import type { ApiResponse } from "@/types/api";
 import type { PaginationResponse } from "@/types/paginationResponse";
 import type { ParamsProp } from "@/types/params";
@@ -16,4 +17,15 @@ export const apartmentManagementApi = {
         apiConfig.privateApi.delete(`/apartments/${id}`),
     addAmenityToApartment: (apartmentId: string, amenityIds: string[]): Promise<ApiResponse<null>> =>
         apiConfig.privateApi.post(`/apartments/${apartmentId}/amenities`, amenityIds)
+}
+
+export const roomManagementApi = {
+    getRooms: (landlordId: string, params: ParamsProp): Promise<ApiResponse<PaginationResponse<Room>>> =>
+        apiConfig.privateApi.get(`/rooms/by-landlord/${landlordId}`, { params }),
+    createRoom: (data: Partial<Room>): Promise<ApiResponse<null>> =>
+        apiConfig.privateApi.post("/rooms", data),
+    updateRoom: (data: UpdateRoomFormData, id: string): Promise<ApiResponse<null>> =>
+        apiConfig.privateApi.put(`/rooms/${id}`, data),
+    deleteRoom: (id: string): Promise<ApiResponse<null>> =>
+        apiConfig.privateApi.delete(`/rooms/${id}`)
 }

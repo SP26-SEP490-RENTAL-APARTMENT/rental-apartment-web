@@ -5,6 +5,7 @@ import {
   Wallet,
   MessageCircle,
   Settings,
+  Hotel,
 } from "lucide-react";
 
 export const landlordNavList = [
@@ -16,6 +17,11 @@ export const landlordNavList = [
   {
     title: "Apartments",
     url: "/landlord/apartments",
+    icon: Hotel,
+  },
+  {
+    title: "Rooms",
+    url: "/landlord/rooms",
     icon: Home,
   },
   {
