@@ -6,6 +6,7 @@ import {
   RollerCoaster,
   Ungroup,
   Package,
+  FileMinus,
 } from "lucide-react";
 
 export const adminNavList = [
@@ -43,5 +44,10 @@ export const adminNavList = [
     title: "Package Items",
     url: "/admin/package-items",
     icon: Ungroup,
+  },
+  {
+    title: "Documents",
+    url: "/admin/documents",
+    icon: FileMinus,
   },
 ];

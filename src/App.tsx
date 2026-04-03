@@ -27,6 +27,9 @@ import NearbyAttractions from "./pages/Admin/NearbyAttractions/NearbyAttractions
 import PackageItemManagement from "./pages/Admin/PackageItem/PackageItemManagement";
 import PackageManagement from "./pages/Admin/PackageManagement/PackageManagement";
 import RoomManagement from "./pages/Landlord/RoomManagement/RoomManagement";
+import Bookings from "./pages/Tenant/Bookings/Bookings";
+import Collections from "./pages/Tenant/Collections/Collections";
+import DocumentsManagement from "./pages/Admin/DocumentsManagement/DocumentsManagement";
 
 /**
  * App Component - Simplified routing setup
@@ -106,6 +109,14 @@ export default function App() {
               </ProtectedRoute>
             }
           />
+          <Route
+            path={ROUTES.ADMIN_DOCUMENT}
+            element={
+              <ProtectedRoute requiredRoles={["admin"]}>
+                <DocumentsManagement />
+              </ProtectedRoute>
+            }
+          />
         </Route>
 
         {/* ========== Landlord Routes ========== */}
@@ -143,6 +154,22 @@ export default function App() {
             element={
               <ProtectedRoute requiredRoles={["tenant"]}>
                 <Profile />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path={ROUTES.TENANT_BOOKINGS}
+            element={
+              <ProtectedRoute requiredRoles={["tenant"]}>
+                <Bookings />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path={ROUTES.TENANT_COLLECTIONS}
+            element={
+              <ProtectedRoute requiredRoles={["tenant"]}>
+                <Collections />
               </ProtectedRoute>
             }
           />

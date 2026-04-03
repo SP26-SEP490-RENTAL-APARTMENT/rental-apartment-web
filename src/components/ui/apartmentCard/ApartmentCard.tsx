@@ -45,7 +45,7 @@ function ApartmentCard({ apartment }: ApartmentCardProps) {
       </CardContent>
 
       <CardFooter className="font-semibold text-primary text-lg flex justify-end gap-2">
-        <span className="text-blue-500 text-2xl">$ {apartment.basePricePerNight.toFixed(2)}</span>
+        <span className="text-blue-500 text-2xl">{apartment.basePricePerNight.toLocaleString('vi-VN')} đ</span>
         <span>/night</span>
       </CardFooter>
     </Card>

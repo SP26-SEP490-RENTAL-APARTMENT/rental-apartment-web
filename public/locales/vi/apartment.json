@@ -7,5 +7,9 @@
     "maxOccupants": "Số người tối đa",
     "allowPets": "Cho phép",
     "notAllowPets": "Không cho phép",
-    "amenities": "Tiện nghi"
+    "amenities": "Tiện nghi",
+    "address": "Địa chỉ",
+    "description": "Mô tả",
+    "title": "Tên",
+    "createdAt": "Ngày tạo"
 }

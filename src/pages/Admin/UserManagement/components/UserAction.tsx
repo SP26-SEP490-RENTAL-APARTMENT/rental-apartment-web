@@ -10,6 +10,7 @@ import {
 import { Eye, Trash2, UserRoundPen } from "lucide-react";
 import type { User } from "@/types/user";
 import { useTranslation } from "react-i18next";
+import UserDetailDialog from "@/components/ui/userDetailDialog/UserDetailDialog";
 
 interface Props {
   user: User;
@@ -42,20 +43,7 @@ function UserAction({ user, onDelete, onEdit }: Props) {
               {translate("userDetailsDescription")}
             </DialogDescription>
           </DialogHeader>
-          <div className="grid grid-cols-2 gap-5">
-            <div className="font-bold">{translate("userId")}</div>
-            <div>{user?.userId}</div>
-            <div className="font-bold">{translate("name")}</div>
-            <div>{user?.fullName}</div>
-            <div className="font-bold">{translate("email")}</div>
-            <div>{user?.email}</div>
-            <div className="font-bold">{translate("phone")}</div>
-            <div>{user?.phone}</div>
-            <div className="font-bold">{translate("role")}</div>
-            <div>{user?.role}</div>
-            <div className="font-bold">{translate("verified")}</div>
-            <div>{user?.identityVerified ? "Yes" : "No"}</div>
-          </div>
+          <UserDetailDialog user={user} />
         </DialogContent>
       </Dialog>
 

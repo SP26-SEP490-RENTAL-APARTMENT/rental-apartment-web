@@ -24,6 +24,7 @@ export const ADMIN_ROUTES = {
   NEARBY_ATTRACTIONS: "/admin/nearby-attractions",
   PACKAGE_ITEMS: "/admin/package-items",
   PACKAGE: '/admin/packages',
+  DOCUMENT: '/admin/documents',
 } as const;
 
 // Landlord Routes
@@ -37,6 +38,8 @@ export const LANDLORD_ROUTES = {
 export const TENANT_ROUTES = {
   PROFILE: "/tenant/profile",
   DASHBOARD: "/tenant/dashboard",
+  BOOKINGS: "/tenant/bookings",
+  COLLECTIONS: "/tenant/collections",
 } as const;
 
 // Error Routes
@@ -64,6 +67,7 @@ export const ROUTES = {
   ADMIN_NEARBY_ATTRACTIONS: ADMIN_ROUTES.NEARBY_ATTRACTIONS,
   ADMIN_PACKAGE_ITEMS: ADMIN_ROUTES.PACKAGE_ITEMS,
   ADMIN_PACKAGE: ADMIN_ROUTES.PACKAGE,
+  ADMIN_DOCUMENT: ADMIN_ROUTES.DOCUMENT,
 
   // Landlord
   LANDLORD_DASHBOARD: LANDLORD_ROUTES.DASHBOARD,
@@ -73,6 +77,8 @@ export const ROUTES = {
   // Tenant
   TENANT_PROFILE: TENANT_ROUTES.PROFILE,
   TENANT_DASHBOARD: TENANT_ROUTES.DASHBOARD,
+  TENANT_BOOKINGS: TENANT_ROUTES.BOOKINGS,
+  TENANT_COLLECTIONS: TENANT_ROUTES.COLLECTIONS,
   
   // Error
   NOT_FOUND: ERROR_ROUTES.NOT_FOUND,

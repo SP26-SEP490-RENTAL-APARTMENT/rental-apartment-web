@@ -1,11 +1,12 @@
 import { Building2, LogOut, Menu, X } from "lucide-react";
 import { useState } from "react";
-import { tenantNavList } from "./TenantNavList";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { useTenantNavList } from "./TenantNavList";
 
 function TenantSideBar() {
   const navigate = useNavigate();
+  const tenantNavList = useTenantNavList();
   const { t: account } = useTranslation("account");
   const { t: auth } = useTranslation("auth");
 

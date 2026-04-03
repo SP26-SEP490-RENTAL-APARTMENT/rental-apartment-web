@@ -11,15 +11,16 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import ApartmentCardSkeleton from "@/components/ui/apartmentCard/ApartmentCardSkeleton";
+import HomeFilter from "./components/HomeFilter";
 
 function Home() {
   const [apartments, setApartments] = useState<Apartment[]>([]);
   const [page, setPage] = useState(1);
   const [pageSize] = useState(6);
   const [total, setTotal] = useState(0);
-  const [search] = useState("");
-  const [sortBy] = useState<keyof Apartment>("address");
-  const [sortOrder] = useState<"asc" | "desc">("asc");
+  const [search, setSearch] = useState("");
+  const [sortBy, setSortBy] = useState<keyof Apartment>("basePricePerNight");
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -38,7 +39,7 @@ function Home() {
       } catch (error) {
         console.error("Error fetching apartments:", error);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
     };
 
@@ -49,45 +50,62 @@ function Home() {
 
   return (
     <div className="">
+      <div className="m-10">
+        <HomeFilter
+          search={search}
+          sortBy={sortBy}
+          sortOrder={sortOrder}
+          onSearchChange={setSearch}
+          onSortByChange={setSortBy}
+          onSortOrderChange={setSortOrder}
+        />
+      </div>
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 m-10">
         {loading
-  ? Array.from({ length: 6 }).map((_, i) => (
-      <ApartmentCardSkeleton key={i} />
-    ))
-  : apartments.map((a) => (
-      <ApartmentCard key={a.apartmentId} apartment={a} />
-    ))}
+          ? Array.from({ length: 6 }).map((_, i) => (
+              <ApartmentCardSkeleton key={i} />
+            ))
+          : apartments.map((a) => (
+              <ApartmentCard key={a.apartmentId} apartment={a} />
+            ))}
       </div>
-      <Pagination>
-        <PaginationContent>
-          {/* Prev */}
-          <PaginationItem>
-            <PaginationPrevious
-              onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
-              className={page === 1 ? "pointer-events-none opacity-50" : ""}
-            />
-          </PaginationItem>
-
-          {/* Page numbers */}
-          {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
-            <PaginationItem key={p}>
-              <PaginationLink isActive={p === page} onClick={() => setPage(p)}>
-                {p}
-              </PaginationLink>
+      <div className="m-10">
+        <Pagination>
+          <PaginationContent>
+            {/* Prev */}
+            <PaginationItem>
+              <PaginationPrevious
+                onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+                className={page === 1 ? "pointer-events-none opacity-50" : ""}
+              />
             </PaginationItem>
-          ))}
 
-          {/* Next */}
-          <PaginationItem>
-            <PaginationNext
-              onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
-              className={
-                page === totalPages ? "pointer-events-none opacity-50" : ""
-              }
-            />
-          </PaginationItem>
-        </PaginationContent>
-      </Pagination>
+            {/* Page numbers */}
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
+              <PaginationItem key={p}>
+                <PaginationLink
+                  isActive={p === page}
+                  onClick={() => setPage(p)}
+                >
+                  {p}
+                </PaginationLink>
+              </PaginationItem>
+            ))}
+
+            {/* Next */}
+            <PaginationItem>
+              <PaginationNext
+                onClick={() =>
+                  setPage((prev) => Math.min(prev + 1, totalPages))
+                }
+                className={
+                  page === totalPages ? "pointer-events-none opacity-50" : ""
+                }
+              />
+            </PaginationItem>
+          </PaginationContent>
+        </Pagination>
+      </div>
     </div>
   );
 }

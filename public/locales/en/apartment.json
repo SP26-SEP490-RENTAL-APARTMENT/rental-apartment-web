@@ -7,5 +7,9 @@
     "maxOccupants": "Max occupants",
     "allowPets": "Allow",
     "notAllowPets": "Not Allow",
-    "amenities": "Amenities"
+    "amenities": "Amenities",
+    "address": "Address",
+    "description": "Description",
+    "title": "Title",
+    "createdAt": "Create at"
 }
