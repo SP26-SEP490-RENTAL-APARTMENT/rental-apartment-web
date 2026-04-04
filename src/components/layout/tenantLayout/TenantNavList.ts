@@ -1,4 +1,4 @@
-import { Album, BookUser } from "lucide-react";
+import { Album, BookUser, IdCard } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 export const useTenantNavList = () => {
@@ -19,6 +19,11 @@ export const useTenantNavList = () => {
       title: tenantT("collections"),
       url: "/tenant/collections",
       icon: Album,
+    },
+    {
+      title: tenantT("identityStatus"),
+      url: "/tenant/identity",
+      icon: IdCard,
     },
   ];
 };

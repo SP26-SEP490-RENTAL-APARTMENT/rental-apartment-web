@@ -2,11 +2,12 @@ import { collectionsApi } from "@/services/privateApi/tenantApi";
 import type { Collection } from "@/types/collection";
 import { useCallback, useEffect, useState } from "react";
 import CollectionBox from "./components/CollectionBox";
+import CollectionSkeleton from "./components/CollectionSkeleton";
 
 function Collections() {
   const [collections, setCollections] = useState<Collection[]>([]);
   const [loading, setLoading] = useState(false);
-  const [totalCount, setTotalCount] = useState(0);
+  // const [totalCount, setTotalCount] = useState(0);
   const [page] = useState(1);
   const [search] = useState("");
   const [sortBy] = useState("createdAt");
@@ -23,7 +24,7 @@ function Collections() {
         sortOrder,
       });
       setCollections(response.data.data.items);
-      setTotalCount(response.data.data.totalCount);
+      // setTotalCount(response.data.data.totalCount);
     } catch (error) {
       console.error("Error fetching collections:", error);
     } finally {
@@ -36,12 +37,20 @@ function Collections() {
   }, [fetchCollections]);
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-      {collections.map((item) => (
-        <CollectionBox key={item.collectionId} collection={item} />
-      ))}
-      {totalCount}
-      {loading}
+    <div>
+      {loading ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <CollectionSkeleton key={i} />
+          ))}
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {collections.map((c) => (
+            <CollectionBox key={c.collectionId} collection={c} />
+          ))}
+        </div>
+      )}
     </div>
   );
 }

@@ -12,9 +12,15 @@ import {
 } from "@/components/ui/pagination";
 import ApartmentCardSkeleton from "@/components/ui/apartmentCard/ApartmentCardSkeleton";
 import HomeFilter from "./components/HomeFilter";
+import type { Collection } from "@/types/collection";
+import { collectionsApi } from "@/services/privateApi/tenantApi";
+import AddWishlistDialog from "./components/AddWishlistDialog";
+import { toast } from "sonner";
 
 function Home() {
   const [apartments, setApartments] = useState<Apartment[]>([]);
+  const [collections, setCollections] = useState<Collection[]>([]);
+  const [selectedApartmentId, setSelectedApartmentId] = useState("");
   const [page, setPage] = useState(1);
   const [pageSize] = useState(6);
   const [total, setTotal] = useState(0);
@@ -22,6 +28,8 @@ function Home() {
   const [sortBy, setSortBy] = useState<keyof Apartment>("basePricePerNight");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
   const [loading, setLoading] = useState(false);
+  const [collectionDialogOpen, setCollectionDialogOpen] = useState(false);
+  const [addWishlistLoading, setAddWishlistLoading] = useState(false);
 
   useEffect(() => {
     const fetchApartments = async () => {
@@ -46,6 +54,50 @@ function Home() {
     fetchApartments();
   }, [page, search, sortBy, sortOrder, pageSize]);
 
+  const fetchCollections = async () => {
+    try {
+      const response = await collectionsApi.getAllCollections({
+        page: 1,
+        pageSize: 10,
+        search: "",
+        sortBy: "createdAt",
+        sortOrder: "desc",
+      });
+      setCollections(response.data.data.items);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleClickHeart = async (apartmentId: string) => {
+    setSelectedApartmentId(apartmentId);
+    setCollectionDialogOpen(true);
+    fetchCollections();
+  };
+
+  const handleSelectCollection = async (collectionId: string) => {
+    if (!selectedApartmentId) return;
+
+    setAddWishlistLoading(true);
+    try {
+      await collectionsApi.addWishlistToCollection({
+        collectionId,
+        apartmentId: selectedApartmentId,
+        note: "",
+      });
+      toast.success("Added to collection successfully");
+      setCollectionDialogOpen(false);
+      setSelectedApartmentId("");
+    } catch (error: any) {
+      toast.error(
+        error?.response?.data?.message || "Failed to add to collection",
+      );
+      console.error("Error adding to collection:", error);
+    } finally {
+      setAddWishlistLoading(false);
+    }
+  };
+
   const totalPages = Math.ceil(total / pageSize);
 
   return (
@@ -60,13 +112,29 @@ function Home() {
           onSortOrderChange={setSortOrder}
         />
       </div>
+      {/* delete later */}
+{addWishlistLoading}
+      {collections && (
+        <AddWishlistDialog
+          isOpen={collectionDialogOpen}
+          onClose={() => setCollectionDialogOpen(false)}
+          collection={collections}
+          onSelectCollection={handleSelectCollection}
+          // isLoading={addWishlistLoading}
+        />
+      )}
+
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 m-10">
         {loading
           ? Array.from({ length: 6 }).map((_, i) => (
               <ApartmentCardSkeleton key={i} />
             ))
           : apartments.map((a) => (
-              <ApartmentCard key={a.apartmentId} apartment={a} />
+              <ApartmentCard
+                key={a.apartmentId}
+                apartment={a}
+                onClickHeart={handleClickHeart}
+              />
             ))}
       </div>
       <div className="m-10">

@@ -40,6 +40,8 @@ export const TENANT_ROUTES = {
   DASHBOARD: "/tenant/dashboard",
   BOOKINGS: "/tenant/bookings",
   COLLECTIONS: "/tenant/collections",
+  WISHLIST: "/tenant/wishlist/collections/:collectionId/items",
+  IDENTITY: "/tenant/identity",
 } as const;
 
 // Error Routes
@@ -79,6 +81,8 @@ export const ROUTES = {
   TENANT_DASHBOARD: TENANT_ROUTES.DASHBOARD,
   TENANT_BOOKINGS: TENANT_ROUTES.BOOKINGS,
   TENANT_COLLECTIONS: TENANT_ROUTES.COLLECTIONS,
+  TENANT_WISHLIST: TENANT_ROUTES.WISHLIST,
+  TENANT_IDENTITY: TENANT_ROUTES.IDENTITY,
   
   // Error
   NOT_FOUND: ERROR_ROUTES.NOT_FOUND,

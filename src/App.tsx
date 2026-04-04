@@ -30,6 +30,9 @@ import RoomManagement from "./pages/Landlord/RoomManagement/RoomManagement";
 import Bookings from "./pages/Tenant/Bookings/Bookings";
 import Collections from "./pages/Tenant/Collections/Collections";
 import DocumentsManagement from "./pages/Admin/DocumentsManagement/DocumentsManagement";
+import CollectionLayout from "./components/layout/collectionLayout/CollectionLayout";
+import Identity from "./pages/Tenant/Identity/Identity";
+import WishlistPage from "./pages/Tenant/Wishlist/WishlistPage";
 
 /**
  * App Component - Simplified routing setup
@@ -158,6 +161,14 @@ export default function App() {
             }
           />
           <Route
+            path={ROUTES.TENANT_IDENTITY}
+            element={
+              <ProtectedRoute requiredRoles={["tenant"]}>
+                <Identity />
+              </ProtectedRoute>
+            }
+          />
+          <Route
             path={ROUTES.TENANT_BOOKINGS}
             element={
               <ProtectedRoute requiredRoles={["tenant"]}>
@@ -165,14 +176,24 @@ export default function App() {
               </ProtectedRoute>
             }
           />
-          <Route
-            path={ROUTES.TENANT_COLLECTIONS}
-            element={
-              <ProtectedRoute requiredRoles={["tenant"]}>
-                <Collections />
-              </ProtectedRoute>
-            }
-          />
+          <Route element={<CollectionLayout />}>
+            <Route
+              path={ROUTES.TENANT_COLLECTIONS}
+              element={
+                <ProtectedRoute requiredRoles={["tenant"]}>
+                  <Collections />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path={ROUTES.TENANT_WISHLIST}
+              element={
+                <ProtectedRoute requiredRoles={["tenant"]}>
+                  <WishlistPage />
+                </ProtectedRoute>
+              }
+            />
+          </Route>
         </Route>
 
         {/* ========== Fallback - Unknown routes ========== */}

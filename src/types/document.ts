@@ -11,8 +11,8 @@ export interface Document {
   fileUrl: string;
   mimeType: string;
   fileSize: number;
-  uploadedAt: boolean;
-  verificationStatus: 'pending' | 'verified' | 'rejected' | 'expired';
+  uploadedAt: string;
+  verificationStatus: "pending" | "verified" | "rejected" | "expired";
   verifiedAt: string;
   rejectionReason: string;
   notes: string;
