@@ -2,20 +2,13 @@ import { useEffect, useState } from "react";
 import ApartmentCard from "../../components/ui/apartmentCard/ApartmentCard";
 import type { Apartment } from "@/types/apartment";
 import { apartmentApi } from "@/services/publicApi/apartmentApi";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
 import ApartmentCardSkeleton from "@/components/ui/apartmentCard/ApartmentCardSkeleton";
 import HomeFilter from "./components/HomeFilter";
 import type { Collection } from "@/types/collection";
 import { collectionsApi } from "@/services/privateApi/tenantApi";
 import AddWishlistDialog from "./components/AddWishlistDialog";
 import { toast } from "sonner";
+import PaginationComponent from "@/components/ui/paginationComponent/PaginationComponent";
 
 function Home() {
   const [apartments, setApartments] = useState<Apartment[]>([]);
@@ -113,7 +106,7 @@ function Home() {
         />
       </div>
       {/* delete later */}
-{addWishlistLoading}
+      {addWishlistLoading}
       {collections && (
         <AddWishlistDialog
           isOpen={collectionDialogOpen}
@@ -138,41 +131,11 @@ function Home() {
             ))}
       </div>
       <div className="m-10">
-        <Pagination>
-          <PaginationContent>
-            {/* Prev */}
-            <PaginationItem>
-              <PaginationPrevious
-                onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
-                className={page === 1 ? "pointer-events-none opacity-50" : ""}
-              />
-            </PaginationItem>
-
-            {/* Page numbers */}
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
-              <PaginationItem key={p}>
-                <PaginationLink
-                  isActive={p === page}
-                  onClick={() => setPage(p)}
-                >
-                  {p}
-                </PaginationLink>
-              </PaginationItem>
-            ))}
-
-            {/* Next */}
-            <PaginationItem>
-              <PaginationNext
-                onClick={() =>
-                  setPage((prev) => Math.min(prev + 1, totalPages))
-                }
-                className={
-                  page === totalPages ? "pointer-events-none opacity-50" : ""
-                }
-              />
-            </PaginationItem>
-          </PaginationContent>
-        </Pagination>
+        <PaginationComponent
+          onPageChange={setPage}
+          page={page}
+          totalPages={totalPages}
+        />
       </div>
     </div>
   );

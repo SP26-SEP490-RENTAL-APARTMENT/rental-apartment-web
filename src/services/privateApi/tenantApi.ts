@@ -26,4 +26,6 @@ export const collectionsApi = {
 export const indentityApi = {
   getMyIdentity: (params: ParamsProp) =>
     apiConfig.privateApi.get("/identity/my-documents", { params }),
+  createIdentity: (data: FormData) =>
+    apiConfig.privateApi.post("/identity/documents", data),
 };

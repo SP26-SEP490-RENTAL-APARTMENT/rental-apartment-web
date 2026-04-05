@@ -3,14 +3,22 @@ import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useTenantNavList } from "./TenantNavList";
+import { useAuthStore } from "@/store/authStore";
 
 function TenantSideBar() {
   const navigate = useNavigate();
+  const { logout } = useAuthStore();
   const tenantNavList = useTenantNavList();
   const { t: account } = useTranslation("account");
   const { t: auth } = useTranslation("auth");
 
   const [sidebarOpen, setSidebarOpen] = useState(true);
+
+  const handleLogout = () => {
+    logout();
+    localStorage.removeItem("auth-storage");
+    window.location.href = "/";
+  };
   return (
     <div
       className={`${
@@ -68,7 +76,7 @@ function TenantSideBar() {
 
       {/* Footer - Logout */}
       <div className="p-4 border-t border-gray-200">
-        <button className="w-full flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-red-50 hover:text-red-700 rounded-lg transition">
+        <button onClick={handleLogout} className="w-full flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-red-50 hover:text-red-700 rounded-lg transition">
           <LogOut className="h-5 w-5 shrink-0" />
           {sidebarOpen && <span>{auth("logout")}</span>}
         </button>
