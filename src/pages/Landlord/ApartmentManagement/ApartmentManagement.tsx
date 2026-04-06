@@ -28,8 +28,10 @@ import AvailableDateForm from "./components/AvailableDateForm";
 import type { AddAvailableDateFormData } from "@/schemas/availableDateSchema";
 import type { Package } from "@/types/package";
 import PackageDialog from "./components/PackageDialog";
+import SubmitApproveForm from "./components/SubmitApproveForm";
 
 function ApartmentManagement() {
+  const [note, setNote] = useState<string>("");
   const [packages, setPackages] = useState<Package[]>([]);
   const [apartmentList, setApartmentList] = useState<Apartment[]>([]);
   const [page, setPage] = useState<number>(1);
@@ -59,6 +61,7 @@ function ApartmentManagement() {
     roomForm: false,
     availabilityForm: false,
     packageDialog: false,
+    sendApproveForm: false,
   });
 
   const fetchApartmentList = useCallback(async () => {
@@ -152,6 +155,25 @@ function ApartmentManagement() {
       throw error;
     }
   };
+
+  const handleAddPhotos = async (apartmentId: string, files: File[]) => {
+    try {
+      const formData = new FormData();
+      files.forEach((file) => {
+        formData.append("photos", file);
+      });
+
+      await apartmentManagementApi.putPhotosForApartment(apartmentId, formData);
+      toast.success("Photos added successfully");
+      fetchApartmentList();
+    } catch (error: unknown) {
+      console.log(error);
+      const errorMessage =
+        error instanceof Error ? error.message : "Failed to add photos";
+      toast.error(errorMessage);
+      throw error;
+    }
+  };
   const handleAddPackage = async (
     data: CreatePackageFormData | UpdatePackageFormData,
   ) => {
@@ -210,6 +232,23 @@ function ApartmentManagement() {
           : "Failed to add available dates";
       toast.error(errorMessage);
       throw error;
+    }
+  };
+
+  const handleSendToApprove = async () => {
+    try {
+      await apartmentManagementApi.sendToApprove(selectedApartmentId, {
+        submissionNotes: note,
+      });
+
+      toast.success("Apartment sent for approval successfully");
+
+      setNote(""); // reset
+      setIsOpen((prev) => ({ ...prev, sendApproveForm: false }));
+      fetchApartmentList();
+    } catch (error) {
+      console.log(error);
+      toast.error("Failed to send for approval");
     }
   };
 
@@ -276,6 +315,11 @@ function ApartmentManagement() {
     fetchPackageDetail(apartmentId);
   };
 
+  const triggerSendApprove = (apartmentId: string) => {
+    setSelectedApartmentId(apartmentId);
+    setIsOpen((prev) => ({ ...prev, sendApproveForm: true }));
+  };
+
   const handlePackageItemAdded = async (packageId: string) => {
     console.log(packageId);
 
@@ -301,6 +345,8 @@ function ApartmentManagement() {
           triggerCreateRoom,
           triggerAddAvailability,
           triggerViewPackage,
+          triggerSendApprove,
+          handleAddPhotos,
         )}
         data={apartmentList}
         limit={pageSize}
@@ -371,6 +417,17 @@ function ApartmentManagement() {
         }}
         packages={packages}
         onAddSuccess={handlePackageItemAdded}
+      />
+
+      <SubmitApproveForm
+        apartmentId={selectedApartmentId}
+        note={note}
+        onSubmit={handleSendToApprove}
+        setNote={setNote}
+        isOpen={isOpen.sendApproveForm}
+        onClose={() =>
+          setIsOpen((prev) => ({ ...prev, sendApproveForm: false }))
+        }
       />
     </div>
   );

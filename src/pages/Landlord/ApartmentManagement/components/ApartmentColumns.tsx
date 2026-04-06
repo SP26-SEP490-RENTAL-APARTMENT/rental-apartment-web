@@ -10,6 +10,8 @@ export const ApartmentColumns = (
   onCreateRoom: (apartment: Apartment) => void,
   onAddAvailability: (apartmentId: string) => void,
   onViewPackage: (apartmentId: string) => void,
+  onSendApprove: (apartmentId: string) => void,
+  onAddPhotos: (apartmentId: string, files: File[]) => Promise<void>,
 ): ColumnDef<Apartment>[] => [
   {
     accessorKey: "title",
@@ -26,7 +28,7 @@ export const ApartmentColumns = (
     cell: ({ row }) => {
       const status = row.original.status;
       return status.charAt(0).toUpperCase() + status.slice(1);
-    }
+    },
   },
   {
     id: "actions",
@@ -43,6 +45,8 @@ export const ApartmentColumns = (
           onCreateRoom={onCreateRoom}
           onAddAvailability={onAddAvailability}
           onViewPackage={onViewPackage}
+          onSendApprove={onSendApprove}
+          onAddPhotos={onAddPhotos}
         />
       );
     },

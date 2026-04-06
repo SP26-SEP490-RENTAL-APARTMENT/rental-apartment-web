@@ -36,6 +36,15 @@ export const apartmentManagementApi = {
     apiConfig.privateApi.post(`/apartments/${apartmentId}/availability`, {
       ranges: availableDate,
     }),
+  sendToApprove: (
+    apartmentId: string,
+    { submissionNotes }: { submissionNotes: string },
+  ): Promise<ApiResponse<null>> =>
+    apiConfig.privateApi.post(`/apartments/${apartmentId}/submit-for-review`, {
+      submissionNotes,
+    }),
+  putPhotosForApartment: (apartmentId: string, data: FormData) =>
+    apiConfig.privateApi.put(`/apartments/${apartmentId}/photos`, data),
 };
 
 export const roomManagementApi = {

@@ -20,6 +20,7 @@ import {
   CalendarCog,
   Boxes,
   PackageOpen,
+  Send,
 } from "lucide-react";
 import { useState } from "react";
 import useAmenity from "@/hooks/useAmenity";
@@ -40,6 +41,8 @@ interface Props {
   onCreateRoom: (apartment: Apartment) => void;
   onAddAvailability: (apartmentId: string) => void;
   onViewPackage: (apartmentId: string) => void;
+  onSendApprove: (apartmentId: string) => void;
+  onAddPhotos: (apartmentId: string, files: File[]) => Promise<void>;
 }
 function ApartmentAction({
   apartment,
@@ -50,6 +53,8 @@ function ApartmentAction({
   onCreateRoom,
   onAddAvailability,
   onViewPackage,
+  onSendApprove,
+  onAddPhotos,
 }: Props) {
   const [selectedAmenities, setSelectedAmenities] = useState<string[]>([]);
   const [loadingSubmit, setLoadingSubmit] = useState(false);
@@ -117,7 +122,10 @@ function ApartmentAction({
           <DialogHeader>
             <DialogTitle>Detail</DialogTitle>
           </DialogHeader>
-          <ApartmentDetailDialog apartment={apartment} />
+          <ApartmentDetailDialog
+            apartment={apartment}
+            onAddPhotos={onAddPhotos}
+          />
         </DialogContent>
       </Dialog>
 
@@ -125,23 +133,14 @@ function ApartmentAction({
         <UserRoundPen />
       </Button>
 
-      <TooltipProvider>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              size="sm"
-              variant="outline"
-              className="bg-yellow-500"
-              onClick={() => onAddAvailability(apartment.apartmentId)}
-            >
-              <CalendarCog />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>
-            <p>Set the availability</p>
-          </TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
+      <Button
+        size="sm"
+        variant="outline"
+        className="bg-yellow-500"
+        onClick={() => onAddAvailability(apartment.apartmentId)}
+      >
+        <CalendarCog />
+      </Button>
 
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogTrigger asChild>
@@ -232,7 +231,7 @@ function ApartmentAction({
             </div>
           </div>
 
-          {/* ACTION BUTTONS */}
+          {/* Add amenities */}
           <div className="flex justify-end gap-2 mt-6">
             <DialogTrigger asChild>
               <Button variant="outline" size="sm">
@@ -253,6 +252,7 @@ function ApartmentAction({
         </DialogContent>
       </Dialog>
 
+      {/* Create package */}
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger asChild>
@@ -271,6 +271,7 @@ function ApartmentAction({
         </Tooltip>
       </TooltipProvider>
 
+      {/* View package n add items */}
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger asChild>
@@ -289,6 +290,7 @@ function ApartmentAction({
         </Tooltip>
       </TooltipProvider>
 
+      {/* Add room */}
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger asChild>
@@ -307,6 +309,25 @@ function ApartmentAction({
         </Tooltip>
       </TooltipProvider>
 
+      {/* Send to approve */}
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              size="sm"
+              variant="secondary"
+              onClick={() => onSendApprove(apartment.apartmentId)}
+            >
+              <Send />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Send to approve</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+
+      {/* Delete */}
       <Dialog>
         <DialogTrigger asChild>
           <Button className="cursor-pointer" size="sm" variant="destructive">
