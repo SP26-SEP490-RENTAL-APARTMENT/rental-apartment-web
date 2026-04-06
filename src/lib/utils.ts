@@ -4,3 +4,7 @@ import { twMerge } from "tailwind-merge"
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
+
+export const formatPrice = (price: number, currency: string) => {
+  return price.toLocaleString("vi-VN") + " " + currency;
+};

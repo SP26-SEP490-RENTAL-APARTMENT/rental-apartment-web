@@ -129,6 +129,12 @@ export const packageManagementApi = {
     data: Partial<Package>,
   ): Promise<ApiResponse<null>> =>
     apiConfig.privateApi.put(`/Package/${packageId}`, data),
+  addPackageItemToPackage: (packageId: string, data: string[]) =>
+    apiConfig.privateApi.post(`/Package/${packageId}/items`, data),
+  getPackageByApartment: (apartmentId: string, params: ParamsProp) =>
+    apiConfig.privateApi.get(`/Package/by-apartment/${apartmentId}`, {
+      params,
+    }),
 };
 
 export const documentsManagement = {

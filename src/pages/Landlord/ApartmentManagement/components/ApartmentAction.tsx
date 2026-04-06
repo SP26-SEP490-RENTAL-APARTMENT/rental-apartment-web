@@ -16,12 +16,20 @@ import {
   UserRoundPen,
   X,
   Loader2,
-  Package,
   Home,
+  CalendarCog,
+  Boxes,
+  PackageOpen,
 } from "lucide-react";
 import { useState } from "react";
 import useAmenity from "@/hooks/useAmenity";
 import ApartmentDetailDialog from "@/components/ui/apartmentDetailDialog/ApartmentDetailDialog";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface Props {
   apartment: Apartment;
@@ -30,6 +38,8 @@ interface Props {
   onAddAmenity: (apartmentId: string, amenities: string[]) => Promise<void>;
   onAddPackage: (apartment: Apartment) => void;
   onCreateRoom: (apartment: Apartment) => void;
+  onAddAvailability: (apartmentId: string) => void;
+  onViewPackage: (apartmentId: string) => void;
 }
 function ApartmentAction({
   apartment,
@@ -38,6 +48,8 @@ function ApartmentAction({
   onAddAmenity,
   onAddPackage,
   onCreateRoom,
+  onAddAvailability,
+  onViewPackage,
 }: Props) {
   const [selectedAmenities, setSelectedAmenities] = useState<string[]>([]);
   const [loadingSubmit, setLoadingSubmit] = useState(false);
@@ -113,37 +125,23 @@ function ApartmentAction({
         <UserRoundPen />
       </Button>
 
-      <Dialog>
-        <DialogTrigger asChild>
-          <Button className="cursor-pointer" size="sm" variant="destructive">
-            <Trash2 />
-          </Button>
-        </DialogTrigger>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Confirm Delete</DialogTitle>
-            <DialogDescription>
-              This action will permanently remove the apartment from the system.
-            </DialogDescription>
-          </DialogHeader>
-          <p>Are you sure you want to delete this apartment?</p>
-          <div className="flex justify-end gap-2 mt-4">
-            <DialogTrigger asChild>
-              <Button className="cursor-pointer" size="sm" variant="outline">
-                Cancel
-              </Button>
-            </DialogTrigger>
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
             <Button
-              className="cursor-pointer"
               size="sm"
-              variant="destructive"
-              onClick={handleDelete}
+              variant="outline"
+              className="bg-yellow-500"
+              onClick={() => onAddAvailability(apartment.apartmentId)}
             >
-              Delete
+              <CalendarCog />
             </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Set the availability</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
 
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogTrigger asChild>
@@ -255,23 +253,91 @@ function ApartmentAction({
         </DialogContent>
       </Dialog>
 
-      <Button
-        size="sm"
-        variant="outline"
-        onClick={() => onAddPackage(apartment)}
-        className="cursor-pointer"
-      >
-        <Package />
-      </Button>
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => onAddPackage(apartment)}
+              className="cursor-pointer"
+            >
+              <PackageOpen />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Add a package</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
 
-      <Button
-        size="sm"
-        variant="outline"
-        onClick={() => onCreateRoom(apartment)}
-        className="cursor-pointer bg-blue-500 text-white"
-      >
-        <Home />
-      </Button>
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => onViewPackage(apartment.apartmentId)}
+              className="cursor-pointer"
+            >
+              <Boxes />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>View package</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => onCreateRoom(apartment)}
+              className="cursor-pointer bg-blue-500 text-white"
+            >
+              <Home />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Add room</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+
+      <Dialog>
+        <DialogTrigger asChild>
+          <Button className="cursor-pointer" size="sm" variant="destructive">
+            <Trash2 />
+          </Button>
+        </DialogTrigger>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Confirm Delete</DialogTitle>
+            <DialogDescription>
+              This action will permanently remove the apartment from the system.
+            </DialogDescription>
+          </DialogHeader>
+          <p>Are you sure you want to delete this apartment?</p>
+          <div className="flex justify-end gap-2 mt-4">
+            <DialogTrigger asChild>
+              <Button className="cursor-pointer" size="sm" variant="outline">
+                Cancel
+              </Button>
+            </DialogTrigger>
+            <Button
+              className="cursor-pointer"
+              size="sm"
+              variant="destructive"
+              onClick={handleDelete}
+            >
+              Delete
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

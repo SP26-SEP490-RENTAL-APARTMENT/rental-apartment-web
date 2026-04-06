@@ -8,6 +8,8 @@ export const ApartmentColumns = (
   onAddAmenity: (apartmentId: string, amenities: string[]) => Promise<void>,
   onAddPackage: (apartment: Apartment) => void,
   onCreateRoom: (apartment: Apartment) => void,
+  onAddAvailability: (apartmentId: string) => void,
+  onViewPackage: (apartmentId: string) => void,
 ): ColumnDef<Apartment>[] => [
   {
     accessorKey: "title",
@@ -19,12 +21,12 @@ export const ApartmentColumns = (
     cell: ({ row }) => `${row.original.basePricePerNight.toLocaleString()} đ`,
   },
   {
-    accessorKey: "maxOccupants",
-    header: "Max occupants",
-  },
-  {
     accessorKey: "status",
     header: "Status",
+    cell: ({ row }) => {
+      const status = row.original.status;
+      return status.charAt(0).toUpperCase() + status.slice(1);
+    }
   },
   {
     id: "actions",
@@ -39,6 +41,8 @@ export const ApartmentColumns = (
           onAddAmenity={onAddAmenity}
           onAddPackage={onAddPackage}
           onCreateRoom={onCreateRoom}
+          onAddAvailability={onAddAvailability}
+          onViewPackage={onViewPackage}
         />
       );
     },

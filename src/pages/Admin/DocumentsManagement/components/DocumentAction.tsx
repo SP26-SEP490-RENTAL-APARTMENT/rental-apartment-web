@@ -1,6 +1,14 @@
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import type { Document } from "@/types/document";
-import { CircleCheckBig } from "lucide-react";
+import { CircleCheckBig, Eye } from "lucide-react";
+import DocumentViewer from "./DocumentViewer";
 
 export interface Props {
   document: Document;
@@ -9,7 +17,7 @@ export interface Props {
 
 function DocumentAction({ document, onApprove }: Props) {
   return (
-    <div>
+    <div className="flex gap-2">
       {document.verificationStatus === "verified" ? null : (
         <Button
           onClick={() => onApprove(document.documentId)}
@@ -19,6 +27,20 @@ function DocumentAction({ document, onApprove }: Props) {
           <CircleCheckBig />
         </Button>
       )}
+
+      <Dialog>
+        <DialogTrigger asChild>
+          <Button size="sm" variant="outline">
+            <Eye />
+          </Button>
+        </DialogTrigger>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Document</DialogTitle>
+          </DialogHeader>
+          <DocumentViewer doc={document} />
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
