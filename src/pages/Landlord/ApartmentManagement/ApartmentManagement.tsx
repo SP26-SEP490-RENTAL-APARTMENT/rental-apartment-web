@@ -20,9 +20,19 @@ import type {
 import { packageManagementApi } from "@/services/privateApi/adminApi";
 import PackageForm from "@/pages/Admin/PackageManagement/components/PackageForm";
 import RoomForm from "../RoomManagement/components/RoomForm";
-import type { CreateRoomFormData, UpdateRoomFormData } from "@/schemas/roomSchema";
+import type {
+  CreateRoomFormData,
+  UpdateRoomFormData,
+} from "@/schemas/roomSchema";
+import AvailableDateForm from "./components/AvailableDateForm";
+import type { AddAvailableDateFormData } from "@/schemas/availableDateSchema";
+import type { Package } from "@/types/package";
+import PackageDialog from "./components/PackageDialog";
+import SubmitApproveForm from "./components/SubmitApproveForm";
 
 function ApartmentManagement() {
+  const [note, setNote] = useState<string>("");
+  const [packages, setPackages] = useState<Package[]>([]);
   const [apartmentList, setApartmentList] = useState<Apartment[]>([]);
   const [page, setPage] = useState<number>(1);
   const [pageSize] = useState<number>(5);
@@ -44,10 +54,14 @@ function ApartmentManagement() {
   );
   const [selectedApartmentForPackage, setSelectedApartmentForPackage] =
     useState<Apartment | null>(null);
+  const [selectedApartmentId, setSelectedApartmentId] = useState<string>("");
   const [isOpen, setIsOpen] = useState({
     apartmentForm: false,
     packageForm: false,
     roomForm: false,
+    availabilityForm: false,
+    packageDialog: false,
+    sendApproveForm: false,
   });
 
   const fetchApartmentList = useCallback(async () => {
@@ -141,6 +155,25 @@ function ApartmentManagement() {
       throw error;
     }
   };
+
+  const handleAddPhotos = async (apartmentId: string, files: File[]) => {
+    try {
+      const formData = new FormData();
+      files.forEach((file) => {
+        formData.append("photos", file);
+      });
+
+      await apartmentManagementApi.putPhotosForApartment(apartmentId, formData);
+      toast.success("Photos added successfully");
+      fetchApartmentList();
+    } catch (error: unknown) {
+      console.log(error);
+      const errorMessage =
+        error instanceof Error ? error.message : "Failed to add photos";
+      toast.error(errorMessage);
+      throw error;
+    }
+  };
   const handleAddPackage = async (
     data: CreatePackageFormData | UpdatePackageFormData,
   ) => {
@@ -181,6 +214,66 @@ function ApartmentManagement() {
     }
   };
 
+  const handleAddAvailability = async (data: AddAvailableDateFormData) => {
+    try {
+      await apartmentManagementApi.addAvailableDateToApartment(
+        selectedApartmentId,
+        data.ranges,
+      );
+      toast.success("Available dates added successfully");
+      setIsOpen((prev) => ({ ...prev, availabilityForm: false }));
+      setSelectedApartmentId("");
+      fetchApartmentList();
+    } catch (error: unknown) {
+      console.log(error);
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : "Failed to add available dates";
+      toast.error(errorMessage);
+      throw error;
+    }
+  };
+
+  const handleSendToApprove = async () => {
+    try {
+      await apartmentManagementApi.sendToApprove(selectedApartmentId, {
+        submissionNotes: note,
+      });
+
+      toast.success("Apartment sent for approval successfully");
+
+      setNote(""); // reset
+      setIsOpen((prev) => ({ ...prev, sendApproveForm: false }));
+      fetchApartmentList();
+    } catch (error) {
+      console.log(error);
+      toast.error("Failed to send for approval");
+    }
+  };
+
+  const fetchPackageDetail = async (apartmentId: string) => {
+    if (!apartmentId) return;
+    try {
+      const response = await packageManagementApi.getPackageByApartment(
+        apartmentId,
+        {
+          page: 1,
+          pageSize: 30,
+          search: "",
+          sortBy: "createdAt",
+          sortOrder: "desc",
+        },
+      );
+      // Handle case when no packages found
+      setPackages(response.data?.items || []);
+    } catch (error) {
+      console.log(error);
+      // Set to empty array on error to avoid stale data
+      setPackages([]);
+    }
+  };
+
   useEffect(() => {
     fetchApartmentList();
   }, [fetchApartmentList]);
@@ -210,6 +303,31 @@ function ApartmentManagement() {
     setIsOpen((prev) => ({ ...prev, roomForm: true }));
   };
 
+  const triggerAddAvailability = (apartmentId: string) => {
+    setSelectedApartmentId(apartmentId);
+    setIsOpen((prev) => ({ ...prev, availabilityForm: true }));
+  };
+
+  const triggerViewPackage = (apartmentId: string) => {
+    setSelectedApartmentId(apartmentId);
+    setPackages([]); // Reset packages for new apartment
+    setIsOpen((prev) => ({ ...prev, packageDialog: true }));
+    fetchPackageDetail(apartmentId);
+  };
+
+  const triggerSendApprove = (apartmentId: string) => {
+    setSelectedApartmentId(apartmentId);
+    setIsOpen((prev) => ({ ...prev, sendApproveForm: true }));
+  };
+
+  const handlePackageItemAdded = async (packageId: string) => {
+    console.log(packageId);
+
+    if (selectedApartmentId) {
+      await fetchPackageDetail(selectedApartmentId);
+    }
+  };
+
   return (
     <div className="space-y-4">
       <div className="flex justify-end mb-4">
@@ -225,6 +343,10 @@ function ApartmentManagement() {
           handleAddAmenity,
           triggerAddPackage,
           triggerCreateRoom,
+          triggerAddAvailability,
+          triggerViewPackage,
+          triggerSendApprove,
+          handleAddPhotos,
         )}
         data={apartmentList}
         limit={pageSize}
@@ -274,6 +396,38 @@ function ApartmentManagement() {
         }
         apartment={selectedApartmentForPackage}
         onSubmit={handleCreateRoom}
+      />
+
+      <AvailableDateForm
+        isOpen={isOpen.availabilityForm}
+        onClose={() => {
+          setIsOpen((prev) => ({ ...prev, availabilityForm: false }));
+          setSelectedApartmentId("");
+        }}
+        onSubmit={handleAddAvailability}
+        // apartmentId={selectedApartmentId}
+      />
+
+      <PackageDialog
+        isOpen={isOpen.packageDialog}
+        onClose={() => {
+          setIsOpen((prev) => ({ ...prev, packageDialog: false }));
+          setSelectedApartmentId("");
+          setPackages([]);
+        }}
+        packages={packages}
+        onAddSuccess={handlePackageItemAdded}
+      />
+
+      <SubmitApproveForm
+        apartmentId={selectedApartmentId}
+        note={note}
+        onSubmit={handleSendToApprove}
+        setNote={setNote}
+        isOpen={isOpen.sendApproveForm}
+        onClose={() =>
+          setIsOpen((prev) => ({ ...prev, sendApproveForm: false }))
+        }
       />
     </div>
   );

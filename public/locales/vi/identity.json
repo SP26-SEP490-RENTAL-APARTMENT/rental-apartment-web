@@ -1,0 +1,18 @@
+{
+    "createIdentity": "Tạo định danh",
+    "documentType": "Loại tài liệu",
+    "side": "Phía",
+    "file": "File",
+    "notes": "Ghi chú",
+    "passport": "Hộ chiếu",
+    "nationalIdCard": "CCCD",
+    "driversLicense": "Bằng lái xe",
+    "otherGovernmentId": "Tài liệu khác",
+    "selfieWithId": "Ảnh chụp",
+    "front": "Phía trước",
+    "back": "Phía sau",
+    "bioPage": "Bio Page",
+    "other": "Khác",
+    "selectSide": "Chọn phía",
+    "selectDocumentType": "Chọn loại tài liệu"
+}

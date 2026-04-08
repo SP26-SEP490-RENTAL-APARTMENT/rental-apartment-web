@@ -10,6 +10,8 @@ import MapDetail from "./components/MapDetail";
 import RoomInfo from "./components/RoomInfo";
 import type { Amenity } from "@/types/amenity";
 import AmenitiesInfo from "./components/AmenitiesInfo";
+import type { Availability } from "@/types/availability";
+import AvailabilityDialog from "./components/AvailabilityDialog";
 
 const detail = {
   guest: [
@@ -54,6 +56,8 @@ function ApartmentDetail() {
   const [apartment, setApartment] = useState<Apartment>();
   const [room, setRoom] = useState<Room>();
   const [amenities, setAmenities] = useState<Amenity[]>([]);
+  const [availability, setAvailability] = useState<Availability>();
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     if (!id) return;
@@ -64,7 +68,7 @@ function ApartmentDetail() {
         const data = response.data.data;
         setApartment(data);
         setRoom(data.room);
-        setAmenities(data.amenities)
+        setAmenities(data.amenities);
       } catch (error) {
         console.log(error);
       }
@@ -72,6 +76,21 @@ function ApartmentDetail() {
 
     fetchApartmentDetail();
   }, [id]);
+
+  const handleCheckAvailability = async () => {
+    if (!id) return;
+
+    try {
+      const response = await apartmentApi.checkAvailability(id, {
+        startDate: null,
+        endDate: null,
+      });
+      setIsOpen(true);
+      setAvailability(response.data.data);
+    } catch (error) {
+      console.error("Error checking availability:", error);
+    }
+  };
   return (
     <div className="px-20">
       <h1 className="text-3xl mb-3 font-medium">{apartment?.room?.title}</h1>
@@ -97,17 +116,20 @@ function ApartmentDetail() {
 
         <aside className="lg:basis-1/3 relative">
           <div className="sticky top-10">
-            <BookingBox />
+            {apartment && (
+              <BookingBox
+                apartmentId={apartment.apartmentId}
+                onSubmit={handleCheckAvailability}
+                apartment={apartment}
+              />
+            )}
           </div>
         </aside>
       </div>
 
+      <div className="pb-10">{room && <RoomInfo room={room} />}</div>
       <div className="pb-10">
-        {room && (<RoomInfo room={room} />)}
-        
-      </div>
-      <div className="pb-10">
-        {amenities && (<AmenitiesInfo amenities={amenities} />)}
+        {amenities && <AmenitiesInfo amenities={amenities} />}
       </div>
 
       <div className="border-b pb-10">
@@ -123,6 +145,14 @@ function ApartmentDetail() {
           <MapDetail lat={apartment?.latitude} lng={apartment?.longitude} />
         )}
       </div>
+
+      {availability && (
+        <AvailabilityDialog
+          data={availability}
+          isOpen={isOpen}
+          onClose={() => setIsOpen(false)}
+        />
+      )}
     </div>
   );
 }

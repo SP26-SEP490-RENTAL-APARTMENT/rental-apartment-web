@@ -1,6 +1,72 @@
 import type { Apartment } from "@/types/apartment";
+import { useState, useRef } from "react";
+import { Button } from "@/components/ui/button";
+import { Loader2, X, Upload } from "lucide-react";
 
-function ApartmentDetailDialog({ apartment }: { apartment: Apartment }) {
+interface Props {
+  apartment: Apartment;
+  onAddPhotos?: (apartmentId: string, files: File[]) => Promise<void>;
+}
+
+function ApartmentDetailDialog({ apartment, onAddPhotos }: Props) {
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const [previewUrls, setPreviewUrls] = useState<string[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+
+    if (selectedFiles.length + files.length > 10) {
+      setError("Maximum 10 photos allowed");
+      return;
+    }
+
+    setSelectedFiles((prev) => [...prev, ...files]);
+    setError(null);
+
+    // Create preview URLs
+    files.forEach((file) => {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreviewUrls((prev) => [...prev, reader.result as string]);
+      };
+      reader.readAsDataURL(file);
+    });
+
+    // Reset input
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
+
+  const handleRemoveFile = (index: number) => {
+    setSelectedFiles((prev) => prev.filter((_, i) => i !== index));
+    setPreviewUrls((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const handleSubmit = async () => {
+    if (selectedFiles.length === 0) {
+      setError("Please select at least one photo");
+      return;
+    }
+    if (!onAddPhotos) return;
+
+    setLoading(true);
+    setError(null);
+    try {
+      await onAddPhotos(apartment.apartmentId, selectedFiles);
+      setSelectedFiles([]);
+      setPreviewUrls([]);
+    } catch (err) {
+      setError("Failed to upload photos");
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="max-h-[70vh] overflow-y-auto pr-2 space-y-6">
       {/* IMAGE */}
@@ -40,6 +106,78 @@ function ApartmentDetailDialog({ apartment }: { apartment: Apartment }) {
         <div>
           <p className="text-muted-foreground">Trạng thái</p>
           <p className="font-medium capitalize">{apartment.status}</p>
+        </div>
+      </div>
+
+      {/* ADD PHOTOS SECTION */}
+      <div className="border rounded-lg p-4 space-y-3">
+        <p className="font-semibold">Thêm ảnh</p>
+
+        {error && (
+          <div className="bg-destructive/15 text-destructive px-3 py-2 rounded-md text-sm">
+            {error}
+          </div>
+        )}
+
+        <div className="space-y-3">
+          <input
+            ref={fileInputRef}
+            type="file"
+            multiple
+            accept="image/*"
+            onChange={handleFileSelect}
+            className="hidden"
+            disabled={loading}
+          />
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => fileInputRef.current?.click()}
+            disabled={loading}
+            className="w-full"
+          >
+            <Upload className="mr-2" size={16} />
+            Chọn ảnh (tối đa 10)
+          </Button>
+
+          {/* SELECTED FILES PREVIEW */}
+          {previewUrls.length > 0 && (
+            <div>
+              <p className="text-sm font-medium mb-2">
+                Ảnh được chọn ({selectedFiles.length})
+              </p>
+              <div className="grid grid-cols-4 gap-2 max-h-40 overflow-y-auto">
+                {previewUrls.map((url, index) => (
+                  <div key={index} className="relative group">
+                    <img
+                      src={url}
+                      alt={`preview-${index}`}
+                      className="w-full h-20 object-cover rounded-md"
+                    />
+                    <button
+                      onClick={() => handleRemoveFile(index)}
+                      className="absolute top-1 right-1 bg-destructive text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                      disabled={loading}
+                    >
+                      <X size={14} />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {selectedFiles.length > 0 && (
+            <Button
+              size="sm"
+              onClick={handleSubmit}
+              disabled={loading}
+              className="w-full"
+            >
+              {loading && <Loader2 className="mr-2 animate-spin" size={16} />}
+              {loading ? "Đang tải lên..." : "Upload ảnh"}
+            </Button>
+          )}
         </div>
       </div>
 

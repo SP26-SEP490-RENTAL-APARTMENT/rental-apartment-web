@@ -29,17 +29,9 @@ export const PackageColumns = (
     header: "Name",
   },
   {
-    accessorKey: "description",
-    header: "Description",
-  },
-  {
     accessorKey: "price",
     header: "Price",
     cell: ({ row }) => `${row.original.price.toLocaleString()} đ`,
-  },
-  {
-    accessorKey: "currency",
-    header: "Currency",
   },
   {
     accessorKey: "isActive",

@@ -1,5 +1,6 @@
 import { apiConfig } from "@/config/apiConfig";
 import type { CreateAmenityFormData } from "@/schemas/amenitySchema";
+import type { DocumentApproveFormData } from "@/schemas/documentApproveSchema";
 import type { Amenity } from "@/types/amenity";
 import type { ApiResponse } from "@/types/api";
 import type { NearbyAttraction } from "@/types/nearbyAttraction";
@@ -40,6 +41,8 @@ export const userManagementApi = {
     apiConfig.privateApi.put(`/User/${userId}`, data),
   deleteUser: (userId: string): Promise<ApiResponse<null>> =>
     apiConfig.privateApi.delete(`/User/${userId}`),
+  getUserDetail: (userId: string): Promise<ApiResponse<User>> =>
+    apiConfig.privateApi.get(`/User/${userId}`),
 };
 
 export const subscriptionPlanManagementApi = {
@@ -121,6 +124,24 @@ export const packageManagementApi = {
     apiConfig.privateApi.delete(`/Package/${packageId}`),
   createPackage: (data: Partial<Package>): Promise<ApiResponse<null>> =>
     apiConfig.privateApi.post("/Package", data),
-  updatePackage: (packageId: string, data: Partial<Package>): Promise<ApiResponse<null>> =>
+  updatePackage: (
+    packageId: string,
+    data: Partial<Package>,
+  ): Promise<ApiResponse<null>> =>
     apiConfig.privateApi.put(`/Package/${packageId}`, data),
+  addPackageItemToPackage: (packageId: string, data: string[]) =>
+    apiConfig.privateApi.post(`/Package/${packageId}/items`, data),
+  getPackageByApartment: (apartmentId: string, params: ParamsProp) =>
+    apiConfig.privateApi.get(`/Package/by-apartment/${apartmentId}`, {
+      params,
+    }),
+};
+
+export const documentsManagement = {
+  getAllDocuments: (params: ParamsProp) =>
+    apiConfig.privateApi.get("/identity/documents", { params }),
+  approveDocument: (
+    data: DocumentApproveFormData,
+  ): Promise<ApiResponse<null>> =>
+    apiConfig.privateApi.post("/identity/documents/review", data),
 };
