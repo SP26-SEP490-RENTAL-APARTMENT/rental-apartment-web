@@ -94,7 +94,7 @@ function Identity() {
             ))}
       </div>
 
-      <div className="">
+      <div>
         <PaginationComponent
           onPageChange={setPage}
           page={page}

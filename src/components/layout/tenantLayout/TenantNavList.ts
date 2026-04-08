@@ -12,7 +12,7 @@ export const useTenantNavList = () => {
     },
     {
       title: tenantT("myBookings"),
-      url: "/tenant/bookings",
+      url: "/tenant/booking-history",
       icon: BookUser,
     },
     {

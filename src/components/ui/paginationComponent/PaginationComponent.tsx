@@ -6,6 +6,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "../pagination";
+import getPages from "./getPages";
 
 export interface PaginationProps {
   page: number;
@@ -24,9 +25,13 @@ function PaginationComponent({
   const handleNext = () => {
     onPageChange(Math.min(page + 1, totalPages));
   };
+
+  const pages = getPages(page, totalPages);
+
   return (
     <Pagination>
       <PaginationContent>
+        {/* Prev */}
         <PaginationItem>
           <PaginationPrevious
             onClick={handlePrev}
@@ -34,22 +39,30 @@ function PaginationComponent({
           />
         </PaginationItem>
 
-        {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
-          <PaginationItem key={p}>
-            <PaginationLink
-              isActive={p === page}
-              onClick={() => onPageChange(p)}
-            >
-              {p}
-            </PaginationLink>
+        {/* Pages */}
+        {pages.map((p, index) => (
+          <PaginationItem key={index}>
+            {p === "..." ? (
+              <span className="px-2 text-gray-500">...</span>
+            ) : (
+              <PaginationLink
+                isActive={p === page}
+                onClick={() => onPageChange(p)}
+              >
+                {p}
+              </PaginationLink>
+            )}
           </PaginationItem>
         ))}
 
+        {/* Next */}
         <PaginationItem>
           <PaginationNext
             onClick={handleNext}
             className={
-              page === totalPages ? "pointer-events-none opacity-50" : "cursor-pointer"
+              page === totalPages
+                ? "pointer-events-none opacity-50"
+                : "cursor-pointer"
             }
           />
         </PaginationItem>

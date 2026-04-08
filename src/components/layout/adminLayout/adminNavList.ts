@@ -7,6 +7,7 @@ import {
   Ungroup,
   Package,
   FileMinus,
+  Hotel,
 } from "lucide-react";
 
 export const adminNavList = [
@@ -49,5 +50,10 @@ export const adminNavList = [
     title: "Documents",
     url: "/admin/documents",
     icon: FileMinus,
+  },
+  {
+    title: "Approve Listings",
+    url: "/admin/approve-listings",
+    icon: Hotel,
   },
 ];

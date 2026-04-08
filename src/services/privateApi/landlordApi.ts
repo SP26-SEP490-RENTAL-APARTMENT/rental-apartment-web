@@ -1,6 +1,7 @@
 import { apiConfig } from "@/config/apiConfig";
 import type { UpdateApartmentFormData } from "@/schemas/apartmentSchema";
 import type { AvailableDateFormData } from "@/schemas/availableDateSchema";
+import type { ListingApproveFormData } from "@/schemas/listingApproveSchema";
 import type { UpdateRoomFormData } from "@/schemas/roomSchema";
 import type { Apartment, Room } from "@/types/apartment";
 import type { ApiResponse } from "@/types/api";
@@ -45,6 +46,13 @@ export const apartmentManagementApi = {
     }),
   putPhotosForApartment: (apartmentId: string, data: FormData) =>
     apiConfig.privateApi.put(`/apartments/${apartmentId}/photos`, data),
+  getApproveListings: (params: ParamsProp) =>
+    apiConfig.privateApi.get("/apartments/pending-review", { params }),
+  approveListing: (
+    apartmentId: string,
+    data: ListingApproveFormData,
+  ): Promise<ApiResponse<null>> =>
+    apiConfig.privateApi.post(`/apartments/${apartmentId}/approve`, data),
 };
 
 export const roomManagementApi = {
