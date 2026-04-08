@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { ROUTES } from "./constants/routes";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 
@@ -27,6 +27,14 @@ import NearbyAttractions from "./pages/Admin/NearbyAttractions/NearbyAttractions
 import PackageItemManagement from "./pages/Admin/PackageItem/PackageItemManagement";
 import PackageManagement from "./pages/Admin/PackageManagement/PackageManagement";
 import RoomManagement from "./pages/Landlord/RoomManagement/RoomManagement";
+import BookingConfirm from "./pages/Tenant/Bookings/Confirm/BookingConfirm";
+import Collections from "./pages/Tenant/Collections/Collections";
+import DocumentsManagement from "./pages/Admin/DocumentsManagement/DocumentsManagement";
+import CollectionLayout from "./components/layout/collectionLayout/CollectionLayout";
+import Identity from "./pages/Tenant/Identity/Identity";
+import WishlistPage from "./pages/Tenant/Wishlist/WishlistPage";
+import ApproveListings from "./pages/Admin/ApproveListings/ApproveListings";
+import BookingHistories from "./pages/Tenant/BookingHistory/BookingHistories";
 
 /**
  * App Component - Simplified routing setup
@@ -106,6 +114,22 @@ export default function App() {
               </ProtectedRoute>
             }
           />
+          <Route
+            path={ROUTES.ADMIN_DOCUMENT}
+            element={
+              <ProtectedRoute requiredRoles={["admin"]}>
+                <DocumentsManagement />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path={ROUTES.ADMIN_APPROVE_LISTINGS}
+            element={
+              <ProtectedRoute requiredRoles={["admin"]}>
+                <ApproveListings />
+              </ProtectedRoute>
+            }
+          />
         </Route>
 
         {/* ========== Landlord Routes ========== */}
@@ -146,10 +170,53 @@ export default function App() {
               </ProtectedRoute>
             }
           />
+          <Route
+            path={ROUTES.TENANT_IDENTITY}
+            element={
+              <ProtectedRoute requiredRoles={["tenant"]}>
+                <Identity />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path={ROUTES.TENANT_BOOKING_HISTORY}
+            element={
+              <ProtectedRoute requiredRoles={["tenant"]}>
+                <BookingHistories />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route element={<CollectionLayout />}>
+            <Route
+              path={ROUTES.TENANT_COLLECTIONS}
+              element={
+                <ProtectedRoute requiredRoles={["tenant"]}>
+                  <Collections />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path={ROUTES.TENANT_WISHLIST}
+              element={
+                <ProtectedRoute requiredRoles={["tenant"]}>
+                  <WishlistPage />
+                </ProtectedRoute>
+              }
+            />
+          </Route>
         </Route>
+        <Route
+          path={ROUTES.TENANT_BOOKING_CONFIRM}
+          element={
+            <ProtectedRoute requiredRoles={["tenant"]}>
+              <BookingConfirm />
+            </ProtectedRoute>
+          }
+        />
 
         {/* ========== Fallback - Unknown routes ========== */}
-        <Route path="*" element={<Navigate to={ROUTES.HOME} replace />} />
+        {/* <Route path="*" element={<Navigate to={ROUTES.HOME} replace />} /> */}
       </Routes>
     </BrowserRouter>
   );

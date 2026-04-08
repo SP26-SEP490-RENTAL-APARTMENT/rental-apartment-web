@@ -23,20 +23,27 @@ export const ADMIN_ROUTES = {
   AMENITIES: "/admin/amenities",
   NEARBY_ATTRACTIONS: "/admin/nearby-attractions",
   PACKAGE_ITEMS: "/admin/package-items",
-  PACKAGE: '/admin/packages',
+  PACKAGE: "/admin/packages",
+  DOCUMENT: "/admin/documents",
+  APPROVE_LISTINGS: "/admin/approve-listings",
 } as const;
 
 // Landlord Routes
 export const LANDLORD_ROUTES = {
   DASHBOARD: "/landlord/dashboard",
   APARTMENTS: "/landlord/apartments",
-  ROOMS: '/landlord/rooms',
+  ROOMS: "/landlord/rooms",
 } as const;
 
 // Tenant Routes
 export const TENANT_ROUTES = {
   PROFILE: "/tenant/profile",
   DASHBOARD: "/tenant/dashboard",
+  BOOKING_HISTORY: "/tenant/booking-history",
+  BOOKING_CONFIRM: "/tenant/booking-confirm",
+  COLLECTIONS: "/tenant/collections",
+  WISHLIST: "/tenant/wishlist/collections/:collectionId/items",
+  IDENTITY: "/tenant/identity",
 } as const;
 
 // Error Routes
@@ -55,7 +62,7 @@ export const ROUTES = {
   // Public
   HOME: PUBLIC_ROUTES.HOME,
   APARTMENT_DETAIL: PUBLIC_ROUTES.APARTMENT_DETAIL,
-  
+
   // Admin
   ADMIN_DASHBOARD: ADMIN_ROUTES.DASHBOARD,
   ADMIN_USERS: ADMIN_ROUTES.USERS,
@@ -64,6 +71,8 @@ export const ROUTES = {
   ADMIN_NEARBY_ATTRACTIONS: ADMIN_ROUTES.NEARBY_ATTRACTIONS,
   ADMIN_PACKAGE_ITEMS: ADMIN_ROUTES.PACKAGE_ITEMS,
   ADMIN_PACKAGE: ADMIN_ROUTES.PACKAGE,
+  ADMIN_DOCUMENT: ADMIN_ROUTES.DOCUMENT,
+  ADMIN_APPROVE_LISTINGS: ADMIN_ROUTES.APPROVE_LISTINGS,
 
   // Landlord
   LANDLORD_DASHBOARD: LANDLORD_ROUTES.DASHBOARD,
@@ -73,7 +82,12 @@ export const ROUTES = {
   // Tenant
   TENANT_PROFILE: TENANT_ROUTES.PROFILE,
   TENANT_DASHBOARD: TENANT_ROUTES.DASHBOARD,
-  
+  TENANT_BOOKING_HISTORY: TENANT_ROUTES.BOOKING_HISTORY,
+  TENANT_BOOKING_CONFIRM: TENANT_ROUTES.BOOKING_CONFIRM,
+  TENANT_COLLECTIONS: TENANT_ROUTES.COLLECTIONS,
+  TENANT_WISHLIST: TENANT_ROUTES.WISHLIST,
+  TENANT_IDENTITY: TENANT_ROUTES.IDENTITY,
+
   // Error
   NOT_FOUND: ERROR_ROUTES.NOT_FOUND,
   UNAUTHORIZED: ERROR_ROUTES.UNAUTHORIZED,
