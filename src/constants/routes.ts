@@ -33,6 +33,7 @@ export const LANDLORD_ROUTES = {
   DASHBOARD: "/landlord/dashboard",
   APARTMENTS: "/landlord/apartments",
   ROOMS: "/landlord/rooms",
+  BOOKING_MANAGEMENT: "/landlord/booking-management",
 } as const;
 
 // Tenant Routes
@@ -44,6 +45,7 @@ export const TENANT_ROUTES = {
   COLLECTIONS: "/tenant/collections",
   WISHLIST: "/tenant/wishlist/collections/:collectionId/items",
   IDENTITY: "/tenant/identity",
+  FINISH_PAYMENT: "/payment/success",
 } as const;
 
 // Error Routes
@@ -78,6 +80,7 @@ export const ROUTES = {
   LANDLORD_DASHBOARD: LANDLORD_ROUTES.DASHBOARD,
   LANDLORD_APARTMENTS: LANDLORD_ROUTES.APARTMENTS,
   LANDLORD_ROOMS: LANDLORD_ROUTES.ROOMS,
+  LANDLORD_BOOKING_MANAGEMENT: LANDLORD_ROUTES.BOOKING_MANAGEMENT,
 
   // Tenant
   TENANT_PROFILE: TENANT_ROUTES.PROFILE,
@@ -87,6 +90,7 @@ export const ROUTES = {
   TENANT_COLLECTIONS: TENANT_ROUTES.COLLECTIONS,
   TENANT_WISHLIST: TENANT_ROUTES.WISHLIST,
   TENANT_IDENTITY: TENANT_ROUTES.IDENTITY,
+  TENANT_FINISH_PAYMENT: TENANT_ROUTES.FINISH_PAYMENT,
 
   // Error
   NOT_FOUND: ERROR_ROUTES.NOT_FOUND,

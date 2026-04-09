@@ -35,6 +35,8 @@ import Identity from "./pages/Tenant/Identity/Identity";
 import WishlistPage from "./pages/Tenant/Wishlist/WishlistPage";
 import ApproveListings from "./pages/Admin/ApproveListings/ApproveListings";
 import BookingHistories from "./pages/Tenant/BookingHistory/BookingHistories";
+import FinishPayment from "./pages/Tenant/FinishPayment/FinishPayment";
+import BookingManagement from "./pages/Landlord/BookingManagement/BookingManagement";
 
 /**
  * App Component - Simplified routing setup
@@ -158,6 +160,14 @@ export default function App() {
               </ProtectedRoute>
             }
           />
+          <Route
+            path={ROUTES.LANDLORD_BOOKING_MANAGEMENT}
+            element={
+              <ProtectedRoute requiredRoles={["landlord"]}>
+                <BookingManagement />
+              </ProtectedRoute>
+            }
+          />
         </Route>
 
         {/* ========== Tenant Routes ========== */}
@@ -206,6 +216,14 @@ export default function App() {
             />
           </Route>
         </Route>
+        <Route
+          path={ROUTES.TENANT_FINISH_PAYMENT}
+          element={
+            <ProtectedRoute requiredRoles={["tenant"]}>
+              <FinishPayment />
+            </ProtectedRoute>
+          }
+        />
         <Route
           path={ROUTES.TENANT_BOOKING_CONFIRM}
           element={

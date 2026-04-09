@@ -26,7 +26,7 @@ export const landlordNavList = [
   },
   {
     title: "Bookings",
-    url: "/landlord/bookings",
+    url: "/landlord/booking-management",
     icon: CalendarCheck,
   },
   {

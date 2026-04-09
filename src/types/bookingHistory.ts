@@ -16,4 +16,6 @@ export interface BookingHistory {
     balanceDueDate: string
     status: 'pending' | 'negotiating' | 'confirmed' | 'paid' | 'completed' | 'cancelled' | 'disputed'
     createdAt: string
+    paymentMode: 'partial' | 'full',
+    upfrontPaymentAmount: number
 }

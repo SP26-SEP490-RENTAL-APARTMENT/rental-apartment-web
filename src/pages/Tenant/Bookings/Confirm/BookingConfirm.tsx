@@ -46,7 +46,7 @@ function BookingConfirm() {
       noOfInfants: quoteData?.noOfInfants || 0,
       noOfPets: quoteData?.noOfPets || 0,
       packageId: quoteData?.packageId || "",
-      depositPaid: false,
+      paymentMode: "partial" as const,
       paymentProvider: "stripe" as const,
     },
   });
@@ -55,6 +55,7 @@ function BookingConfirm() {
     try {
       setError(null);
       const response = await bookingApi.confirmBooking(data);
+      sessionStorage.setItem("payment_info", JSON.stringify(data));
       const paymentLink = response.data.data.paymentLink.url;
       setSuccessMessage("Booking confirmed successfully!");
       window.location.href = paymentLink;
@@ -249,28 +250,44 @@ function BookingConfirm() {
             render={({ field }) => <input {...field} type="hidden" />}
           />
 
-          {/* Deposit Paid */}
-          <div className="bg-yellow-50 rounded-lg p-4">
-            <label className="flex items-center cursor-pointer">
-              <Controller
-                name="depositPaid"
-                control={control}
-                render={({ field: { value, onChange } }) => (
-                  <input
-                    type="checkbox"
-                    checked={Boolean(value)}
-                    onChange={(e) => onChange(e.target.checked)}
-                    className="w-4 h-4 text-blue-600 rounded focus:ring-2 focus:ring-blue-500"
-                  />
-                )}
-              />
-              <span className="ml-3 text-gray-900">
-                I confirm that the deposit has been paid
-              </span>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-3">
+              Payment method
             </label>
-            {errors.depositPaid && (
+            <Controller
+              name="paymentMode"
+              control={control}
+              render={({ field }) => (
+                <div className="flex w-full gap-3">
+                  <label className="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50 transition flex-1">
+                    <input
+                      {...field}
+                      type="radio"
+                      value="partial"
+                      checked={field.value === "partial"}
+                      className="w-4 h-4"
+                    />
+                    <span className="ml-3 font-medium text-gray-900">
+                      Deposit
+                    </span>
+                  </label>
+
+                  <label className="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50 transition flex-1">
+                    <input
+                      {...field}
+                      type="radio"
+                      value="full"
+                      checked={field.value === "full"}
+                      className="w-4 h-4"
+                    />
+                    <span className="ml-3 font-medium text-gray-900">Full</span>
+                  </label>
+                </div>
+              )}
+            />
+            {errors.paymentProvider && (
               <p className="mt-2 text-sm text-red-600">
-                {errors.depositPaid.message}
+                {errors.paymentProvider.message}
               </p>
             )}
           </div>

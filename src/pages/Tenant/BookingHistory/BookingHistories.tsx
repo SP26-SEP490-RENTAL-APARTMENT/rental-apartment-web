@@ -37,24 +37,32 @@ function BookingHistories() {
   const totalPage = Math.ceil(totalCount / 3);
   return (
     <div className="p-10">
-      <div className="grid grid-cols-1 gap-4 mb-10">
-        {loading
-          ? Array.from({ length: 6 }).map((_, i) => (
-              <BookingHistorySkeleton key={i} />
-            ))
-          : bookingHistory &&
-            bookingHistory.map((item) => (
-              <BookingHistoryCard key={item.bookingId} data={item} />
-            ))}
-      </div>
+      {bookingHistory.length > 0 ? (
+        <div>
+          <div className="grid grid-cols-1 gap-4 mb-10">
+            {loading
+              ? Array.from({ length: 6 }).map((_, i) => (
+                  <BookingHistorySkeleton key={i} />
+                ))
+              : bookingHistory &&
+                bookingHistory.map((item) => (
+                  <BookingHistoryCard key={item.bookingId} data={item} />
+                ))}
+          </div>
 
-      <div>
-        <PaginationComponent
-          page={page}
-          totalPages={totalPage}
-          onPageChange={setPage}
-        />
-      </div>
+          <div>
+            <PaginationComponent
+              page={page}
+              totalPages={totalPage}
+              onPageChange={setPage}
+            />
+          </div>
+        </div>
+      ) : (
+        <div className="text-gray-500 flex justify-center items-center">
+          No Booking History Found
+        </div>
+      )}
     </div>
   );
 }
