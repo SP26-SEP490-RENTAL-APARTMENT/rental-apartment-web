@@ -71,3 +71,8 @@ export const roomManagementApi = {
   deleteRoom: (id: string): Promise<ApiResponse<null>> =>
     apiConfig.privateApi.delete(`/rooms/${id}`),
 };
+
+export const bookingManagementApi = {
+  getBookings: (params: ParamsProp) =>
+    apiConfig.privateApi.get("/landlord/bookings/history", { params }),
+};
