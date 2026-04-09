@@ -38,7 +38,7 @@ export const bookingConfirmSchema = z.object({
   noOfInfants: z.number().int().min(0, "Number of infants cannot be negative"),
   noOfPets: z.number().int().min(0, "Number of pets cannot be negative"),
   packageId: z.string().uuid("Invalid package ID"),
-  depositPaid: z.boolean(),
+  paymentMode: z.enum(["partial", "full"]),
   paymentProvider: z.enum(["stripe", "momo"]),
 });
 

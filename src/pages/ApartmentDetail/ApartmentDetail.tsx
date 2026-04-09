@@ -12,6 +12,7 @@ import type { Amenity } from "@/types/amenity";
 import AmenitiesInfo from "./components/AmenitiesInfo";
 import type { Availability } from "@/types/availability";
 import AvailabilityDialog from "./components/AvailabilityDialog";
+import { MapPin } from "lucide-react";
 
 const detail = {
   guest: [
@@ -140,10 +141,32 @@ function ApartmentDetail() {
           ))}
         </div>
       </div>
-      <div className="h-100 mt-10">
-        {apartment && (
-          <MapDetail lat={apartment?.latitude} lng={apartment?.longitude} />
-        )}
+      <div className="mt-16">
+        <div className="bg-white rounded-2xl shadow-lg p-5 border">
+          {/* Header */}
+          <div className="mb-4">
+            <div className="flex items-center gap-2">
+              <MapPin size={16} />
+              <h2 className="text-xl font-semibold text-gray-900">Location</h2>
+            </div>
+
+            <p className="text-sm text-gray-500">
+              {apartment?.address}, {apartment?.district}
+            </p>
+          </div>
+
+          {/* Map */}
+          <div className="w-full h-100 rounded-xl overflow-hidden">
+            {apartment && (
+              <MapDetail lat={apartment.latitude} lng={apartment.longitude} />
+            )}
+          </div>
+
+          {/* Optional footer */}
+          <div className="mt-3 text-xs text-gray-400">
+            Exact location provided after booking
+          </div>
+        </div>
       </div>
 
       {availability && (
