@@ -2,9 +2,6 @@ import {
   LayoutDashboard,
   Home,
   CalendarCheck,
-  Wallet,
-  MessageCircle,
-  Settings,
   Hotel,
 } from "lucide-react";
 
@@ -28,20 +25,5 @@ export const landlordNavList = [
     title: "Bookings",
     url: "/landlord/booking-management",
     icon: CalendarCheck,
-  },
-  {
-    title: "Earnings",
-    url: "/landlord/earnings",
-    icon: Wallet,
-  },
-  {
-    title: "Messages",
-    url: "/landlord/messages",
-    icon: MessageCircle,
-  },
-  {
-    title: "Settings",
-    url: "/landlord/settings",
-    icon: Settings,
   },
 ];

@@ -1,5 +1,6 @@
 import { apiConfig } from "@/config/apiConfig";
 import type { CreateAmenityFormData } from "@/schemas/amenitySchema";
+import type { AssignInspectionFormData } from "@/schemas/assignInspection";
 import type { DocumentApproveFormData } from "@/schemas/documentApproveSchema";
 import type { Amenity } from "@/types/amenity";
 import type { ApiResponse } from "@/types/api";
@@ -144,4 +145,21 @@ export const documentsManagement = {
     data: DocumentApproveFormData,
   ): Promise<ApiResponse<null>> =>
     apiConfig.privateApi.post("/identity/documents/review", data),
+};
+
+export const inspectionApi = {
+  assignInspection: (data: AssignInspectionFormData) =>
+    apiConfig.privateApi.post("/PropertyInspection", data),
+  getAllInspection: (params: ParamsProp) =>
+    apiConfig.privateApi.get("/PropertyInspection", { params }),
+  getMyInspection: (params: ParamsProp) =>
+    apiConfig.privateApi.get("/PropertyInspection/staff/me", { params }),
+  startInspection: (id: string) =>
+    apiConfig.privateApi.post(`/PropertyInspection/${id}/start`),
+  fillInspection: (id: string, data: FormData) =>
+    apiConfig.privateApi.post(`/PropertyInspection/${id}/complete`, data),
+  reviewInspection: (
+    id: string,
+    data: { decision: string; reason: string },
+  ) => apiConfig.privateApi.post(`/PropertyInspection/${id}/review`, data),
 };
