@@ -65,7 +65,7 @@ function Login() {
       } else if (data.role === "landlord") {
         navigate(ROUTES.LANDLORD_DASHBOARD);
       } else if (data.role === "staff") {
-        navigate(ROUTES.ADMIN_DASHBOARD);
+        navigate(ROUTES.ADMIN_INSPECTION);
       } else {
         navigate(ROUTES.HOME);
       }

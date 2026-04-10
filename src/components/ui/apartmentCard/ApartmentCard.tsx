@@ -1,14 +1,9 @@
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
+  Card
 } from "@/components/ui/card";
 import { PUBLIC_ROUTES } from "@/constants/routes";
 import type { Apartment } from "@/types/apartment";
-import { Heart, MapPin, Star } from "lucide-react";
+import { Heart, MapPin, PawPrint, UsersRound } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../button";
 
@@ -30,53 +25,67 @@ function ApartmentCard({ apartment, onClickHeart }: ApartmentCardProps) {
           ),
         )
       }
-      className="overflow-hidden hover:shadow-xl transition duration-300 pt-0 cursor-pointer"
+      className="group overflow-hidden rounded-2xl border hover:shadow-xl transition-all duration-300 cursor-pointer pt-0"
     >
+      {/* IMAGE */}
       <div className="relative">
         <img
           src={apartment.photos[0]}
           alt={apartment.title}
-          className="w-full h-52 object-cover"
+          className="w-full h-56 object-cover group-hover:scale-105 transition duration-300"
         />
+
+        {/* HEART */}
         <Button
           onClick={(e) => {
-            e.stopPropagation(); // tránh trigger navigate
+            e.stopPropagation();
             onClickHeart(apartment.apartmentId);
           }}
           variant="secondary"
-          className="absolute top-2 right-2 hover:bg-white p-2 shadow"
+          size="icon"
+          className="absolute top-3 right-3 bg-white/80 backdrop-blur hover:bg-white shadow"
         >
-          <Heart />
+          <Heart size={18} />
         </Button>
+
+        {/* PRICE OVERLAY */}
+        <div className="absolute bottom-3 left-3 bg-white/90 backdrop-blur px-3 py-1 rounded-lg shadow text-sm font-semibold">
+          {apartment.basePricePerNight.toLocaleString("vi-VN")} đ / đêm
+        </div>
       </div>
 
-      <CardHeader>
-        <CardTitle className="text-lg">{apartment.title}</CardTitle>
-        <CardDescription className="flex gap-2 items-center">
-          <span>
-            <MapPin size={15} />
-          </span>
-          <span>{apartment.address}</span>
-        </CardDescription>
-      </CardHeader>
+      {/* CONTENT */}
+      <div className="p-4 space-y-2">
+        {/* TITLE */}
+        <h3 className="font-semibold text-lg line-clamp-1">
+          {apartment.title}
+        </h3>
 
-      <CardContent className="border-b pb-2">
-        <p className="text-sm text-gray-600 line-clamp-2">
+        {/* LOCATION */}
+        <div className="flex items-center text-sm text-gray-500 gap-1">
+          <MapPin size={14} />
+          <span className="line-clamp-1">
+            {apartment.district}, {apartment.city}
+          </span>
+        </div>
+
+        {/* INFO */}
+        <div className="flex items-center gap-3 text-sm text-gray-600">
+          <div className="flex gap-2 items-center">
+            <UsersRound size={16} /> <p>{apartment.maxOccupants}</p>
+          </div>
+          {apartment.isPetAllowed && (
+            <div className="flex items-center gap-2">
+              <PawPrint size={16} /> <p>Pet</p>
+            </div>
+          )}
+        </div>
+
+        {/* DESCRIPTION */}
+        <p className="text-sm text-gray-500 line-clamp-2">
           {apartment.description}
         </p>
-
-        <div className="flex items-center mt-2">
-          <Star className="text-yellow-500 fill-yellow-500" />
-          <span className="text-2xl ml-2 font-bold">0</span>
-        </div>
-      </CardContent>
-
-      <CardFooter className="font-semibold text-primary text-lg flex justify-end gap-2">
-        <span className="text-blue-500 text-2xl">
-          {apartment.basePricePerNight.toLocaleString("vi-VN")} đ
-        </span>
-        <span>/night</span>
-      </CardFooter>
+      </div>
     </Card>
   );
 }

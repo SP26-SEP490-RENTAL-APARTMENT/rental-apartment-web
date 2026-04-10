@@ -3,7 +3,8 @@ import type { ColumnDef } from "@tanstack/react-table";
 import ListingAction from "./ListingAction";
 
 export const ListingColumns = (
-  onApproveApartment: (id: string) => void
+  onApproveApartment: (id: string) => void,
+  onAssignInspection: (id: string) => void
 ): ColumnDef<Apartment>[] => [
   {
     accessorKey: "title",
@@ -28,7 +29,7 @@ export const ListingColumns = (
     cell: ({ row }) => {
       const listing = row.original;
       return (
-        <ListingAction listings={listing} onAppvrove={onApproveApartment} />
+        <ListingAction listings={listing} onAppvrove={onApproveApartment} onAssign={onAssignInspection} />
       );
     },
   },

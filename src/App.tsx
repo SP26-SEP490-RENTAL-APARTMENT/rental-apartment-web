@@ -37,6 +37,7 @@ import ApproveListings from "./pages/Admin/ApproveListings/ApproveListings";
 import BookingHistories from "./pages/Tenant/BookingHistory/BookingHistories";
 import FinishPayment from "./pages/Tenant/FinishPayment/FinishPayment";
 import BookingManagement from "./pages/Landlord/BookingManagement/BookingManagement";
+import Inspections from "./pages/Admin/Inspection/Inspection";
 
 /**
  * App Component - Simplified routing setup
@@ -129,6 +130,14 @@ export default function App() {
             element={
               <ProtectedRoute requiredRoles={["admin"]}>
                 <ApproveListings />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path={ROUTES.ADMIN_INSPECTION}
+            element={
+              <ProtectedRoute requiredRoles={["admin", "staff"]}>
+                <Inspections />
               </ProtectedRoute>
             }
           />
