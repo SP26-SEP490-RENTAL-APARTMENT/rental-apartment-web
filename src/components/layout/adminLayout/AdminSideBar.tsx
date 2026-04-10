@@ -13,11 +13,12 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { LogOut } from "lucide-react";
-import { adminNavList } from "./adminNavList";
+import { useAadminNavList } from "./adminNavList";
 import { useAuthStore } from "@/store/authStore";
 function AdminSideBar() {
   const { state } = useSidebar();
   const { logout } = useAuthStore();
+  const adminNavList = useAadminNavList()
 
   const handleLogout = () => {
     logout();

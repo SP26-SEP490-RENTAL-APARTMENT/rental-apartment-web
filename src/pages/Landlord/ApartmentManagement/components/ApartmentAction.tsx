@@ -309,24 +309,6 @@ function ApartmentAction({
         </Tooltip>
       </TooltipProvider>
 
-      {/* Send to approve */}
-      <TooltipProvider>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              size="sm"
-              variant="secondary"
-              onClick={() => onSendApprove(apartment.apartmentId)}
-            >
-              <Send />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>
-            <p>Send to approve</p>
-          </TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
-
       {/* Delete */}
       <Dialog>
         <DialogTrigger asChild>
@@ -359,6 +341,26 @@ function ApartmentAction({
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* Send to approve */}
+      {apartment.status === "draft" && (
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                size="sm"
+                variant="secondary"
+                onClick={() => onSendApprove(apartment.apartmentId)}
+              >
+                <Send />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Send to approve</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      )}
     </div>
   );
 }

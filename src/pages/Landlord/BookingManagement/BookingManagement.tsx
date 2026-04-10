@@ -64,7 +64,6 @@ function BookingManagement() {
         page={page}
         onPageChange={handlePageChange}
       />
-      {/* Test */}
     </div>
   );
 }

@@ -26,6 +26,7 @@ export const ADMIN_ROUTES = {
   PACKAGE: "/admin/packages",
   DOCUMENT: "/admin/documents",
   APPROVE_LISTINGS: "/admin/approve-listings",
+  INSPECTION: '/admin/inspection'
 } as const;
 
 // Landlord Routes
@@ -75,6 +76,7 @@ export const ROUTES = {
   ADMIN_PACKAGE: ADMIN_ROUTES.PACKAGE,
   ADMIN_DOCUMENT: ADMIN_ROUTES.DOCUMENT,
   ADMIN_APPROVE_LISTINGS: ADMIN_ROUTES.APPROVE_LISTINGS,
+  ADMIN_INSPECTION: ADMIN_ROUTES.INSPECTION,
 
   // Landlord
   LANDLORD_DASHBOARD: LANDLORD_ROUTES.DASHBOARD,
