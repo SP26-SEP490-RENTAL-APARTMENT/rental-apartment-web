@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -7,14 +8,40 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import type { BookingHistory } from "@/types/bookingHistory";
-import { Eye } from "lucide-react";
+import { CheckCheck, Eye, LogOut } from "lucide-react";
+import CheckOutDialog from "./CheckOutDialog";
+import CheckInDialog from "./CheckinDialog";
 
 export interface Props {
   bookings: BookingHistory;
+  onCheckIn: (
+    bookingId: string,
+    data: { actualCheckIn: Date; note: string },
+  ) => Promise<void>;
+  onCheckOut: (
+    bookingId: string,
+    data: { actualCheckOut: Date; note: string },
+  ) => Promise<void>;
 }
-function BookingAction({ bookings }: Props) {
+function BookingAction({ bookings, onCheckIn, onCheckOut }: Props) {
+  const [checkInDialogOpen, setCheckInDialogOpen] = useState(false);
+  const [checkOutDialogOpen, setCheckOutDialogOpen] = useState(false);
+
+  const handleCheckInSubmit = async (data: {
+    actualCheckIn: Date;
+    note: string;
+  }) => {
+    await onCheckIn(bookings.bookingId, data);
+  };
+
+  const handleCheckOutSubmit = async (data: {
+    actualCheckOut: Date;
+    note: string;
+  }) => {
+    await onCheckOut(bookings.bookingId, data);
+  };
   return (
-    <div>
+    <div className="flex gap-2">
       <Dialog>
         <DialogTrigger asChild>
           <Button size="sm" variant="outline">
@@ -119,6 +146,37 @@ function BookingAction({ bookings }: Props) {
           </div>
         </DialogContent>
       </Dialog>
+
+      {!bookings.actualCheckIn && (
+        <Button
+          size="sm"
+          variant="secondary"
+          onClick={() => setCheckInDialogOpen(true)}
+        >
+          <CheckCheck />
+        </Button>
+      )}
+      {bookings.actualCheckIn && !bookings.actualCheckOut && (
+        <Button
+          size="sm"
+          variant="default"
+          onClick={() => setCheckOutDialogOpen(true)}
+        >
+          <LogOut />
+        </Button>
+      )}
+
+      <CheckInDialog
+        open={checkInDialogOpen}
+        onClose={() => setCheckInDialogOpen(false)}
+        onSubmit={handleCheckInSubmit}
+      />
+
+      <CheckOutDialog
+        open={checkOutDialogOpen}
+        onClose={() => setCheckOutDialogOpen(false)}
+        onSubmit={handleCheckOutSubmit}
+      />
     </div>
   );
 }

@@ -9,6 +9,7 @@ import {
 import { bookingApi } from "@/services/privateApi/tenantApi";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { toast } from "sonner";
 
 function BookingConfirm() {
   const navigate = useNavigate();
@@ -59,7 +60,8 @@ function BookingConfirm() {
       const paymentLink = response.data.data.paymentLink.url;
       setSuccessMessage("Booking confirmed successfully!");
       window.location.href = paymentLink;
-    } catch (err) {
+    } catch (err: any) {
+      toast.error(err?.response?.data?.message || "Failed to confirm booking");
       console.error("Error confirming booking:", err);
       setError("Failed to confirm booking. Please try again.");
     }
