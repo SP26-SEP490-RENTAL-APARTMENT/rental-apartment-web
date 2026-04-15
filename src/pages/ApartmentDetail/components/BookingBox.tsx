@@ -10,6 +10,7 @@ import type { Package } from "@/types/package";
 import type { ParamsProp } from "@/types/params";
 import { ROUTES } from "@/constants/routes";
 import type { Apartment } from "@/types/apartment";
+import { toast } from "sonner";
 
 export interface Props {
   apartmentId: string;
@@ -82,8 +83,8 @@ function BookingBox({ apartmentId, onSubmit, apartment }: Props) {
     return false;
   };
   const formatDateOnly = (date: Date) => {
-  return date.toLocaleDateString("en-CA"); 
-};
+    return date.toLocaleDateString("en-CA");
+  };
 
   const handleBook = async () => {
     if (!checkIn || !checkOut || !packageId) {
@@ -94,7 +95,7 @@ function BookingBox({ apartmentId, onSubmit, apartment }: Props) {
     const quoteData = {
       apartmentId,
       checkInDate: formatDateOnly(checkIn),
-  checkOutDate: formatDateOnly(checkOut),
+      checkOutDate: formatDateOnly(checkOut),
       noOfAdults,
       noOfInfants,
       noOfPets,
@@ -116,8 +117,8 @@ function BookingBox({ apartmentId, onSubmit, apartment }: Props) {
           remainingBalance: bookingDetails.remainingBalance,
         },
       });
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      toast.error(error?.response?.data?.message || "Failed to create booking quote");
     }
   };
 

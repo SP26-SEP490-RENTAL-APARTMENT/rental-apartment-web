@@ -46,3 +46,12 @@ export const bookingApi = {
   getBookingHistory: (params: ParamsProp) =>
     apiConfig.privateApi.get("/tenant/bookings/history", { params }),
 };
+
+export const reviewApi = {
+  postReview: (data: { bookingId: string; rating: number; comment: string }) =>
+    apiConfig.privateApi.post("/Review", data),
+  getAverageRating: (apartmentId: string) =>
+    apiConfig.privateApi.get(`/Review/apartment/${apartmentId}/average-rating`),
+  getAllReviews: (apartmentId: string) =>
+    apiConfig.privateApi.get(`/Review/apartment/${apartmentId}`),
+};
