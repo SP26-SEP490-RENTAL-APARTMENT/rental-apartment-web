@@ -12,7 +12,7 @@ import { inspectionApi } from "@/services/privateApi/adminApi";
 
 function ApproveListings() {
   const [approveListings, setApproveListings] = useState<Apartment[]>([]);
-  const [selectedListingId, setSelectedListingId] = useState("");
+  const [selectedListingId, setSelectedListingId] = useState<string>("");
   const [page, setPage] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
   const [loading, setLoading] = useState(false);

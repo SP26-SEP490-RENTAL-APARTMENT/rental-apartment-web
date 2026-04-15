@@ -18,4 +18,7 @@ export interface BookingHistory {
     createdAt: string
     paymentMode: 'partial' | 'full',
     upfrontPaymentAmount: number
+    tenantFullName: string
+    actualCheckIn: string | null
+    actualCheckOut: string | null
 }

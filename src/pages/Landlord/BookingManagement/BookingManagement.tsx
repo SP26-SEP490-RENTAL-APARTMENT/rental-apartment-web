@@ -14,8 +14,7 @@ function BookingManagement() {
   const [totalCount, setTotalCount] = useState(0);
   const [filters, setFilters] = useState<BookingFilterValues>({
     search: "",
-    fromDate: undefined,
-    toDate: undefined,
+    sortBy: "createdAt",
     sortOrder: "desc",
   });
 
@@ -26,10 +25,8 @@ function BookingManagement() {
         page,
         pageSize: 5,
         search: filters.search,
-        sortBy: "createdAt",
+        sortBy: filters.sortBy,
         sortOrder: filters.sortOrder,
-        fromDate: filters.fromDate,
-        toDate: filters.toDate,
       });
       setBookings(response.data.items);
       setTotalCount(response.data.totalCount);
@@ -47,16 +44,54 @@ function BookingManagement() {
   const handlePageChange = (newPage: number) => {
     setPage(newPage);
   };
+
+  const handleResetFilters = () => {
+    setPage(1);
+    setFilters({
+      search: "",
+      sortBy: "createdAt",
+      sortOrder: "desc",
+    });
+  };
+
+  const handleCheckIn = async (
+    bookingId: string,
+    data: { actualCheckIn: Date; note: string },
+  ) => {
+    try {
+      await bookingManagementApi.checkIn(bookingId, data);
+      // Refresh bookings list after successful check-in
+      fetchBookings();
+    } catch (error) {
+      console.error("Check-in failed:", error);
+      throw error;
+    }
+  };
+  const handleCheckOut = async (
+    bookingId: string,
+    data: { actualCheckOut: Date; note: string },
+  ) => {
+    try {
+      await bookingManagementApi.checkOut(bookingId, data);
+      // Refresh bookings list after successful check-out
+      fetchBookings();
+    } catch (error) {
+      console.error("Check-out failed:", error);
+      throw error;
+    }
+  };
   return (
     <div>
       <BookingManagementFilter
+        filters={filters}
         onFilterChange={(values) => {
-          setPage(1); // reset về page 1 khi filter
+          setPage(1);
           setFilters(values);
         }}
+        onReset={handleResetFilters}
       />
       <DataTable
-        columns={BookingColumns()}
+        columns={BookingColumns(handleCheckIn, handleCheckOut)}
         data={bookings}
         limit={5}
         loading={loading}
