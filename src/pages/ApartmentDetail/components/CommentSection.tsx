@@ -1,43 +1,36 @@
+import { formatDate } from "@/lib/utils";
+import type { Review } from "@/types/review";
 import { Star } from "lucide-react";
 
-interface CommentSectionProps {
-  guest: {
-    name: string;
-    avatarUrl: string;
-    comment: string;
-    time: string;
-    rate: number;
-  };
-}
-function CommentSection({ guest }: CommentSectionProps) {
+function CommentSection({ reviews }: { reviews: Review }) {
   return (
     <div>
       <div className="flex items-center gap-2">
-        <img
-          className="w-15 h-15 rounded-full object-cover border-2"
-          src={guest.avatarUrl}
-          alt={guest.name}
-        />
+        <div className="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center">
+          <span className="text-lg font-bold">
+            {reviews.tenantName.charAt(0).toUpperCase()}
+          </span>
+        </div>
         <div className="flex flex-col">
-          <span className="font-bold">{guest.name}</span>
-          <span>{guest.time}</span>
+          <span className="font-bold">{reviews.tenantName}</span>
+          <span>{formatDate(reviews.createdAt)}</span>
         </div>
       </div>
-      <div className="flex gap-1">
+      <div className="flex gap-1 my-2">
         {[...Array(5)].map((_, i) => (
           <Star
             key={i}
-            size={16}
+            size={15}
             className={
-              i < guest.rate
-                ? "text-yellow-500 fill-yellow-500"
-                : "text-black fill-black"
+              i < reviews.rating
+                ? "text-black fill-black"
+                : "text-gray-400 fill-gray-400"
             }
           />
         ))}
       </div>
-      <div className="mt-2 line-clamp-3">
-        <p>{guest.comment}</p>
+      <div className="line-clamp-3">
+        <p>{reviews.comment}</p>
       </div>
     </div>
   );

@@ -4,6 +4,7 @@ import type { BookingHistory } from "@/types/bookingHistory";
 
 export interface Props {
   data: BookingHistory;
+  onClick?: (booking: BookingHistory) => void;
 }
 
 const formatDate = (date: string) => new Date(date).toLocaleDateString("vi-VN");
@@ -33,9 +34,9 @@ const getPaymentModeColor = (mode: "full" | "partial") => {
     : "bg-blue-100 text-blue-700";
 };
 
-export default function BookingHistoryCard({ data }: Props) {
+export default function BookingHistoryCard({ data, onClick }: Props) {
   return (
-    <Card className="w-full hover:shadow-md transition">
+    <Card className="w-full hover:shadow-md transition cursor-pointer" onClick={() => onClick?.(data)}>
       <CardContent className="p-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="flex flex-col gap-2 flex-1">
           <div className="flex flex-col gap-1">

@@ -75,4 +75,8 @@ export const roomManagementApi = {
 export const bookingManagementApi = {
   getBookings: (params: ParamsProp) =>
     apiConfig.privateApi.get("/landlord/bookings/history", { params }),
+  checkIn: (bookingId: string, data: {actualCheckIn: Date, note: string}) =>
+    apiConfig.privateApi.post(`/Booking/${bookingId}/check-in`, data),
+  checkOut: (bookingId: string, data: {actualCheckOut: Date, note: string}) =>
+    apiConfig.privateApi.post(`/Booking/${bookingId}/check-out`, data),
 };

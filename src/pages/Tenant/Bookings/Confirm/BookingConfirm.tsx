@@ -9,12 +9,15 @@ import {
 import { bookingApi } from "@/services/privateApi/tenantApi";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { toast } from "sonner";
+import { useBookingStore } from "@/store/bookingStore";
 
 function BookingConfirm() {
   const navigate = useNavigate();
   const location = useLocation();
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const setBookingData = useBookingStore((state) => state.setBookingData);
 
   const quoteData = location.state;
 
@@ -55,11 +58,12 @@ function BookingConfirm() {
     try {
       setError(null);
       const response = await bookingApi.confirmBooking(data);
-      sessionStorage.setItem("payment_info", JSON.stringify(data));
+      setBookingData(data);
       const paymentLink = response.data.data.paymentLink.url;
       setSuccessMessage("Booking confirmed successfully!");
       window.location.href = paymentLink;
-    } catch (err) {
+    } catch (err: any) {
+      toast.error(err?.response?.data?.message || "Failed to confirm booking");
       console.error("Error confirming booking:", err);
       setError("Failed to confirm booking. Please try again.");
     }

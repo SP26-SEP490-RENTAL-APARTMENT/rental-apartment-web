@@ -24,6 +24,14 @@ export const ListingColumns = (
     },
   },
   {
+    accessorKey: "inspectionStatus",
+    header: "Inspection Status",
+    cell: ({ row }) => {
+      const inspectionStatus = row.original.inspectionStatus;
+      return inspectionStatus ? inspectionStatus.charAt(0).toUpperCase() + inspectionStatus.slice(1) : "Not Inspected";
+    },
+  },
+  {
     id: "actions",
     header: "Actions",
     cell: ({ row }) => {

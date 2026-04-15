@@ -12,7 +12,7 @@ function RecenterButton({ lat, lng }: { lat: number; lng: number }) {
   const map = useMap();
 
   const handleClick = () => {
-    map.setView([lat, lng], 15); // zoom + move về marker
+    map.setView([lat, lng], 15);
   };
 
   return (
@@ -26,7 +26,11 @@ function RecenterButton({ lat, lng }: { lat: number; lng: number }) {
 }
 function MapDetail({ lat, lng }: MapDetailProps) {
   return (
-    <MapContainer  center={[lat, lng]} zoom={15} style={{ height: "100%" }}>
+    <MapContainer
+      center={[lat, lng]}
+      zoom={15}
+      style={{ height: "100%", zIndex: 0 }}
+    >
       <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
       <Marker position={[lat, lng]}>
         <Popup>Căn hộ của bạn</Popup>
