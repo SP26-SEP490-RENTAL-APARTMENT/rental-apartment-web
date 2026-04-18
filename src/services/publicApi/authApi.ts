@@ -8,4 +8,6 @@ export const authApi = {
   register: (registerData: Register) =>
     apiConfig.publicApi.post("/auth/register", registerData),
   // refreshToken: (refreshToken: string) => apiConfig.publicApi.post("/auth/refresh-token", { refreshToken }),
+  addRole: (data: { targetRole: string }) =>
+    apiConfig.privateApi.post("/auth/roles", data),
 };

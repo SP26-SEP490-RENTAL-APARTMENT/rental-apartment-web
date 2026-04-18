@@ -1,9 +1,9 @@
 export interface ParamsProp extends DateParamsProps {
   page: number;
   pageSize: number;
-  sortBy: string;
-  sortOrder: string;
-  search: string;
+  sortBy?: string;
+  sortOrder?: string;
+  search?: string;
 }
 
 export interface DateParamsProps {

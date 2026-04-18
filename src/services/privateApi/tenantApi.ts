@@ -55,3 +55,7 @@ export const reviewApi = {
   getAllReviews: (apartmentId: string) =>
     apiConfig.privateApi.get(`/Review/apartment/${apartmentId}`),
 };
+
+export const profileApi = {
+  getProfile: () => apiConfig.privateApi.get("/User/me"),
+}

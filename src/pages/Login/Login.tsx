@@ -55,6 +55,9 @@ function Login() {
           fullName: data.fullName,
           email: data.email,
           role: data.role,
+          roles: data.roles,
+          nationality: data.nationality,
+          subscriptionPlanId: data.subscriptionPlanId,
         },
         data.accessToken,
         data.refreshToken,
@@ -62,8 +65,6 @@ function Login() {
 
       if (data.role === "admin") {
         navigate(ROUTES.ADMIN_DASHBOARD);
-      } else if (data.role === "landlord") {
-        navigate(ROUTES.LANDLORD_DASHBOARD);
       } else if (data.role === "staff") {
         navigate(ROUTES.ADMIN_INSPECTION);
       } else {
