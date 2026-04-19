@@ -134,14 +134,13 @@ function Header() {
             </DropdownMenuTrigger>
             <DropdownMenuContent>
               <DropdownMenuGroup>
-                {/* <DropdownMenuLabel>{account("myAccount")}</DropdownMenuLabel> */}
-                {user?.roles.includes("tenant") && (
-                  <DropdownMenuItem onClick={() => navigate("/tenant/profile")}>
-                    {account("profile")}
-                  </DropdownMenuItem>
-                )}
-                {user?.roles.includes('landlord') && (
-                  <DropdownMenuItem onClick={() => navigate(ROUTES.LANDLORD_APARTMENTS)}>
+                <DropdownMenuItem onClick={() => navigate("/tenant/profile")}>
+                  {account("profile")}
+                </DropdownMenuItem>
+                {user?.roles.includes("landlord") && (
+                  <DropdownMenuItem
+                    onClick={() => navigate(ROUTES.LANDLORD_APARTMENTS)}
+                  >
                     {account("landlordDashboard")}
                   </DropdownMenuItem>
                 )}
