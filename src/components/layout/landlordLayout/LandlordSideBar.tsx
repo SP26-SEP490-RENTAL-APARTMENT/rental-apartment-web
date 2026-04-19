@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import {
   Sidebar,
   SidebarContent,
@@ -12,11 +12,12 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { landlordNavList } from "./landlordNavList";
-import { LogOut } from "lucide-react";
+import { Building2, LogOut } from "lucide-react";
 import { useAuthStore } from "@/store/authStore";
 function LandlordSideBar() {
   const { state } = useSidebar();
   const { logout } = useAuthStore();
+  const navigate = useNavigate();
 
   const handleLogout = () => {
     logout();
@@ -28,10 +29,20 @@ function LandlordSideBar() {
     <Sidebar collapsible="icon">
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>
-            {state === "expanded" && "Landlord Panel"}
+          <SidebarGroupLabel className="p-5 flex justify-start items-center">
+            {state === "expanded" && (
+              <div
+                onClick={() => navigate("/")}
+                className="flex gap-2 items-center cursor-pointer justify-center"
+              >
+                <span>
+                  <Building2 color="blue" size={35} />
+                </span>
+                <span className="text-blue-700 font-bold text-3xl">VStay</span>
+              </div>
+            )}
           </SidebarGroupLabel>
-
+          <hr className="my-2" />
           <SidebarGroupContent>
             <SidebarMenu>
               {landlordNavList.map((item) => {

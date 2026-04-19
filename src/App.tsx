@@ -38,6 +38,7 @@ import BookingHistories from "./pages/Tenant/BookingHistory/BookingHistories";
 import FinishPayment from "./pages/Tenant/FinishPayment/FinishPayment";
 import BookingManagement from "./pages/Landlord/BookingManagement/BookingManagement";
 import Inspections from "./pages/Admin/Inspection/Inspection";
+import MySubscription from "./pages/Landlord/MySubscription/MySubscription";
 
 /**
  * App Component - Simplified routing setup
@@ -148,7 +149,7 @@ export default function App() {
           <Route
             path={ROUTES.LANDLORD_DASHBOARD}
             element={
-              <ProtectedRoute requiredRoles={["landlord"]}>
+              <ProtectedRoute requiredRoles={["landlord", "tenant"]}>
                 <LandlordDashboard />
               </ProtectedRoute>
             }
@@ -156,7 +157,7 @@ export default function App() {
           <Route
             path={ROUTES.LANDLORD_APARTMENTS}
             element={
-              <ProtectedRoute requiredRoles={["landlord"]}>
+              <ProtectedRoute requiredRoles={["landlord", "tenant"]}>
                 <ApartmentManagement />
               </ProtectedRoute>
             }
@@ -164,7 +165,7 @@ export default function App() {
           <Route
             path={ROUTES.LANDLORD_ROOMS}
             element={
-              <ProtectedRoute requiredRoles={["landlord"]}>
+              <ProtectedRoute requiredRoles={["landlord", "tenant"]}>
                 <RoomManagement />
               </ProtectedRoute>
             }
@@ -172,8 +173,16 @@ export default function App() {
           <Route
             path={ROUTES.LANDLORD_BOOKING_MANAGEMENT}
             element={
-              <ProtectedRoute requiredRoles={["landlord"]}>
+              <ProtectedRoute requiredRoles={["landlord", "tenant"]}>
                 <BookingManagement />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path={ROUTES.LANDLORD_MY_SUBSCRIPTIONS}
+            element={
+              <ProtectedRoute requiredRoles={["landlord", "tenant"]}>
+                <MySubscription />
               </ProtectedRoute>
             }
           />
@@ -184,7 +193,7 @@ export default function App() {
           <Route
             path={ROUTES.TENANT_PROFILE}
             element={
-              <ProtectedRoute requiredRoles={["tenant"]}>
+              <ProtectedRoute requiredRoles={["tenant", "landlord"]}>
                 <Profile />
               </ProtectedRoute>
             }
@@ -192,7 +201,7 @@ export default function App() {
           <Route
             path={ROUTES.TENANT_IDENTITY}
             element={
-              <ProtectedRoute requiredRoles={["tenant"]}>
+              <ProtectedRoute requiredRoles={["tenant", "landlord"]}>
                 <Identity />
               </ProtectedRoute>
             }
@@ -200,7 +209,7 @@ export default function App() {
           <Route
             path={ROUTES.TENANT_BOOKING_HISTORY}
             element={
-              <ProtectedRoute requiredRoles={["tenant"]}>
+              <ProtectedRoute requiredRoles={["tenant", "landlord"]}>
                 <BookingHistories />
               </ProtectedRoute>
             }
@@ -210,7 +219,7 @@ export default function App() {
             <Route
               path={ROUTES.TENANT_COLLECTIONS}
               element={
-                <ProtectedRoute requiredRoles={["tenant"]}>
+                <ProtectedRoute requiredRoles={["tenant", "landlord"]}>
                   <Collections />
                 </ProtectedRoute>
               }
@@ -218,7 +227,7 @@ export default function App() {
             <Route
               path={ROUTES.TENANT_WISHLIST}
               element={
-                <ProtectedRoute requiredRoles={["tenant"]}>
+                <ProtectedRoute requiredRoles={["tenant", "landlord"]}>
                   <WishlistPage />
                 </ProtectedRoute>
               }
@@ -228,7 +237,7 @@ export default function App() {
         <Route
           path={ROUTES.TENANT_FINISH_PAYMENT}
           element={
-            <ProtectedRoute requiredRoles={["tenant"]}>
+            <ProtectedRoute requiredRoles={["tenant", "landlord"]}>
               <FinishPayment />
             </ProtectedRoute>
           }
@@ -236,7 +245,7 @@ export default function App() {
         <Route
           path={ROUTES.TENANT_BOOKING_CONFIRM}
           element={
-            <ProtectedRoute requiredRoles={["tenant"]}>
+            <ProtectedRoute requiredRoles={["tenant", "landlord"]}>
               <BookingConfirm />
             </ProtectedRoute>
           }

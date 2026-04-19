@@ -3,7 +3,16 @@ import type { BookingHistory } from "@/types/bookingHistory";
 import type { ColumnDef } from "@tanstack/react-table";
 import BookingAction from "./BookingAction";
 
-export const BookingColumns = (): ColumnDef<BookingHistory>[] => [
+export const BookingColumns = (
+  onCheckIn: (
+    bookingId: string,
+    data: { actualCheckIn: Date; note: string },
+  ) => Promise<void>,
+  onCheckOut: (
+    bookingId: string,
+    data: { actualCheckOut: Date; note: string },
+  ) => Promise<void>,
+): ColumnDef<BookingHistory>[] => [
   {
     accessorKey: "apartmentId",
     header: "Apartment",
@@ -20,12 +29,8 @@ export const BookingColumns = (): ColumnDef<BookingHistory>[] => [
     },
   },
   {
-    accessorKey: "paymentMode",
-    header: "Payment mode",
-    cell: ({ row }) => {
-      const paymentMode = row.original.paymentMode;
-      return paymentMode.charAt(0).toUpperCase() + paymentMode.slice(1);
-    },
+    accessorKey: "tenantFullName",
+    header: "Tenant",
   },
   {
     accessorKey: "status",
@@ -53,7 +58,13 @@ export const BookingColumns = (): ColumnDef<BookingHistory>[] => [
     header: "Actions",
     cell: ({ row }) => {
       const booking = row.original;
-      return <BookingAction bookings={booking} />;
+      return (
+        <BookingAction
+          bookings={booking}
+          onCheckIn={onCheckIn}
+          onCheckOut={onCheckOut}
+        />
+      );
     },
   },
 ];

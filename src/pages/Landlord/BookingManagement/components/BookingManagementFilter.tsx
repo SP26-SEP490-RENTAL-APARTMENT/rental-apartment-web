@@ -1,99 +1,129 @@
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { X } from "lucide-react";
 
 export interface BookingFilterValues {
   search: string;
-  fromDate?: Date;
-  toDate?: Date;
+  sortBy: string;
   sortOrder: "asc" | "desc";
 }
-interface Props {
-  onFilterChange: (values: BookingFilterValues) => void;
+
+interface BookingManagementFilterProps {
+  onFilterChange: (filters: BookingFilterValues) => void;
+  filters: BookingFilterValues;
+  onReset?: () => void;
 }
 
-function BookingManagementFilter({ onFilterChange }: Props) {
-  const [search, setSearch] = useState("");
-  const [fromDate, setFromDate] = useState<string>("");
-  const [toDate, setToDate] = useState<string>("");
-  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
+const SORT_BY_OPTIONS = [
+  { label: "Created Date", value: "createdAt" },
+  { label: "Status", value: "status" },
+  { label: "Total", value: "total" },
+  { label: "Check-in Date", value: "checkInDate" },
+];
 
-  const handleApply = () => {
+const SORT_ORDER_OPTIONS = [
+  { label: "Ascending", value: "asc" },
+  { label: "Descending", value: "desc" },
+];
+
+function BookingManagementFilter({
+  onFilterChange,
+  filters,
+  onReset,
+}: BookingManagementFilterProps) {
+  const [search, setSearch] = useState(filters.search);
+
+  const handleSearchChange = (value: string) => {
+    setSearch(value);
     onFilterChange({
-      search,
-      fromDate: fromDate ? new Date(fromDate) : undefined,
-      toDate: toDate ? new Date(toDate) : undefined,
-      sortOrder,
+      ...filters,
+      search: value,
+    });
+  };
+
+  const handleSortByChange = (value: string) => {
+    onFilterChange({
+      ...filters,
+      sortBy: value,
+    });
+  };
+
+  const handleSortOrderChange = (value: "asc" | "desc") => {
+    onFilterChange({
+      ...filters,
+      sortOrder: value,
     });
   };
 
   const handleReset = () => {
     setSearch("");
-    setFromDate("");
-    setToDate("");
-    setSortOrder("desc");
-
-    onFilterChange({
-      search: "",
-      fromDate: undefined,
-      toDate: undefined,
-      sortOrder: "desc",
-    });
+    onReset?.();
   };
 
   return (
-    <div className="bg-white p-4 rounded-xl shadow-sm border mb-4">
-      <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-        
-        {/* Search */}
+    <div className="flex flex-wrap gap-4 items-end p-4 bg-card border border-border rounded-lg mb-4">
+      {/* Search */}
+      <div className="flex flex-col gap-2">
+        <label className="text-sm font-medium">Search</label>
         <input
           type="text"
           placeholder="Search booking..."
           value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="border rounded-lg px-3 py-2 w-full"
+          onChange={(e) => handleSearchChange(e.target.value)}
+          className="border rounded-lg px-3 py-2 w-48"
         />
-
-        {/* From date */}
-        <input
-          type="date"
-          value={fromDate}
-          onChange={(e) => setFromDate(e.target.value)}
-          className="border rounded-lg px-3 py-2 w-full"
-        />
-
-        {/* To date */}
-        <input
-          type="date"
-          value={toDate}
-          onChange={(e) => setToDate(e.target.value)}
-          className="border rounded-lg px-3 py-2 w-full"
-        />
-
-        {/* Sort */}
-        <select
-          value={sortOrder}
-          onChange={(e) => setSortOrder(e.target.value as "asc" | "desc")}
-          className="border rounded-lg px-3 py-2 w-full"
-        >
-          <option value="desc">Newest</option>
-          <option value="asc">Oldest</option>
-        </select>
-
-        {/* Actions */}
-        <div className="flex gap-2">
-          <button
-            onClick={handleApply}
-            className="bg-black text-white px-4 py-2 rounded-lg w-full"
-          >
-            Apply
-          </button>
-          <button
-            onClick={handleReset}
-            className="border px-4 py-2 rounded-lg w-full"
-          >
-            Reset
-          </button>
-        </div>
       </div>
+
+      {/* Sort By */}
+      <div className="flex flex-col gap-2">
+        <label className="text-sm font-medium">Sort By</label>
+        <Select value={filters.sortBy} onValueChange={handleSortByChange}>
+          <SelectTrigger className="w-48">
+            <SelectValue placeholder="Select field" />
+          </SelectTrigger>
+          <SelectContent>
+            {SORT_BY_OPTIONS.map((option) => (
+              <SelectItem key={option.value} value={option.value}>
+                {option.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
+      {/* Sort Order */}
+      <div className="flex flex-col gap-2">
+        <label className="text-sm font-medium">Sort Order</label>
+        <Select value={filters.sortOrder} onValueChange={handleSortOrderChange}>
+          <SelectTrigger className="w-48">
+            <SelectValue placeholder="Select order" />
+          </SelectTrigger>
+          <SelectContent>
+            {SORT_ORDER_OPTIONS.map((option) => (
+              <SelectItem key={option.value} value={option.value}>
+                {option.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={handleReset}
+        className="gap-2"
+      >
+        <X className="w-4 h-4" />
+        Reset
+      </Button>
     </div>
   );
 }

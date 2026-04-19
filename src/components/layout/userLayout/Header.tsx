@@ -16,6 +16,9 @@ import {
 import i18next from "i18next";
 import { useTranslation } from "react-i18next";
 import { useAuthStore } from "@/store/authStore";
+import { authApi } from "@/services/publicApi/authApi";
+import { toast } from "sonner";
+import { ROUTES } from "@/constants/routes";
 
 function Header() {
   const navigate = useNavigate();
@@ -23,7 +26,7 @@ function Header() {
   const { t: auth } = useTranslation("auth");
   const { t: account } = useTranslation("account");
   const isAuthenticated = useAuthStore.getState().isAuthenticated;
-  const { logout } = useAuthStore();
+  const { logout, user, login } = useAuthStore();
 
   const handleLogout = () => {
     logout();
@@ -34,6 +37,37 @@ function Header() {
   const [language, setLanguage] = useState(() => {
     return localStorage.getItem("i18nextLng") || "en";
   });
+
+  const isLandlord = user?.role === "landlord" ? "tenant" : "landlord";
+
+  const handleAddRole = async () => {
+    try {
+      const response = await authApi.addRole({ targetRole: isLandlord });
+      const data = response.data;
+      login(
+        {
+          id: data.id,
+          fullName: data.fullName,
+          email: data.email,
+          role: data.role,
+          roles: data.roles,
+          nationality: data.nationality,
+          subscriptionPlanId: data.subscriptionPlanId,
+        },
+        data.accessToken,
+        data.refreshToken,
+      );
+      toast.success(
+        user?.role === "landlord"
+          ? "You are now a tenant!"
+          : "You are now a landlord!",
+      );
+    } catch (error) {
+      console.log(error);
+
+      toast.error("Failed to update role.");
+    }
+  };
 
   return (
     <div className="px-3 py-5 flex justify-between shadow-b shadow-[0_2px_4px_rgba(0,0,0,0.08)]">
@@ -94,21 +128,42 @@ function Header() {
         {isAuthenticated ? (
           <DropdownMenu>
             <DropdownMenuTrigger>
-              <img
-                className="w-12 h-12 rounded-full object-cover border-2 cursor-pointer"
-                src="https://ipwatchdog.com/wp-content/uploads/2018/03/pepe-the-frog-1272162_640.jpg"
-                alt="Avatar"
-              />
+              <div className="w-12 h-12 rounded-full object-cover border-2 cursor-pointer flex items-center justify-center bg-gray-500 text-white font-bold">
+                <span>{user?.fullName?.charAt(0).toUpperCase()}</span>
+              </div>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
               <DropdownMenuGroup>
-                <DropdownMenuLabel>{account("myAccount")}</DropdownMenuLabel>
                 <DropdownMenuItem onClick={() => navigate("/tenant/profile")}>
                   {account("profile")}
                 </DropdownMenuItem>
+                {user?.roles.includes("landlord") && (
+                  <DropdownMenuItem
+                    onClick={() => navigate(ROUTES.LANDLORD_APARTMENTS)}
+                  >
+                    {account("landlordDashboard")}
+                  </DropdownMenuItem>
+                )}
+                {user?.roles?.length === 1 && (
+                  <>
+                    {user.roles[0] === "tenant" && (
+                      <DropdownMenuItem onClick={handleAddRole}>
+                        {account("becomeHost")}
+                      </DropdownMenuItem>
+                    )}
+
+                    {user.roles[0] === "landlord" && (
+                      <DropdownMenuItem onClick={handleAddRole}>
+                        {account("becomeTenant")}
+                      </DropdownMenuItem>
+                    )}
+                  </>
+                )}
               </DropdownMenuGroup>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={handleLogout}>{auth("logout")}</DropdownMenuItem>
+              <DropdownMenuItem onClick={handleLogout}>
+                {auth("logout")}
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         ) : (

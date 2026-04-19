@@ -1,5 +1,6 @@
 import { apiConfig } from "@/config/apiConfig";
 import type { BookingConfirmFormData } from "@/schemas/bookingSchema";
+import type { UserProfileFormData } from "@/schemas/userProfileSchema";
 import type { ApiResponse } from "@/types/api";
 import type { ParamsProp } from "@/types/params";
 
@@ -45,4 +46,19 @@ export const bookingApi = {
     apiConfig.privateApi.post("/Booking", data),
   getBookingHistory: (params: ParamsProp) =>
     apiConfig.privateApi.get("/tenant/bookings/history", { params }),
+};
+
+export const reviewApi = {
+  postReview: (data: { bookingId: string; rating: number; comment: string }) =>
+    apiConfig.privateApi.post("/Review", data),
+  getAverageRating: (apartmentId: string) =>
+    apiConfig.privateApi.get(`/Review/apartment/${apartmentId}/average-rating`),
+  getAllReviews: (apartmentId: string) =>
+    apiConfig.privateApi.get(`/Review/apartment/${apartmentId}`),
+};
+
+export const profileApi = {
+  getProfile: () => apiConfig.privateApi.get("/User/me"),
+  updateProfile: (data: UserProfileFormData) =>
+    apiConfig.privateApi.put("/User/me", data),
 };

@@ -4,12 +4,17 @@ import { useCallback, useEffect, useState } from "react";
 import BookingHistoryCard from "./components/BookingHistoryCard";
 import BookingHistorySkeleton from "./components/BookingHistorySkeleton";
 import PaginationComponent from "@/components/ui/paginationComponent/PaginationComponent";
+import BookingViewDialog from "./components/BookingViewDialog";
 
 function BookingHistories() {
   const [bookingHistory, setBookingHistory] = useState<BookingHistory[]>([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
+  const [bookingDetail, setBookingDetail] = useState<BookingHistory | null>(
+    null,
+  );
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const fetchBookingHistory = useCallback(async () => {
     setLoading(true);
@@ -34,6 +39,11 @@ function BookingHistories() {
     fetchBookingHistory();
   }, [fetchBookingHistory]);
 
+  const handleCardClick = (booking: BookingHistory) => {
+    setBookingDetail(booking);
+    setIsDialogOpen(true);
+  };
+
   const totalPage = Math.ceil(totalCount / 3);
   return (
     <div className="p-10">
@@ -46,7 +56,11 @@ function BookingHistories() {
                 ))
               : bookingHistory &&
                 bookingHistory.map((item) => (
-                  <BookingHistoryCard key={item.bookingId} data={item} />
+                  <BookingHistoryCard
+                    key={item.bookingId}
+                    data={item}
+                    onClick={handleCardClick}
+                  />
                 ))}
           </div>
 
@@ -62,6 +76,14 @@ function BookingHistories() {
         <div className="text-gray-500 flex justify-center items-center">
           No Booking History Found
         </div>
+      )}
+
+      {bookingDetail && (
+        <BookingViewDialog
+          booking={bookingDetail}
+          open={isDialogOpen}
+          onClose={() => setIsDialogOpen(false)}
+        />
       )}
     </div>
   );

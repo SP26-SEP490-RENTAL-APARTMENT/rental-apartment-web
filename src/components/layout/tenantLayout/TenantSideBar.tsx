@@ -23,7 +23,7 @@ function TenantSideBar() {
     <div
       className={`${
         sidebarOpen ? "w-64" : "w-20"
-      } bg-white border-r border-gray-200 transition-all duration-300 flex flex-col shadow-sm`}
+      } sticky top-0 h-screen bg-white border-r border-gray-200 flex flex-col`}
     >
       {/* Header */}
       <div className="flex items-center justify-between p-4 border-b border-gray-200">
@@ -76,7 +76,10 @@ function TenantSideBar() {
 
       {/* Footer - Logout */}
       <div className="p-4 border-t border-gray-200">
-        <button onClick={handleLogout} className="w-full flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-red-50 hover:text-red-700 rounded-lg transition">
+        <button
+          onClick={handleLogout}
+          className="w-full flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-red-50 hover:text-red-700 rounded-lg transition"
+        >
           <LogOut className="h-5 w-5 shrink-0" />
           {sidebarOpen && <span>{auth("logout")}</span>}
         </button>

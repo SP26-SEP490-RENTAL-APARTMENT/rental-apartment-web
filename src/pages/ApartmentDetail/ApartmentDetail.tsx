@@ -13,53 +13,27 @@ import AmenitiesInfo from "./components/AmenitiesInfo";
 import type { Availability } from "@/types/availability";
 import AvailabilityDialog from "./components/AvailabilityDialog";
 import { MapPin } from "lucide-react";
-
-const detail = {
-  guest: [
-    {
-      name: "string",
-      avatarUrl: "string",
-      comment:
-        "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Vel, dolorum soluta. Ex, veritatis doloremque laboriosam vitae aliquam quaerat nobis illum molestiae perspiciatis excepturi neque ratione sapiente quod sint nulla molestias!",
-      time: "string",
-      rate: 2,
-    },
-    {
-      name: "string",
-      avatarUrl: "string",
-      comment:
-        "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Vel, dolorum soluta. Ex, veritatis doloremque laboriosam vitae aliquam quaerat nobis illum molestiae perspiciatis excepturi neque ratione sapiente quod sint nulla molestias!",
-      time: "string",
-      rate: 2,
-    },
-    {
-      name: "string",
-      avatarUrl: "string",
-      comment:
-        "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Vel, dolorum soluta. Ex, veritatis doloremque laboriosam vitae aliquam quaerat nobis illum molestiae perspiciatis excepturi neque ratione sapiente quod sint nulla molestias!",
-      time: "string",
-      rate: 2,
-    },
-    {
-      name: "string",
-      avatarUrl: "string",
-      comment:
-        "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Vel, dolorum soluta. Ex, veritatis doloremque laboriosam vitae aliquam quaerat nobis illum molestiae perspiciatis excepturi neque ratione sapiente quod sint nulla molestias!",
-      time: "string",
-      rate: 2,
-    },
-  ],
-};
+import { reviewApi } from "@/services/privateApi/tenantApi";
+import type { AverageRating, Review } from "@/types/review";
+import ReviewSummary from "./components/ReviewSummary";
+import { useTranslation } from "react-i18next";
+import { Button } from "@/components/ui/button";
+import AllReviewsDialog from "./components/AllReviewsDialog";
 
 function ApartmentDetail() {
   const { id } = useParams();
+  const { t: reviewT } = useTranslation("review");
 
   const [apartment, setApartment] = useState<Apartment>();
   const [room, setRoom] = useState<Room>();
   const [amenities, setAmenities] = useState<Amenity[]>([]);
   const [availability, setAvailability] = useState<Availability>();
   const [isOpen, setIsOpen] = useState(false);
-
+  const [reviewDialogOpen, setReviewDialogOpen] = useState(false);
+  const [reviews, setReviews] = useState<Review[]>([]);
+  const [averageRating, setAverageRating] = useState<AverageRating | null>(
+    null,
+  );
   useEffect(() => {
     if (!id) return;
 
@@ -75,7 +49,27 @@ function ApartmentDetail() {
       }
     };
 
+    const fetchReviews = async () => {
+      try {
+        const response = await reviewApi.getAllReviews(id);
+        setReviews(response.data);
+      } catch (error) {
+        console.error("Error fetching reviews:", error);
+      }
+    };
+
+    const fetchAverageRating = async () => {
+      try {
+        const response = await reviewApi.getAverageRating(id);
+        setAverageRating(response.data);
+      } catch (error) {
+        console.error("Error fetching average rating:", error);
+      }
+    };
+
     fetchApartmentDetail();
+    fetchReviews();
+    fetchAverageRating();
   }, [id]);
 
   const handleCheckAvailability = async () => {
@@ -129,18 +123,35 @@ function ApartmentDetail() {
       </div>
 
       <div className="pb-10">{room && <RoomInfo room={room} />}</div>
+
       <div className="pb-10">
         {amenities && <AmenitiesInfo amenities={amenities} />}
       </div>
 
-      <div className="border-b pb-10">
-        <h1 className="text-center font-bold text-2xl">Comments Section</h1>
+      <div className="border-t-2 border-b-2 py-10">
+        {averageRating && (
+          <ReviewSummary averageData={averageRating} reviews={reviews} />
+        )}
+      </div>
+
+      <div className="border-b py-10">
+        <h1 className="font-bold text-2xl py-10">{reviewT("otherReviews")}</h1>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-25 mt-6">
-          {detail.guest.map((guest, index) => (
-            <CommentSection key={index} guest={guest} />
+          {reviews.slice(0, 4).map((review) => (
+            <CommentSection key={review.reviewId} reviews={review} />
           ))}
         </div>
+        <div className="mt-15 flex justify-center">
+          <Button
+            onClick={() => setReviewDialogOpen(true)}
+            className="font-medium p-5"
+            variant="default"
+          >
+            View all the reviews
+          </Button>
+        </div>
       </div>
+
       <div className="mt-16">
         <div className="bg-white rounded-2xl shadow-lg p-5 border">
           {/* Header */}
@@ -174,6 +185,15 @@ function ApartmentDetail() {
           data={availability}
           isOpen={isOpen}
           onClose={() => setIsOpen(false)}
+        />
+      )}
+
+      {reviewDialogOpen && averageRating && (
+        <AllReviewsDialog
+          open={reviewDialogOpen}
+          onClose={() => setReviewDialogOpen(false)}
+          reviews={reviews}
+          averageRating={averageRating}
         />
       )}
     </div>

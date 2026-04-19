@@ -1,6 +1,6 @@
 import type { Amenity } from "./amenity";
 
-export interface Apartment {
+export interface Apartment extends InspectionStatus {
   apartmentId: string;
   landlordId: string;
   title: string;
@@ -35,4 +35,8 @@ export interface Room {
   sizeSqm: number;
   isPrivateBathroom: boolean;
   createdAt: string;
+}
+
+export interface InspectionStatus {
+  inspectionStatus?: string
 }
