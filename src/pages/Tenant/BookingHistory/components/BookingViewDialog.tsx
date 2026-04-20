@@ -59,7 +59,7 @@ function BookingViewDialog({ open, onClose, booking }: Props) {
             {/* Tenant */}
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <p className="text-sm text-muted-foreground">Tenant</p>
+                <p className="text-sm text-muted-foreground">Name</p>
                 <p className="font-medium">{booking.tenantFullName}</p>
               </div>
 
@@ -136,10 +136,12 @@ function BookingViewDialog({ open, onClose, booking }: Props) {
                 <span>{formatCurrency(booking.packagePrice)}</span>
               </div>
 
-              <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">Deposit</span>
-                <span>{formatCurrency(booking.depositAmount)}</span>
-              </div>
+              {booking.paymentMode !== "full" && (
+                <div className="flex justify-between text-sm">
+                  <span className="text-muted-foreground">Deposit</span>
+                  <span>{formatCurrency(booking.depositAmount)}</span>
+                </div>
+              )}
 
               <div className="flex justify-between text-sm">
                 <span className="text-muted-foreground">Total</span>

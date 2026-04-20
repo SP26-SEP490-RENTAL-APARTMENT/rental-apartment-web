@@ -111,7 +111,7 @@ function Login() {
               <div className="flex items-center">
                 <Label htmlFor="password">{auth("password")}</Label>
                 <a
-                  href="#"
+                  href={ROUTES.REQUEST_RESET_PASSWORD}
                   className="text-blue-500 cursor-pointer hover:underline ml-auto"
                 >
                   {auth("forgotPassword")}

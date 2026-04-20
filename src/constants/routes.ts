@@ -7,6 +7,8 @@
 export const AUTH_ROUTES = {
   LOGIN: "/login",
   REGISTER: "/register",
+  REQUEST_RESET_PASSWORD: "/request-reset-password",
+  RESET_PASSWORD: "/reset-password",
 } as const;
 
 // Public Routes
@@ -62,7 +64,9 @@ export const ROUTES = {
   // Auth
   LOGIN: AUTH_ROUTES.LOGIN,
   REGISTER: AUTH_ROUTES.REGISTER,
-
+  REQUEST_RESET_PASSWORD: AUTH_ROUTES.REQUEST_RESET_PASSWORD,
+  RESET_PASSWORD: AUTH_ROUTES.RESET_PASSWORD,
+  
   // Public
   HOME: PUBLIC_ROUTES.HOME,
   APARTMENT_DETAIL: PUBLIC_ROUTES.APARTMENT_DETAIL,

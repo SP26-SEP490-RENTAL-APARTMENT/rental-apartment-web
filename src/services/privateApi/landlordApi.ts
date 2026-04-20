@@ -79,6 +79,24 @@ export const bookingManagementApi = {
     apiConfig.privateApi.post(`/Booking/${bookingId}/check-in`, data),
   checkOut: (bookingId: string, data: { actualCheckOut: Date; note: string }) =>
     apiConfig.privateApi.post(`/Booking/${bookingId}/check-out`, data),
+  submitResidenceReport: (
+    bookingId: string,
+    data: {
+      reportedToPolice: boolean;
+      reportDate: Date | string;
+      reportNumber: string;
+      actualCheckIn: Date | string;
+    },
+  ) =>
+    apiConfig.privateApi.post(`/Booking/${bookingId}/residence-report`, data),
+  getPDFFile: (bookingId: string) =>
+    apiConfig.privateApi.get(`/Booking/${bookingId}/residence-report/pdf`, {
+      responseType: "blob",
+    }),
+  getDOCFile: (bookingId: string) =>
+    apiConfig.privateApi.get(`/Booking/${bookingId}/residence-report/doc`, {
+      responseType: "blob",
+    }),
 };
 
 export const mySubscriptionApi = {

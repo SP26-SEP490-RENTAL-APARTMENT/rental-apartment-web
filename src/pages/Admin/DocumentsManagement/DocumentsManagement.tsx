@@ -37,7 +37,7 @@ function DocumentsManagement() {
     try {
       const response = await documentsManagement.getAllDocuments({
         page,
-        pageSize: 10,
+        pageSize: 5,
         search,
         sortBy,
         sortOrder,

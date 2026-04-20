@@ -2,8 +2,8 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { ROUTES } from "./constants/routes";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 
-import Login from "./pages/Login/Login";
-import Register from "./pages/Register/Register";
+import Login from "./pages/Auth/Login/Login";
+import Register from "./pages/Auth/Register/Register";
 
 import Home from "./pages/Home/Home";
 import ApartmentDetail from "./pages/ApartmentDetail/ApartmentDetail";
@@ -39,6 +39,8 @@ import FinishPayment from "./pages/Tenant/FinishPayment/FinishPayment";
 import BookingManagement from "./pages/Landlord/BookingManagement/BookingManagement";
 import Inspections from "./pages/Admin/Inspection/Inspection";
 import MySubscription from "./pages/Landlord/MySubscription/MySubscription";
+import RequestResetPW from "./pages/Auth/RequestResetPW/RequestResetPW";
+import ResetPWPage from "./pages/Auth/ResetPWPage/ResetPWPage";
 
 /**
  * App Component - Simplified routing setup
@@ -52,6 +54,14 @@ export default function App() {
         <Route element={<AuthenLayout />}>
           <Route path={ROUTES.LOGIN} element={<Login />} />
           <Route path={ROUTES.REGISTER} element={<Register />} />
+          <Route
+            path={ROUTES.REQUEST_RESET_PASSWORD}
+            element={<RequestResetPW />}
+          />
+          <Route
+            path={ROUTES.RESET_PASSWORD}
+            element={<ResetPWPage />}
+          />
         </Route>
 
         {/* ========== Public Routes ========== */}
