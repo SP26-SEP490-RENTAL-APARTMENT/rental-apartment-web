@@ -64,11 +64,11 @@ export default function AvailabilityDialog({
                     </div>
                   </div>
 
-                  <Badge variant="secondary">
+                  {/* <Badge variant="secondary">
                     {item.pricePerNight
                       ? `${item.pricePerNight.toLocaleString()} VND`
                       : "No price"}
-                  </Badge>
+                  </Badge> */}
                 </div>
               ))}
             </div>

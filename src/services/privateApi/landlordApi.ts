@@ -75,8 +75,38 @@ export const roomManagementApi = {
 export const bookingManagementApi = {
   getBookings: (params: ParamsProp) =>
     apiConfig.privateApi.get("/landlord/bookings/history", { params }),
-  checkIn: (bookingId: string, data: {actualCheckIn: Date, note: string}) =>
+  checkIn: (bookingId: string, data: { actualCheckIn: Date; note: string }) =>
     apiConfig.privateApi.post(`/Booking/${bookingId}/check-in`, data),
-  checkOut: (bookingId: string, data: {actualCheckOut: Date, note: string}) =>
+  checkOut: (bookingId: string, data: { actualCheckOut: Date; note: string }) =>
     apiConfig.privateApi.post(`/Booking/${bookingId}/check-out`, data),
+  submitResidenceReport: (
+    bookingId: string,
+    data: {
+      reportedToPolice: boolean;
+      reportDate: Date | string;
+      reportNumber: string;
+      actualCheckIn: Date | string;
+    },
+  ) =>
+    apiConfig.privateApi.post(`/Booking/${bookingId}/residence-report`, data),
+  getPDFFile: (bookingId: string) =>
+    apiConfig.privateApi.get(`/Booking/${bookingId}/residence-report/pdf`, {
+      responseType: "blob",
+    }),
+  getDOCFile: (bookingId: string) =>
+    apiConfig.privateApi.get(`/Booking/${bookingId}/residence-report/doc`, {
+      responseType: "blob",
+    }),
+};
+
+export const mySubscriptionApi = {
+  getSubscription: (params: ParamsProp) =>
+    apiConfig.privateApi.get("/SubscriptionPlan/landlord", { params }),
+  momoCheckout: (data: {
+    planId: string;
+    renewalType: string;
+    autoRenew: boolean;
+  }) => apiConfig.privateApi.post("/landlord/subscription/momo-checkout", data),
+  getSubscriptionHistory: (params: ParamsProp) =>
+    apiConfig.privateApi.get("/landlord/subscriptions/history", { params }),
 };

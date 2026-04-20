@@ -19,4 +19,7 @@ export interface LoginResponse {
     refreshToken: string;
     isActive: boolean;
     role: "admin" | "tenant" | "landlord" | "staff"
+    roles: string[]
+    subscriptionPlanId: string | null
+    nationality: string
 }
