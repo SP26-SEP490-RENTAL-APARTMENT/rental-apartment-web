@@ -7,3 +7,18 @@ export interface User {
     createdAt: string;
     identityVerified: boolean;
 }
+
+export interface UserProfile {
+  userId: string;
+  email: string;
+  role: string;
+  fullName: string;
+  phone: string;
+  sex: string | null;
+  birthday: string | null;
+  nationality: string | null;
+  nationalIdCardNumber: string | null;
+  identityVerified: boolean;
+  createdAt: string;
+}
+

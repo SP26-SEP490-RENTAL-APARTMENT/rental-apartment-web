@@ -20,43 +20,6 @@ import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import AllReviewsDialog from "./components/AllReviewsDialog";
 
-// const detail = {
-//   guest: [
-//     {
-//       name: "string",
-//       avatarUrl: "string",
-//       comment:
-//         "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Vel, dolorum soluta. Ex, veritatis doloremque laboriosam vitae aliquam quaerat nobis illum molestiae perspiciatis excepturi neque ratione sapiente quod sint nulla molestias!",
-//       time: "string",
-//       rate: 2,
-//     },
-//     {
-//       name: "string",
-//       avatarUrl: "string",
-//       comment:
-//         "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Vel, dolorum soluta. Ex, veritatis doloremque laboriosam vitae aliquam quaerat nobis illum molestiae perspiciatis excepturi neque ratione sapiente quod sint nulla molestias!",
-//       time: "string",
-//       rate: 2,
-//     },
-//     {
-//       name: "string",
-//       avatarUrl: "string",
-//       comment:
-//         "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Vel, dolorum soluta. Ex, veritatis doloremque laboriosam vitae aliquam quaerat nobis illum molestiae perspiciatis excepturi neque ratione sapiente quod sint nulla molestias!",
-//       time: "string",
-//       rate: 2,
-//     },
-//     {
-//       name: "string",
-//       avatarUrl: "string",
-//       comment:
-//         "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Vel, dolorum soluta. Ex, veritatis doloremque laboriosam vitae aliquam quaerat nobis illum molestiae perspiciatis excepturi neque ratione sapiente quod sint nulla molestias!",
-//       time: "string",
-//       rate: 2,
-//     },
-//   ],
-// };
-
 function ApartmentDetail() {
   const { id } = useParams();
   const { t: reviewT } = useTranslation("review");

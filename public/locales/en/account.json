@@ -1,4 +1,7 @@
 {
     "myAccount": "My Account",
-    "profile": "Profile"
+    "profile": "Profile",
+    "becomeHost": "Become a Host",
+    "becomeTenant": "Become a Tenant",
+    "landlordDashboard": "Landlord Dashboard"
 }

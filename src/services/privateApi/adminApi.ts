@@ -1,6 +1,7 @@
 import { apiConfig } from "@/config/apiConfig";
 import type { CreateAmenityFormData } from "@/schemas/amenitySchema";
 import type { AssignInspectionFormData } from "@/schemas/assignInspection";
+import type { CatalogFormData } from "@/schemas/catalogSchema";
 import type { DocumentApproveFormData } from "@/schemas/documentApproveSchema";
 import type { Amenity } from "@/types/amenity";
 import type { ApiResponse } from "@/types/api";
@@ -158,8 +159,15 @@ export const inspectionApi = {
     apiConfig.privateApi.post(`/PropertyInspection/${id}/start`),
   fillInspection: (id: string, data: FormData) =>
     apiConfig.privateApi.post(`/PropertyInspection/${id}/complete`, data),
-  reviewInspection: (
-    id: string,
-    data: { decision: string; reason: string },
-  ) => apiConfig.privateApi.post(`/PropertyInspection/${id}/review`, data),
+  reviewInspection: (id: string, data: { decision: string; reason: string }) =>
+    apiConfig.privateApi.post(`/PropertyInspection/${id}/review`, data),
+};
+
+export const reportApi = {
+  getCatalog: (params: ParamsProp) =>
+    apiConfig.privateApi.get("/reports/catalog", { params }),
+  createReport: (data: CatalogFormData) => apiConfig.privateApi.post("/reports", data),
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  runReport: (reportId: string, data: any) =>
+    apiConfig.privateApi.post(`/reports/${reportId}/run`, data),
 };
