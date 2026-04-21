@@ -10,10 +10,7 @@ import { useTranslation } from "react-i18next";
 
 interface ApartmentInfoProps {
   description: string;
-  host: {
-    name: string;
-    avatarUrl: string;
-  };
+  landlordName: string;
   address: string;
   district: string;
   price: number;
@@ -22,7 +19,7 @@ interface ApartmentInfoProps {
 }
 function ApartmentInfo({
   description,
-  host,
+  landlordName,
   address,
   district,
   price,
@@ -35,17 +32,15 @@ function ApartmentInfo({
     <div className="bg-white rounded-2xl shadow-sm border p-6 space-y-8">
       {/* Host */}
       <div className="flex items-center gap-4 pb-6 border-b">
-        <img
-          className="w-16 h-16 rounded-full object-cover"
-          src={host.avatarUrl}
-          alt={host.name}
-        />
+        <div className="w-16 h-16 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold">
+          {landlordName.charAt(0).toUpperCase()}
+        </div>
         <div>
           <p className="text-sm text-gray-500">
             {apartmentTranslate("hostedBy")}
           </p>
           <p className="text-lg font-semibold text-gray-900">
-            {host.name}
+            {landlordName}
           </p>
         </div>
       </div>

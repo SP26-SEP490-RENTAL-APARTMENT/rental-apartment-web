@@ -47,8 +47,8 @@ function FinishPayment() {
             <div className="flex justify-between">
               <span className="text-gray-500">Thời gian</span>
               <span className="font-medium text-right">
-                {formatDate(bookingData.checkInDate)} –{" "}
-                {formatDate(bookingData.checkOutDate)}
+                {formatDate(bookingData.checkInDateTime)} –{" "}
+                {formatDate(bookingData.checkOutDateTime)}
               </span>
             </div>
 

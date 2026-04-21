@@ -94,7 +94,7 @@ export const bookingManagementApi = {
       responseType: "blob",
     }),
   getDOCFile: (bookingId: string) =>
-    apiConfig.privateApi.get(`/Booking/${bookingId}/residence-report/doc`, {
+    apiConfig.privateApi.get(`/Booking/${bookingId}/residence-report/docx`, {
       responseType: "blob",
     }),
   getOccupantList: (bookingId: string) =>
