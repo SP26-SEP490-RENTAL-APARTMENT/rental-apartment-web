@@ -80,8 +80,11 @@ function CatalogForm({ isOpen, onClose, onSubmit }: Props) {
                         <SelectItem value="General">
                           General
                         </SelectItem>
-                        <SelectItem value="Revenue by day">
-                          Revenue by day
+                        <SelectItem value="Revenue">
+                          Revenue
+                        </SelectItem>
+                        <SelectItem value="Booking">
+                          Booking
                         </SelectItem>
                       </SelectGroup>
                     </SelectContent>

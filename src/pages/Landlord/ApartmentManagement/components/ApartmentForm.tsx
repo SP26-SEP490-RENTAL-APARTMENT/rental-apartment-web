@@ -355,9 +355,9 @@ function ApartmentForm({
                   accept="image/*"
                   onChange={handleFileChange}
                 />
-                <p className="text-xs text-muted-foreground">
+                {/* <p className="text-xs text-muted-foreground">
                   You can upload multiple photos. Only available when creating.
-                </p>
+                </p> */}
               </div>
             )}
 
