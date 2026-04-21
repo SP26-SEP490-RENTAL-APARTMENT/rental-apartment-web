@@ -52,7 +52,13 @@ export interface Props {
   onGetOccupantList: (bookingId: string) => Promise<void>;
   onAddOccupant: (bookingId: string) => void;
 }
-function BookingAction({ bookings, onCheckIn, onCheckOut, onGetOccupantList, onAddOccupant }: Props) {
+function BookingAction({
+  bookings,
+  onCheckIn,
+  onCheckOut,
+  onGetOccupantList,
+  onAddOccupant,
+}: Props) {
   const [checkInDialogOpen, setCheckInDialogOpen] = useState(false);
   const [checkOutDialogOpen, setCheckOutDialogOpen] = useState(false);
 
@@ -97,21 +103,28 @@ function BookingAction({ bookings, onCheckIn, onCheckOut, onGetOccupantList, onA
   const handleGetDOC = async (id: string) => {
     try {
       const response = await bookingManagementApi.getDOCFile(id);
-      const blob = new Blob([response.data], { type: "application/msword" });
+
+      const blob = new Blob([response.data], {
+        type: response.headers["content-type"], // lấy đúng type
+      });
+
       const url = window.URL.createObjectURL(blob);
 
       const link = document.createElement("a");
       link.href = url;
-      link.download = `residence-report-${id}.doc`;
+
+      // nếu backend trả zip → đặt .zip
+      link.download = `residence-report-${id}.zip`;
+
       document.body.appendChild(link);
       link.click();
 
       link.remove();
       window.URL.revokeObjectURL(url);
 
-      toast.success("DOC file downloaded successfully");
+      toast.success("File downloaded successfully");
     } catch (error) {
-      toast.error("Failed to download DOC file");
+      toast.error("Failed to download file");
     }
   };
 

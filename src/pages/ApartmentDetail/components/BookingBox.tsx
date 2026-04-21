@@ -25,7 +25,7 @@ function BookingBox({ apartmentId, onSubmit, apartment }: Props) {
   const [noOfAdults, setNoOfAdults] = useState(1);
   const [noOfInfants, setNoOfInfants] = useState(0);
   const [noOfPets, setNoOfPets] = useState(0);
-  const [packageId, setPackageId] = useState("");
+  const [packageId, setPackageId] = useState<string | null>(null);
   const [packages, setPackages] = useState<Package[]>([]);
   const [loadingPackages, setLoadingPackages] = useState(false);
   const formatDates = useFormatDate();
@@ -73,29 +73,26 @@ function BookingBox({ apartmentId, onSubmit, apartment }: Props) {
     return isPastDate(date);
   };
 
-  const disableCheckOut = (date: Date) => {
-    if (isPastDate(date)) return true;
+  // const disableCheckOut = (date: Date) => {
+  //   if (isPastDate(date)) return true;
 
-    if (checkIn) {
-      return date <= checkIn;
-    }
+  //   if (checkIn) {
+  //     return date <= checkIn;
+  //   }
 
-    return false;
-  };
-  const formatDateOnly = (date: Date) => {
-    return date.toLocaleDateString("en-CA");
-  };
+  //   return false;
+  // };
 
   const handleBook = async () => {
-    if (!checkIn || !checkOut || !packageId) {
+    if (!checkIn || !checkOut) {
       alert("Please fill in all required fields");
       return;
     }
 
     const quoteData = {
       apartmentId,
-      checkInDate: formatDateOnly(checkIn),
-      checkOutDate: formatDateOnly(checkOut),
+      checkInDateTime: checkIn.toISOString(),
+      checkOutDateTime: checkOut.toISOString(),
       noOfAdults,
       noOfInfants,
       noOfPets,
@@ -109,6 +106,7 @@ function BookingBox({ apartmentId, onSubmit, apartment }: Props) {
       navigate(ROUTES.TENANT_BOOKING_CONFIRM, {
         state: {
           ...quoteData,
+          nights: bookingDetails.nights,
           basePricePerNight: bookingDetails.basePricePerNight,
           baseAmount: bookingDetails.baseAmount,
           packageAmount: bookingDetails.packageAmount,
@@ -118,7 +116,9 @@ function BookingBox({ apartmentId, onSubmit, apartment }: Props) {
         },
       });
     } catch (error: any) {
-      toast.error(error?.response?.data?.message || "Failed to create booking quote");
+      toast.error(
+        error?.response?.data?.message || "Failed to create booking quote",
+      );
     }
   };
 
@@ -131,54 +131,106 @@ function BookingBox({ apartmentId, onSubmit, apartment }: Props) {
         {/* Check-in & Check-out */}
         <div className="flex gap-2 items-end">
           <div className="flex flex-col w-full">
-            <span className="text-sm font-medium mb-1">Check‑in *</span>
+            <span className="text-sm font-medium mb-1">Check-in *</span>
+
             <Popover.Root>
               <Popover.Trigger asChild>
-                <Button
-                  variant="outline"
-                  className="w-full justify-start cursor-pointer"
-                >
+                <Button variant="outline" className="w-full justify-start">
                   {formatDates(checkIn)}
                 </Button>
               </Popover.Trigger>
-              <Popover.Content className="w-auto p-0 bg-white" align="start">
+
+              <Popover.Content className="p-3 bg-white flex flex-col gap-2">
                 <Calendar
-                  className="bg-white"
                   mode="single"
                   selected={checkIn}
                   onSelect={(date) => {
-                    if (date instanceof Date) {
-                      setCheckIn(date);
+                    if (date) {
+                      const newDate = new Date(date);
+                      // giữ giờ cũ nếu có
+                      if (checkIn) {
+                        newDate.setHours(
+                          checkIn.getHours(),
+                          checkIn.getMinutes(),
+                        );
+                      }
+                      setCheckIn(newDate);
                     }
                   }}
                   disabled={disableCheckIn}
+                />
+
+                {/* chọn giờ */}
+                <input
+                  type="time"
+                  className="border rounded p-2"
+                  value={
+                    checkIn
+                      ? `${String(checkIn.getHours()).padStart(2, "0")}:${String(
+                          checkIn.getMinutes(),
+                        ).padStart(2, "0")}`
+                      : ""
+                  }
+                  onChange={(e) => {
+                    if (!checkIn) return;
+                    const [h, m] = e.target.value.split(":").map(Number);
+                    const newDate = new Date(checkIn);
+                    newDate.setHours(h, m);
+                    setCheckIn(newDate);
+                  }}
                 />
               </Popover.Content>
             </Popover.Root>
           </div>
 
           <div className="flex flex-col w-full">
-            <span className="text-sm font-medium mb-1">Check‑out *</span>
+            <span className="text-sm font-medium mb-1">Check-out *</span>
+
             <Popover.Root>
               <Popover.Trigger asChild>
-                <Button
-                  variant="outline"
-                  className="w-full justify-start cursor-pointer"
-                >
+                <Button variant="outline" className="w-full justify-start">
                   {formatDates(checkOut)}
                 </Button>
               </Popover.Trigger>
-              <Popover.Content className="w-auto p-0 bg-white" align="start">
+
+              <Popover.Content className="p-3 bg-white flex flex-col gap-2">
                 <Calendar
-                  className="bg-white"
                   mode="single"
                   selected={checkOut}
                   onSelect={(date) => {
-                    if (date instanceof Date) {
-                      setCheckOut(date);
+                    if (date) {
+                      const newDate = new Date(date);
+                      // giữ giờ cũ nếu có
+                      if (checkOut) {
+                        newDate.setHours(
+                          checkOut.getHours(),
+                          checkOut.getMinutes(),
+                        );
+                      }
+                      setCheckOut(newDate);
                     }
                   }}
-                  disabled={disableCheckOut}
+                  disabled={disableCheckIn}
+                />
+
+                {/* chọn giờ */}
+                <input
+                  type="time"
+                  className="border rounded p-2"
+                  value={
+                    checkOut
+                      ? `${String(checkOut.getHours()).padStart(2, "0")}:${String(
+                          checkOut.getMinutes(),
+                        ).padStart(2, "0")}`
+                      : ""
+                  }
+                  onChange={(e) => {
+                    if (!checkOut) return;
+                    const [h, m] = e.target.value.split(":").map(Number);
+                    const newDate = new Date(checkOut);
+                    newDate.setHours(h, m);
+                    setCheckOut(newDate);
+                  }}
                 />
               </Popover.Content>
             </Popover.Root>
@@ -236,10 +288,14 @@ function BookingBox({ apartmentId, onSubmit, apartment }: Props) {
             </div>
           ) : (
             <select
-              value={packageId}
-              onChange={(e) => setPackageId(e.target.value)}
+              value={packageId ?? ""}
+              onChange={(e) => {
+                const value = e.target.value;
+                setPackageId(value === "" ? null : value);
+              }}
               className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
+              <option value="">Không chọn</option>
               {packages?.map((pkg) => (
                 <option key={pkg.packageId} value={pkg.packageId}>
                   {pkg.name} - {pkg.currency} {pkg.price.toLocaleString()}
@@ -256,7 +312,6 @@ function BookingBox({ apartmentId, onSubmit, apartment }: Props) {
           </Button>
           {checkIn &&
             checkOut &&
-            packageId &&
             noOfAdults >= 1 &&
             noOfInfants >= 0 &&
             noOfPets >= 0 && (
