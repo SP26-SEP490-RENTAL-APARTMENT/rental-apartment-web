@@ -9,7 +9,7 @@ import type { CatalogFormData } from "@/schemas/catalogSchema";
 import { toast } from "sonner";
 import CatalogForm from "./components/CatalogForm";
 import RunReportDialog from "./components/RunReportDialog";
-import { GENERAL, REVENUE } from "@/constants/reportBody";
+import { BOOKING, GENERAL, REVENUE } from "@/constants/reportBody";
 import RevenueLineChart from "./components/RevenueLineChart";
 import { useChartStore } from "@/store/chartStore";
 import GeneralCard from "./components/GeneralCard";
@@ -18,6 +18,7 @@ import {
   ChartNoAxesColumnIncreasing,
   UsersRound,
 } from "lucide-react";
+import BookingLineChart from "./components/BookingLineChart";
 // import BookStatusPieChart from "./components/BookStatusPieChart";
 
 function AdminDashboard() {
@@ -69,17 +70,26 @@ function AdminDashboard() {
     }
   };
 
+  const REPORT_BODY_MAP: Record<string, any> = {
+    Revenue: REVENUE,
+    Booking: BOOKING,
+  };
+
   const handleRunReport = async () => {
     if (!selectedReport) return;
+    const reportBody = REPORT_BODY_MAP[selectedReport.name];
+    if (!reportBody) {
+      toast.error("Unsupported report type");
+      return;
+    }
     try {
       const response = await reportApi.runReport(selectedReport!.reportId, {
-        ...REVENUE,
+        ...reportBody,
         from: dateRange.from,
         to: dateRange.to,
       });
       setOpen({ ...open, runReport: false });
       setChartData(response.data.data);
-      // setReportResult(response.data.data);
       toast.success("Report run successfully");
     } catch (error) {
       toast.error("Failed to run report");
@@ -147,7 +157,8 @@ function AdminDashboard() {
         )}
       </div>
 
-      {chartData && <RevenueLineChart data={chartData} />}
+      {(chartData && selectedReport?.name === "Revenue") && <RevenueLineChart data={chartData} />}
+      {(chartData && selectedReport?.name === "Booking") && <BookingLineChart data={chartData} />}
       {/* {chartData && (<BookStatusPieChart data={chartData} />)} */}
 
       <CatalogForm

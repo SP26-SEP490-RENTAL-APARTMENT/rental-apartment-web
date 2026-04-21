@@ -35,7 +35,7 @@ function InspectionAction({
         <DialogContent className="max-w-xl">
           <DialogHeader>
             <DialogTitle className="text-xl font-semibold">
-              Booking Detail
+              Inspection
             </DialogTitle>
           </DialogHeader>
 

@@ -3,10 +3,10 @@ export const REVENUE = {
   metrics: [{ field: "total_revenue", aggregation: "sum", alias: "revenue" }],
 };
 
-export const BOOKING_STATUS = {
-  dimensions: [{ field: "status", alias: "status" }],
-  metrics: [{ field: "booking_count", aggregation: "count", alias: "count" }],
-};
+// export const BOOKING_STATUS = {
+//   dimensions: [{ field: "status", alias: "status" }],
+//   metrics: [{ field: "booking_count", aggregation: "count", alias: "count" }],
+// };
 
 export const GENERAL = {
   dimensions: [
@@ -31,5 +31,12 @@ export const GENERAL = {
       aggregation: "distinct_count",
       alias: "total_user",
     },
+  ],
+};
+
+export const BOOKING = {
+  dimensions: [{ field: "date", alias: "date" }],
+  metrics: [
+    { field: "booking_count", aggregation: "count", alias: "bookings" },
   ],
 };
