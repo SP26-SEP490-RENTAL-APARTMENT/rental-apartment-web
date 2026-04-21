@@ -8,6 +8,13 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import {
   createApartmentSchema,
@@ -20,6 +27,19 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
+const cities = ["TP. Hồ Chí Minh", "Hà Nội", "Đà Nẵng"];
+
+const districtsHCM = [
+  "Quận 1",
+  "Quận 2",
+  "Quận 3",
+  "Quận 4",
+  "Quận 5",
+  "Quận 7",
+  "Bình Thạnh",
+  "Thủ Đức",
+];
+
 export interface ApartmentFormProps {
   isOpen: boolean;
   onClose: () => void;
@@ -29,6 +49,13 @@ export interface ApartmentFormProps {
   apartment: Partial<Apartment> | null;
   mode: "create" | "update";
 }
+
+const generateLatLng = () => {
+  return {
+    lat: 10.7 + Math.random() * 0.1,
+    lng: 106.6 + Math.random() * 0.1,
+  };
+};
 
 function ApartmentForm({
   isOpen,
@@ -47,6 +74,7 @@ function ApartmentForm({
     register,
     handleSubmit,
     reset,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm({
     resolver: zodResolver(schema),
@@ -125,6 +153,7 @@ function ApartmentForm({
   const handleFormSubmit = async (
     data: CreateApartmentFormData | UpdateApartmentFormData,
   ) => {
+    const { lat, lng } = generateLatLng();
     try {
       if (isCreate) {
         // Create mode: use FormData for file upload
@@ -138,8 +167,8 @@ function ApartmentForm({
         formData.append("address", String(data.address));
         formData.append("district", String(data.district));
         formData.append("city", String(data.city));
-        formData.append("latitude", String(data.latitude));
-        formData.append("longitude", String(data.longitude));
+        formData.append("latitude", String(lat));
+        formData.append("longitude", String(lng));
         formData.append("basePricePerNight", String(data.basePricePerNight));
 
         // Add photos
@@ -256,9 +285,12 @@ function ApartmentForm({
               <Label htmlFor="address">Address *</Label>
               <Input
                 id="address"
-                placeholder="Street address"
+                placeholder="123 Nguyễn Văn Cừ"
                 {...register("address")}
               />
+              <p className="text-xs text-muted-foreground">
+                Enter street and house number
+              </p>
               {errors.address && (
                 <p className="text-sm text-destructive">
                   {errors.address.message}
@@ -268,7 +300,7 @@ function ApartmentForm({
 
             {/* GRID: DISTRICT & CITY */}
             <div className="grid grid-cols-2 gap-4">
-              <div className="grid gap-2">
+              {/* <div className="grid gap-2">
                 <Label htmlFor="district">District *</Label>
                 <Input
                   id="district"
@@ -280,9 +312,47 @@ function ApartmentForm({
                     {errors.district.message}
                   </p>
                 )}
+              </div> */}
+
+              <div className="grid gap-2">
+                <Label>District *</Label>
+                <Select
+                  onValueChange={(value) => setValue("district", value)}
+                  defaultValue={apartment?.district}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select district" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {districtsHCM.map((d) => (
+                      <SelectItem key={d} value={d}>
+                        {d}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
 
               <div className="grid gap-2">
+                <Label>City *</Label>
+                <Select
+                  onValueChange={(value) => setValue("city", value)}
+                  defaultValue={apartment?.city}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select city" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {cities.map((c) => (
+                      <SelectItem key={c} value={c}>
+                        {c}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* <div className="grid gap-2">
                 <Label htmlFor="city">City *</Label>
                 <Input id="city" placeholder="City" {...register("city")} />
                 {errors.city && (
@@ -290,11 +360,11 @@ function ApartmentForm({
                     {errors.city.message}
                   </p>
                 )}
-              </div>
+              </div> */}
             </div>
 
             {/* GRID: LATITUDE & LONGITUDE */}
-            <div className="grid grid-cols-2 gap-4">
+            {/* <div className="grid grid-cols-2 gap-4">
               <div className="grid gap-2">
                 <Label htmlFor="latitude">Latitude *</Label>
                 <Input
@@ -326,7 +396,7 @@ function ApartmentForm({
                   </p>
                 )}
               </div>
-            </div>
+            </div> */}
 
             {/* PET ALLOWED */}
             <div className="grid gap-2">

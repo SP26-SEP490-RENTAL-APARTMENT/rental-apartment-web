@@ -21,19 +21,6 @@ function BookingConfirm() {
 
   const quoteData = location.state;
 
-  // Calculate number of nights
-  const calculateNights = () => {
-    if (!quoteData?.checkInDate || !quoteData?.checkOutDate) return 0;
-    const checkIn = new Date(quoteData.checkInDate);
-    const checkOut = new Date(quoteData.checkOutDate);
-    const nights = Math.ceil(
-      (checkOut.getTime() - checkIn.getTime()) / (1000 * 60 * 60 * 24),
-    );
-    return nights;
-  };
-
-  const nights = calculateNights();
-
   const {
     control,
     handleSubmit,
@@ -42,19 +29,21 @@ function BookingConfirm() {
     resolver: zodResolver(bookingConfirmSchema),
     defaultValues: {
       apartmentId: quoteData?.apartmentId || "",
-      checkInDate: quoteData?.checkInDate || "",
-      checkOutDate: quoteData?.checkOutDate || "",
-      nights: nights || 1,
+      checkInDateTime: quoteData?.checkInDateTime || "",
+      checkOutDateTime: quoteData?.checkOutDateTime || "",
+      nights: quoteData?.nights || 1,
       noOfAdults: quoteData?.noOfAdults || 1,
       noOfInfants: quoteData?.noOfInfants || 0,
       noOfPets: quoteData?.noOfPets || 0,
-      packageId: quoteData?.packageId || "",
+      packageId: quoteData?.packageId || null,
       paymentMode: "partial" as const,
       paymentProvider: "stripe" as const,
     },
   });
 
   const onSubmit = async (data: BookingConfirmFormData) => {
+    console.log(data);
+    
     try {
       setError(null);
       const response = await bookingApi.confirmBooking(data);
@@ -113,20 +102,20 @@ function BookingConfirm() {
                     <div>
                       <p className="text-muted-foreground">Check-in</p>
                       <p className="font-medium">
-                        {new Date(quoteData.checkInDate).toLocaleDateString()}
+                        {new Date(quoteData.checkInDateTime).toLocaleDateString()}
                       </p>
                     </div>
 
                     <div>
                       <p className="text-muted-foreground">Check-out</p>
                       <p className="font-medium">
-                        {new Date(quoteData.checkOutDate).toLocaleDateString()}
+                        {new Date(quoteData.checkOutDateTime).toLocaleDateString()}
                       </p>
                     </div>
 
                     <div>
                       <p className="text-muted-foreground">Nights</p>
-                      <p className="font-medium">{nights} nights</p>
+                      <p className="font-medium">{quoteData.nights} nights</p>
                     </div>
 
                     <div>
@@ -217,12 +206,12 @@ function BookingConfirm() {
             render={({ field }) => <input {...field} type="hidden" />}
           />
           <Controller
-            name="checkInDate"
+            name="checkInDateTime"
             control={control}
             render={({ field }) => <input {...field} type="hidden" />}
           />
           <Controller
-            name="checkOutDate"
+            name="checkOutDateTime"
             control={control}
             render={({ field }) => <input {...field} type="hidden" />}
           />
@@ -230,7 +219,7 @@ function BookingConfirm() {
             name="nights"
             control={control}
             render={({ field }) => (
-              <input {...field} type="hidden" value={nights} />
+              <input {...field} type="hidden" value={quoteData.nights} />
             )}
           />
           <Controller
@@ -248,11 +237,11 @@ function BookingConfirm() {
             control={control}
             render={({ field }) => <input {...field} type="hidden" />}
           />
-          <Controller
+          {/* <Controller
             name="packageId"
             control={control}
             render={({ field }) => <input {...field} type="hidden" />}
-          />
+          /> */}
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-3">

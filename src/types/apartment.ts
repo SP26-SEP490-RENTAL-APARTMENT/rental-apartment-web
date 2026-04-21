@@ -3,6 +3,7 @@ import type { Amenity } from "./amenity";
 export interface Apartment extends InspectionStatus {
   apartmentId: string;
   landlordId: string;
+  landlordName: string;
   title: string;
   description: string;
   maxOccupants: number;

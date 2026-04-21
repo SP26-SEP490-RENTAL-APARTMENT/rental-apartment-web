@@ -96,15 +96,12 @@ function ApartmentDetail() {
           {apartment && (
             <ApartmentInfo
               description={apartment.description}
-              host={{
-                name: "ll",
-                avatarUrl: "https://i.pravatar.cc/150?img=1",
-              }}
               address={apartment.address}
               district={apartment.district}
               price={apartment.basePricePerNight}
               isPetAllowed={apartment.isPetAllowed}
               maxOccupants={apartment.maxOccupants}
+              landlordName={apartment.landlordName}
             />
           )}
         </div>
