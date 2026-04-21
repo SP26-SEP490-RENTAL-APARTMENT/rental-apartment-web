@@ -9,34 +9,35 @@ import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
 function RevenueLineChart({ data }: { data: any }) {
   if (!data?.rows?.length) {
     return (
-      <Card>
+      <Card className="rounded-2xl shadow-md">
         <CardHeader>
-          <CardTitle>Doanh thu theo ngày</CardTitle>
+          <CardTitle>📈 Revenue Over Time</CardTitle>
         </CardHeader>
         <CardContent>Không có dữ liệu</CardContent>
       </Card>
     );
   }
 
-  // 🔥 Transform + sort
+  // 🔥 transform + sort (giống booking)
   const chartData = data.rows
     .map((item: any) => ({
-      rawDate: item.dimensions.date,
-      date: new Date(item.dimensions.date).toLocaleDateString("vi-VN", {
-        day: "2-digit",
-        month: "2-digit",
-      }),
+      rawDate: new Date(item.dimensions.date),
+      date: new Date(item.dimensions.date).toLocaleDateString("vi-VN"),
       revenue: item.metrics.revenue,
     }))
-    .sort(
-      (a: any, b: any) =>
-        new Date(a.rawDate).getTime() - new Date(b.rawDate).getTime(),
-    );
+    .sort((a: any, b: any) => a.rawDate - b.rawDate);
+
+  const total = data?.totalMetrics?.revenue || 0;
 
   return (
-    <Card>
+    <Card className="rounded-2xl shadow-md">
       <CardHeader>
-        <CardTitle>Revenue - day</CardTitle>
+        <CardTitle className="flex justify-between items-center">
+          <span>Revenue Over Time</span>
+          <span className="text-sm font-normal text-muted-foreground">
+            Total: {Number(total).toLocaleString("vi-VN")} đ
+          </span>
+        </CardTitle>
       </CardHeader>
 
       <CardContent>
@@ -44,20 +45,20 @@ function RevenueLineChart({ data }: { data: any }) {
           config={{
             revenue: {
               label: "Doanh thu",
-              color: "hsl(var(--chart-1))",
+              color: "#3b82f6",
             },
           }}
-          className="h-80 w-full"
+          className="h-75 w-full"
         >
           <LineChart data={chartData}>
-            <CartesianGrid vertical={false} strokeDasharray="3 3" />
+            <CartesianGrid strokeDasharray="3 3" />
 
-            <XAxis dataKey="date" tickLine={false} axisLine={false} />
+            <XAxis dataKey="date" />
 
             <YAxis
-              tickLine={false}
-              axisLine={false}
-              tickFormatter={(value) => value.toLocaleString("vi-VN")}
+              tickFormatter={(value) =>
+                Number(value).toLocaleString("vi-VN")
+              }
             />
 
             <ChartTooltip
@@ -74,8 +75,8 @@ function RevenueLineChart({ data }: { data: any }) {
               type="monotone"
               dataKey="revenue"
               stroke="#3b82f6"
-              strokeWidth={2}
-              dot={false}
+              strokeWidth={3}
+              dot={{ r: 4 }}
             />
           </LineChart>
         </ChartContainer>

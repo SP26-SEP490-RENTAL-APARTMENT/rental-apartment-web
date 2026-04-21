@@ -6,15 +6,18 @@ export const useTenantNavList = () => {
   const { t: tenantT } = useTranslation("tenant");
   const { user } = useAuthStore();
 
-  const isExactTenantLandlord =
-
-  user?.roles.includes("tenant") 
+  const isExactTenantLandlord = user?.roles.includes("tenant");
 
   return [
     {
       title: tenantT("profile"),
       url: "/tenant/profile",
       icon: BookUser,
+    },
+    {
+      title: tenantT("identityStatus"),
+      url: "/tenant/identity",
+      icon: IdCard,
     },
     ...(isExactTenantLandlord
       ? [
@@ -27,11 +30,6 @@ export const useTenantNavList = () => {
             title: tenantT("collections"),
             url: "/tenant/collections",
             icon: Album,
-          },
-          {
-            title: tenantT("identityStatus"),
-            url: "/tenant/identity",
-            icon: IdCard,
           },
         ]
       : []),

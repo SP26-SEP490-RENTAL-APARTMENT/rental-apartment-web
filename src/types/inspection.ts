@@ -1,5 +1,6 @@
 export interface Inspection {
     inspectionId: string
+    apartmentName: string
     apartmentId: string
     inspectorId: string
     scheduledDate: string

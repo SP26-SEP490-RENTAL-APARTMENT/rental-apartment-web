@@ -1,12 +1,20 @@
-
 import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { X } from "lucide-react";
 
 export interface InspectionFilterValues {
   sortBy: string;
   sortOrder: "asc" | "desc";
   status: string;
+  scheduledDate: string | undefined;
+  search: string | undefined;
 }
 
 interface InspectionFilterProps {
@@ -22,7 +30,7 @@ const SORT_BY_OPTIONS = [
 ];
 
 const STATUS_OPTIONS = [
-//   { label: "All Statuses", value: "" },
+  //   { label: "All Statuses", value: "" },
   { label: "Pending", value: "pending" },
   { label: "Scheduled", value: "scheduled" },
   { label: "In Progress", value: "in_progress" },
@@ -60,12 +68,38 @@ function InspectionFilter({
     });
   };
 
+  const handleScheduledDateChange = (value: string) => {
+    onFilterChange({
+      ...filters,
+      scheduledDate: value || undefined,
+    });
+  };
+
+  const handleSearchChange = (value: string) => {
+    onFilterChange({
+      ...filters,
+      search: value || undefined,
+    });
+  };
+
   const handleReset = () => {
     onReset?.();
   };
 
   return (
     <div className="flex flex-wrap gap-4 items-end p-4 bg-card border border-border rounded-lg mb-4">
+      {/* Search */}
+      <div className="flex flex-col gap-2">
+        <label className="text-sm font-medium">Search</label>
+        <Input
+          type="text"
+          placeholder="Search by name..."
+          value={filters.search || ""}
+          onChange={(e) => handleSearchChange(e.target.value)}
+          className="w-48"
+        />
+      </div>
+
       {/* Sort By */}
       <div className="flex flex-col gap-2">
         <label className="text-sm font-medium">Sort By</label>
@@ -115,6 +149,17 @@ function InspectionFilter({
             ))}
           </SelectContent>
         </Select>
+      </div>
+
+      {/* Scheduled Date */}
+      <div className="flex flex-col gap-2">
+        <label className="text-sm font-medium">Scheduled Date</label>
+        <input
+          type="date"
+          value={filters.scheduledDate || ""}
+          onChange={(e) => handleScheduledDateChange(e.target.value)}
+          className="w-48 px-3 py-2 border border-input rounded-md bg-background text-sm"
+        />
       </div>
 
       {/* Reset Button */}

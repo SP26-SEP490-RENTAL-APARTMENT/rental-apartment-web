@@ -26,10 +26,13 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
+import { ROUTES } from "@/constants/routes";
 
 function Register() {
   const { t } = useTranslation();
   const { t: auth } = useTranslation("auth");
+  const navigate = useNavigate();
 
   const [isShowPassword, setIsShowPassword] = useState(false);
 
@@ -50,6 +53,7 @@ function Register() {
         phone: String(registerData.phone),
       });
       toast.success(auth("registerSuccess"));
+      navigate(ROUTES.LOGIN)
     } catch (error: any) {
       toast.error(error.response?.data?.message || auth("registerFailed"));
     }
@@ -64,44 +68,46 @@ function Register() {
       <CardContent>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <div className="flex flex-col gap-6">
-            <div className="grid gap-2">
-              <Label htmlFor="name">{auth("fullName")}</Label>
-              <InputGroup>
-                <InputGroupInput
-                  id="name"
-                  type="text"
-                  placeholder={auth("fullName")}
-                  {...register("fullName")}
-                />
-                <InputGroupAddon align="inline-start">
-                  <UserRound />
-                </InputGroupAddon>
-              </InputGroup>
-              {errors.fullName ? (
-                <p className="text-sm text-destructive">
-                  {errors.fullName.message}
-                </p>
-              ) : null}
-            </div>
+            <div className="grid grid-cols-2 gap-6">
+              <div className="grid gap-2">
+                <Label htmlFor="name">{auth("fullName")}</Label>
+                <InputGroup>
+                  <InputGroupInput
+                    id="name"
+                    type="text"
+                    placeholder={auth("fullName")}
+                    {...register("fullName")}
+                  />
+                  <InputGroupAddon align="inline-start">
+                    <UserRound />
+                  </InputGroupAddon>
+                </InputGroup>
+                {errors.fullName ? (
+                  <p className="text-sm text-destructive">
+                    {errors.fullName.message}
+                  </p>
+                ) : null}
+              </div>
 
-            <div className="grid gap-2">
-              <Label htmlFor="email">{auth("email")}</Label>
-              <InputGroup>
-                <InputGroupInput
-                  id="email"
-                  type="email"
-                  placeholder={auth("email")}
-                  {...register("email")}
-                />
-                <InputGroupAddon align="inline-start">
-                  <Mail />
-                </InputGroupAddon>
-              </InputGroup>
-              {errors.email ? (
-                <p className="text-sm text-destructive">
-                  {errors.email.message}
-                </p>
-              ) : null}
+              <div className="grid gap-2">
+                <Label htmlFor="email">{auth("email")}</Label>
+                <InputGroup>
+                  <InputGroupInput
+                    id="email"
+                    type="email"
+                    placeholder={auth("email")}
+                    {...register("email")}
+                  />
+                  <InputGroupAddon align="inline-start">
+                    <Mail />
+                  </InputGroupAddon>
+                </InputGroup>
+                {errors.email ? (
+                  <p className="text-sm text-destructive">
+                    {errors.email.message}
+                  </p>
+                ) : null}
+              </div>
             </div>
 
             <div className="grid gap-2">

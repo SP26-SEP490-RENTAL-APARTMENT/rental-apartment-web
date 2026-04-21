@@ -7,7 +7,7 @@ export const InspectionColumns = (
   onStartInspection: (id: string) => void,
   onInspectionForm: (id: string) => void,
   onReviewInspection: (id: string) => void,
-  onGetApartment: (id: string) => void
+  onGetApartment: (id: string) => void,
 ): ColumnDef<Inspection>[] => [
   {
     accessorKey: "apartmentId",
@@ -24,6 +24,10 @@ export const InspectionColumns = (
         </Button>
       );
     },
+  },
+  {
+    accessorKey: "apartmentName",
+    header: "Apartment Name",
   },
   {
     accessorKey: "status",

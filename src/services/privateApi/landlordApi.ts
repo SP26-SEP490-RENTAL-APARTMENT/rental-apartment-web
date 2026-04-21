@@ -97,6 +97,10 @@ export const bookingManagementApi = {
     apiConfig.privateApi.get(`/Booking/${bookingId}/residence-report/doc`, {
       responseType: "blob",
     }),
+  getOccupantList: (bookingId: string) =>
+    apiConfig.privateApi.get(`/Booking/${bookingId}/occupants`),
+  addOccupant: (bookingId: string, data: FormData) =>
+    apiConfig.privateApi.post(`/Booking/${bookingId}/occupants`, data),
 };
 
 export const mySubscriptionApi = {

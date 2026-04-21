@@ -8,7 +8,16 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import type { BookingHistory } from "@/types/bookingHistory";
-import { CheckCheck, Eye, FileDown, LogOut, Send } from "lucide-react";
+import {
+  CheckCheck,
+  Eye,
+  FileDown,
+  LogOut,
+  Plus,
+  ScanEye,
+  Send,
+  UserRoundPlus,
+} from "lucide-react";
 import CheckOutDialog from "./CheckOutDialog";
 import CheckInDialog from "./CheckinDialog";
 import {
@@ -40,8 +49,10 @@ export interface Props {
     bookingId: string,
     data: { actualCheckOut: Date; note: string },
   ) => Promise<void>;
+  onGetOccupantList: (bookingId: string) => Promise<void>;
+  onAddOccupant: (bookingId: string) => void;
 }
-function BookingAction({ bookings, onCheckIn, onCheckOut }: Props) {
+function BookingAction({ bookings, onCheckIn, onCheckOut, onGetOccupantList, onAddOccupant }: Props) {
   const [checkInDialogOpen, setCheckInDialogOpen] = useState(false);
   const [checkOutDialogOpen, setCheckOutDialogOpen] = useState(false);
 
@@ -62,26 +73,26 @@ function BookingAction({ bookings, onCheckIn, onCheckOut }: Props) {
   };
 
   const handleGetPDF = async (id: string) => {
-  try {
-    const response = await bookingManagementApi.getPDFFile(id);
+    try {
+      const response = await bookingManagementApi.getPDFFile(id);
 
-    const blob = new Blob([response.data], { type: "application/pdf" });
-    const url = window.URL.createObjectURL(blob);
+      const blob = new Blob([response.data], { type: "application/pdf" });
+      const url = window.URL.createObjectURL(blob);
 
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = `residence-report-${id}.pdf`;
-    document.body.appendChild(link);
-    link.click();
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `residence-report-${id}.pdf`;
+      document.body.appendChild(link);
+      link.click();
 
-    link.remove();
-    window.URL.revokeObjectURL(url);
+      link.remove();
+      window.URL.revokeObjectURL(url);
 
-    toast.success("PDF file downloaded successfully");
-  } catch (error) {
-    toast.error("Failed to download PDF file");
-  }
-};
+      toast.success("PDF file downloaded successfully");
+    } catch (error) {
+      toast.error("Failed to download PDF file");
+    }
+  };
 
   const handleGetDOC = async (id: string) => {
     try {
@@ -280,6 +291,33 @@ function BookingAction({ bookings, onCheckIn, onCheckOut }: Props) {
           </div>
         </TooltipContent>
       </Tooltip>
+
+      {bookings.actualCheckIn && (
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button size="sm" className="bg-amber-500">
+              <Plus />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <div>
+              <Button
+                size="sm"
+                variant="secondary"
+                onClick={() => onAddOccupant(bookings.bookingId)}
+              >
+                <UserRoundPlus />
+              </Button>
+              <Button
+                size="sm"
+                onClick={() => onGetOccupantList(bookings.bookingId)}
+              >
+                <ScanEye />
+              </Button>
+            </div>
+          </TooltipContent>
+        </Tooltip>
+      )}
 
       <CheckInDialog
         open={checkInDialogOpen}

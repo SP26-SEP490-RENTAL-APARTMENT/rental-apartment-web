@@ -12,6 +12,8 @@ export const BookingColumns = (
     bookingId: string,
     data: { actualCheckOut: Date; note: string },
   ) => Promise<void>,
+  onGetOccupantList: (bookingId: string) => Promise<void>,
+  onAddOccupant: (bookingId: string) => void,
 ): ColumnDef<BookingHistory>[] => [
   {
     accessorKey: "apartmentId",
@@ -63,6 +65,8 @@ export const BookingColumns = (
           bookings={booking}
           onCheckIn={onCheckIn}
           onCheckOut={onCheckOut}
+          onGetOccupantList={onGetOccupantList}
+          onAddOccupant={onAddOccupant}
         />
       );
     },

@@ -36,6 +36,8 @@ function Inspections() {
     sortBy: "scheduledDate",
     sortOrder: "desc",
     status: "",
+    scheduledDate: "",
+    search: ''
   });
 
   const fetchInspections = async () => {
@@ -48,10 +50,11 @@ function Inspections() {
       const requestParams = {
         page,
         pageSize: 5,
-        search: "",
+        search: filters.search,
         sortBy: filters.sortBy,
         sortOrder: filters.sortOrder,
         ...(filters.status && { status: filters.status }),
+        ...(filters.scheduledDate && { scheduledDate: filters.scheduledDate }),
       };
 
       if (user.role === "admin") {
@@ -94,10 +97,9 @@ function Inspections() {
   };
 
   useEffect(() => {
-    setPage(1);
     fetchInspections();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [filters, user]);
+  }, [filters, user, page]);
 
   const handleStartInspection = async (id: string) => {
     try {
@@ -155,6 +157,8 @@ function Inspections() {
       sortBy: "scheduledDate",
       sortOrder: "desc",
       status: "",
+      scheduledDate: "",
+      search: "",
     });
   };
   return (
