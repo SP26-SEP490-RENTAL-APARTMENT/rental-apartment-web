@@ -1,11 +1,43 @@
 {
-    "welcome": "Welcome to {{appName}}",
-    "loginDescription": "Sign in to your account to continue",
-    "registerDescription": "Register your account to continue",
-    "language": "Select language",
-    "cancel": "Cancel",
-    "update": "Update",
-    "create": "Create",
-    "actions": "Actions",
-    "submit": "Submit"
+    "button": {
+        "save": "Save",
+        "cancel": "Cancel",
+        "delete": "Delete",
+        "edit": "Edit",
+        "add": "Add",
+        "view": "View",
+        "confirm": "Confirm",
+        "back": "Back",
+        "next": "Next",
+        "submit": "Submit",
+        "update": "Update",
+        "login": "Login",
+        "register": "Register",
+        "sendCode": "Send Code",
+        "previous": "Previous"
+    },
+    "description": {
+        "apartment": "Find your perfect stay with our wide selection of apartments. Whether you're looking for a cozy studio or a spacious family home, we have options to suit every need and budget.",
+        "booking": "Easily manage your bookings and reservations. View your upcoming stays, past trips, and keep track of all your travel plans in one convenient place.",
+        "profile": "Manage your personal information, preferences, and settings. Update your profile to ensure a personalized experience tailored to your needs.",
+        "login": "Access your account to manage your bookings, profile, and more. Enter your credentials to log in and enjoy a seamless experience.",
+        "register": "Create a new account to start booking your perfect stay. Join our community and discover a world of travel possibilities at your fingertips.",
+        "welcome": "Welcome to VStay",
+        "question": "Don't have an account?",
+        "requestResetPassword": "We'll send you a code to reset your password",
+        "enterEmail": "Enter your email",
+        "resetPassword": "Reset password",
+        "setNewPassword": "Set new password for your account",
+        "availableApartments": "Available Apartments"
+    },
+    "slogan": {
+        "primeLocation": "Prime Location",
+        "locationDescription": "Access to city center",
+        "verifiedListings": "Verified Listings",
+        "verifiedDescription": "Trusted apartments",
+        "secureBooking": "Secure Booking",
+        "secureDescription": "Protected transactions",
+        "slogan": "Find Your Perfect Stay",
+        "description": "Discover comfortable and affordable apartments in the heart of the city"
+    }
 }

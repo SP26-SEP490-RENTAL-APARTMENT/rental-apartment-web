@@ -1,22 +1,16 @@
 import DataTable from "@/components/ui/dataTable/DataTable";
-import {
-  documentsManagement,
-  userManagementApi,
-} from "@/services/privateApi/adminApi";
+import { documentsManagement, userManagementApi } from "@/services/privateApi/adminApi";
 import type { Document } from "@/types/document";
 import { useCallback, useEffect, useState } from "react";
 import { DocumentColumns } from "./components/DocumentColumns";
 import type { User } from "@/types/user";
 import { toast } from "sonner";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import UserDetailDialog from "@/components/ui/userDetailDialog/UserDetailDialog";
 import DocumentApproveForm from "./components/DocumentApproveForm";
 import type { DocumentApproveFormData } from "@/schemas/documentApproveSchema";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { FileCheck } from "lucide-react";
 
 function DocumentsManagement() {
   const [user, setUser] = useState<User>();
@@ -28,7 +22,6 @@ function DocumentsManagement() {
   const [sortOrder] = useState("");
   const [loading, setLoading] = useState(false);
   const [userDialogOpen, setUserDialogOpen] = useState(false);
-
   const [selectedDocumentId, setSelectedDocumentId] = useState("");
   const [isFormOpen, setIsFormOpen] = useState(false);
 
@@ -37,7 +30,7 @@ function DocumentsManagement() {
     try {
       const response = await documentsManagement.getAllDocuments({
         page,
-        pageSize: 5,
+        pageSize: 8,
         search,
         sortBy,
         sortOrder,
@@ -85,17 +78,49 @@ function DocumentsManagement() {
   const handlePageChane = (page: number) => {
     setPage(page);
   };
-  return (
-    <div>
-      <DataTable
-        columns={DocumentColumns(triggerApprove, fetchUserDetail)}
-        data={documents}
-        limit={5}
-        loading={loading}
-        onPageChange={handlePageChane}
-        total={totalCount}
-      />
 
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <div className="bg-white border-b border-gray-200 sticky top-0 z-30 shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-blue-100 rounded-lg">
+              <FileCheck className="h-6 w-6 text-blue-600" />
+            </div>
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900">Documents Management</h1>
+              <p className="text-gray-600 mt-1">
+                Review and approve user identity documents
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Content */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <Card className="border-0 shadow-sm">
+          <CardHeader className="border-b border-gray-100">
+            <CardTitle>
+              Documents ({totalCount})
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="pt-6">
+            <DataTable
+              columns={DocumentColumns(triggerApprove, fetchUserDetail)}
+              data={documents}
+              limit={8}
+              loading={loading}
+              onPageChange={handlePageChane}
+              total={totalCount}
+              page={page}
+            />
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Document Approve Form Modal */}
       <DocumentApproveForm
         isOpen={isFormOpen}
         onClose={() => setIsFormOpen(false)}
@@ -103,13 +128,11 @@ function DocumentsManagement() {
         documentId={selectedDocumentId}
       />
 
-      <Dialog
-        open={userDialogOpen}
-        onOpenChange={() => setUserDialogOpen(false)}
-      >
+      {/* User Detail Modal */}
+      <Dialog open={userDialogOpen} onOpenChange={() => setUserDialogOpen(false)}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Detail</DialogTitle>
+            <DialogTitle>User Details</DialogTitle>
           </DialogHeader>
           {user && <UserDetailDialog user={user} />}
         </DialogContent>
@@ -119,3 +142,4 @@ function DocumentsManagement() {
 }
 
 export default DocumentsManagement;
+        

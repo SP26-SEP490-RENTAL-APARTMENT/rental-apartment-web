@@ -1,11 +1,43 @@
 {
-    "welcome": "Chào mừng đến với {{appName}}",
-    "loginDescription": "Đăng nhập vào tài khoản của bạn để tiếp tục",
-    "registerDescription": "Đăng ký tài khoản của bạn để tiếp tục",
-    "language": "Chọn ngôn ngữ",
-    "cancel": "Hủy",
-    "update": "Cập nhật",
-    "create": "Tạo",
-    "actions": "Hành động",
-    "submit": "Nộp"
+    "button": {
+        "save": "Lưu",
+        "cancel": "Hủy",
+        "delete": "Xóa",
+        "edit": "Chỉnh sửa",
+        "add": "Thêm",
+        "view": "Xem",
+        "confirm": "Xác nhận",
+        "back": "Quay lại",
+        "next": "Tiếp theo",
+        "submit": "Gửi",
+        "update": "Cập nhật",
+        "login": "Đăng nhập",
+        "register": "Đăng ký",
+        "sendCode": "Gửi mã",
+        "previous": "Trước"
+    },
+    "description": {
+        "apartment": "Tìm nơi ở hoàn hảo của bạn với sự lựa chọn rộng rãi các căn hộ. Cho dù bạn đang tìm kiếm một studio ấm cúng hay một ngôi nhà gia đình rộng rãi, chúng tôi có các lựa chọn phù hợp với mọi nhu cầu và ngân sách.",
+        "booking": "Quản lý dễ dàng các đặt phòng và đặt chỗ của bạn. Xem những chuyến đi sắp tới, các chuyến đi trước đó, và theo dõi tất cả các kế hoạch du lịch của bạn tại một nơi thuận tiện.",
+        "profile": "Quản lý thông tin cá nhân, sở thích và cài đặt. Cập nhật hồ sơ của bạn để đảm bảo trải nghiệm được cá nhân hóa phù hợp với nhu cầu của bạn.",
+        "login": "Truy cập tài khoản của bạn để quản lý các đặt phòng, hồ sơ và nhiều hơn nữa. Nhập thông tin đăng nhập của bạn để đăng nhập và tận hưởng trải nghiệm liền mạch.",
+        "register": "Tạo tài khoản mới để bắt đầu đặt chỗ nơi ở hoàn hảo của bạn",
+        "welcome": "Chào mừng đến với VStay",
+        "question": "Bạn chưa có tài khoản?",
+        "requestResetPassword": "Chúng tôi sẽ gửi cho bạn một mã để đặt lại mật khẩu của bạn",
+        "enterEmail": "Nhập email của bạn",
+        "resetPassword": "Đặt lại mật khẩu",
+        "setNewPassword": "Đặt lại mật khẩu mới cho tài khoản của bạn",
+        "availableApartments": "Các căn hộ có sẵn"
+    },
+    "slogan": {
+        "primeLocation": "Vị trí tốt",
+        "locationDescription": "Truy cập trung tâm thành phố",
+        "verifiedListings": "Danh sách đã xác minh",
+        "verifiedDescription": "Căn hộ được tin cậy",
+        "secureBooking": "Đặt phòng an toàn",
+        "secureDescription": "Giao dịch được bảo vệ",
+        "slogan": "Tìm nơi ở hoàn hảo của bạn",
+        "description": "Khám phá các căn hộ thoải mái và phải chăng ở trung tâm thành phố"
+    }
 }

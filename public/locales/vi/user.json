@@ -1,13 +1,25 @@
 {
-    "userId": "ID người dùng",
-    "name": "Tên",
-    "email": "Email",
-    "phone": "Số điện thoại",
-    "role": "Vai trò",
-    "verified": "Đã xác minh",
-    "userDetails": "Chi tiết người dùng",
-    "userDetailsDescription": "Xem thông tin chi tiết cho người dùng này.",
-    "userManagement": "Quản lý người dùng",
-    "createUser": "Tạo người dùng",
-    "updateUser": "Cập nhật người dùng"
+    "profile": {
+        "name": "Họ và tên",
+        "email": "Email",
+        "phone": "Số điện thoại",
+        "gender": "Giới tính",
+        "birthday": "Ngày sinh",
+        "nationality":"Quốc tịch",
+        "address": "Địa chỉ",
+        "forgotPassword": "Quên mật khẩu?"
+    },
+    "auth": {
+        "password": "Mật khẩu",
+        "confirmPassword": "Xác nhận mật khẩu",
+        "confirmNewPassword": "Xác nhận mật khẩu mới",
+        "verificationCode": "Mã xác nhận",
+        "resetPassword": "Đặt lại mật khẩu"
+    },
+    "role": {
+        "tenant": "Khách thuê",
+        "tenantDescription": "Tìm nơi để ở",
+        "landlord": "Chủ nhà",
+        "landlordDescription": "Có bất động sản cho thuê?"
+    }
 }

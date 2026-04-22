@@ -11,6 +11,17 @@ import type { ParamsProp } from "@/types/params";
 import { ROUTES } from "@/constants/routes";
 import type { Apartment } from "@/types/apartment";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
+import { CalendarIcon, Users, Zap } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export interface Props {
   apartmentId: string;
@@ -19,6 +30,7 @@ export interface Props {
 }
 
 function BookingBox({ apartmentId, onSubmit, apartment }: Props) {
+  const { t } = useTranslation("booking");
   const navigate = useNavigate();
   const [checkIn, setCheckIn] = useState<Date | undefined>(undefined);
   const [checkOut, setCheckOut] = useState<Date | undefined>(undefined);
@@ -73,16 +85,6 @@ function BookingBox({ apartmentId, onSubmit, apartment }: Props) {
     return isPastDate(date);
   };
 
-  // const disableCheckOut = (date: Date) => {
-  //   if (isPastDate(date)) return true;
-
-  //   if (checkIn) {
-  //     return date <= checkIn;
-  //   }
-
-  //   return false;
-  // };
-
   const handleBook = async () => {
     if (!checkIn || !checkOut) {
       alert("Please fill in all required fields");
@@ -123,205 +125,241 @@ function BookingBox({ apartmentId, onSubmit, apartment }: Props) {
   };
 
   return (
-    <Card className="shadow-2xl">
-      <CardHeader>
-        <CardTitle className="text-center">Book Now</CardTitle>
+    <Card className="shadow-xl border-0 bg-white overflow-hidden pt-0">
+      <CardHeader className="bg-linear-to-r from-blue-600 to-blue-700 text-white py-6">
+        <CardTitle className="text-center text-2xl font-bold">
+          {t("bookNow")}
+        </CardTitle>
       </CardHeader>
-      <CardContent className="flex flex-col gap-4">
+      <CardContent className="p-6 space-y-6">
         {/* Check-in & Check-out */}
-        <div className="flex gap-2 items-end">
-          <div className="flex flex-col w-full">
-            <span className="text-sm font-medium mb-1">Check-in *</span>
+        <div className="space-y-3">
+          <Label className="text-sm font-semibold text-gray-900 flex items-center gap-2">
+            <CalendarIcon className="h-4 w-4 text-blue-600" />
+            Check-in & Check-out
+          </Label>
+          <div className="flex gap-2">
+            <div className="flex-1">
+              <Popover.Root>
+                <Popover.Trigger asChild>
+                  <Button
+                    variant="outline"
+                    className="w-full justify-start text-left font-normal border-gray-300 hover:bg-gray-50"
+                  >
+                    {checkIn ? formatDates(checkIn) : "Select date"}
+                  </Button>
+                </Popover.Trigger>
 
-            <Popover.Root>
-              <Popover.Trigger asChild>
-                <Button variant="outline" className="w-full justify-start">
-                  {formatDates(checkIn)}
-                </Button>
-              </Popover.Trigger>
-
-              <Popover.Content className="p-3 bg-white flex flex-col gap-2">
-                <Calendar
-                  mode="single"
-                  selected={checkIn}
-                  onSelect={(date) => {
-                    if (date) {
-                      const newDate = new Date(date);
-                      // giữ giờ cũ nếu có
-                      if (checkIn) {
-                        newDate.setHours(
-                          checkIn.getHours(),
-                          checkIn.getMinutes(),
-                        );
+                <Popover.Content className="p-3 bg-white flex flex-col gap-2 rounded-lg shadow-lg">
+                  <Calendar
+                    mode="single"
+                    selected={checkIn}
+                    onSelect={(date) => {
+                      if (date) {
+                        const newDate = new Date(date);
+                        if (checkIn) {
+                          newDate.setHours(
+                            checkIn.getHours(),
+                            checkIn.getMinutes(),
+                          );
+                        }
+                        setCheckIn(newDate);
                       }
+                    }}
+                    disabled={disableCheckIn}
+                  />
+
+                  <input
+                    type="time"
+                    className="border border-gray-300 rounded p-2 text-sm"
+                    value={
+                      checkIn
+                        ? `${String(checkIn.getHours()).padStart(2, "0")}:${String(
+                            checkIn.getMinutes(),
+                          ).padStart(2, "0")}`
+                        : ""
+                    }
+                    onChange={(e) => {
+                      if (!checkIn) return;
+                      const [h, m] = e.target.value.split(":").map(Number);
+                      const newDate = new Date(checkIn);
+                      newDate.setHours(h, m);
                       setCheckIn(newDate);
-                    }
-                  }}
-                  disabled={disableCheckIn}
-                />
+                    }}
+                  />
+                </Popover.Content>
+              </Popover.Root>
+            </div>
 
-                {/* chọn giờ */}
-                <input
-                  type="time"
-                  className="border rounded p-2"
-                  value={
-                    checkIn
-                      ? `${String(checkIn.getHours()).padStart(2, "0")}:${String(
-                          checkIn.getMinutes(),
-                        ).padStart(2, "0")}`
-                      : ""
-                  }
-                  onChange={(e) => {
-                    if (!checkIn) return;
-                    const [h, m] = e.target.value.split(":").map(Number);
-                    const newDate = new Date(checkIn);
-                    newDate.setHours(h, m);
-                    setCheckIn(newDate);
-                  }}
-                />
-              </Popover.Content>
-            </Popover.Root>
-          </div>
+            <div className="flex-1">
+              <Popover.Root>
+                <Popover.Trigger asChild>
+                  <Button
+                    variant="outline"
+                    className="w-full justify-start text-left font-normal border-gray-300 hover:bg-gray-50"
+                  >
+                    {checkOut ? formatDates(checkOut) : "Select date"}
+                  </Button>
+                </Popover.Trigger>
 
-          <div className="flex flex-col w-full">
-            <span className="text-sm font-medium mb-1">Check-out *</span>
-
-            <Popover.Root>
-              <Popover.Trigger asChild>
-                <Button variant="outline" className="w-full justify-start">
-                  {formatDates(checkOut)}
-                </Button>
-              </Popover.Trigger>
-
-              <Popover.Content className="p-3 bg-white flex flex-col gap-2">
-                <Calendar
-                  mode="single"
-                  selected={checkOut}
-                  onSelect={(date) => {
-                    if (date) {
-                      const newDate = new Date(date);
-                      // giữ giờ cũ nếu có
-                      if (checkOut) {
-                        newDate.setHours(
-                          checkOut.getHours(),
-                          checkOut.getMinutes(),
-                        );
+                <Popover.Content className="p-3 bg-white flex flex-col gap-2 rounded-lg shadow-lg">
+                  <Calendar
+                    mode="single"
+                    selected={checkOut}
+                    onSelect={(date) => {
+                      if (date) {
+                        const newDate = new Date(date);
+                        if (checkOut) {
+                          newDate.setHours(
+                            checkOut.getHours(),
+                            checkOut.getMinutes(),
+                          );
+                        }
+                        setCheckOut(newDate);
                       }
-                      setCheckOut(newDate);
-                    }
-                  }}
-                  disabled={disableCheckIn}
-                />
+                    }}
+                    disabled={disableCheckIn}
+                  />
 
-                {/* chọn giờ */}
-                <input
-                  type="time"
-                  className="border rounded p-2"
-                  value={
-                    checkOut
-                      ? `${String(checkOut.getHours()).padStart(2, "0")}:${String(
-                          checkOut.getMinutes(),
-                        ).padStart(2, "0")}`
-                      : ""
-                  }
-                  onChange={(e) => {
-                    if (!checkOut) return;
-                    const [h, m] = e.target.value.split(":").map(Number);
-                    const newDate = new Date(checkOut);
-                    newDate.setHours(h, m);
-                    setCheckOut(newDate);
-                  }}
-                />
-              </Popover.Content>
-            </Popover.Root>
+                  <input
+                    type="time"
+                    className="border border-gray-300 rounded p-2 text-sm"
+                    value={
+                      checkOut
+                        ? `${String(checkOut.getHours()).padStart(2, "0")}:${String(
+                            checkOut.getMinutes(),
+                          ).padStart(2, "0")}`
+                        : ""
+                    }
+                    onChange={(e) => {
+                      if (!checkOut) return;
+                      const [h, m] = e.target.value.split(":").map(Number);
+                      const newDate = new Date(checkOut);
+                      newDate.setHours(h, m);
+                      setCheckOut(newDate);
+                    }}
+                  />
+                </Popover.Content>
+              </Popover.Root>
+            </div>
           </div>
         </div>
 
         {/* Guests */}
-        <div className="grid grid-cols-3 gap-2">
-          <div>
-            <label className="text-sm font-medium mb-1 block">Adults *</label>
-            <input
-              type="number"
-              min="1"
-              max={apartment.maxOccupants}
-              value={noOfAdults}
-              onChange={(e) => setNoOfAdults(Number(e.target.value))}
-              className="w-full px-2 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-          <div>
-            <label className="text-sm font-medium mb-1 block">Infants</label>
-            <input
-              type="number"
-              min="0"
-              max="3"
-              value={noOfInfants}
-              onChange={(e) => setNoOfInfants(Number(e.target.value))}
-              className="w-full px-2 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-          <div>
-            <label className="text-sm font-medium mb-1 block">Pets</label>
-            <input
-              type="number"
-              min="0"
-              value={noOfPets}
-              onChange={(e) => setNoOfPets(Number(e.target.value))}
-              className="w-full px-2 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
+        <div className="space-y-3">
+          <Label className="text-sm font-semibold text-gray-900 flex items-center gap-2">
+            <Users className="h-4 w-4 text-blue-600" />
+            Guests
+          </Label>
+          <div className="grid grid-cols-3 gap-2">
+            <div>
+              <Label
+                htmlFor="adults"
+                className="text-xs text-gray-700 mb-1 block"
+              >
+                Adults
+              </Label>
+              <Input
+                id="adults"
+                type="number"
+                min="1"
+                max={apartment.maxOccupants}
+                value={noOfAdults}
+                onChange={(e) => setNoOfAdults(Number(e.target.value))}
+                className="border-gray-300"
+              />
+            </div>
+            <div>
+              <Label
+                htmlFor="infants"
+                className="text-xs text-gray-700 mb-1 block"
+              >
+                Infants
+              </Label>
+              <Input
+                id="infants"
+                type="number"
+                min="0"
+                max="3"
+                value={noOfInfants}
+                onChange={(e) => setNoOfInfants(Number(e.target.value))}
+                className="border-gray-300"
+              />
+            </div>
+            <div>
+              <Label
+                htmlFor="pets"
+                className="text-xs text-gray-700 mb-1 block"
+              >
+                Pets
+              </Label>
+              <Input
+                id="pets"
+                type="number"
+                min="0"
+                value={noOfPets}
+                onChange={(e) => setNoOfPets(Number(e.target.value))}
+                className="border-gray-300"
+              />
+            </div>
           </div>
         </div>
 
         {/* Package Selection */}
-        <div>
-          <label className="text-sm font-medium mb-2 block">
-            Select Package *
-          </label>
+        <div className="space-y-3">
+          <Label className="text-sm font-semibold text-gray-900 flex items-center gap-2">
+            <Zap className="h-4 w-4 text-blue-600" />
+            Package
+          </Label>
           {loadingPackages ? (
-            <div className="text-center py-4 text-gray-500">
+            <div className="text-center py-4 text-gray-500 text-sm">
               Loading packages...
             </div>
           ) : packages?.length === 0 ? (
-            <div className="text-center py-4 text-gray-500">
+            <div className="text-center py-4 text-gray-500 text-sm">
               No packages available
             </div>
           ) : (
-            <select
+            <Select
               value={packageId ?? ""}
-              onChange={(e) => {
-                const value = e.target.value;
+              onValueChange={(value) => {
                 setPackageId(value === "" ? null : value);
               }}
-              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
-              <option value="">Không chọn</option>
-              {packages?.map((pkg) => (
-                <option key={pkg.packageId} value={pkg.packageId}>
-                  {pkg.name} - {pkg.currency} {pkg.price.toLocaleString()}
-                </option>
-              ))}
-            </select>
+              <SelectTrigger className="border-gray-300">
+                <SelectValue placeholder="Select a package" />
+              </SelectTrigger>
+              <SelectContent>
+                {/* <SelectItem value="">No Package</SelectItem> */}
+                {packages?.map((pkg) => (
+                  <SelectItem key={pkg.packageId} value={pkg.packageId}>
+                    {pkg.name} - {pkg.currency} {pkg.price.toLocaleString()}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           )}
         </div>
 
+        {/* Divider */}
+        <div className="h-px bg-gray-200" />
+
         {/* Buttons */}
-        <div className="flex gap-2 pt-2">
-          <Button className="flex-1 cursor-pointer" onClick={onSubmit}>
+        <div className="flex flex-col gap-2 pt-2">
+          <Button
+            className="w-full cursor-pointer bg-gray-100 text-gray-900 hover:bg-gray-200 font-semibold"
+            onClick={onSubmit}
+          >
             Check Availability
           </Button>
-          {checkIn &&
-            checkOut &&
-            noOfAdults >= 1 &&
-            noOfInfants >= 0 &&
-            noOfPets >= 0 && (
-              <Button
-                className="flex-1 cursor-pointer bg-green-600 hover:bg-green-700"
-                onClick={handleBook}
-              >
-                Book
-              </Button>
-            )}
+          {checkIn && checkOut && noOfAdults >= 1 && (
+            <Button
+              className="w-full cursor-pointer bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-semibold py-2.5"
+              onClick={handleBook}
+            >
+              Reserve Now
+            </Button>
+          )}
         </div>
       </CardContent>
     </Card>

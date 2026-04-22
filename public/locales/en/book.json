@@ -1,0 +1,25 @@
+{
+    "review": {
+        "otherReviews": "Other reviews",
+        "review": "Review"
+    },
+    "apartment": {
+        "hostedBy": "Hosted by",
+        "description": "Description",
+        "location": "Location",
+        "pricePerNight": "Price per night",
+        "isPetAllowed": "Pets allowed",
+        "maxOccupants": "Maximum occupants",
+        "allowPets": "Allow pets",
+        "notAllowPets": "Do not allow pets"
+    },
+    "room": {
+        "roomType": "Room type",
+        "bedType": "Bed type",
+        "size": "Size",
+        "bathroom": "Bathroom",
+        "privateBathroom": "Private bathroom",
+        "noPrivateBathroom": "No private bathroom",
+        "description": "Description"
+    }
+}

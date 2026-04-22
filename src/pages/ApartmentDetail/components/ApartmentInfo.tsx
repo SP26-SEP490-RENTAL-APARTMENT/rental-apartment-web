@@ -26,7 +26,7 @@ function ApartmentInfo({
   maxOccupants,
   isPetAllowed,
 }: ApartmentInfoProps) {
-  const { t: apartmentTranslate } = useTranslation("apartment");
+  const { t } = useTranslation("book");
 
   return (
     <div className="bg-white rounded-2xl shadow-sm border p-6 space-y-8">
@@ -37,7 +37,7 @@ function ApartmentInfo({
         </div>
         <div>
           <p className="text-sm text-gray-500">
-            {apartmentTranslate("hostedBy")}
+            {t("apartment.hostedBy")}
           </p>
           <p className="text-lg font-semibold text-gray-900">
             {landlordName}
@@ -48,7 +48,7 @@ function ApartmentInfo({
       {/* Description */}
       <div className="space-y-2">
         <h3 className="text-lg font-semibold text-gray-900">
-          {apartmentTranslate("aboutThisPlace")}
+          {t("apartment.description")}
         </h3>
         <p className="text-gray-600 leading-relaxed text-sm">
           {description}
@@ -62,7 +62,7 @@ function ApartmentInfo({
           <div className="flex items-center gap-2 text-gray-500">
             <MapPin size={16} />
             <span className="text-sm">
-              {apartmentTranslate("location")}
+              {t("apartment.location")}
             </span>
           </div>
           <p className="font-semibold text-gray-900">
@@ -75,7 +75,7 @@ function ApartmentInfo({
           <div className="flex items-center gap-2 text-gray-500">
             <HandCoins size={16} />
             <span className="text-sm">
-              {apartmentTranslate("pricePerNight")}
+              {t("apartment.pricePerNight")}
             </span>
           </div>
           <p className="text-xl font-bold text-blue-600">
@@ -88,7 +88,7 @@ function ApartmentInfo({
           <div className="flex items-center gap-2 text-gray-500">
             <PawPrint size={16} />
             <span className="text-sm">
-              {apartmentTranslate("isPetAllowed")}
+              {t("apartment.isPetAllowed")}
             </span>
           </div>
 
@@ -96,14 +96,14 @@ function ApartmentInfo({
             {isPetAllowed ? (
               <>
                 <span className="text-green-600">
-                  {apartmentTranslate("allowPets")}
+                  {t("apartment.allowPets")}
                 </span>
                 <CircleCheck className="text-green-600" size={18} />
               </>
             ) : (
               <>
                 <span className="text-red-500">
-                  {apartmentTranslate("notAllowPets")}
+                  {t("apartment.notAllowPets")}
                 </span>
                 <CircleX className="text-red-500" size={18} />
               </>
@@ -116,7 +116,7 @@ function ApartmentInfo({
           <div className="flex items-center gap-2 text-gray-500">
             <Users size={16} />
             <span className="text-sm">
-              {apartmentTranslate("maxOccupants")}
+              {t("apartment.maxOccupants")}
             </span>
           </div>
           <p className="text-lg font-semibold text-gray-900">

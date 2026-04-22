@@ -7,12 +7,10 @@ import UserFilter from "./components/UserFilter";
 import { userManagementApi } from "@/services/privateApi/adminApi";
 import type { User } from "@/types/user";
 import { toast } from "sonner";
-import { Plus } from "lucide-react";
+import { Plus, Users } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import type {
-  CreateUserFormData,
-  UpdateUserFormData,
-} from "@/schemas/userSchema";
+import type { CreateUserFormData, UpdateUserFormData } from "@/schemas/userSchema";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 function UserManagement() {
   const { t: userTranslation } = useTranslation("user");
@@ -20,7 +18,7 @@ function UserManagement() {
   const [data, setData] = useState<User[]>([]);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
-  const [pageSize] = useState(5);
+  const [pageSize] = useState(8);
   const [total, setTotal] = useState(0);
   const [search, setSearch] = useState("");
   const [sortBy, setSortBy] = useState<keyof User>("fullName");
@@ -125,36 +123,73 @@ function UserManagement() {
   };
 
   return (
-    <div className="space-y-4">
-      <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold">
-          {userTranslation("userManagement")}
-        </h1>
-        <Button onClick={handleCreateNewUser}>
-          <Plus className="mr-2 h-4 w-4" />
-          {userTranslation("createUser")}
-        </Button>
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <div className="bg-white border-b border-gray-200 sticky top-0 z-30 shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-purple-100 rounded-lg">
+                <Users className="h-6 w-6 text-purple-600" />
+              </div>
+              <div>
+                <h1 className="text-3xl font-bold text-gray-900">
+                  User Management
+                </h1>
+                <p className="text-gray-600 mt-1">
+                  View and manage all platform users
+                </p>
+              </div>
+            </div>
+            <Button
+              onClick={handleCreateNewUser}
+              className="bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white font-semibold gap-2"
+            >
+              <Plus className="h-4 w-4" />
+              New User
+            </Button>
+          </div>
+        </div>
       </div>
 
-      <UserFilter
-        search={search}
-        sortBy={sortBy}
-        sortOrder={sortOrder}
-        onSearchChange={setSearch}
-        onSortByChange={setSortBy}
-        onSortOrderChange={setSortOrder}
-      />
+      {/* Content */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+        {/* Filter Card */}
+        <Card className="border-0 shadow-sm">
+          <CardContent className="pt-6">
+            <UserFilter
+              search={search}
+              sortBy={sortBy}
+              sortOrder={sortOrder}
+              onSearchChange={setSearch}
+              onSortByChange={setSortBy}
+              onSortOrderChange={setSortOrder}
+            />
+          </CardContent>
+        </Card>
 
-      <DataTable
-        columns={userColumns(handleDeleteUser, handleEditUser)}
-        data={data}
-        total={total}
-        page={page}
-        limit={pageSize}
-        onPageChange={handlePageChange}
-        loading={loading}
-      />
+        {/* Data Table Card */}
+        <Card className="border-0 shadow-sm">
+          <CardHeader className="border-b border-gray-100">
+            <CardTitle>
+              Users ({total})
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="pt-6">
+            <DataTable
+              columns={userColumns(handleDeleteUser, handleEditUser)}
+              data={data}
+              total={total}
+              page={page}
+              limit={pageSize}
+              onPageChange={handlePageChange}
+              loading={loading}
+            />
+          </CardContent>
+        </Card>
+      </div>
 
+      {/* User Form Modal */}
       <UserForm
         isOpen={isFormOpen}
         onClose={handleFormClose}
@@ -167,3 +202,4 @@ function UserManagement() {
 }
 
 export default UserManagement;
+  

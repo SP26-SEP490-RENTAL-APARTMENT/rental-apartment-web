@@ -30,8 +30,8 @@ import { useNavigate } from "react-router-dom";
 import { ROUTES } from "@/constants/routes";
 
 function Register() {
-  const { t } = useTranslation();
-  const { t: auth } = useTranslation("auth");
+  const { t: commonT } = useTranslation("common");
+  const { t: userT } = useTranslation("user");
   const navigate = useNavigate();
 
   const [isShowPassword, setIsShowPassword] = useState(false);
@@ -52,30 +52,30 @@ function Register() {
         ...registerData,
         phone: String(registerData.phone),
       });
-      toast.success(auth("registerSuccess"));
+      toast.success('ok');
       navigate(ROUTES.LOGIN)
     } catch (error: any) {
-      toast.error(error.response?.data?.message || auth("registerFailed"));
+      toast.error(error.response?.data?.message || 'no');
     }
   };
 
   return (
     <Card className="w-full max-w-lg">
       <CardHeader className="text-center">
-        <CardTitle>{t("welcome", { appName: "VStay" })}</CardTitle>
-        <CardDescription>{t("registerDescription")}</CardDescription>
+        <CardTitle>{commonT("description.welcome")}</CardTitle>
+        <CardDescription>{commonT("description.register")}</CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <div className="flex flex-col gap-6">
             <div className="grid grid-cols-2 gap-6">
               <div className="grid gap-2">
-                <Label htmlFor="name">{auth("fullName")}</Label>
+                <Label htmlFor="name">{userT("profile.name")}</Label>
                 <InputGroup>
                   <InputGroupInput
                     id="name"
                     type="text"
-                    placeholder={auth("fullName")}
+                    placeholder={userT("profile.name")}
                     {...register("fullName")}
                   />
                   <InputGroupAddon align="inline-start">
@@ -90,12 +90,12 @@ function Register() {
               </div>
 
               <div className="grid gap-2">
-                <Label htmlFor="email">{auth("email")}</Label>
+                <Label htmlFor="email">{userT("profile.email")}</Label>
                 <InputGroup>
                   <InputGroupInput
                     id="email"
                     type="email"
-                    placeholder={auth("email")}
+                    placeholder={userT("profile.email")}
                     {...register("email")}
                   />
                   <InputGroupAddon align="inline-start">
@@ -111,12 +111,12 @@ function Register() {
             </div>
 
             <div className="grid gap-2">
-              <Label htmlFor="phone">{auth("phone")}</Label>
+              <Label htmlFor="phone">{userT("profile.phone")}</Label>
               <InputGroup>
                 <InputGroupInput
                   id="phone"
                   type="tel"
-                  placeholder="0849007..."
+                  placeholder="0849007477"
                   {...register("phone")}
                 />
                 <InputGroupAddon align="inline-start">
@@ -143,9 +143,9 @@ function Register() {
                   <label className="border rounded-lg p-4 cursor-pointer hover:bg-accent transition-colors peer-data-[state=checked]:border-primary">
                     <div className="flex items-start justify-between gap-4">
                       <div>
-                        <p className="font-medium">{auth("tenant")}</p>
+                        <p className="font-medium">{userT("role.tenant")}</p>
                         <p className="text-sm text-muted-foreground">
-                          {auth("tenantDescription")}
+                          {userT("role.tenantDescription")}
                         </p>
                       </div>
                       <RadioGroupItem
@@ -158,9 +158,9 @@ function Register() {
                   <label className="border rounded-lg p-4 cursor-pointer hover:bg-accent transition-colors peer-data-[state=checked]:border-primary">
                     <div className="flex items-start justify-between gap-4">
                       <div>
-                        <p className="font-medium">{auth("landlord")}</p>
+                        <p className="font-medium">{userT("role.landlord")}</p>
                         <p className="text-sm text-muted-foreground">
-                          {auth("landlordDescription")}
+                          {userT("role.landlordDescription")}
                         </p>
                       </div>
                       <RadioGroupItem
@@ -175,12 +175,12 @@ function Register() {
             />
 
             <div className="grid gap-2">
-              <Label htmlFor="password">{auth("password")}</Label>
+              <Label htmlFor="password">{userT("auth.password")}</Label>
               <InputGroup>
                 <InputGroupInput
                   type={isShowPassword ? "text" : "password"}
                   id="password"
-                  placeholder={auth("password")}
+                  placeholder={userT("auth.password")}
                   {...register("password")}
                 />
                 <InputGroupAddon align="inline-start">
@@ -206,7 +206,7 @@ function Register() {
             disabled={isSubmitting}
             className="w-full mb-5 cursor-pointer"
           >
-            {auth("register")}
+            {commonT("button.register")}
           </Button>
         </form>
       </CardContent>
