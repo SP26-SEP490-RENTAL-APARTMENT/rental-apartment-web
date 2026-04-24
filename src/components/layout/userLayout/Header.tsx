@@ -1,10 +1,4 @@
-import {
-  Menu,
-  LogOut,
-  Users,
-  Settings,
-  CircleUser,
-} from "lucide-react";
+import { Menu, LogOut, Users, Settings, CircleUser } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../../ui/button";
 import { useState } from "react";
@@ -141,7 +135,7 @@ function Header() {
                     <span>{t("button.profile")}</span>
                   </DropdownMenuItem>
                   <DropdownMenuGroup>
-                    {user?.role === "tenant" && (
+                    {user?.roles.includes("tenant") && (
                       <>
                         <DropdownMenuItem
                           onClick={() => navigate("/tenant/booking-history")}
@@ -152,7 +146,7 @@ function Header() {
                         </DropdownMenuItem>
                       </>
                     )}
-                    {user?.role === "landlord" && (
+                    {user?.roles.includes("landlord") && (
                       <DropdownMenuItem
                         onClick={() => navigate("/landlord/apartments")}
                         className="cursor-pointer"
@@ -161,28 +155,21 @@ function Header() {
                         <span>{t("button.landlordDashboard")}</span>
                       </DropdownMenuItem>
                     )}
-                    {user?.role === "admin" && (
-                      <DropdownMenuItem
-                        onClick={() => navigate("/admin/dashboard")}
-                        className="cursor-pointer"
-                      >
-                        <Settings className="mr-2 h-4 w-4" />
-                        <span>{t("button.adminDashboard")}</span>
-                      </DropdownMenuItem>
-                    )}
                   </DropdownMenuGroup>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem
-                    onClick={handleAddRole}
-                    className="cursor-pointer"
-                  >
-                    <Users className="mr-2 h-4 w-4" />
-                    <span>
-                      {isLandlord === "landlord"
-                        ? t("button.becomeLandlord")
-                        : t("button.becomeTenant")}
-                    </span>
-                  </DropdownMenuItem>
+                  {user?.roles.length === 1 && (
+                    <DropdownMenuItem
+                      onClick={handleAddRole}
+                      className="cursor-pointer"
+                    >
+                      <Users className="mr-2 h-4 w-4" />
+                      <span>
+                        {isLandlord === "landlord"
+                          ? t("button.becomeLandlord")
+                          : t("button.becomeTenant")}
+                      </span>
+                    </DropdownMenuItem>
+                  )}
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
                     onClick={handleLogout}
