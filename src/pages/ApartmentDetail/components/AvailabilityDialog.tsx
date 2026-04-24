@@ -12,14 +12,12 @@ import { formatDate } from "@/lib/utils";
 type Props = {
   isOpen: boolean;
   onClose: () => void;
-  data: Availability
+  data: Availability;
 };
 
-export default function AvailabilityDialog({
-  isOpen,
-  onClose,
-  data,
-}: Props) {
+export default function AvailabilityDialog({ isOpen, onClose, data }: Props) {
+
+
   if (!data) return null;
 
   return (
@@ -32,8 +30,7 @@ export default function AvailabilityDialog({
         {/* Tổng quan */}
         <div className="space-y-2">
           <div>
-            Status:{" "}
-            <Badge variant="outline">{data.bookingStatus}</Badge>
+            Status: <Badge variant="outline">{data.bookingStatus}</Badge>
           </div>
 
           <div className="text-sm text-gray-500">
@@ -59,15 +56,14 @@ export default function AvailabilityDialog({
                 >
                   <div>
                     <div className="text-sm">
-                      {formatDate(item.startDate)} →{" "}
-                      {formatDate(item.endDate)}
+                      {formatDate(item.startDate)} → {formatDate(item.endDate)}
                     </div>
                   </div>
 
                   {/* <Badge variant="secondary">
                     {item.pricePerNight
                       ? `${item.pricePerNight.toLocaleString()} VND`
-                      : "No price"}
+                      : t("noPrice")}
                   </Badge> */}
                 </div>
               ))}
@@ -86,24 +82,16 @@ export default function AvailabilityDialog({
           ) : (
             <div className="space-y-2">
               {data.unavailablePeriods.map((item, index) => (
-                <div
-                  key={index}
-                  className="border rounded-lg p-3"
-                >
+                <div key={index} className="border rounded-lg p-3">
                   <div className="text-sm">
-                    {formatDate(item.startDate)} →{" "}
-                    {formatDate(item.endDate)}
+                    {formatDate(item.startDate)} → {formatDate(item.endDate)}
                   </div>
 
                   <div className="flex gap-2 mt-2">
-                    <Badge variant="destructive">
-                      {item.reason}
-                    </Badge>
+                    <Badge variant="destructive">{item.reason}</Badge>
 
                     {item.bookingStatus && (
-                      <Badge variant="outline">
-                        {item.bookingStatus}
-                      </Badge>
+                      <Badge variant="outline">{item.bookingStatus}</Badge>
                     )}
                   </div>
                 </div>

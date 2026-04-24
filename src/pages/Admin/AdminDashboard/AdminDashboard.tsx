@@ -17,8 +17,10 @@ import {
   BanknoteArrowUp,
   ChartNoAxesColumnIncreasing,
   UsersRound,
+  Plus,
 } from "lucide-react";
 import BookingLineChart from "./components/BookingLineChart";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 // import BookStatusPieChart from "./components/BookStatusPieChart";
 
 function AdminDashboard() {
@@ -117,50 +119,82 @@ function AdminDashboard() {
   };
 
   return (
-    <div className="space-y-4">
-      <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold">Dashboard</h1>
-        <Button onClick={() => setOpen({ ...open, catalog: true })}>
-          Create report
-        </Button>
+    <div className="min-h-screen bg-gray-50 space-y-8">
+      {/* Header */}
+      <div className="bg-white border-b border-gray-200 sticky top-0 z-30 shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex justify-between items-center">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
+            <p className="text-gray-600 mt-1">Welcome to admin dashboard</p>
+          </div>
+          <Button
+            onClick={() => setOpen({ ...open, catalog: true })}
+            className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold gap-2"
+          >
+            <Plus className="h-4 w-4" />
+            Create Report
+          </Button>
+        </div>
       </div>
 
-      <DataTable
-        columns={DashboardColumns(triggerRunReport)}
-        data={catalogs}
-        limit={5}
-        loading={loading}
-        onPageChange={handlePageChange}
-        page={page}
-        total={totalCount}
-      />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+        {/* Metrics Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {generalData && (
+            <>
+              <GeneralCard
+                title="Total Revenue"
+                data={generalData.total_revenue}
+                Icon={BanknoteArrowUp}
+              />
+              <GeneralCard
+                title="Total Bookings"
+                data={generalData.total_booking}
+                Icon={ChartNoAxesColumnIncreasing}
+              />
+              <GeneralCard
+                title="Total Tenants"
+                data={generalData.total_user}
+                Icon={UsersRound}
+              />
+            </>
+          )}
+        </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        {generalData && (
-          <>
-            <GeneralCard
-              title="Total Revenue"
-              data={generalData.total_revenue}
-              Icon={BanknoteArrowUp}
+        {/* Charts Section */}
+        <div className="space-y-6">
+          {chartData && selectedReport?.name === "Revenue" && (
+            <Card className="border-0 shadow-sm">
+              <RevenueLineChart data={chartData} />
+            </Card>
+          )}
+          {chartData && selectedReport?.name === "Booking" && (
+            <Card className="border-0 shadow-sm">
+              <BookingLineChart data={chartData} />
+            </Card>
+          )}
+        </div>
+
+        {/* Reports Table */}
+        <Card className="border-0 shadow-sm">
+          <CardHeader>
+            <CardTitle>Report Catalogs</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <DataTable
+              columns={DashboardColumns(triggerRunReport)}
+              data={catalogs}
+              limit={5}
+              loading={loading}
+              onPageChange={handlePageChange}
+              page={page}
+              total={totalCount}
             />
-            <GeneralCard
-              title="Total Bookings"
-              data={generalData.total_booking}
-              Icon={ChartNoAxesColumnIncreasing}
-            />
-            <GeneralCard
-              title="Total Tenants"
-              data={generalData.total_user}
-              Icon={UsersRound}
-            />
-          </>
-        )}
+          </CardContent>
+        </Card>
       </div>
 
-      {(chartData && selectedReport?.name === "Revenue") && <RevenueLineChart data={chartData} />}
-      {(chartData && selectedReport?.name === "Booking") && <BookingLineChart data={chartData} />}
-      {/* {chartData && (<BookStatusPieChart data={chartData} />)} */}
-
+      {/* Dialogs */}
       <CatalogForm
         isOpen={open.catalog}
         onClose={() => setOpen({ ...open, catalog: false })}

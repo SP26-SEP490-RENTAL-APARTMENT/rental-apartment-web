@@ -4,18 +4,19 @@ import { useCallback, useEffect, useState } from "react";
 import { packageItemColumns } from "./components/PackageItemColumns";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+import { Plus, Zap } from "lucide-react";
 import PackageItemForm from "./components/PackageItemForm";
 import type {
   CreatePackageItemFormData,
   UpdatePackageItemFormData,
 } from "@/schemas/packageItemSchema";
 import type { PackageItem } from "@/types/package";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 function PackageItemManagement() {
   const [packageItems, setPackageItems] = useState<PackageItem[]>([]);
   const [page, setPage] = useState(1);
-  const [pageSize] = useState(10);
+  const [pageSize] = useState(8);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(false);
   const [sortBy] = useState<keyof PackageItem>("itemName");
@@ -113,25 +114,59 @@ function PackageItemManagement() {
   };
 
   return (
-    <div className="space-y-4">
-      <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold">Package items</h1>
-        <Button onClick={triggerCreatePackageItem}>
-          <Plus className="mr-2 h-4 w-4" />
-          Add
-        </Button>
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <div className="bg-white border-b border-gray-200 sticky top-0 z-30 shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-amber-100 rounded-lg">
+                <Zap className="h-6 w-6 text-amber-600" />
+              </div>
+              <div>
+                <h1 className="text-3xl font-bold text-gray-900">
+                  Package Items
+                </h1>
+                <p className="text-gray-600 mt-1">
+                  Manage amenities and package items
+                </p>
+              </div>
+            </div>
+            <Button
+              onClick={triggerCreatePackageItem}
+              className="bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-700 hover:to-amber-800 text-white font-semibold gap-2"
+            >
+              <Plus className="h-4 w-4" />
+              Add Item
+            </Button>
+          </div>
+        </div>
       </div>
 
-      <DataTable
-        columns={packageItemColumns(handleDeletePackageItem, triggerUpdatePackageItem)}
-        data={packageItems}
-        limit={pageSize}
-        loading={loading}
-        page={page}
-        total={total}
-        onPageChange={handlePageChange}
-      />
+      {/* Content */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <Card className="border-0 shadow-sm">
+          <CardHeader className="border-b border-gray-100">
+            <CardTitle>Items ({total})</CardTitle>
+          </CardHeader>
+          <CardContent className="pt-6">
+            <DataTable
+              columns={packageItemColumns(
+                handleDeletePackageItem,
+                triggerUpdatePackageItem,
+              )}
+              data={packageItems}
+              limit={pageSize}
+              loading={loading}
+              page={page}
+              total={total}
+              onPageChange={handlePageChange}
+            />
+          </CardContent>
+        </Card>
+      </div>
 
+      {/* Package Item Form Modal */}
       <PackageItemForm
         isOpen={isFormOpen}
         onClose={() => setIsFormOpen(false)}

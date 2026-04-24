@@ -4,41 +4,35 @@ import type { NearbyAttraction } from "@/types/nearbyAttraction";
 import { useCallback, useEffect, useState } from "react";
 import { NearbyColumns } from "./components/NearbyColumns";
 import { toast } from "sonner";
-import type {
-  CreateNearbyAttractionFormData,
-  UpdateNearbyAttractionFormData,
-} from "@/schemas/nearbyAttractionSchema";
+import type { CreateNearbyAttractionFormData, UpdateNearbyAttractionFormData } from "@/schemas/nearbyAttractionSchema";
 import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+import { Plus, MapPin } from "lucide-react";
 import NearbyAttractionForm from "./components/NearbyAttractionForm";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 function NearbyAttractions() {
-  const [nearbyAttractions, setNearbyAttractions] = useState<
-    NearbyAttraction[]
-  >([]);
+  const [nearbyAttractions, setNearbyAttractions] = useState<NearbyAttraction[]>([]);
   const [page, setPage] = useState(1);
-  const [pageSize] = useState(5);
+  const [pageSize] = useState(8);
   const [sortBy] = useState<string>("attractionId");
   const [sortOrder] = useState<"asc" | "desc">("asc");
   const [search] = useState<string>("");
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(false);
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const [selectedAttraction, setSelectedAttraction] =
-    useState<NearbyAttraction | null>(null);
+  const [selectedAttraction, setSelectedAttraction] = useState<NearbyAttraction | null>(null);
   const [formMode, setFormMode] = useState<"create" | "update">("create");
 
   const fetchNearby = useCallback(async () => {
     setLoading(true);
     try {
-      const response =
-        await nearbyAttractionManagementApi.getAllNearbyAttractions({
-          page,
-          pageSize,
-          search,
-          sortBy,
-          sortOrder,
-        });
+      const response = await nearbyAttractionManagementApi.getAllNearbyAttractions({
+        page,
+        pageSize,
+        search,
+        sortBy,
+        sortOrder,
+      });
       setNearbyAttractions(response.data.items);
       setTotal(response.data.totalCount);
     } catch (error) {
@@ -119,25 +113,56 @@ function NearbyAttractions() {
   };
 
   return (
-    <div className="space-y-4">
-      <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold">Nearby Attractions Management</h1>
-        <Button onClick={triggerCreateNearby}>
-          <Plus className="mr-2 h-4 w-4" />
-          Add Nearby Attraction
-        </Button>
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <div className="bg-white border-b border-gray-200 sticky top-0 z-30 shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-rose-100 rounded-lg">
+                <MapPin className="h-6 w-6 text-rose-600" />
+              </div>
+              <div>
+                <h1 className="text-3xl font-bold text-gray-900">Nearby Attractions</h1>
+                <p className="text-gray-600 mt-1">
+                  Manage attractions near properties
+                </p>
+              </div>
+            </div>
+            <Button
+              onClick={triggerCreateNearby}
+              className="bg-gradient-to-r from-rose-600 to-rose-700 hover:from-rose-700 hover:to-rose-800 text-white font-semibold gap-2"
+            >
+              <Plus className="h-4 w-4" />
+              Add Attraction
+            </Button>
+          </div>
+        </div>
       </div>
 
-      <DataTable
-        columns={NearbyColumns(handleDeleteNearby, triggerEditNearby)}
-        data={nearbyAttractions}
-        limit={pageSize}
-        loading={loading}
-        page={page}
-        total={total}
-        onPageChange={handlePageChange}
-      />
+      {/* Content */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <Card className="border-0 shadow-sm">
+          <CardHeader className="border-b border-gray-100">
+            <CardTitle>
+              Attractions ({total})
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="pt-6">
+            <DataTable
+              columns={NearbyColumns(handleDeleteNearby, triggerEditNearby)}
+              data={nearbyAttractions}
+              limit={pageSize}
+              loading={loading}
+              page={page}
+              total={total}
+              onPageChange={handlePageChange}
+            />
+          </CardContent>
+        </Card>
+      </div>
 
+      {/* Nearby Attraction Form Modal */}
       <NearbyAttractionForm
         attraction={selectedAttraction}
         isOpen={isFormOpen}
@@ -150,3 +175,4 @@ function NearbyAttractions() {
 }
 
 export default NearbyAttractions;
+    

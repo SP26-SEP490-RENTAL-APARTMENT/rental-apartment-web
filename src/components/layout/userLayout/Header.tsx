@@ -1,4 +1,10 @@
-import { Building2 } from "lucide-react";
+import {
+  Menu,
+  LogOut,
+  Users,
+  Settings,
+  CircleUser,
+} from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../../ui/button";
 import { useState } from "react";
@@ -13,18 +19,19 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import i18next from "i18next";
 import { useTranslation } from "react-i18next";
 import { useAuthStore } from "@/store/authStore";
 import { authApi } from "@/services/publicApi/authApi";
-import { toast } from "sonner";
+
 import { ROUTES } from "@/constants/routes";
+import { toast } from "sonner";
+import Logo from "@/components/ui/logo/Logo";
 
 function Header() {
   const navigate = useNavigate();
-  const { t } = useTranslation();
-  const { t: auth } = useTranslation("auth");
-  const { t: account } = useTranslation("account");
+  const { t } = useTranslation("common");
   const isAuthenticated = useAuthStore.getState().isAuthenticated;
   const { logout, user, login } = useAuthStore();
 
@@ -70,121 +77,227 @@ function Header() {
   };
 
   return (
-    <div className="px-3 py-5 flex justify-between shadow-b shadow-[0_2px_4px_rgba(0,0,0,0.08)]">
-      <div
-        onClick={() => navigate("/")}
-        className="flex gap-2 items-center cursor-pointer"
-      >
-        <span>
-          <Building2 color="blue" size={35} />
-        </span>
-        <span className="text-blue-700 font-bold text-3xl">VStay</span>
-      </div>
-      <div className="flex gap-5 items-center">
-        <DropdownMenu>
-          <DropdownMenuTrigger>
-            <Button variant="outline">
-              {language === "en" ? "English" : "Việt Nam"}
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            <DropdownMenuGroup>
-              <DropdownMenuLabel>{t("language")}</DropdownMenuLabel>
-              <DropdownMenuRadioGroup
-                value={language}
-                onValueChange={setLanguage}
-              >
-                <DropdownMenuRadioItem
-                  onClick={() => i18next.changeLanguage("en")}
-                  value="en"
-                >
-                  <div className="flex justify-between items-center w-full">
-                    <span>English</span>
-                    <img
-                      className="w-6 h-6 rounded-full object-cover"
-                      src="/src/assets/EN-Flag.png"
-                      alt="English"
-                    />
-                  </div>
-                </DropdownMenuRadioItem>
-                <DropdownMenuRadioItem
-                  onClick={() => i18next.changeLanguage("vi")}
-                  value="vi"
-                >
-                  <div className="flex justify-between items-center w-full gap-3">
-                    <span>Việt Nam</span>
-                    <img
-                      className="w-6 h-6 rounded-full object-cover"
-                      src="/src/assets/VN-Flag.png"
-                      alt="Vietnamese"
-                    />
-                  </div>
-                </DropdownMenuRadioItem>
-              </DropdownMenuRadioGroup>
-            </DropdownMenuGroup>
-          </DropdownMenuContent>
-        </DropdownMenu>
+    <header className="sticky top-0 z-40 bg-white border-b border-gray-200 shadow-sm">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16">
+          {/* Logo */}
+          <Logo />
 
-        {isAuthenticated ? (
-          <DropdownMenu>
-            <DropdownMenuTrigger>
-              <div className="w-12 h-12 rounded-full object-cover border-2 cursor-pointer flex items-center justify-center bg-gray-500 text-white font-bold">
-                <span>{user?.fullName?.charAt(0).toUpperCase()}</span>
-              </div>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <DropdownMenuGroup>
-                <DropdownMenuItem onClick={() => navigate("/tenant/profile")}>
-                  {account("profile")}
-                </DropdownMenuItem>
-                {user?.roles.includes("landlord") && (
-                  <DropdownMenuItem
-                    onClick={() => navigate(ROUTES.LANDLORD_APARTMENTS)}
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex items-center gap-6">
+            {/* Language Selector */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="sm">
+                  {language === "en" ? "EN" : "VI"}
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuRadioGroup
+                  value={language}
+                  onValueChange={setLanguage}
+                >
+                  <DropdownMenuRadioItem
+                    onClick={() => i18next.changeLanguage("en")}
+                    value="en"
                   >
-                    {account("landlordDashboard")}
-                  </DropdownMenuItem>
-                )}
-                {user?.roles?.length === 1 && (
-                  <>
-                    {user.roles[0] === "tenant" && (
-                      <DropdownMenuItem onClick={handleAddRole}>
-                        {account("becomeHost")}
-                      </DropdownMenuItem>
-                    )}
+                    English
+                  </DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem
+                    onClick={() => i18next.changeLanguage("vi")}
+                    value="vi"
+                  >
+                    Tiếng Việt
+                  </DropdownMenuRadioItem>
+                </DropdownMenuRadioGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
 
-                    {user.roles[0] === "landlord" && (
-                      <DropdownMenuItem onClick={handleAddRole}>
-                        {account("becomeTenant")}
+            {/* Auth Actions */}
+            {isAuthenticated ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="rounded-full">
+                    <div className="flex items-center gap-2">
+                      <div className="w-8 h-8 rounded-full bg-linear-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white text-sm font-bold">
+                        {user?.fullName?.charAt(0).toUpperCase()}
+                      </div>
+                      <span className="text-sm font-medium">
+                        {user?.fullName}
+                      </span>
+                    </div>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56">
+                  <DropdownMenuLabel>
+                    <div className="text-xs text-gray-500">{user?.email}</div>
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    onClick={() => navigate("/tenant/profile")}
+                    className="cursor-pointer"
+                  >
+                    <CircleUser className="mr-2 h-4 w-4" />
+                    <span>{t("button.profile")}</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuGroup>
+                    {user?.role === "tenant" && (
+                      <>
+                        <DropdownMenuItem
+                          onClick={() => navigate("/tenant/booking-history")}
+                          className="cursor-pointer"
+                        >
+                          <Users className="mr-2 h-4 w-4" />
+                          <span>{t("button.bookHistory")}</span>
+                        </DropdownMenuItem>
+                      </>
+                    )}
+                    {user?.role === "landlord" && (
+                      <DropdownMenuItem
+                        onClick={() => navigate("/landlord/apartments")}
+                        className="cursor-pointer"
+                      >
+                        <Settings className="mr-2 h-4 w-4" />
+                        <span>{t("button.landlordDashboard")}</span>
                       </DropdownMenuItem>
                     )}
+                    {user?.role === "admin" && (
+                      <DropdownMenuItem
+                        onClick={() => navigate("/admin/dashboard")}
+                        className="cursor-pointer"
+                      >
+                        <Settings className="mr-2 h-4 w-4" />
+                        <span>{t("button.adminDashboard")}</span>
+                      </DropdownMenuItem>
+                    )}
+                  </DropdownMenuGroup>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    onClick={handleAddRole}
+                    className="cursor-pointer"
+                  >
+                    <Users className="mr-2 h-4 w-4" />
+                    <span>
+                      {isLandlord === "landlord"
+                        ? t("button.becomeLandlord")
+                        : t("button.becomeTenant")}
+                    </span>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    onClick={handleLogout}
+                    className="cursor-pointer text-red-600"
+                  >
+                    <LogOut className="mr-2 h-4 w-4" />
+                    <span>{t("button.logout")}</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <div className="flex gap-2">
+                <Button
+                  variant="ghost"
+                  onClick={() => navigate(ROUTES.LOGIN)}
+                  className="text-sm"
+                >
+                  {t("button.login")}
+                </Button>
+                <Button
+                  onClick={() => navigate(ROUTES.REGISTER)}
+                  className="bg-blue-600 hover:bg-blue-700 text-white text-sm"
+                >
+                  {t("button.register")}
+                </Button>
+              </div>
+            )}
+          </div>
+
+          {/* Mobile Menu */}
+          <Sheet>
+            <SheetTrigger asChild className="md:hidden">
+              <Button variant="ghost" size="icon">
+                <Menu className="h-5 w-5" />
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="right" className="w-72">
+              <div className="flex flex-col gap-4 mt-6">
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline" className="w-full">
+                      {language === "en" ? "English" : "Tiếng Việt"}
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                    <DropdownMenuRadioGroup
+                      value={language}
+                      onValueChange={setLanguage}
+                    >
+                      <DropdownMenuRadioItem
+                        onClick={() => i18next.changeLanguage("en")}
+                        value="en"
+                      >
+                        English
+                      </DropdownMenuRadioItem>
+                      <DropdownMenuRadioItem
+                        onClick={() => i18next.changeLanguage("vi")}
+                        value="vi"
+                      >
+                        Tiếng Việt
+                      </DropdownMenuRadioItem>
+                    </DropdownMenuRadioGroup>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+
+                {isAuthenticated ? (
+                  <>
+                    <Button
+                      variant="outline"
+                      className="w-full justify-start"
+                      onClick={() => navigate("/tenant/profile")}
+                    >
+                      <Settings className="mr-2 h-4 w-4" />
+                      {t("button.profile")}
+                    </Button>
+                    <Button
+                      variant="outline"
+                      className="w-full justify-start"
+                      onClick={handleAddRole}
+                    >
+                      <Users className="mr-2 h-4 w-4" />
+                      Switch Role
+                    </Button>
+                    <Button
+                      variant="destructive"
+                      className="w-full justify-start"
+                      onClick={handleLogout}
+                    >
+                      <LogOut className="mr-2 h-4 w-4" />
+                      Logout
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Button
+                      variant="outline"
+                      className="w-full"
+                      onClick={() => navigate(ROUTES.LOGIN)}
+                    >
+                      {t("button.login")}
+                    </Button>
+                    <Button
+                      className="w-full bg-blue-600 hover:bg-blue-700"
+                      onClick={() => navigate(ROUTES.REGISTER)}
+                    >
+                      {t("button.register")}
+                    </Button>
                   </>
                 )}
-              </DropdownMenuGroup>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={handleLogout}>
-                {auth("logout")}
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        ) : (
-          <div className="flex gap-3 items-center">
-            <Button
-              className="cursor-pointer"
-              variant={"ghost"}
-              onClick={() => navigate("/register")}
-            >
-              {auth("register")}
-            </Button>
-            <Button
-              className="cursor-pointer"
-              onClick={() => navigate("/login")}
-            >
-              {auth("login")}
-            </Button>
-          </div>
-        )}
+              </div>
+            </SheetContent>
+          </Sheet>
+        </div>
       </div>
-    </div>
+    </header>
   );
 }
 

@@ -5,6 +5,8 @@ import BookingHistoryCard from "./components/BookingHistoryCard";
 import BookingHistorySkeleton from "./components/BookingHistorySkeleton";
 import PaginationComponent from "@/components/ui/paginationComponent/PaginationComponent";
 import BookingViewDialog from "./components/BookingViewDialog";
+import { Card, CardContent } from "@/components/ui/card";
+import { Calendar, AlertCircle } from "lucide-react";
 
 function BookingHistories() {
   const [bookingHistory, setBookingHistory] = useState<BookingHistory[]>([]);
@@ -21,7 +23,7 @@ function BookingHistories() {
     try {
       const response = await bookingApi.getBookingHistory({
         page,
-        pageSize: 3,
+        pageSize: 6,
         sortBy: "createdAt",
         sortOrder: "desc",
         search: "",
@@ -44,39 +46,79 @@ function BookingHistories() {
     setIsDialogOpen(true);
   };
 
-  const totalPage = Math.ceil(totalCount / 3);
-  return (
-    <div className="p-10">
-      {bookingHistory.length > 0 ? (
-        <div>
-          <div className="grid grid-cols-1 gap-4 mb-10">
-            {loading
-              ? Array.from({ length: 6 }).map((_, i) => (
-                  <BookingHistorySkeleton key={i} />
-                ))
-              : bookingHistory &&
-                bookingHistory.map((item) => (
-                  <BookingHistoryCard
-                    key={item.bookingId}
-                    data={item}
-                    onClick={handleCardClick}
-                  />
-                ))}
-          </div>
+  const totalPage = Math.ceil(totalCount / 6);
 
-          <div>
-            <PaginationComponent
-              page={page}
-              totalPages={totalPage}
-              onPageChange={setPage}
-            />
+  return (
+    <div className="min-h-screen bg-gray-50 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Header */}
+        <div className="mb-8">
+          <div className="flex items-center gap-3 mb-2">
+            <div className="p-2 bg-blue-100 rounded-lg">
+              <Calendar className="h-6 w-6 text-blue-600" />
+            </div>
+            <h1 className="text-3xl font-bold text-gray-900">
+              Booking History
+            </h1>
           </div>
+          <p className="text-gray-600">Manage and view all your bookings</p>
         </div>
-      ) : (
-        <div className="text-gray-500 flex justify-center items-center">
-          No Booking History Found
-        </div>
-      )}
+
+        {bookingHistory.length > 0 ? (
+          <>
+            {/* Bookings Grid */}
+            <div className="space-y-4 mb-10">
+              {loading
+                ? Array.from({ length: 6 }).map((_, i) => (
+                    <BookingHistorySkeleton key={i} />
+                  ))
+                : bookingHistory &&
+                  bookingHistory.map((item) => (
+                    <BookingHistoryCard
+                      key={item.bookingId}
+                      data={item}
+                      onClick={handleCardClick}
+                    />
+                  ))}
+            </div>
+
+            {/* Pagination */}
+            {totalPage > 1 && (
+              <div className="flex justify-center">
+                <PaginationComponent
+                  page={page}
+                  totalPages={totalPage}
+                  onPageChange={setPage}
+                />
+              </div>
+            )}
+          </>
+        ) : (
+          /* Empty State */
+          <Card className="border-0 shadow-sm bg-white">
+            <CardContent className="py-16 text-center">
+              <div className="flex justify-center mb-4">
+                <div className="p-4 bg-blue-50 rounded-full">
+                  <AlertCircle className="h-8 w-8 text-blue-600" />
+                </div>
+              </div>
+              <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                No bookings yet
+              </h2>
+              <p className="text-gray-600 mb-6">
+                You haven't made any bookings yet. Start exploring apartments to
+                find your perfect stay!
+              </p>
+              <a
+                href="/"
+                className="inline-block px-6 py-2 bg-linear-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold rounded-lg transition-all duration-200"
+              >
+                Browse Apartments
+              </a>
+            </CardContent>
+          </Card>
+        )}
+      </div>
 
       {bookingDetail && (
         <BookingViewDialog

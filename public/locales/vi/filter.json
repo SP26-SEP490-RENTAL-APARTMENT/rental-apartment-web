@@ -1,6 +1,16 @@
 {
-    "asc": "Tăng dần",
-    "desc": "Giảm dần",
-    "search": "Tìm kiếm",
-    "sortBy": "Sắp xếp theo"
+    "apartment": {
+        "pricePerNight": "Giá mỗi đêm",
+        "maxOccupant": "Số người tối đa",
+        "address": "Địa chỉ",
+        "title": "Tiêu đề"
+    },
+    "label": {
+        "sortBy": "Sắp xếp theo",
+        "sortOrder": "Thứ tự sắp xếp",
+        "search": "Tìm kiếm",
+        "asc": "Tăng dần",
+        "desc": "Giảm dần",
+        "clearFilters": "Xóa bộ lọc"
+    }
 }

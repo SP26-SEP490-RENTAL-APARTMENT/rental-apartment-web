@@ -25,7 +25,7 @@ import {
 import type { Apartment } from "@/types/apartment";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 
 const cities = ["TP. Hồ Chí Minh", "Hà Nội", "Đà Nẵng"];
 
@@ -68,13 +68,14 @@ function ApartmentForm({
   const schema = isCreate ? createApartmentSchema : updateApartmentSchema;
 
   const [preview, setPreview] = useState<string[]>([]);
-  const [selectedFiles, setSelectedFiles] = useState<FileList | null>(null);
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
 
   const {
     register,
     handleSubmit,
     reset,
     setValue,
+    control,
     formState: { errors, isSubmitting },
   } = useForm({
     resolver: zodResolver(schema),
@@ -85,6 +86,7 @@ function ApartmentForm({
           description: "",
           maxOccupants: 1,
           isPetAllowed: false,
+          maxPets: 0,
           address: "",
           district: "",
           city: "",
@@ -94,6 +96,18 @@ function ApartmentForm({
         }
       : undefined,
   });
+
+  const isPetAllowed = useWatch({
+    control,
+    name: "isPetAllowed",
+  });
+
+  // Log validation errors for debugging
+  useEffect(() => {
+    if (Object.keys(errors).length > 0) {
+      console.log("🚨 Validation errors:", errors);
+    }
+  }, [errors]);
 
   // Reset form when dialog opens/closes or apartment changes
   useEffect(() => {
@@ -107,6 +121,7 @@ function ApartmentForm({
         description: "",
         maxOccupants: 1,
         isPetAllowed: false,
+        maxPets: 0,
         address: "",
         district: "",
         city: "",
@@ -116,7 +131,7 @@ function ApartmentForm({
       });
       queueMicrotask(() => {
         setPreview([]);
-        setSelectedFiles(null);
+        setSelectedFiles([]);
       });
     } else if (apartment) {
       reset({
@@ -124,6 +139,7 @@ function ApartmentForm({
         description: apartment.description || "",
         maxOccupants: apartment.maxOccupants || 1,
         isPetAllowed: apartment.isPetAllowed || false,
+        maxPets: apartment.maxPets || 0,
         address: apartment.address || "",
         district: apartment.district || "",
         city: apartment.city || "",
@@ -133,7 +149,7 @@ function ApartmentForm({
       });
       queueMicrotask(() => {
         setPreview(apartment.photos || []);
-        setSelectedFiles(null);
+        setSelectedFiles([]);
       });
     }
   }, [apartment, mode, reset, isCreate, isOpen]);
@@ -141,18 +157,44 @@ function ApartmentForm({
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
     if (files) {
-      setSelectedFiles(files);
-      // Create preview URLs
-      const previews = Array.from(files).map((file) =>
-        URL.createObjectURL(file),
-      );
-      setPreview(previews);
+      const newFileArray = Array.from(files);
+      // Combine new files with existing ones (max 10)
+      const combinedFiles = [...selectedFiles, ...newFileArray].slice(0, 10);
+      setSelectedFiles(combinedFiles);
+
+      // Create preview URLs for new files
+      const newPreviews = newFileArray.map((file) => URL.createObjectURL(file));
+      const combinedPreviews = [...preview, ...newPreviews].slice(0, 10);
+      setPreview(combinedPreviews);
     }
+  };
+
+  const removePhoto = (index: number) => {
+    const updatedFiles = selectedFiles.filter((_, i) => i !== index);
+    setSelectedFiles(updatedFiles);
+
+    const updatedPreview = preview.filter((_, i) => i !== index);
+    setPreview(updatedPreview);
   };
 
   const handleFormSubmit = async (
     data: CreateApartmentFormData | UpdateApartmentFormData,
   ) => {
+
+    // Validate photos for create mode
+    if (isCreate) {
+      if (selectedFiles.length === 0) {
+        console.error("❌ Validation error: Phải upload ít nhất 1 ảnh");
+        alert("Phải upload ít nhất 1 ảnh");
+        return;
+      }
+      if (selectedFiles.length > 10) {
+        console.error("❌ Validation error: Tối đa 10 ảnh");
+        alert("Tối đa 10 ảnh");
+        return;
+      }
+    }
+
     const { lat, lng } = generateLatLng();
     try {
       if (isCreate) {
@@ -164,6 +206,9 @@ function ApartmentForm({
         formData.append("description", String(data.description));
         formData.append("maxOccupants", String(data.maxOccupants));
         formData.append("isPetAllowed", String(data.isPetAllowed));
+        if (data.isPetAllowed && "maxPets" in data) {
+          formData.append("maxPets", String(data.maxPets));
+        }
         formData.append("address", String(data.address));
         formData.append("district", String(data.district));
         formData.append("city", String(data.city));
@@ -172,10 +217,13 @@ function ApartmentForm({
         formData.append("basePricePerNight", String(data.basePricePerNight));
 
         // Add photos
-        if (selectedFiles) {
-          Array.from(selectedFiles).forEach((file) => {
+        if (selectedFiles.length > 0) {
+          selectedFiles.forEach((file) => {
             formData.append("photos", file);
           });
+          console.log("Photos added to FormData:", selectedFiles.length);
+        } else {
+          console.warn("No photos selected");
         }
 
         await onSubmit(
@@ -190,17 +238,21 @@ function ApartmentForm({
 
       reset();
       setPreview([]);
-      setSelectedFiles(null);
+      setSelectedFiles([]);
       onClose();
-    } catch {
-      // Error handling is done in the parent component
+    } catch (error) {
+      console.error("Submit error:", error);
+      if (error instanceof Error) {
+        console.error("Error message:", error.message);
+        console.error("Error stack:", error.stack);
+      }
     }
   };
 
   const handleClose = () => {
     reset();
     setPreview([]);
-    setSelectedFiles(null);
+    setSelectedFiles([]);
     onClose();
   };
 
@@ -351,55 +403,9 @@ function ApartmentForm({
                   </SelectContent>
                 </Select>
               </div>
-
-              {/* <div className="grid gap-2">
-                <Label htmlFor="city">City *</Label>
-                <Input id="city" placeholder="City" {...register("city")} />
-                {errors.city && (
-                  <p className="text-sm text-destructive">
-                    {errors.city.message}
-                  </p>
-                )}
-              </div> */}
             </div>
-
-            {/* GRID: LATITUDE & LONGITUDE */}
-            {/* <div className="grid grid-cols-2 gap-4">
-              <div className="grid gap-2">
-                <Label htmlFor="latitude">Latitude *</Label>
-                <Input
-                  id="latitude"
-                  type="number"
-                  step="0.000001"
-                  placeholder="21.0285"
-                  {...register("latitude", { valueAsNumber: true })}
-                />
-                {errors.latitude && (
-                  <p className="text-sm text-destructive">
-                    {errors.latitude.message}
-                  </p>
-                )}
-              </div>
-
-              <div className="grid gap-2">
-                <Label htmlFor="longitude">Longitude *</Label>
-                <Input
-                  id="longitude"
-                  type="number"
-                  step="0.000001"
-                  placeholder="105.8542"
-                  {...register("longitude", { valueAsNumber: true })}
-                />
-                {errors.longitude && (
-                  <p className="text-sm text-destructive">
-                    {errors.longitude.message}
-                  </p>
-                )}
-              </div>
-            </div> */}
-
             {/* PET ALLOWED */}
-            <div className="grid gap-2">
+            <div className="grid gap-3">
               <Label
                 htmlFor="isPetAllowed"
                 className="flex items-center gap-3 cursor-pointer"
@@ -412,40 +418,86 @@ function ApartmentForm({
                 />
                 <span>Allow pets</span>
               </Label>
+              {isPetAllowed && (
+                <div className="grid gap-2 pl-7">
+                  <Label htmlFor="maxPets">Max pets</Label>
+                  <Input
+                    id="maxPets"
+                    type="number"
+                    placeholder="Enter maximum number of pets"
+                    {...register("maxPets", { valueAsNumber: true })}
+                  />
+                  {errors.maxPets && (
+                    <p className="text-sm text-destructive">
+                      {errors.maxPets.message}
+                    </p>
+                  )}
+                </div>
+              )}
             </div>
 
             {/* PHOTOS - ONLY FOR CREATE */}
             {isCreate && (
-              <div className="grid gap-2">
-                <Label htmlFor="photos">Upload Photos</Label>
-                <Input
-                  id="photos"
-                  type="file"
-                  multiple
-                  accept="image/*"
-                  onChange={handleFileChange}
-                />
-                {/* <p className="text-xs text-muted-foreground">
-                  You can upload multiple photos. Only available when creating.
-                </p> */}
+              <div className="grid gap-3">
+                <div>
+                  <Label htmlFor="photos">Upload Photos *</Label>
+                  <p className="text-xs text-muted-foreground mt-1 mb-2">
+                    Chọn từ 1 đến 10 ảnh
+                  </p>
+                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:border-gray-400 transition cursor-pointer">
+                    <Input
+                      id="photos"
+                      type="file"
+                      multiple
+                      accept="image/*"
+                      onChange={handleFileChange}
+                      className="hidden"
+                    />
+                    <label htmlFor="photos" className="cursor-pointer block">
+                      <div className="text-sm text-gray-600">
+                        <p className="font-medium">
+                          Kéo thả ảnh vào đây hoặc nhấp để chọn
+                        </p>
+                        <p className="text-xs mt-1">
+                          PNG, JPG, GIF (tối đa 10 ảnh)
+                        </p>
+                      </div>
+                    </label>
+                  </div>
+                </div>
               </div>
             )}
 
             {/* PHOTO PREVIEW */}
             {preview.length > 0 && (
-              <div className="grid gap-2">
-                <Label>Photo Preview</Label>
-                <div className="grid grid-cols-3 gap-2">
+              <div className="grid gap-3">
+                <div className="flex justify-between items-center">
+                  <Label>Ảnh đã chọn ({preview.length}/10)</Label>
+                </div>
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
                   {preview.map((src, idx) => (
                     <div
                       key={idx}
-                      className="w-full h-24 rounded-lg overflow-hidden bg-muted"
+                      className="relative w-full h-28 rounded-lg overflow-hidden bg-muted group"
                     >
                       <img
                         src={src}
                         alt={`preview-${idx}`}
                         className="w-full h-full object-cover"
                       />
+                      {isCreate && (
+                        <button
+                          type="button"
+                          onClick={() => removePhoto(idx)}
+                          className="absolute top-1 right-1 bg-red-500 hover:bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition"
+                          title="Xóa ảnh này"
+                        >
+                          ✕
+                        </button>
+                      )}
+                      <div className="absolute bottom-1 left-1 bg-black/50 text-white text-xs px-2 py-1 rounded">
+                        {idx + 1}
+                      </div>
                     </div>
                   ))}
                 </div>

@@ -9,9 +9,10 @@ import { Button } from "@/components/ui/button";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import type { CreateIdentityFormData } from "@/schemas/identitySchema";
+import { Shield, Plus } from "lucide-react";
 
 function Identity() {
-  const { t: identityT } = useTranslation("identity");
+  const { t: userT } = useTranslation("user");
   const [identities, setIdentities] = useState<Document[]>([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -27,7 +28,7 @@ function Identity() {
     try {
       const response = await indentityApi.getMyIdentity({
         page,
-        pageSize: 4,
+        pageSize: 8,
         search,
         sortBy,
         sortOrder,
@@ -58,48 +59,88 @@ function Identity() {
       }
 
       await indentityApi.createIdentity(formData);
-      toast.success(identityT("createSuccess"));
+      toast.success('ok');
       setIsFormOpen(false);
       // Refresh the list
       fetchIdentities();
     } catch (error) {
       console.error("Create identity error:", error);
-      toast.error(identityT("createError"));
+      toast.error('no');
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const totalPages = Math.ceil(totalCount / 4);
+  const totalPages = Math.ceil(totalCount / 8);
+
   return (
-    <div className="p-10">
-      <div className="flex justify-end">
-        <Button onClick={() => setIsFormOpen(true)}>
-          {identityT("createIdentity")}
-        </Button>
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <div className="bg-white border-b border-gray-200 sticky top-0 z-30 shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-green-100 rounded-lg">
+                <Shield className="h-6 w-6 text-green-600" />
+              </div>
+              <div>
+                <h1 className="text-3xl font-bold text-gray-900">
+                  {userT("identityVerification.label")}
+                </h1>
+                <p className="text-gray-600 mt-1">
+                  {userT("identityVerification.description")}
+                </p>
+              </div>
+            </div>
+            <Button
+              onClick={() => setIsFormOpen(true)}
+              className="bg-linear-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-semibold gap-2"
+            >
+              <Plus className="h-4 w-4" />
+              {userT("identityVerification.upload")}
+            </Button>
+          </div>
+        </div>
       </div>
+
+      {/* Form Modal */}
       <IdentityForm
         isOpen={isFormOpen}
         onClose={() => setIsFormOpen(false)}
         onSubmit={handleCreateIdentity}
         isLoading={isSubmitting}
       />
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-10 mt-10">
-        {loading
-          ? Array.from({ length: 6 }).map((_, i) => (
-              <IdentitySkeleton key={i} />
-            ))
-          : identities.map((doc) => (
-              <IdentityCard key={doc.documentId} document={doc} />
-            ))}
-      </div>
 
-      <div>
-        <PaginationComponent
-          onPageChange={setPage}
-          page={page}
-          totalPages={totalPages}
-        />
+      {/* Content */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {identities.length > 0 || loading ? (
+          <>
+            {/* Documents Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+              {loading
+                ? Array.from({ length: 8 }).map((_, i) => (
+                    <IdentitySkeleton key={i} />
+                  ))
+                : identities.map((doc) => (
+                    <IdentityCard key={doc.documentId} document={doc} />
+                  ))}
+            </div>
+
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <div className="flex justify-center">
+                <PaginationComponent
+                  onPageChange={setPage}
+                  page={page}
+                  totalPages={totalPages}
+                />
+              </div>
+            )}
+          </>
+        ) : (
+          /* Empty State */
+          <div className="w-full h-full text-gray-400">No documents found</div>
+        )}
       </div>
     </div>
   );

@@ -1,6 +1,16 @@
 {
-    "asc": "Ascending",
-    "desc": "Descending",
-    "search": "Search",
-    "sortBy": "Sort By"
+    "apartment": {
+        "pricePerNight": "Price per night",
+        "maxOccupant": "Max occupant",
+        "address": "Address",
+        "title": "Title"
+    },
+    "label": {
+        "sortBy": "Sort by",
+        "sortOrder": "Sort order",
+        "search": "Search",
+        "asc": "Ascending",
+        "desc": "Descending",
+        "clearFilters": "Clear filters"
+    }
 }

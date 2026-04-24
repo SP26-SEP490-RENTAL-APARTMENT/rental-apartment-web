@@ -1,0 +1,34 @@
+{
+    "review": {
+        "otherReviews": "Đánh giá khác",
+        "review": "Đánh giá",
+        "viewAllReviews": "Xem tất cả đánh giá"
+    },
+    "apartment": {
+        "hostedBy": "Chủ căn hộ",
+        "description": "Mô tả",
+        "location": "Vị trí",
+        "pricePerNight": "Giá mỗi đêm",
+        "isPetAllowed": "Cho phép thú cưng",
+        "maxOccupants": "Số người tối đa",
+        "allowPets": "Cho phép",
+        "notAllowPets": "Không cho phép"
+    },
+    "room": {
+        "roomType": "Loại phòng",
+        "bedType": "Loại giường",
+        "size": "Kích thước",
+        "bathroom": "Phòng tắm",
+        "privateBathroom": "Phòng tắm riêng",
+        "noPrivateBathroom": "Không có phòng tắm riêng",
+        "description": "Mô tả",
+        "roomDetail": "Chi tiết phòng"
+    },
+    "amenity": {
+        "amenity": "Tiện nghi",
+        "amenities": "Các tiện nghi"
+    },
+    "location": {
+        "location": "Vị trí"
+    }
+}

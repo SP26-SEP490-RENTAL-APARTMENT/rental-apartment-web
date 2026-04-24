@@ -1,12 +1,12 @@
-import { Building2, LogOut, Menu, X } from "lucide-react";
+import { LogOut, Menu, X } from "lucide-react";
 import { useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useTenantNavList } from "./TenantNavList";
 import { useAuthStore } from "@/store/authStore";
+import Logo from "@/components/ui/logo/Logo";
 
 function TenantSideBar() {
-  const navigate = useNavigate();
   const { logout } = useAuthStore();
   const tenantNavList = useTenantNavList();
   const { t: account } = useTranslation("account");
@@ -28,15 +28,7 @@ function TenantSideBar() {
       {/* Header */}
       <div className="flex items-center justify-between p-4 border-b border-gray-200">
         {sidebarOpen && (
-          <div
-            onClick={() => navigate("/")}
-            className="flex gap-2 cursor-pointer"
-          >
-            <span>
-              <Building2 color="blue" size={35} />
-            </span>
-            <h1 className="text-blue-700 font-bold text-3xl">VStay</h1>
-          </div>
+          <Logo />
         )}
         <button
           onClick={() => setSidebarOpen(!sidebarOpen)}
