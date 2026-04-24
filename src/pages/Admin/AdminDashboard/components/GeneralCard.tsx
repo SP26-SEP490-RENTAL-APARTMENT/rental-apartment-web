@@ -10,7 +10,7 @@ function GeneralCard({ title, data, Icon }: Props) {
   return (
     <Card className="border-0 shadow-sm hover:shadow-lg transition-shadow duration-300 bg-white overflow-hidden group">
       {/* Gradient background accent */}
-      <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-blue-100 to-transparent opacity-0 group-hover:opacity-50 transition-opacity duration-300" />
+      <div className="absolute top-0 right-0 w-20 h-20 bg-linear-to-br from-blue-100 to-transparent opacity-0 group-hover:opacity-50 transition-opacity duration-300" />
 
       <CardContent className="p-6 relative">
         <div className="flex items-start justify-between">
@@ -20,7 +20,7 @@ function GeneralCard({ title, data, Icon }: Props) {
               {data.toLocaleString("vi-VN")}
             </p>
           </div>
-          <div className="ml-4 p-3 bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg group-hover:scale-110 transition-transform duration-300">
+          <div className="ml-4 p-3 bg-linear-to-br from-blue-50 to-blue-100 rounded-lg group-hover:scale-110 transition-transform duration-300">
             <Icon className="h-6 w-6 text-blue-600" />
           </div>
         </div>

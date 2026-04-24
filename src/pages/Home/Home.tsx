@@ -98,7 +98,7 @@ function HomePage() {
   const totalPages = Math.ceil(total / pageSize);
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 pb-16">
       <HeroSection />
       {/* Search & Filter Section */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8 relative z-10 mb-12">
@@ -162,7 +162,7 @@ function HomePage() {
 
         {/* Pagination */}
         {totalPages > 1 && (
-          <div className="flex justify-center mb-16">
+          <div className="flex justify-center">
             <PaginationComponent
               onPageChange={setPage}
               page={page}

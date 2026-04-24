@@ -40,8 +40,8 @@ function ApartmentManagement() {
   const [pageSize] = useState<number>(5);
   const [total, setTotal] = useState<number>(0);
   const [search] = useState<string>("");
-  const [sortBy] = useState<string>("");
-  const [sortOrder] = useState<string>("");
+  // const [sortBy] = useState<string>("");
+  // const [sortOrder] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
 
   const [formMode, setFormMode] = useState<"create" | "update">("create");
@@ -73,8 +73,8 @@ function ApartmentManagement() {
         page,
         pageSize,
         search,
-        sortBy,
-        sortOrder,
+        sortBy: 'createdAt',
+        sortOrder: 'desc',
       });
       setApartmentList(response.data.items);
       setTotal(response.data.totalCount);
@@ -84,7 +84,7 @@ function ApartmentManagement() {
     } finally {
       setLoading(false);
     }
-  }, [page, pageSize, search, sortBy, sortOrder]);
+  }, [page, pageSize, search]);
 
   const handleCreateApartment = async (
     data: CreateApartmentFormData | UpdateApartmentFormData,

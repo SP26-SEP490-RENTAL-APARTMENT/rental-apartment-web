@@ -22,6 +22,7 @@ import AllReviewsDialog from "./components/AllReviewsDialog";
 function ApartmentDetail() {
   const { id } = useParams();
   const { t: bookT } = useTranslation("book");
+  const { t } = useTranslation("common");
 
   const [apartment, setApartment] = useState<Apartment>();
   const [room, setRoom] = useState<Room>();
@@ -154,7 +155,7 @@ function ApartmentDetail() {
             {room && (
               <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
                 <h2 className="text-2xl font-bold text-gray-900 mb-6">
-                  Room Details
+                  {bookT("room.roomDetail")}
                 </h2>
                 <RoomInfo room={room} />
               </div>
@@ -164,7 +165,7 @@ function ApartmentDetail() {
             {amenities && (
               <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
                 <h2 className="text-2xl font-bold text-gray-900 mb-6">
-                  Amenities
+                  {bookT("amenity.amenities")}
                 </h2>
                 <AmenitiesInfo amenities={amenities} />
               </div>
@@ -192,14 +193,14 @@ function ApartmentDetail() {
                           onClick={() => setReviewDialogOpen(true)}
                           className="bg-blue-600 hover:bg-blue-700 text-white"
                         >
-                          {bookT("viewAllReviews")}
+                          {bookT("review.viewAllReviews")}
                         </Button>
                       </div>
                     )}
                   </div>
                 ) : (
                   <p className="text-gray-500 text-center py-8">
-                    No reviews yet. Be the first to review!
+                    {t("description.noReviewYet")}
                   </p>
                 )}
               </div>
@@ -207,9 +208,15 @@ function ApartmentDetail() {
 
             {/* Location Map */}
             <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">
-                {bookT("location")}
-              </h2>
+              <div className="mb-6 flex flex-col gap-2">
+                <h2 className="text-2xl font-bold text-gray-900">
+                  {bookT("location.location")}
+                </h2>
+                <p className="text-sm text-gray-500">
+                  {apartment?.address}, {apartment?.district}
+                </p>
+              </div>
+
               <div className="w-full h-96 rounded-lg overflow-hidden border border-gray-200">
                 {apartment && (
                   <MapDetail
@@ -218,15 +225,12 @@ function ApartmentDetail() {
                   />
                 )}
               </div>
-              <p className="text-sm text-gray-500 mt-4">
-                {bookT("exactLocationNote")}
-              </p>
             </div>
           </div>
 
           {/* Sidebar - Booking Box */}
           <aside className="lg:col-span-1">
-            <div className="sticky top-24">
+            <div className="sticky top-20">
               {apartment && (
                 <BookingBox
                   apartmentId={apartment.apartmentId}

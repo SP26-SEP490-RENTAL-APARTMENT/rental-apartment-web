@@ -70,10 +70,10 @@ function Login() {
       } else {
         navigate(ROUTES.HOME);
       }
-      toast.success('ok');
+      toast.success(commonT("toast.loginSuccess") || "Logged in successfully");
     } catch (error: any) {
       toast.error(
-        error?.response?.data?.message || commonT("loginFailed") || "Login failed",
+        error?.response?.data?.message || commonT("toast.loginFailed") || "Login failed",
       );
     }
   };

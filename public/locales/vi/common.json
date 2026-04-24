@@ -14,7 +14,14 @@
         "login": "Đăng nhập",
         "register": "Đăng ký",
         "sendCode": "Gửi mã",
-        "previous": "Trước"
+        "previous": "Trước",
+        "logout": "Đăng xuất",
+        "profile": "Hồ sơ",
+        "bookHistory": "Lịch sử đặt phòng",
+        "becomeLandlord": "Trở thành chủ nhà",
+        "becomeTenant": "Trở thành người thuê",
+        "landlordDashboard": "Bảng điều khiển chủ nhà",
+        "adminDashboard": "Bảng điều khiển admin"
     },
     "description": {
         "apartment": "Tìm nơi ở hoàn hảo của bạn với sự lựa chọn rộng rãi các căn hộ. Cho dù bạn đang tìm kiếm một studio ấm cúng hay một ngôi nhà gia đình rộng rãi, chúng tôi có các lựa chọn phù hợp với mọi nhu cầu và ngân sách.",
@@ -28,7 +35,8 @@
         "enterEmail": "Nhập email của bạn",
         "resetPassword": "Đặt lại mật khẩu",
         "setNewPassword": "Đặt lại mật khẩu mới cho tài khoản của bạn",
-        "availableApartments": "Các căn hộ có sẵn"
+        "availableApartments": "Các căn hộ có sẵn",
+        "noReviewYet": "Chưa có đánh giá nào"
     },
     "slogan": {
         "primeLocation": "Vị trí tốt",
@@ -39,5 +47,15 @@
         "secureDescription": "Giao dịch được bảo vệ",
         "slogan": "Tìm nơi ở hoàn hảo của bạn",
         "description": "Khám phá các căn hộ thoải mái và phải chăng ở trung tâm thành phố"
+    },
+    "toast": {
+        "profileUpdated": "Hồ sơ đã được cập nhật thành công",
+        "profileUpdateFailed": "Không thể cập nhật hồ sơ",
+        "passwordResetEmailSent": "Email đặt lại mật khẩu đã được gửi",
+        "passwordResetEmailFailed": "Không thể gửi email đặt lại mật khẩu",
+        "passwordResetSuccess": "Đặt lại mật khẩu thành công",
+        "passwordResetFailed": "Không thể đặt lại mật khẩu",
+        "loginSuccess": "Đăng nhập thành công",
+        "loginFailed": "Đăng nhập thất bại"
     }
 }

@@ -1,4 +1,10 @@
-import { Building2, Menu, LogOut, Users, Settings } from "lucide-react";
+import {
+  Menu,
+  LogOut,
+  Users,
+  Settings,
+  CircleUser,
+} from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../../ui/button";
 import { useState } from "react";
@@ -21,6 +27,7 @@ import { authApi } from "@/services/publicApi/authApi";
 
 import { ROUTES } from "@/constants/routes";
 import { toast } from "sonner";
+import Logo from "@/components/ui/logo/Logo";
 
 function Header() {
   const navigate = useNavigate();
@@ -74,17 +81,7 @@ function Header() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <div
-            onClick={() => navigate("/")}
-            className="flex gap-2 items-center cursor-pointer group transition-transform hover:scale-105"
-          >
-            <div className="bg-linear-to-br from-blue-600 to-blue-700 rounded-lg p-2">
-              <Building2 color="white" size={28} />
-            </div>
-            <span className="text-2xl font-bold bg-linear-to-r from-blue-600 to-blue-700 bg-clip-text text-transparent">
-              VStay
-            </span>
-          </div>
+          <Logo />
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-6">
@@ -125,7 +122,9 @@ function Header() {
                       <div className="w-8 h-8 rounded-full bg-linear-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white text-sm font-bold">
                         {user?.fullName?.charAt(0).toUpperCase()}
                       </div>
-                      <span className="text-sm font-medium">{user?.fullName}</span>
+                      <span className="text-sm font-medium">
+                        {user?.fullName}
+                      </span>
                     </div>
                   </Button>
                 </DropdownMenuTrigger>
@@ -134,32 +133,32 @@ function Header() {
                     <div className="text-xs text-gray-500">{user?.email}</div>
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    onClick={() => navigate("/tenant/profile")}
+                    className="cursor-pointer"
+                  >
+                    <CircleUser className="mr-2 h-4 w-4" />
+                    <span>{t("button.profile")}</span>
+                  </DropdownMenuItem>
                   <DropdownMenuGroup>
                     {user?.role === "tenant" && (
                       <>
-                        <DropdownMenuItem
-                          onClick={() => navigate("/tenant/profile")}
-                          className="cursor-pointer"
-                        >
-                          <Settings className="mr-2 h-4 w-4" />
-                          <span>Profile</span>
-                        </DropdownMenuItem>
                         <DropdownMenuItem
                           onClick={() => navigate("/tenant/booking-history")}
                           className="cursor-pointer"
                         >
                           <Users className="mr-2 h-4 w-4" />
-                          <span>Booking History</span>
+                          <span>{t("button.bookHistory")}</span>
                         </DropdownMenuItem>
                       </>
                     )}
                     {user?.role === "landlord" && (
                       <DropdownMenuItem
-                        onClick={() => navigate("/landlord/dashboard")}
+                        onClick={() => navigate("/landlord/apartments")}
                         className="cursor-pointer"
                       >
                         <Settings className="mr-2 h-4 w-4" />
-                        <span>Landlord Dashboard</span>
+                        <span>{t("button.landlordDashboard")}</span>
                       </DropdownMenuItem>
                     )}
                     {user?.role === "admin" && (
@@ -168,7 +167,7 @@ function Header() {
                         className="cursor-pointer"
                       >
                         <Settings className="mr-2 h-4 w-4" />
-                        <span>Admin Dashboard</span>
+                        <span>{t("button.adminDashboard")}</span>
                       </DropdownMenuItem>
                     )}
                   </DropdownMenuGroup>
@@ -179,7 +178,9 @@ function Header() {
                   >
                     <Users className="mr-2 h-4 w-4" />
                     <span>
-                      Switch to {isLandlord === "landlord" ? "Landlord" : "Tenant"}
+                      {isLandlord === "landlord"
+                        ? t("button.becomeLandlord")
+                        : t("button.becomeTenant")}
                     </span>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
@@ -188,7 +189,7 @@ function Header() {
                     className="cursor-pointer text-red-600"
                   >
                     <LogOut className="mr-2 h-4 w-4" />
-                    <span>Logout</span>
+                    <span>{t("button.logout")}</span>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -255,7 +256,7 @@ function Header() {
                       onClick={() => navigate("/tenant/profile")}
                     >
                       <Settings className="mr-2 h-4 w-4" />
-                      Profile
+                      {t("button.profile")}
                     </Button>
                     <Button
                       variant="outline"
@@ -301,4 +302,3 @@ function Header() {
 }
 
 export default Header;
-                  

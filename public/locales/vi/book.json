@@ -1,7 +1,8 @@
 {
     "review": {
         "otherReviews": "Đánh giá khác",
-        "review": "Đánh giá"
+        "review": "Đánh giá",
+        "viewAllReviews": "Xem tất cả đánh giá"
     },
     "apartment": {
         "hostedBy": "Chủ căn hộ",
@@ -20,6 +21,14 @@
         "bathroom": "Phòng tắm",
         "privateBathroom": "Phòng tắm riêng",
         "noPrivateBathroom": "Không có phòng tắm riêng",
-        "description": "Mô tả"
+        "description": "Mô tả",
+        "roomDetail": "Chi tiết phòng"
+    },
+    "amenity": {
+        "amenity": "Tiện nghi",
+        "amenities": "Các tiện nghi"
+    },
+    "location": {
+        "location": "Vị trí"
     }
 }

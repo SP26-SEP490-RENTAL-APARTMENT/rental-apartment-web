@@ -38,12 +38,10 @@ const amenityIconMap: Record<string, React.ReactNode> = {
 
 function AmenitiesInfo({ amenities }: { amenities: Amenity[] }) {
   const { i18n } = useTranslation();
-  const { t } = useTranslation("amenity");
   const lang = i18n.language;
 
   return (
     <div className="bg-white rounded-2xl shadow-sm border p-6 space-y-6">
-      <h2 className="text-lg font-semibold text-gray-900">{t("amenity")}</h2>
 
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
         {amenities.map((item) => {

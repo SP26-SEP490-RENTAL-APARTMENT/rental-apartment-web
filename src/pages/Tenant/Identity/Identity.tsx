@@ -9,11 +9,10 @@ import { Button } from "@/components/ui/button";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import type { CreateIdentityFormData } from "@/schemas/identitySchema";
-import { Card, CardContent } from "@/components/ui/card";
 import { Shield, Plus } from "lucide-react";
 
 function Identity() {
-  const { t: identityT } = useTranslation("identity");
+  const { t: userT } = useTranslation("user");
   const [identities, setIdentities] = useState<Document[]>([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -60,13 +59,13 @@ function Identity() {
       }
 
       await indentityApi.createIdentity(formData);
-      toast.success(identityT("createSuccess"));
+      toast.success('ok');
       setIsFormOpen(false);
       // Refresh the list
       fetchIdentities();
     } catch (error) {
       console.error("Create identity error:", error);
-      toast.error(identityT("createError"));
+      toast.error('no');
     } finally {
       setIsSubmitting(false);
     }
@@ -86,19 +85,19 @@ function Identity() {
               </div>
               <div>
                 <h1 className="text-3xl font-bold text-gray-900">
-                  Identity Verification
+                  {userT("identityVerification.label")}
                 </h1>
                 <p className="text-gray-600 mt-1">
-                  Upload and manage your identity documents
+                  {userT("identityVerification.description")}
                 </p>
               </div>
             </div>
             <Button
               onClick={() => setIsFormOpen(true)}
-              className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-semibold gap-2"
+              className="bg-linear-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-semibold gap-2"
             >
               <Plus className="h-4 w-4" />
-              Upload Document
+              {userT("identityVerification.upload")}
             </Button>
           </div>
         </div>
@@ -140,29 +139,7 @@ function Identity() {
           </>
         ) : (
           /* Empty State */
-          <Card className="border-0 shadow-sm bg-white">
-            <CardContent className="py-16 text-center">
-              <div className="flex justify-center mb-4">
-                <div className="p-4 bg-green-50 rounded-full">
-                  <Shield className="h-8 w-8 text-green-600" />
-                </div>
-              </div>
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">
-                No documents uploaded
-              </h2>
-              <p className="text-gray-600 mb-6">
-                Upload your identity documents to complete your verification
-                process
-              </p>
-              <Button
-                onClick={() => setIsFormOpen(true)}
-                className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-semibold gap-2"
-              >
-                <Plus className="h-4 w-4" />
-                Upload Your First Document
-              </Button>
-            </CardContent>
-          </Card>
+          <div className="w-full h-full text-gray-400">No documents found</div>
         )}
       </div>
     </div>

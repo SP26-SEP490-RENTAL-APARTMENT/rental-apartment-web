@@ -14,7 +14,14 @@
         "login": "Login",
         "register": "Register",
         "sendCode": "Send Code",
-        "previous": "Previous"
+        "previous": "Previous",
+        "logout": "Log out",
+        "profile": "Profile",
+        "bookHistory": "Booking history",
+        "becomeLandlord": "Become a landlord",
+        "becomeTenant": "Become a tenant",
+        "landlordDashboard": "Landlord dashboard",
+        "adminDashboard": "Admin dashboard"
     },
     "description": {
         "apartment": "Find your perfect stay with our wide selection of apartments. Whether you're looking for a cozy studio or a spacious family home, we have options to suit every need and budget.",
@@ -28,7 +35,8 @@
         "enterEmail": "Enter your email",
         "resetPassword": "Reset password",
         "setNewPassword": "Set new password for your account",
-        "availableApartments": "Available Apartments"
+        "availableApartments": "Available Apartments",
+        "noReviewYet": "No reviews yet"
     },
     "slogan": {
         "primeLocation": "Prime Location",
@@ -39,5 +47,15 @@
         "secureDescription": "Protected transactions",
         "slogan": "Find Your Perfect Stay",
         "description": "Discover comfortable and affordable apartments in the heart of the city"
+    },
+    "toast": {
+        "profileUpdated": "Profile updated successfully",
+        "profileUpdateFailed": "Failed to update profile",
+        "passwordResetEmailSent": "Password reset email sent",
+        "passwordResetEmailFailed": "Failed to send password reset email",
+        "passwordResetSuccess": "Password reset successfully",
+        "passwordResetFailed": "Failed to reset password",
+        "loginSuccess": "Logged in successfully",
+        "loginFailed": "Failed to log in"
     }
 }

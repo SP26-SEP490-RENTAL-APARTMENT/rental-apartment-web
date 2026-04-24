@@ -37,7 +37,7 @@ function ApartmentCard({ apartment, onClickHeart }: ApartmentCardProps) {
 
         {/* PRICE BADGE */}
         <div className="absolute top-3 left-3 bg-linear-to-r from-blue-600 to-blue-700 text-white px-3 py-1.5 rounded-lg shadow-md text-sm font-bold">
-          ${apartment.basePricePerNight}/night
+          {apartment.basePricePerNight.toLocaleString('vi-VN')} VNĐ/night
         </div>
 
         {/* HEART BUTTON */}
