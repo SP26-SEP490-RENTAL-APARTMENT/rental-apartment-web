@@ -36,7 +36,10 @@
         "resetPassword": "Reset password",
         "setNewPassword": "Set new password for your account",
         "availableApartments": "Available Apartments",
-        "noReviewYet": "No reviews yet"
+        "noReviewYet": "No reviews yet",
+        "deleteConfirm": "Confirm deletion",
+        "deleteConfirmation": "Do you want to delete?",
+        "deleteWarning": "This action cannot be undone"
     },
     "slogan": {
         "primeLocation": "Prime Location",
@@ -56,6 +59,8 @@
         "passwordResetSuccess": "Password reset successfully",
         "passwordResetFailed": "Failed to reset password",
         "loginSuccess": "Logged in successfully",
-        "loginFailed": "Failed to log in"
+        "loginFailed": "Failed to log in",
+        "deleteCollectionSuccess": "Deleted collection successfully",
+        "deleteCollectionFailed": "Failed to delete collection"
     }
 }

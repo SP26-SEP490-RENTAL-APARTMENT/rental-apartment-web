@@ -11,7 +11,20 @@ export const collectionsApi = {
     name: string;
     description: string;
   }): Promise<ApiResponse<null>> =>
-    apiConfig.privateApi.post("/tenant/collections", data),
+    apiConfig.privateApi.post("/tenant/wishlist/collections", data),
+  updateCollection: (
+    collectionId: string,
+    data: {
+      name: string;
+      description: string;
+    },
+  ): Promise<ApiResponse<null>> =>
+    apiConfig.privateApi.put(
+      `/tenant/wishlist/collections/${collectionId}`,
+      data,
+    ),
+  deleteCollection: (collectionId: string) =>
+    apiConfig.privateApi.delete(`/tenant/wishlist/collections/${collectionId}`),
   addWishlistToCollection: (data: {
     collectionId: string;
     apartmentId: string;
@@ -23,6 +36,9 @@ export const collectionsApi = {
       `/tenant/wishlist/collections/${collectionId}/items`,
       { params },
     ),
+
+  // deleteWishlistItem: (wishlistId: string) =>
+  //   apiConfig.privateApi.delete(`/tenant/wishlist/${wishlistId}`),
 };
 
 export const indentityApi = {

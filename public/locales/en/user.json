@@ -61,5 +61,42 @@
         "reason": "Reason",
         "verifyAt": "Verified at",
         "uploadedAt": "Uploaded at"
+    },
+    "booking": {
+        "label": "Booking History",
+        "description": "Manage and view all your bookings",
+        "booking": "Booking",
+        "bookedOn": "Booked on",
+        "fullPayment": "Full Payment",
+        "partialPayment": "Partial Payment",
+        "paid": "Paid",
+        "pending": "Pending",
+        "nights": "Nights",
+        "nightsUnit": "nights",
+        "guests": "Guests",
+        "guestsUnit": "guest(s)",
+        "apartmentName": "Apartment Name",
+        "checkIn": "Check-in",
+        "checkOut": "Check-out",
+        "status": "Status",
+        "totalPrice": "Total Price",
+        "cancelBooking": "Cancel Booking",
+        "noBookings": "No bookings found",
+        "details": "Booking Details",
+        "name": "Name",
+        "paymentMode": "Payment Mode",
+        "packagePrice": "Package Price",
+        "paymentSection": "Payment Information",
+        "adults": "Adults",
+        "infants": "Infants",
+        "pets": "Pets",
+        "actualStay": "Actual Stay",
+        "actualCheckIn": "Actual Check-in",
+        "actualCheckOut": "Actual Check-out",
+        "rateService": "Rate our service"
+    },
+    "collection": {
+        "label": "My Collections",
+        "collectionUnit": "collections"
     }
 }

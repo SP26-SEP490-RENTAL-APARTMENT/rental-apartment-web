@@ -22,12 +22,12 @@ export const useTenantNavList = () => {
     ...(isExactTenantLandlord
       ? [
           {
-            title: t("profile.myBookings"),
+            title: t("booking.label"),
             url: "/tenant/booking-history",
             icon: History,
           },
           {
-            title: t("profile.collections"),
+            title: t("collection.label"),
             url: "/tenant/collections",
             icon: Album,
           },

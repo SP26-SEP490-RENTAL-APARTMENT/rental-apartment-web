@@ -7,8 +7,10 @@ import PaginationComponent from "@/components/ui/paginationComponent/PaginationC
 import BookingViewDialog from "./components/BookingViewDialog";
 import { Card, CardContent } from "@/components/ui/card";
 import { Calendar, AlertCircle } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 function BookingHistories() {
+  const { t } = useTranslation("user");
   const [bookingHistory, setBookingHistory] = useState<BookingHistory[]>([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
@@ -58,10 +60,10 @@ function BookingHistories() {
               <Calendar className="h-6 w-6 text-blue-600" />
             </div>
             <h1 className="text-3xl font-bold text-gray-900">
-              Booking History
+              {t("booking.label")}
             </h1>
           </div>
-          <p className="text-gray-600">Manage and view all your bookings</p>
+          <p className="text-gray-600">{t("booking.description")}</p>
         </div>
 
         {bookingHistory.length > 0 ? (

@@ -29,7 +29,6 @@ import RoomManagement from "./pages/Landlord/RoomManagement/RoomManagement";
 import BookingConfirm from "./pages/Tenant/Bookings/Confirm/BookingConfirm";
 import Collections from "./pages/Tenant/Collections/Collections";
 import DocumentsManagement from "./pages/Admin/DocumentsManagement/DocumentsManagement";
-import CollectionLayout from "./components/layout/collectionLayout/CollectionLayout";
 import Identity from "./pages/Tenant/Identity/Identity";
 import WishlistPage from "./pages/Tenant/Wishlist/WishlistPage";
 import ApproveListings from "./pages/Admin/ApproveListings/ApproveListings";
@@ -58,10 +57,7 @@ export default function App() {
             path={ROUTES.REQUEST_RESET_PASSWORD}
             element={<RequestResetPW />}
           />
-          <Route
-            path={ROUTES.RESET_PASSWORD}
-            element={<ResetPWPage />}
-          />
+          <Route path={ROUTES.RESET_PASSWORD} element={<ResetPWPage />} />
         </Route>
 
         {/* ========== Public Routes ========== */}
@@ -224,25 +220,22 @@ export default function App() {
               </ProtectedRoute>
             }
           />
-
-          <Route element={<CollectionLayout />}>
-            <Route
-              path={ROUTES.TENANT_COLLECTIONS}
-              element={
-                <ProtectedRoute requiredRoles={["tenant", "landlord"]}>
-                  <Collections />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path={ROUTES.TENANT_WISHLIST}
-              element={
-                <ProtectedRoute requiredRoles={["tenant", "landlord"]}>
-                  <WishlistPage />
-                </ProtectedRoute>
-              }
-            />
-          </Route>
+          <Route
+            path={ROUTES.TENANT_COLLECTIONS}
+            element={
+              <ProtectedRoute requiredRoles={["tenant", "landlord"]}>
+                <Collections />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path={ROUTES.TENANT_WISHLIST}
+            element={
+              <ProtectedRoute requiredRoles={["tenant", "landlord"]}>
+                <WishlistPage />
+              </ProtectedRoute>
+            }
+          />
         </Route>
         <Route
           path={ROUTES.TENANT_FINISH_PAYMENT}

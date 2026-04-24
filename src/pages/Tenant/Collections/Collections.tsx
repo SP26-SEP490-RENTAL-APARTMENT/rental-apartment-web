@@ -2,14 +2,21 @@ import { collectionsApi } from "@/services/privateApi/tenantApi";
 import type { Collection } from "@/types/collection";
 import { useCallback, useEffect, useState } from "react";
 import CollectionBox from "./components/CollectionBox";
+import CollectionForm from "./components/CollectionForm";
 import CollectionSkeleton from "./components/CollectionSkeleton";
 import { Card, CardContent } from "@/components/ui/card";
 import { FolderPlus, Bookmark } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useTranslation } from "react-i18next";
 
 function Collections() {
+  const { t } = useTranslation("user");
   const [collections, setCollections] = useState<Collection[]>([]);
   const [loading, setLoading] = useState(false);
+  const [formDialogOpen, setFormDialogOpen] = useState(false);
+  const [editingCollection, setEditingCollection] = useState<Collection | null>(
+    null,
+  );
   // const [totalCount, setTotalCount] = useState(0);
   const [page] = useState(1);
   const [search] = useState("");
@@ -51,15 +58,20 @@ function Collections() {
               </div>
               <div>
                 <h1 className="text-2xl font-bold text-gray-900">
-                  Collections
+                  {t("collection.label")}
                 </h1>
                 <p className="text-sm text-gray-600 mt-1">
-                  {collections.length}{" "}
-                  {collections.length === 1 ? "collection" : "collections"}
+                  {collections.length} {t("collection.collectionUnit")}
                 </p>
               </div>
             </div>
-            <Button className="bg-linear-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white font-semibold gap-2">
+            <Button
+              onClick={() => {
+                setEditingCollection(null);
+                setFormDialogOpen(true);
+              }}
+              className="bg-linear-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white font-semibold gap-2"
+            >
               <FolderPlus className="h-4 w-4" />
               New Collection
             </Button>
@@ -78,7 +90,15 @@ function Collections() {
         ) : collections.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {collections.map((c) => (
-              <CollectionBox key={c.collectionId} collection={c} />
+              <CollectionBox
+                key={c.collectionId}
+                collection={c}
+                onDelete={fetchCollections}
+                onEdit={(collection) => {
+                  setEditingCollection(collection);
+                  setFormDialogOpen(true);
+                }}
+              />
             ))}
           </div>
         ) : (
@@ -97,7 +117,13 @@ function Collections() {
                 Create your first collection to organize and save your favorite
                 apartments.
               </p>
-              <Button className="bg-linear-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white font-semibold gap-2">
+              <Button
+                onClick={() => {
+                  setEditingCollection(null);
+                  setFormDialogOpen(true);
+                }}
+                className="bg-linear-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white font-semibold gap-2"
+              >
                 <FolderPlus className="h-4 w-4" />
                 Create Collection
               </Button>
@@ -105,6 +131,13 @@ function Collections() {
           </Card>
         )}
       </div>
+
+      <CollectionForm
+        open={formDialogOpen}
+        onOpenChange={setFormDialogOpen}
+        collection={editingCollection}
+        onSuccess={fetchCollections}
+      />
     </div>
   );
 }
