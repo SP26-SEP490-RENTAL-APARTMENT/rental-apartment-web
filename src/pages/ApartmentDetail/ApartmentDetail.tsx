@@ -15,14 +15,14 @@ import AvailabilityDialog from "./components/AvailabilityDialog";
 import { MapPin } from "lucide-react";
 import { reviewApi } from "@/services/privateApi/tenantApi";
 import type { AverageRating, Review } from "@/types/review";
-import ReviewSummary from "./components/ReviewSummary";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import AllReviewsDialog from "./components/AllReviewsDialog";
 
 function ApartmentDetail() {
   const { id } = useParams();
-  const { t: reviewT } = useTranslation("review");
+  const { t: bookT } = useTranslation("book");
+  const { t } = useTranslation("common");
 
   const [apartment, setApartment] = useState<Apartment>();
   const [room, setRoom] = useState<Room>();
@@ -86,97 +86,164 @@ function ApartmentDetail() {
       console.error("Error checking availability:", error);
     }
   };
+
   return (
-    <div className="px-20">
-      <h1 className="text-3xl mb-3 font-medium">{apartment?.room?.title}</h1>
-      <ImageCarousel photos={apartment?.photos || []} />
-
-      <div className="lg:flex mt-10 gap-10 pb-10 grid grid-cols-1">
-        <div className="lg:basis-2/3">
-          {apartment && (
-            <ApartmentInfo
-              description={apartment.description}
-              address={apartment.address}
-              district={apartment.district}
-              price={apartment.basePricePerNight}
-              isPetAllowed={apartment.isPetAllowed}
-              maxOccupants={apartment.maxOccupants}
-              landlordName={apartment.landlordName}
-            />
-          )}
-        </div>
-
-        <aside className="lg:basis-1/3 relative">
-          <div className="sticky top-10">
-            {apartment && (
-              <BookingBox
-                apartmentId={apartment.apartmentId}
-                onSubmit={handleCheckAvailability}
-                apartment={apartment}
-              />
-            )}
-          </div>
-        </aside>
+    <div className="min-h-screen bg-gray-50">
+      {/* Hero Section with Image Carousel */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <ImageCarousel photos={apartment?.photos || []} />
       </div>
 
-      <div className="pb-10">{room && <RoomInfo room={room} />}</div>
-
-      <div className="pb-10">
-        {amenities && <AmenitiesInfo amenities={amenities} />}
-      </div>
-
-      <div className="border-t-2 border-b-2 py-10">
-        {averageRating && (
-          <ReviewSummary averageData={averageRating} reviews={reviews} />
-        )}
-      </div>
-
-      <div className="border-b py-10">
-        <h1 className="font-bold text-2xl py-10">{reviewT("otherReviews")}</h1>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-25 mt-6">
-          {reviews.slice(0, 4).map((review) => (
-            <CommentSection key={review.reviewId} reviews={review} />
-          ))}
-        </div>
-        <div className="mt-15 flex justify-center">
-          <Button
-            onClick={() => setReviewDialogOpen(true)}
-            className="font-medium p-5"
-            variant="default"
-          >
-            View all the reviews
-          </Button>
-        </div>
-      </div>
-
-      <div className="mt-16">
-        <div className="bg-white rounded-2xl shadow-lg p-5 border">
-          {/* Header */}
-          <div className="mb-4">
-            <div className="flex items-center gap-2">
-              <MapPin size={16} />
-              <h2 className="text-xl font-semibold text-gray-900">Location</h2>
+      {/* Main Content */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Main Content */}
+          <div className="lg:col-span-2 space-y-8">
+            {/* Title Section */}
+            <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
+              <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">
+                {apartment?.room?.title}
+              </h1>
+              <div className="flex items-center gap-2 text-gray-600 mb-4">
+                <MapPin size={18} />
+                <span className="text-lg">
+                  {apartment?.address}, {apartment?.district}
+                </span>
+              </div>
+              {averageRating && (
+                <div className="flex items-center gap-2">
+                  <div className="flex">
+                    {[...Array(5)].map((_, i) => (
+                      <span
+                        key={i}
+                        className={`text-lg ${
+                          i < Math.round(averageRating.averageRating)
+                            ? "text-yellow-400"
+                            : "text-gray-300"
+                        }`}
+                      >
+                        ★
+                      </span>
+                    ))}
+                  </div>
+                  <span className="text-gray-700 font-semibold">
+                    {averageRating?.averageRating}
+                  </span>
+                  <span className="text-gray-500">
+                    ({averageRating?.totalReviews} {bookT("review.review")})
+                  </span>
+                </div>
+              )}
             </div>
 
-            <p className="text-sm text-gray-500">
-              {apartment?.address}, {apartment?.district}
-            </p>
-          </div>
-
-          {/* Map */}
-          <div className="w-full h-100 rounded-xl overflow-hidden">
+            {/* Apartment Info */}
             {apartment && (
-              <MapDetail lat={apartment.latitude} lng={apartment.longitude} />
+              <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
+                <ApartmentInfo
+                  description={apartment.description}
+                  address={apartment.address}
+                  district={apartment.district}
+                  price={apartment.basePricePerNight}
+                  isPetAllowed={apartment.isPetAllowed}
+                  maxOccupants={apartment.maxOccupants}
+                  landlordName={apartment.landlordName}
+                />
+              </div>
             )}
+
+            {/* Room Details */}
+            {room && (
+              <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
+                <h2 className="text-2xl font-bold text-gray-900 mb-6">
+                  {bookT("room.roomDetail")}
+                </h2>
+                <RoomInfo room={room} />
+              </div>
+            )}
+
+            {/* Amenities */}
+            {amenities && (
+              <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
+                <h2 className="text-2xl font-bold text-gray-900 mb-6">
+                  {bookT("amenity.amenities")}
+                </h2>
+                <AmenitiesInfo amenities={amenities} />
+              </div>
+            )}
+
+            {/* Reviews Section */}
+            <div className="space-y-6">
+              <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
+                <h2 className="text-2xl font-bold text-gray-900 mb-6">
+                  {bookT("review.otherReviews")}
+                </h2>
+                {reviews.length > 0 ? (
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      {reviews.slice(0, 4).map((review) => (
+                        <CommentSection
+                          key={review.reviewId}
+                          reviews={review}
+                        />
+                      ))}
+                    </div>
+                    {reviews.length > 3 && (
+                      <div className="pt-6 text-center">
+                        <Button
+                          onClick={() => setReviewDialogOpen(true)}
+                          className="bg-blue-600 hover:bg-blue-700 text-white"
+                        >
+                          {bookT("review.viewAllReviews")}
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <p className="text-gray-500 text-center py-8">
+                    {t("description.noReviewYet")}
+                  </p>
+                )}
+              </div>
+            </div>
+
+            {/* Location Map */}
+            <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
+              <div className="mb-6 flex flex-col gap-2">
+                <h2 className="text-2xl font-bold text-gray-900">
+                  {bookT("location.location")}
+                </h2>
+                <p className="text-sm text-gray-500">
+                  {apartment?.address}, {apartment?.district}
+                </p>
+              </div>
+
+              <div className="w-full h-96 rounded-lg overflow-hidden border border-gray-200">
+                {apartment && (
+                  <MapDetail
+                    lat={apartment.latitude}
+                    lng={apartment.longitude}
+                  />
+                )}
+              </div>
+            </div>
           </div>
 
-          {/* Optional footer */}
-          <div className="mt-3 text-xs text-gray-400">
-            Exact location provided after booking
-          </div>
+          {/* Sidebar - Booking Box */}
+          <aside className="lg:col-span-1">
+            <div className="sticky top-20">
+              {apartment && (
+                <BookingBox
+                  apartmentId={apartment.apartmentId}
+                  onSubmit={handleCheckAvailability}
+                  apartment={apartment}
+                />
+              )}
+            </div>
+          </aside>
         </div>
       </div>
 
+      {/* Dialogs */}
       {availability && (
         <AvailabilityDialog
           data={availability}

@@ -1,16 +1,18 @@
 import type { Document } from "@/types/document";
 
-export const documentTypeLabel: Record<Document["documentType"], string> = {
-  passport: "Passport",
-  national_id_card: "National ID Card",
-  drivers_license: "Driver's License",
-  other_government_id: "Other Government ID",
-  selfie_with_id: "Selfie with ID",
-};
+export const getDocumentTypeLabel = (
+  t: any,
+): Record<Document["documentType"], string> => ({
+  passport: t("identityVerification.passport"),
+  national_id_card: t("identityVerification.nationalIdCard"),
+  drivers_license: t("identityVerification.driverLicense"),
+  other_government_id: t("identityVerification.otherGovernmentId"),
+  selfie_with_id: t("identityVerification.selfieWithId"),
+});
 
-export const sideLabel: Record<Document["side"], string> = {
-  front: "Front",
-  back: "Back",
-  bio_page: "Bio Page",
-  other: "Other",
-};
+export const getSideLabel = (t: any): Record<Document["side"], string> => ({
+  front: t("identityVerification.front"),
+  back: t("identityVerification.back"),
+  bio_page: t("identityVerification.bioPage"),
+  other: t("identityVerification.other"),
+});

@@ -29,6 +29,8 @@ import type { AddAvailableDateFormData } from "@/schemas/availableDateSchema";
 import type { Package } from "@/types/package";
 import PackageDialog from "./components/PackageDialog";
 import SubmitApproveForm from "./components/SubmitApproveForm";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Plus, Building2 } from "lucide-react";
 
 function ApartmentManagement() {
   const [note, setNote] = useState<string>("");
@@ -38,8 +40,8 @@ function ApartmentManagement() {
   const [pageSize] = useState<number>(5);
   const [total, setTotal] = useState<number>(0);
   const [search] = useState<string>("");
-  const [sortBy] = useState<string>("");
-  const [sortOrder] = useState<string>("");
+  // const [sortBy] = useState<string>("");
+  // const [sortOrder] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
 
   const [formMode, setFormMode] = useState<"create" | "update">("create");
@@ -71,8 +73,8 @@ function ApartmentManagement() {
         page,
         pageSize,
         search,
-        sortBy,
-        sortOrder,
+        sortBy: 'createdAt',
+        sortOrder: 'desc',
       });
       setApartmentList(response.data.items);
       setTotal(response.data.totalCount);
@@ -82,7 +84,7 @@ function ApartmentManagement() {
     } finally {
       setLoading(false);
     }
-  }, [page, pageSize, search, sortBy, sortOrder]);
+  }, [page, pageSize, search]);
 
   const handleCreateApartment = async (
     data: CreateApartmentFormData | UpdateApartmentFormData,
@@ -329,32 +331,64 @@ function ApartmentManagement() {
   };
 
   return (
-    <div className="space-y-4">
-      <div className="flex justify-end mb-4">
-        <Button onClick={handleAddNew} className="cursor-pointer">
-          Add New Apartment
-        </Button>
+    <div className="min-h-screen bg-gray-50 space-y-8">
+      {/* Header */}
+      <div className="bg-white border-b border-gray-200 sticky top-0 z-30 shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-blue-100 rounded-lg">
+                <Building2 className="h-6 w-6 text-blue-600" />
+              </div>
+              <div>
+                <h1 className="text-3xl font-bold text-gray-900">
+                  Property Management
+                </h1>
+                <p className="text-gray-600 mt-1">
+                  Manage your apartments and properties
+                </p>
+              </div>
+            </div>
+            <Button
+              onClick={handleAddNew}
+              className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold gap-2 cursor-pointer"
+            >
+              <Plus className="h-4 w-4" />
+              Add Property
+            </Button>
+          </div>
+        </div>
       </div>
 
-      <DataTable
-        columns={ApartmentColumns(
-          handleDeleteApartment,
-          handleEdit,
-          handleAddAmenity,
-          triggerAddPackage,
-          triggerCreateRoom,
-          triggerAddAvailability,
-          triggerViewPackage,
-          triggerSendApprove,
-          handleAddPhotos,
-        )}
-        data={apartmentList}
-        limit={pageSize}
-        loading={loading}
-        page={page}
-        total={total}
-        onPageChange={handlePageChange}
-      />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Data Table Card */}
+        <Card className="border-0 shadow-sm">
+          <CardHeader className="border-b border-gray-100">
+            <CardTitle>Your Properties ({total})</CardTitle>
+          </CardHeader>
+          <CardContent className="pt-6">
+            <DataTable
+              columns={ApartmentColumns(
+                handleDeleteApartment,
+                handleEdit,
+                handleAddAmenity,
+                triggerAddPackage,
+                triggerCreateRoom,
+                triggerAddAvailability,
+                triggerViewPackage,
+                triggerSendApprove,
+                handleAddPhotos,
+              )}
+              data={apartmentList}
+              limit={pageSize}
+              loading={loading}
+              page={page}
+              total={total}
+              onPageChange={handlePageChange}
+            />
+          </CardContent>
+        </Card>
+      </div>
 
       <ApartmentForm
         isOpen={isOpen.apartmentForm}

@@ -15,10 +15,13 @@ import { Label } from "@/components/ui/label";
 import { authApi } from "@/services/publicApi/authApi";
 import { Loader2, Mail } from "lucide-react";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 function RequestResetPW() {
+  const { t } = useTranslation("common");
+  const { t: userT } = useTranslation("user");
   const [email, setEmail] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -44,21 +47,21 @@ function RequestResetPW() {
   return (
     <Card className="w-full max-w-sm">
       <CardHeader className="text-center">
-        <CardTitle>Enter your email</CardTitle>
+        <CardTitle>{t("description.enterEmail")}</CardTitle>
         <CardDescription>
-          We'll send you a code to reset your password
+          {t("description.requestResetPassword")}
         </CardDescription>
       </CardHeader>
       <CardContent>
         <form className="space-y-6" onSubmit={handleSubmit}>
           <div className="flex flex-col gap-6">
             <div className="grid gap-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email">{userT("profile.email")}</Label>
               <InputGroup>
                 <InputGroupInput
                   id="email"
                   type="email"
-                  placeholder="Email"
+                  placeholder={userT("profile.email")}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
@@ -73,7 +76,7 @@ function RequestResetPW() {
             {isSubmitting ? (
               <Loader2 className="animate-spin h-4 w-4" />
             ) : (
-              "Send Code"
+              t("button.sendCode")
             )}
           </Button>
         </form>

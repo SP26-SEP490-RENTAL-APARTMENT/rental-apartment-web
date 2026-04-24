@@ -7,10 +7,18 @@ import {
   type BookingConfirmFormData,
 } from "@/schemas/bookingSchema";
 import { bookingApi } from "@/services/privateApi/tenantApi";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
 import { useBookingStore } from "@/store/bookingStore";
+import {
+  ArrowLeft,
+  Calendar,
+  CreditCard,
+  DollarSign,
+  Users,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 function BookingConfirm() {
   const navigate = useNavigate();
@@ -43,7 +51,7 @@ function BookingConfirm() {
 
   const onSubmit = async (data: BookingConfirmFormData) => {
     console.log(data);
-    
+
     try {
       setError(null);
       const response = await bookingApi.confirmBooking(data);
@@ -63,22 +71,48 @@ function BookingConfirm() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8 px-4">
-      <div className="max-w-2xl mx-auto bg-white rounded-lg shadow-md p-8">
-        <h1 className="text-3xl font-bold mb-2">Confirm Booking</h1>
-        <p className="text-gray-600 mb-8">
-          Review your booking details and complete the confirmation.
-        </p>
+    <div className="min-h-screen bg-gray-50">
+      {/* Sticky Header */}
+      <div className="bg-white border-b border-gray-200 sticky top-0 z-30 shadow-sm">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          <div className="flex items-center gap-3">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => navigate(-1)}
+              className="h-10 w-10"
+            >
+              <ArrowLeft className="h-5 w-5" />
+            </Button>
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900">
+                Confirm Booking
+              </h1>
+              <p className="text-gray-600 mt-1">
+                Review and complete your reservation
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
 
+      {/* Content */}
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Error Alert */}
         {error && (
-          <div className="mb-4 p-4 bg-red-50 border border-red-200 text-red-700 rounded-lg">
-            {error}
+          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-start gap-3">
+            <div className="flex-1">
+              <p className="text-red-800 font-medium">{error}</p>
+            </div>
           </div>
         )}
 
+        {/* Success Alert */}
         {successMessage && (
-          <div className="mb-4 p-4 bg-green-50 border border-green-200 text-green-700 rounded-lg">
-            {successMessage}
+          <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg flex items-start gap-3">
+            <div className="flex-1">
+              <p className="text-green-800 font-medium">{successMessage}</p>
+            </div>
           </div>
         )}
 
@@ -86,120 +120,316 @@ function BookingConfirm() {
           onSubmit={handleSubmit(onSubmit, (errors) => {
             console.log("VALIDATION ERRORS:", errors);
           })}
+          className="space-y-6"
         >
-          {/* Booking Summary Section */}
-          <div className="bg-gray-50 rounded-lg p-4 space-y-3">
-            <h2 className="text-lg font-semibold text-gray-900">
-              Booking Summary
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {/* LEFT - Booking Info */}
-              <Card>
-                <CardContent className="p-4 space-y-4">
-                  <h3 className="font-semibold text-lg">Booking Info</h3>
-
-                  <div className="grid grid-cols-2 gap-3 text-sm">
+          {/* Booking Details Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Booking Info Card */}
+            <Card className="border-0 shadow-sm">
+              <CardHeader className="border-b border-gray-100">
+                <CardTitle className="flex items-center gap-2">
+                  <Calendar className="h-5 w-5 text-blue-600" />
+                  Booking Details
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="pt-6 space-y-4">
+                <div className="space-y-3">
+                  <div>
+                    <p className="text-xs font-semibold text-gray-500 uppercase">
+                      Check-in
+                    </p>
+                    <p className="text-lg font-medium text-gray-900">
+                      {new Date(quoteData.checkInDateTime).toLocaleDateString(
+                        "en-US",
+                        {
+                          weekday: "short",
+                          year: "numeric",
+                          month: "short",
+                          day: "numeric",
+                        },
+                      )}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-xs font-semibold text-gray-500 uppercase">
+                      Check-out
+                    </p>
+                    <p className="text-lg font-medium text-gray-900">
+                      {new Date(quoteData.checkOutDateTime).toLocaleDateString(
+                        "en-US",
+                        {
+                          weekday: "short",
+                          year: "numeric",
+                          month: "short",
+                          day: "numeric",
+                        },
+                      )}
+                    </p>
+                  </div>
+                  <Separator className="my-3" />
+                  <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <p className="text-muted-foreground">Check-in</p>
-                      <p className="font-medium">
-                        {new Date(quoteData.checkInDateTime).toLocaleDateString()}
+                      <p className="text-xs font-semibold text-gray-500 uppercase">
+                        Duration
+                      </p>
+                      <p className="text-lg font-medium text-gray-900">
+                        {quoteData.nights} nights
                       </p>
                     </div>
-
                     <div>
-                      <p className="text-muted-foreground">Check-out</p>
-                      <p className="font-medium">
-                        {new Date(quoteData.checkOutDateTime).toLocaleDateString()}
+                      <p className="text-xs font-semibold text-gray-500 uppercase">
+                        Guests
                       </p>
-                    </div>
-
-                    <div>
-                      <p className="text-muted-foreground">Nights</p>
-                      <p className="font-medium">{quoteData.nights} nights</p>
-                    </div>
-
-                    <div>
-                      <p className="text-muted-foreground">Guests</p>
-                      <p className="font-medium">
-                        {quoteData.noOfAdults + quoteData.noOfInfants} people
-                        {quoteData.noOfPets > 0 &&
-                          ` + ${quoteData.noOfPets} pet(s)`}
+                      <p className="text-lg font-medium text-gray-900">
+                        {quoteData.noOfAdults + quoteData.noOfInfants}
+                        {quoteData.noOfPets > 0 && ` + ${quoteData.noOfPets}P`}
                       </p>
                     </div>
                   </div>
-                </CardContent>
-              </Card>
+                </div>
+              </CardContent>
+            </Card>
 
-              {/* RIGHT - Pricing */}
-              <Card>
-                <CardContent className="p-4 space-y-4">
-                  <h3 className="font-semibold text-lg">Price Details</h3>
-
-                  <div className="space-y-2 text-sm">
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">
-                        Price / night
-                      </span>
-                      <span>
-                        {quoteData.basePricePerNight.toLocaleString("vi-VN")} đ
-                      </span>
-                    </div>
-
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">Base amount</span>
-                      <span>
-                        {quoteData.baseAmount.toLocaleString("vi-VN")} đ
-                      </span>
-                    </div>
-
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">Package</span>
-                      <span>
-                        {quoteData.packageAmount.toLocaleString("vi-VN")} đ
-                      </span>
-                    </div>
-
-                    <Separator />
-
-                    <div className="flex justify-between font-semibold text-base">
-                      <span>Total</span>
-                      <span>
-                        {quoteData.totalPrice.toLocaleString("vi-VN")} đ
-                      </span>
-                    </div>
-
-                    <div className="flex justify-between text-green-600">
-                      <span>Deposit</span>
-                      <span>
-                        {quoteData.suggestedDeposit.toLocaleString("vi-VN")} đ
-                      </span>
-                    </div>
-
-                    <div className="flex justify-between text-red-500">
-                      <span>Remaining</span>
-                      <span>
-                        {quoteData.remainingBalance.toLocaleString("vi-VN")} đ
-                      </span>
-                    </div>
+            {/* Price Details Card */}
+            <Card className="border-0 shadow-sm">
+              <CardHeader className="border-b border-gray-100">
+                <CardTitle className="flex items-center gap-2">
+                  <DollarSign className="h-5 w-5 text-green-600" />
+                  Price Breakdown
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="pt-6 space-y-3">
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center text-sm">
+                    <span className="text-gray-600">Nightly rate</span>
+                    <span className="font-medium text-gray-900">
+                      {quoteData.basePricePerNight.toLocaleString("vi-VN")} đ
+                    </span>
                   </div>
-                </CardContent>
-              </Card>
-            </div>
+                  <div className="flex justify-between items-center text-sm">
+                    <span className="text-gray-600">
+                      Base amount ({quoteData.nights}N)
+                    </span>
+                    <span className="font-medium text-gray-900">
+                      {quoteData.baseAmount.toLocaleString("vi-VN")} đ
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center text-sm">
+                    <span className="text-gray-600">Package</span>
+                    <span className="font-medium text-gray-900">
+                      {quoteData.packageAmount.toLocaleString("vi-VN")} đ
+                    </span>
+                  </div>
+                  <Separator className="my-3" />
+                  <div className="flex justify-between items-center text-lg">
+                    <span className="font-semibold text-gray-900">Total</span>
+                    <span className="font-bold text-green-600">
+                      {quoteData.totalPrice.toLocaleString("vi-VN")} đ
+                    </span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           </div>
 
-          {/* Guests Information */}
-          <div className="bg-blue-50 rounded-lg p-4">
-            <h3 className="font-semibold text-gray-900 mb-3">
-              Guests Information
-            </h3>
-            <div className="space-y-2 text-sm text-gray-700">
-              <p>Adults: {quoteData.noOfAdults}</p>
-              <p>Infants: {quoteData.noOfInfants}</p>
-              <p>Pets: {quoteData.noOfPets}</p>
-            </div>
-          </div>
+          {/* Payment Plan Selection */}
+          <Card className="border-0 shadow-sm">
+            <CardHeader className="border-b border-gray-100">
+              <CardTitle className="flex items-center gap-2">
+                <Users className="h-5 w-5 text-blue-600" />
+                Guest Information
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="pt-6">
+              <div className="grid grid-cols-3 gap-4 mb-6">
+                <div className="bg-blue-50 rounded-lg p-3">
+                  <p className="text-xs font-semibold text-gray-500 uppercase">
+                    Adults
+                  </p>
+                  <p className="text-2xl font-bold text-gray-900">
+                    {quoteData.noOfAdults}
+                  </p>
+                </div>
+                <div className="bg-purple-50 rounded-lg p-3">
+                  <p className="text-xs font-semibold text-gray-500 uppercase">
+                    Infants
+                  </p>
+                  <p className="text-2xl font-bold text-gray-900">
+                    {quoteData.noOfInfants}
+                  </p>
+                </div>
+                <div className="bg-orange-50 rounded-lg p-3">
+                  <p className="text-xs font-semibold text-gray-500 uppercase">
+                    Pets
+                  </p>
+                  <p className="text-2xl font-bold text-gray-900">
+                    {quoteData.noOfPets}
+                  </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
 
-          {/* Hidden fields for read-only data */}
+          {/* Payment Method Selection */}
+          <Card className="border-0 shadow-sm">
+            <CardHeader className="border-b border-gray-100">
+              <CardTitle className="flex items-center gap-2">
+                <CreditCard className="h-5 w-5 text-purple-600" />
+                Payment Method
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="pt-6 space-y-6">
+              {/* Payment Mode */}
+              <div>
+                <label className="block text-sm font-semibold text-gray-900 mb-3">
+                  Select Payment Option
+                </label>
+                <Controller
+                  name="paymentMode"
+                  control={control}
+                  render={({ field }) => (
+                    <div className="flex gap-3">
+                      <label
+                        className="flex-1 flex items-center p-4 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-blue-400 transition"
+                        style={{
+                          borderColor:
+                            field.value === "partial"
+                              ? "rgb(59, 130, 246)"
+                              : undefined,
+                          backgroundColor:
+                            field.value === "partial"
+                              ? "rgb(239, 246, 255)"
+                              : undefined,
+                        }}
+                      >
+                        <input
+                          {...field}
+                          type="radio"
+                          value="partial"
+                          className="w-4 h-4 accent-blue-600"
+                        />
+                        <span className="ml-3">
+                          <span className="block font-medium text-gray-900">
+                            Deposit
+                          </span>
+                          <span className="block text-sm text-green-600">
+                            {quoteData.suggestedDeposit.toLocaleString("vi-VN")}{" "}
+                            đ
+                          </span>
+                        </span>
+                      </label>
+                      <label
+                        className="flex-1 flex items-center p-4 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-blue-400 transition"
+                        style={{
+                          borderColor:
+                            field.value === "full"
+                              ? "rgb(59, 130, 246)"
+                              : undefined,
+                          backgroundColor:
+                            field.value === "full"
+                              ? "rgb(239, 246, 255)"
+                              : undefined,
+                        }}
+                      >
+                        <input
+                          {...field}
+                          type="radio"
+                          value="full"
+                          className="w-4 h-4 accent-blue-600"
+                        />
+                        <span className="ml-3">
+                          <span className="block font-medium text-gray-900">
+                            Full Payment
+                          </span>
+                          <span className="block text-sm text-green-600">
+                            {quoteData.totalPrice.toLocaleString("vi-VN")} đ
+                          </span>
+                        </span>
+                      </label>
+                    </div>
+                  )}
+                />
+              </div>
+
+              {/* Payment Provider */}
+              <div>
+                <label className="block text-sm font-semibold text-gray-900 mb-3">
+                  Payment Provider
+                </label>
+                <Controller
+                  name="paymentProvider"
+                  control={control}
+                  render={({ field }) => (
+                    <div className="space-y-2">
+                      <label
+                        className="flex items-center p-3 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-blue-400 transition"
+                        style={{
+                          borderColor:
+                            field.value === "stripe"
+                              ? "rgb(59, 130, 246)"
+                              : undefined,
+                          backgroundColor:
+                            field.value === "stripe"
+                              ? "rgb(239, 246, 255)"
+                              : undefined,
+                        }}
+                      >
+                        <input
+                          {...field}
+                          type="radio"
+                          value="stripe"
+                          className="w-4 h-4 accent-blue-600"
+                        />
+                        <span className="ml-3">
+                          <span className="font-medium text-gray-900">
+                            Stripe
+                          </span>
+                          <span className="text-sm text-gray-500 ml-1">
+                            (Credit/Debit Card)
+                          </span>
+                        </span>
+                      </label>
+                      <label
+                        className="flex items-center p-3 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-blue-400 transition"
+                        style={{
+                          borderColor:
+                            field.value === "momo"
+                              ? "rgb(59, 130, 246)"
+                              : undefined,
+                          backgroundColor:
+                            field.value === "momo"
+                              ? "rgb(239, 246, 255)"
+                              : undefined,
+                        }}
+                      >
+                        <input
+                          {...field}
+                          type="radio"
+                          value="momo"
+                          className="w-4 h-4 accent-blue-600"
+                        />
+                        <span className="ml-3">
+                          <span className="font-medium text-gray-900">
+                            Momo
+                          </span>
+                          <span className="text-sm text-gray-500 ml-1">
+                            (Mobile Wallet)
+                          </span>
+                        </span>
+                      </label>
+                    </div>
+                  )}
+                />
+                {errors.paymentProvider && (
+                  <p className="mt-2 text-sm text-red-600">
+                    {errors.paymentProvider.message}
+                  </p>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Hidden Fields */}
           <Controller
             name="apartmentId"
             control={control}
@@ -237,112 +467,25 @@ function BookingConfirm() {
             control={control}
             render={({ field }) => <input {...field} type="hidden" />}
           />
-          {/* <Controller
-            name="packageId"
-            control={control}
-            render={({ field }) => <input {...field} type="hidden" />}
-          /> */}
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-3">
-              Payment method
-            </label>
-            <Controller
-              name="paymentMode"
-              control={control}
-              render={({ field }) => (
-                <div className="flex w-full gap-3">
-                  <label className="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50 transition flex-1">
-                    <input
-                      {...field}
-                      type="radio"
-                      value="partial"
-                      checked={field.value === "partial"}
-                      className="w-4 h-4"
-                    />
-                    <span className="ml-3 font-medium text-gray-900">
-                      Deposit
-                    </span>
-                  </label>
-
-                  <label className="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50 transition flex-1">
-                    <input
-                      {...field}
-                      type="radio"
-                      value="full"
-                      checked={field.value === "full"}
-                      className="w-4 h-4"
-                    />
-                    <span className="ml-3 font-medium text-gray-900">Full</span>
-                  </label>
-                </div>
-              )}
-            />
-            {errors.paymentProvider && (
-              <p className="mt-2 text-sm text-red-600">
-                {errors.paymentProvider.message}
-              </p>
-            )}
-          </div>
-
-          {/* Payment Provider */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-3">
-              Payment Provider *
-            </label>
-            <Controller
-              name="paymentProvider"
-              control={control}
-              render={({ field }) => (
-                <div className="space-y-2">
-                  <label className="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50 transition">
-                    <input
-                      {...field}
-                      type="radio"
-                      value="stripe"
-                      checked={field.value === "stripe"}
-                      className="w-4 h-4"
-                    />
-                    <span className="ml-3 font-medium text-gray-900">
-                      Stripe
-                    </span>
-                  </label>
-                  <label className="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50 transition">
-                    <input
-                      {...field}
-                      type="radio"
-                      value="momo"
-                      checked={field.value === "momo"}
-                      className="w-4 h-4"
-                    />
-                    <span className="ml-3 font-medium text-gray-900">Momo</span>
-                  </label>
-                </div>
-              )}
-            />
-            {errors.paymentProvider && (
-              <p className="mt-2 text-sm text-red-600">
-                {errors.paymentProvider.message}
-              </p>
-            )}
-          </div>
 
           {/* Action Buttons */}
-          <div className="flex gap-4 pt-6">
-            <button
+          <div className="flex gap-3 pt-6">
+            <Button
               type="button"
+              variant="outline"
               onClick={() => navigate(-1)}
-              className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-medium transition"
+              className="flex-1 h-11"
             >
+              <ArrowLeft className="h-4 w-4 mr-2" />
               Back
-            </button>
-            <button
+            </Button>
+            <Button
               type="submit"
               disabled={isSubmitting}
-              className="flex-1 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed font-medium transition"
+              className="flex-1 h-11 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-semibold"
             >
-              {isSubmitting ? "Confirming..." : "Confirm Booking"}
-            </button>
+              {isSubmitting ? "Processing..." : "Confirm & Pay"}
+            </Button>
           </div>
         </form>
       </div>

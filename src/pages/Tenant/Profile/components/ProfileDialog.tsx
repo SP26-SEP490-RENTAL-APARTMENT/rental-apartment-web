@@ -14,6 +14,7 @@ import {
 import type { UserProfile } from "@/types/user";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 interface Props {
   open: boolean;
   onClose: () => void;
@@ -21,6 +22,8 @@ interface Props {
   profileData: UserProfile | null;
 }
 function ProfileDialog({ open, onClose, onSubmit, profileData }: Props) {
+  const {t} = useTranslation("user");
+  const { t: commonT } = useTranslation("common");
   const {
     register,
     handleSubmit,
@@ -54,13 +57,13 @@ function ProfileDialog({ open, onClose, onSubmit, profileData }: Props) {
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Edit</DialogTitle>
+          <DialogTitle>{commonT("button.edit")}</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit(handleSubmitForm)} className="space-y-4">
           {/* Full Name */}
           <div className="space-y-2">
-            <Label>Full Name</Label>
-            <Input {...register("fullName")} placeholder="Enter full name" />
+            <Label>{t("profile.name")}</Label>
+            <Input {...register("fullName")} placeholder={t("profile.name")} />
             {errors.fullName && (
               <p className="text-sm text-red-500">{errors.fullName.message}</p>
             )}
@@ -68,7 +71,7 @@ function ProfileDialog({ open, onClose, onSubmit, profileData }: Props) {
 
           {/* Email */}
           <div className="space-y-2">
-            <Label>Email</Label>
+            <Label>{t("profile.email")}</Label>
             <Input type="email" {...register("email")} />
             {errors.email && (
               <p className="text-sm text-red-500">{errors.email.message}</p>
@@ -77,7 +80,7 @@ function ProfileDialog({ open, onClose, onSubmit, profileData }: Props) {
 
           {/* Phone */}
           <div className="space-y-2">
-            <Label>Phone</Label>
+            <Label>{t("profile.phone")}</Label>
             <Input {...register("phone")} />
             {errors.phone && (
               <p className="text-sm text-red-500">{errors.phone.message}</p>
@@ -86,13 +89,13 @@ function ProfileDialog({ open, onClose, onSubmit, profileData }: Props) {
 
           {/* Sex */}
           <div className="space-y-2">
-            <Label>Gender</Label>
+            <Label>{t("profile.gender")}</Label>
             <select
               {...register("sex")}
               className="w-full border rounded-md px-3 py-2"
             >
-              <option value="male">Male</option>
-              <option value="female">Female</option>
+              <option value="male">{t("profile.male")}</option>
+              <option value="female">{t("profile.female")}</option>
             </select>
             {errors.sex && (
               <p className="text-sm text-red-500">{errors.sex.message}</p>
@@ -101,7 +104,7 @@ function ProfileDialog({ open, onClose, onSubmit, profileData }: Props) {
 
           {/* Birthday */}
           <div className="space-y-2">
-            <Label>Birthday</Label>
+            <Label>{t("profile.birthday")}</Label>
             <Input type="date" {...register("birthday")} />
             {errors.birthday && (
               <p className="text-sm text-red-500">{errors.birthday.message}</p>
@@ -110,13 +113,13 @@ function ProfileDialog({ open, onClose, onSubmit, profileData }: Props) {
 
           {/* Nationality */}
           <div className="space-y-2">
-            <Label>Nationality</Label>
+            <Label>{t("profile.nationality")}</Label>
             <select
               {...register("nationality")}
               className="w-full border rounded-md px-3 py-2"
             >
-              <option value="VN">VietNam</option>
-              <option value="OTHER">Other</option>
+              <option value="VN">{t("profile.vietnam")}</option>
+              <option value="OTHER">{t("profile.other")}</option>
             </select>
             {errors.nationality && (
               <p className="text-sm text-red-500">
@@ -127,7 +130,7 @@ function ProfileDialog({ open, onClose, onSubmit, profileData }: Props) {
 
           {/* National ID */}
           <div className="space-y-2">
-            <Label>National ID</Label>
+            <Label>{t("profile.nationalID")}</Label>
             <Input {...register("nationalIdCardNumber")} />
             {errors.nationalIdCardNumber && (
               <p className="text-sm text-red-500">
@@ -138,7 +141,7 @@ function ProfileDialog({ open, onClose, onSubmit, profileData }: Props) {
 
           {/* Submit */}
           <Button type="submit" disabled={isSubmitting} className="w-full">
-            {isSubmitting ? "Saving..." : "Save"}
+            {commonT("button.save")}
           </Button>
         </form>
       </DialogContent>

@@ -11,6 +11,8 @@ import ViewOccupantDialog from "./components/ViewOccupantDialog";
 import AddOccupantDialog from "./components/AddOccupantDialog";
 import type { OccupantFormData } from "@/schemas/occupantSchema";
 import { toast } from "sonner";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Calendar } from "lucide-react";
 
 function BookingManagement() {
   const [bookings, setBookings] = useState<BookingHistory[]>([]);
@@ -33,7 +35,7 @@ function BookingManagement() {
     try {
       const response = await bookingManagementApi.getBookings({
         page,
-        pageSize: 5,
+        pageSize: 8,
         search: filters.search,
         sortBy: filters.sortBy,
         sortOrder: filters.sortOrder,
@@ -113,6 +115,7 @@ function BookingManagement() {
       throw error;
     }
   };
+
   const handleCheckOut = async (
     bookingId: string,
     data: { actualCheckOut: Date; note: string },
@@ -126,32 +129,71 @@ function BookingManagement() {
       throw error;
     }
   };
+
   return (
-    <div>
-      <BookingManagementFilter
-        filters={filters}
-        onFilterChange={(values) => {
-          setPage(1);
-          setFilters(values);
-        }}
-        onReset={handleResetFilters}
-      />
+    <div className="min-h-screen bg-gray-50 space-y-8">
+      {/* Header */}
+      <div className="bg-white border-b border-gray-200 sticky top-0 z-30 shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-blue-100 rounded-lg">
+              <Calendar className="h-6 w-6 text-blue-600" />
+            </div>
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900">
+                Booking Management
+              </h1>
+              <p className="text-gray-600 mt-1">
+                Manage guest bookings and check-ins
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
 
-      <DataTable
-        columns={BookingColumns(
-          handleCheckIn,
-          handleCheckOut,
-          fetchOccupantList,
-          triggerAddOccupant,
-        )}
-        data={bookings}
-        limit={5}
-        loading={loading}
-        total={totalCount}
-        page={page}
-        onPageChange={handlePageChange}
-      />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Filter Section */}
+        <Card className="border-0 shadow-sm mb-8">
+          <CardHeader className="border-b border-gray-100">
+            <CardTitle>Search & Filter</CardTitle>
+          </CardHeader>
+          <CardContent className="pt-6">
+            <BookingManagementFilter
+              filters={filters}
+              onFilterChange={(values) => {
+                setPage(1);
+                setFilters(values);
+              }}
+              onReset={handleResetFilters}
+            />
+          </CardContent>
+        </Card>
 
+        {/* Bookings Table */}
+        <Card className="border-0 shadow-sm">
+          <CardHeader className="border-b border-gray-100">
+            <CardTitle>Bookings ({totalCount})</CardTitle>
+          </CardHeader>
+          <CardContent className="pt-6">
+            <DataTable
+              columns={BookingColumns(
+                handleCheckIn,
+                handleCheckOut,
+                fetchOccupantList,
+                triggerAddOccupant,
+              )}
+              data={bookings}
+              limit={8}
+              loading={loading}
+              total={totalCount}
+              page={page}
+              onPageChange={handlePageChange}
+            />
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Dialogs */}
       <ViewOccupantDialog
         occupantList={occupantList}
         onClose={() => setOpen({ ...open, viewOccupant: false })}

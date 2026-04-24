@@ -14,7 +14,13 @@ import {
 } from "@/components/ui/dialog";
 import ApartmentDetailDialog from "@/components/ui/apartmentDetailDialog/ApartmentDetailDialog";
 import RoomForm from "./components/RoomForm";
-import type { CreateRoomFormData, UpdateRoomFormData } from "@/schemas/roomSchema";
+import type {
+  CreateRoomFormData,
+  UpdateRoomFormData,
+} from "@/schemas/roomSchema";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Plus, DoorOpen } from "lucide-react";
 
 function RoomManagement() {
   const [rooms, setRooms] = useState<Room[]>([]);
@@ -27,11 +33,9 @@ function RoomManagement() {
   const [search] = useState("");
   const [sortBy] = useState("createdAt");
   const [sortOrder] = useState("desc");
-
   const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);
   const [formMode, setFormMode] = useState<"create" | "update">("create");
   const [isFormOpen, setIsFormOpen] = useState(false);
-
   const { user } = useAuthStore();
 
   const fetchRooms = useCallback(async () => {
@@ -43,7 +47,7 @@ function RoomManagement() {
     try {
       const response = await roomManagementApi.getRooms(user?.id, {
         page,
-        pageSize: 10,
+        pageSize: 8,
         search,
         sortBy,
         sortOrder,
@@ -79,7 +83,9 @@ function RoomManagement() {
     }
   };
 
-  const handleUpdateRoom = async (data: CreateRoomFormData | UpdateRoomFormData) => {
+  const handleUpdateRoom = async (
+    data: CreateRoomFormData | UpdateRoomFormData,
+  ) => {
     try {
       await roomManagementApi.updateRoom(data, selectedRoom!.roomId);
       toast.success("Room updated successfully");
@@ -88,7 +94,7 @@ function RoomManagement() {
       toast.error("Failed to update room");
       console.error("Error updating room:", error);
     }
-  }
+  };
 
   useEffect(() => {
     fetchRooms();
@@ -103,22 +109,44 @@ function RoomManagement() {
     setFormMode("update");
     setIsFormOpen(true);
   };
-  return (
-    <div>
-      <DataTable
-        columns={roomColumns(
-          handleDeleteRoom,
-          fetchApartmentDetail,
-          triggerUpdate,
-        )}
-        data={rooms}
-        limit={5}
-        loading={loading}
-        onPageChange={handlePageChange}
-        page={1}
-        total={totalPages}
-      />
 
+  const handleAddRoom = () => {
+    setSelectedRoom(null);
+    setFormMode("create");
+    setIsFormOpen(true);
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <div className="bg-white border-b border-gray-200 sticky top-0 z-30 shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-indigo-100 rounded-lg">
+                <DoorOpen className="h-6 w-6 text-indigo-600" />
+              </div>
+              <div>
+                <h1 className="text-3xl font-bold text-gray-900">
+                  Room Management
+                </h1>
+                <p className="text-gray-600 mt-1">
+                  Manage all rooms across your properties
+                </p>
+              </div>
+            </div>
+            <Button
+              onClick={handleAddRoom}
+              className="bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white font-semibold gap-2"
+            >
+              <Plus className="h-4 w-4" />
+              Add Room
+            </Button>
+          </div>
+        </div>
+      </div>
+
+      {/* Form Modal */}
       <RoomForm
         isOpen={isFormOpen}
         mode={formMode}
@@ -128,17 +156,42 @@ function RoomManagement() {
         apartment={null}
       />
 
+      {/* Apartment Detail Modal */}
       <Dialog
         open={apartmentDetailDialogOpen}
         onOpenChange={() => setApartmentDetailDialogOpen(false)}
       >
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Detail</DialogTitle>
+            <DialogTitle>Apartment Details</DialogTitle>
           </DialogHeader>
           {apartment && <ApartmentDetailDialog apartment={apartment} />}
         </DialogContent>
       </Dialog>
+
+      {/* Content */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <Card className="border-0 shadow-sm">
+          <CardHeader className="border-b border-gray-100">
+            <CardTitle>Rooms ({totalPages})</CardTitle>
+          </CardHeader>
+          <CardContent className="pt-6">
+            <DataTable
+              columns={roomColumns(
+                handleDeleteRoom,
+                fetchApartmentDetail,
+                triggerUpdate,
+              )}
+              data={rooms}
+              limit={8}
+              loading={loading}
+              onPageChange={handlePageChange}
+              page={page}
+              total={totalPages}
+            />
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }

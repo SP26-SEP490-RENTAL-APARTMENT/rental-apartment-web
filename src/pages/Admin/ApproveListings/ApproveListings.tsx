@@ -9,6 +9,8 @@ import ListingApproveForm from "./components/ListingApproveForm";
 import AssignInspectionForm from "./components/AssignInspectionForm";
 import type { AssignInspectionFormData } from "@/schemas/assignInspection";
 import { inspectionApi } from "@/services/privateApi/adminApi";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { CheckCircle2 } from "lucide-react";
 
 function ApproveListings() {
   const [approveListings, setApproveListings] = useState<Apartment[]>([]);
@@ -24,7 +26,7 @@ function ApproveListings() {
     try {
       const response = await apartmentManagementApi.getApproveListings({
         page,
-        pageSize: 5,
+        pageSize: 8,
         search: "",
         sortBy: "createdAt",
         sortOrder: "desc",
@@ -78,18 +80,49 @@ function ApproveListings() {
   const handlePageChange = (newPage: number) => {
     setPage(newPage);
   };
-  return (
-    <div>
-      <DataTable
-        data={approveListings}
-        limit={5}
-        loading={loading}
-        onPageChange={handlePageChange}
-        columns={ListingColumns(triggerApprove, triggerAssignInspection)}
-        page={page}
-        total={totalCount}
-      />
 
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <div className="bg-white border-b border-gray-200 sticky top-0 z-30 shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-cyan-100 rounded-lg">
+              <CheckCircle2 className="h-6 w-6 text-cyan-600" />
+            </div>
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900">Approve Listings</h1>
+              <p className="text-gray-600 mt-1">
+                Review and approve new property listings
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Content */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <Card className="border-0 shadow-sm">
+          <CardHeader className="border-b border-gray-100">
+            <CardTitle>
+              Pending Approvals ({totalCount})
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="pt-6">
+            <DataTable
+              data={approveListings}
+              limit={8}
+              loading={loading}
+              onPageChange={handlePageChange}
+              columns={ListingColumns(triggerApprove, triggerAssignInspection)}
+              page={page}
+              total={totalCount}
+            />
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Listing Approve Form Modal */}
       <ListingApproveForm
         apartmentId={selectedListingId}
         isOpen={isOpen}
@@ -97,6 +130,7 @@ function ApproveListings() {
         onSubmit={handleApprove}
       />
 
+      {/* Assign Inspection Form Modal */}
       <AssignInspectionForm
         apartmentId={selectedListingId}
         isOpen={inspectionForm}
@@ -108,3 +142,4 @@ function ApproveListings() {
 }
 
 export default ApproveListings;
+  

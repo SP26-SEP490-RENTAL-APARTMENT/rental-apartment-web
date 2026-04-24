@@ -5,7 +5,6 @@ import { ProtectedRoute } from "./components/ProtectedRoute";
 import Login from "./pages/Auth/Login/Login";
 import Register from "./pages/Auth/Register/Register";
 
-import Home from "./pages/Home/Home";
 import ApartmentDetail from "./pages/ApartmentDetail/ApartmentDetail";
 
 import AdminDashboard from "./pages/Admin/AdminDashboard/AdminDashboard";
@@ -41,6 +40,7 @@ import Inspections from "./pages/Admin/Inspection/Inspection";
 import MySubscription from "./pages/Landlord/MySubscription/MySubscription";
 import RequestResetPW from "./pages/Auth/RequestResetPW/RequestResetPW";
 import ResetPWPage from "./pages/Auth/ResetPWPage/ResetPWPage";
+import HomePage from "./pages/Home/Home";
 
 /**
  * App Component - Simplified routing setup
@@ -66,7 +66,7 @@ export default function App() {
 
         {/* ========== Public Routes ========== */}
         <Route element={<UserLayout />}>
-          <Route path={ROUTES.HOME} element={<Home />} />
+          <Route path={ROUTES.HOME} element={<HomePage />} />
           <Route path={ROUTES.APARTMENT_DETAIL} element={<ApartmentDetail />} />
         </Route>
 

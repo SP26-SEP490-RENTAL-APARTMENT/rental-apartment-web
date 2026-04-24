@@ -11,6 +11,8 @@ export interface Apartment extends InspectionStatus {
   address: string;
   district: string;
   city: string;
+  maxPets?: number;
+  bookingStatus: string;
   latitude: number;
   longitude: number;
   basePricePerNight: number;
@@ -39,5 +41,5 @@ export interface Room {
 }
 
 export interface InspectionStatus {
-  inspectionStatus?: string
+  inspectionStatus?: string;
 }

@@ -28,8 +28,8 @@ import { loginSchema, type LoginFormData } from "@/schemas/loginSchema";
 import { toast } from "sonner";
 
 function Login() {
-  const { t } = useTranslation();
-  const { t: auth } = useTranslation("auth");
+  const { t: commonT } = useTranslation('common');
+  const { t: userT } = useTranslation('user');
   const navigate = useNavigate();
   const { login } = useAuthStore();
 
@@ -70,10 +70,10 @@ function Login() {
       } else {
         navigate(ROUTES.HOME);
       }
-      toast.success(auth("loginSuccess"));
+      toast.success(commonT("toast.loginSuccess") || "Logged in successfully");
     } catch (error: any) {
       toast.error(
-        error?.response?.data?.message || auth("loginFailed") || "Login failed",
+        error?.response?.data?.message || commonT("toast.loginFailed") || "Login failed",
       );
     }
   };
@@ -81,19 +81,19 @@ function Login() {
   return (
     <Card className="w-full max-w-sm">
       <CardHeader className="text-center">
-        <CardTitle>{t("welcome", { appName: "VStay" })}</CardTitle>
-        <CardDescription>{t("loginDescription")}</CardDescription>
+        <CardTitle>{commonT("description.welcome")}</CardTitle>
+        <CardDescription>{commonT("description.welcome")}</CardDescription>
       </CardHeader>
       <CardContent>
         <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
           <div className="flex flex-col gap-6">
             <div className="grid gap-2">
-              <Label htmlFor="email">{auth("email")}</Label>
+              <Label htmlFor="email">{userT("profile.email")}</Label>
               <InputGroup>
                 <InputGroupInput
                   id="email"
                   type="email"
-                  placeholder={auth("email")}
+                  placeholder={userT("profile.email")}
                   {...register("email")}
                 />
                 <InputGroupAddon align="inline-start">
@@ -109,19 +109,19 @@ function Login() {
 
             <div className="grid gap-2">
               <div className="flex items-center">
-                <Label htmlFor="password">{auth("password")}</Label>
+                <Label htmlFor="password">{userT("auth.password")}</Label>
                 <a
                   href={ROUTES.REQUEST_RESET_PASSWORD}
                   className="text-blue-500 cursor-pointer hover:underline ml-auto"
                 >
-                  {auth("forgotPassword")}
+                  {userT("profile.forgotPassword")}
                 </a>
               </div>
               <InputGroup>
                 <InputGroupInput
                   type={isShowPassword ? "text" : "password"}
                   id="password"
-                  placeholder={auth("password")}
+                  placeholder={userT("auth.password")}
                   {...register("password")}
                 />
                 <InputGroupAddon align="inline-start">
@@ -148,7 +148,7 @@ function Login() {
             {isSubmitting ? (
               <Loader2 className="animate-spin h-4 w-4" />
             ) : (
-              auth("login")
+              commonT("button.login")
             )}
           </Button>
         </form>
@@ -156,13 +156,13 @@ function Login() {
 
       <CardFooter className="flex flex-col">
         <div className="flex justify-center items-center">
-          <p className="text-sm text-muted-foreground">{auth("question")}</p>
+          <p className="text-sm text-muted-foreground">{commonT("description.question")}</p>
           <Button
             onClick={() => navigate(ROUTES.REGISTER)}
             className="text-blue-500 cursor-pointer"
             variant={"link"}
           >
-            {auth("signup")}
+            {commonT("button.register")}
           </Button>
         </div>
       </CardFooter>

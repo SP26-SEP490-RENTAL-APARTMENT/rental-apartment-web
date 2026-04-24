@@ -1,6 +1,8 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import type { BookingHistory } from "@/types/bookingHistory";
+import { useTranslation } from "react-i18next";
+import { ChevronRight, CheckCircle2, Clock, Home } from "lucide-react";
 
 export interface Props {
   data: BookingHistory;
@@ -14,103 +16,136 @@ const formatCurrency = (value: number) => value.toLocaleString("vi-VN") + " ₫"
 const getStatusColor = (status: string) => {
   switch (status) {
     case "pending":
-      return "bg-yellow-100 text-yellow-700";
+      return "bg-amber-100 text-amber-700 border-0";
     case "confirmed":
-      return "bg-green-100 text-green-700";
+      return "bg-emerald-100 text-emerald-700 border-0";
     case "cancelled":
-      return "bg-red-100 text-red-700";
+      return "bg-red-100 text-red-700 border-0";
     default:
-      return "bg-gray-100 text-gray-700";
+      return "bg-gray-100 text-gray-700 border-0";
   }
-};
-
-const getPaymentModeLabel = (mode: "full" | "partial") => {
-  return mode === "full" ? "Full Payment" : "Partial Payment";
 };
 
 const getPaymentModeColor = (mode: "full" | "partial") => {
   return mode === "full"
-    ? "bg-green-100 text-green-700"
-    : "bg-blue-100 text-blue-700";
+    ? "bg-green-100 text-green-700 border-0"
+    : "bg-blue-100 text-blue-700 border-0";
 };
 
 export default function BookingHistoryCard({ data, onClick }: Props) {
+  const { t } = useTranslation("booking");
+
+  const getPaymentModeLabel = (mode: "full" | "partial") => {
+    return mode === "full" ? t("fullPayment") : t("partialPayment");
+  };
+
   return (
-    <Card className="w-full hover:shadow-md transition cursor-pointer" onClick={() => onClick?.(data)}>
-      <CardContent className="p-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div className="flex flex-col gap-2 flex-1">
-          <div className="flex flex-col gap-1">
-            <div className="flex items-center gap-2">
-              <p className="font-semibold text-lg">
-                Booking #{data.bookingId.slice(0, 8)}
+    <Card
+      className="w-full hover:shadow-lg border-0 transition-all duration-300 cursor-pointer group bg-white overflow-hidden"
+      onClick={() => onClick?.(data)}
+    >
+      <CardContent className="p-6">
+        {/* Header Row */}
+        <div className="flex items-start justify-between mb-4">
+          <div className="flex-1">
+            <div className="flex items-center gap-3 mb-2">
+              <div className="p-2 bg-blue-50 rounded-lg group-hover:bg-blue-100 transition-colors">
+                <Home className="h-4 w-4 text-blue-600" />
+              </div>
+              <p className="font-semibold text-gray-900 text-lg">
+                Booking #{data.bookingId.slice(0, 8).toUpperCase()}
               </p>
-
-              <Badge className={getStatusColor(data.status)}>
-                {data.status}
-              </Badge>
-
-              <Badge className={getPaymentModeColor(data.paymentMode)}>
-                {getPaymentModeLabel(data.paymentMode)}
-              </Badge>
             </div>
-
-            {/* 👇 createdAt */}
             <p className="text-xs text-gray-500">
               Booked on {formatDate(data.createdAt)}
             </p>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-sm text-gray-600">
-            <div>
-              <p>Check-in</p>
-              <p className="font-medium text-gray-900">
-                {formatDate(data.checkInDate)}
-              </p>
+          {/* Badges & Amount */}
+          <div className="flex flex-col items-end gap-3">
+            <div className="flex gap-2 flex-wrap justify-end">
+              <Badge className={getStatusColor(data.status)}>
+                {data.status.charAt(0).toUpperCase() + data.status.slice(1)}
+              </Badge>
+              <Badge className={getPaymentModeColor(data.paymentMode)}>
+                {getPaymentModeLabel(data.paymentMode)}
+              </Badge>
             </div>
-
-            <div>
-              <p>Check-out</p>
-              <p className="font-medium text-gray-900">
-                {formatDate(data.checkOutDate)}
-              </p>
-            </div>
-
-            <div>
-              <p>Nights</p>
-              <p className="font-medium text-gray-900">{data.nights} nights</p>
-            </div>
-
-            <div>
-              <p>Guests</p>
-              <p className="font-medium text-gray-900">
-                {data.noOfAdults} adults
+            <div className="text-right">
+              <p className="text-sm text-gray-600 mb-1">{t("totalPrice")}</p>
+              <p className="text-2xl font-bold text-blue-600">
+                {formatCurrency(data.totalPrice)}
               </p>
             </div>
           </div>
         </div>
 
-        {/* RIGHT */}
-        <div className="flex flex-col items-start md:items-end gap-1 min-w-45">
-          <p className="text-sm text-gray-500">Total Price</p>
-          <p className="text-lg font-semibold text-primary">
-            {formatCurrency(data.totalPrice)}
-          </p>
+        {/* Divider */}
+        <div className="h-px bg-gray-100 my-4" />
 
-          {data.paymentMode === "partial" && (
-            <p className="text-xs text-gray-500">
-              Deposit: {formatCurrency(data.depositAmount)}
+        {/* Details Grid */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+          {/* Check-in */}
+          <div>
+            <p className="text-xs text-gray-500 font-medium mb-1">Check-in</p>
+            <p className="font-semibold text-gray-900">
+              {formatDate(data.checkInDate)}
             </p>
-          )}
+          </div>
 
-          <p
-            className={`text-xs font-medium ${
-              data.depositPaid ? "text-green-600" : "text-red-500"
-            }`}
-          >
-            {data.depositPaid ? "Paid" : "Unpaid"}
-          </p>
+          {/* Check-out */}
+          <div>
+            <p className="text-xs text-gray-500 font-medium mb-1">Check-out</p>
+            <p className="font-semibold text-gray-900">
+              {formatDate(data.checkOutDate)}
+            </p>
+          </div>
+
+          {/* Nights */}
+          <div>
+            <p className="text-xs text-gray-500 font-medium mb-1">{t("nightsLabel")}</p>
+            <p className="font-semibold text-gray-900">
+              {data.nights} {t("nightsUnit")}
+            </p>
+          </div>
+
+          {/* Guests */}
+          <div>
+            <p className="text-xs text-gray-500 font-medium mb-1">Guests</p>
+            <p className="font-semibold text-gray-900">
+              {data.noOfAdults} {t("adultsUnit")}
+            </p>
+          </div>
+        </div>
+
+        {/* Footer Row - Payment Status */}
+        <div className="flex items-center justify-between pt-3 border-t border-gray-100">
+          <div className="flex items-center gap-2">
+            {data.depositPaid ? (
+              <>
+                <CheckCircle2 className="h-4 w-4 text-green-600" />
+                <span className="text-sm font-medium text-green-600">
+                  {t("paid")}
+                </span>
+              </>
+            ) : (
+              <>
+                <Clock className="h-4 w-4 text-amber-600" />
+                <span className="text-sm font-medium text-amber-600">
+                  {t("unpaid")}
+                </span>
+              </>
+            )}
+            {data.paymentMode === "partial" && (
+              <span className="text-xs text-gray-500 ml-2">
+                ({t("depositLabel")} {formatCurrency(data.depositAmount)})
+              </span>
+            )}
+          </div>
+          <ChevronRight className="h-4 w-4 text-gray-400 group-hover:text-blue-600 transition-colors" />
         </div>
       </CardContent>
     </Card>
   );
 }
+

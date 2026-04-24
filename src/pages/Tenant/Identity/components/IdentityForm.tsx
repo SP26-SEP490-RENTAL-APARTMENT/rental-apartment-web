@@ -37,8 +37,8 @@ function IdentityForm({
   onSubmit,
   isLoading = false,
 }: IdentityFormProps) {
-  const { t } = useTranslation();
-  const { t: identityT } = useTranslation("identity");
+  const { t } = useTranslation("user");
+  const { t: commonT } = useTranslation("common");
   const {
     register,
     handleSubmit,
@@ -72,12 +72,12 @@ function IdentityForm({
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-125">
         <DialogHeader>
-          <DialogTitle>{identityT("createIdentity")}</DialogTitle>
+          <DialogTitle>{t("identityVerification.upload")}</DialogTitle>
         </DialogHeader>
         <form className="space-y-4" onSubmit={handleSubmit(handleFormSubmit)}>
           <div className="grid gap-2">
             <Label htmlFor="documentType">
-              {identityT("documentType")}
+              {t("identityVerification.documentType")}
               <span className="text-destructive">*</span>
             </Label>
             <Controller
@@ -90,39 +90,34 @@ function IdentityForm({
                 >
                   <SelectTrigger id="documentType">
                     <SelectValue
-                      placeholder={identityT("selectDocumentType")}
+                      placeholder={t("identityVerification.documentType")}
                     />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="passport">
-                      {identityT("passport")}
+                      {t("identityVerification.passport")}
                     </SelectItem>
                     <SelectItem value="national_id_card">
-                      {identityT("nationalIdCard")}
+                      {t("identityVerification.nationalIdCard")}
                     </SelectItem>
                     <SelectItem value="drivers_license">
-                      {identityT("driversLicense")}
+                      {t("identityVerification.driverLicense")}
                     </SelectItem>
                     <SelectItem value="other_government_id">
-                      {identityT("otherGovernmentId")}
+                      {t("identityVerification.otherGovernmentId")}
                     </SelectItem>
                     <SelectItem value="selfie_with_id">
-                      {identityT("selfieWithId")}
+                      {t("identityVerification.selfieWithId")}
                     </SelectItem>
                   </SelectContent>
                 </Select>
               )}
             />
-            {errors.DocumentType && (
-              <p className="text-sm text-destructive">
-                {errors.DocumentType.message}
-              </p>
-            )}
           </div>
 
           <div className="grid gap-2">
             <Label htmlFor="side">
-              {identityT("side")}
+              {t("identityVerification.side")}
               <span className="text-destructive">*</span>
             </Label>
             <Controller
@@ -134,27 +129,30 @@ function IdentityForm({
                   onValueChange={field.onChange}
                 >
                   <SelectTrigger id="side">
-                    <SelectValue placeholder={identityT("selectSide")} />
+                    <SelectValue placeholder={t("identityVerification.side")} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="front">{identityT("front")}</SelectItem>
-                    <SelectItem value="back">{identityT("back")}</SelectItem>
-                    <SelectItem value="bio_page">
-                      {identityT("bioPage")}
+                    <SelectItem value="front">
+                      {t("identityVerification.front")}
                     </SelectItem>
-                    <SelectItem value="other">{identityT("other")}</SelectItem>
+                    <SelectItem value="back">
+                      {t("identityVerification.back")}
+                    </SelectItem>
+                    <SelectItem value="bio_page">
+                      {t("identityVerification.bioPage")}
+                    </SelectItem>
+                    <SelectItem value="other">
+                      {t("identityVerification.other")}
+                    </SelectItem>
                   </SelectContent>
                 </Select>
               )}
             />
-            {errors.Side && (
-              <p className="text-sm text-destructive">{errors.Side.message}</p>
-            )}
           </div>
 
           <div className="grid gap-2">
             <Label htmlFor="file">
-              {identityT("file")}
+              {t("identityVerification.file")}
               <span className="text-destructive">*</span>
             </Label>
             <Input
@@ -169,10 +167,10 @@ function IdentityForm({
           </div>
 
           <div className="grid gap-2">
-            <Label htmlFor="notes">{identityT("notes")}</Label>
+            <Label htmlFor="notes">{t("identityVerification.notes")}</Label>
             <Textarea
               id="notes"
-              placeholder={identityT("enterNotes")}
+              placeholder={t("identityVerification.enterNotes")}
               {...register("Notes")}
               rows={4}
             />
@@ -188,12 +186,10 @@ function IdentityForm({
               onClick={handleClose}
               disabled={isSubmitting || isLoading}
             >
-              {t("cancel")}
+              {commonT("button.cancel")}
             </Button>
             <Button type="submit" disabled={isSubmitting || isLoading}>
-              {isSubmitting || isLoading
-                ? identityT("submitting")
-                : t("submit")}
+              {commonT("button.submit")}
             </Button>
           </DialogFooter>
         </form>

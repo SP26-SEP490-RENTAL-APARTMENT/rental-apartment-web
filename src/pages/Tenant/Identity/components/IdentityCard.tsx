@@ -1,29 +1,42 @@
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { documentTypeLabel, sideLabel } from "@/constants/document";
+import { getDocumentTypeLabel, getSideLabel } from "@/constants/document";
 import type { Document } from "@/types/document";
 import { FileText } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 function IdentityCard({ document }: { document: Document }) {
+  const { t } = useTranslation("user");
   const isImage = document.mimeType.startsWith("image");
   const getStatusBadge = () => {
     const status = document.verificationStatus;
     switch (status) {
       case "verified":
-        return <Badge className="bg-green-500 text-white">Verified</Badge>;
+        return (
+          <Badge className="bg-green-500 text-white">
+            {t("identityVerification.verified")}
+          </Badge>
+        );
 
       case "rejected":
-        return <Badge variant="destructive">Rejected</Badge>;
+        return (
+          <Badge variant="destructive">
+            {t("identityVerification.rejected")}
+          </Badge>
+        );
 
       case "expired":
-        return <Badge className="bg-gray-500 text-white">Expired</Badge>;
+        return (
+          <Badge className="bg-gray-500 text-white">
+            {t("identityVerification.expired")}
+          </Badge>
+        );
 
       default:
-        return <Badge variant="secondary">Pending</Badge>;
+        return (
+          <Badge variant="secondary">{t("identityVerification.pending")}</Badge>
+        );
     }
-  };
-  const formatFileSize = (bytes: number) => {
-    return `${(bytes / 1024).toFixed(1)} KB`;
   };
 
   const formatDate = (date?: string | null) => {
@@ -35,10 +48,13 @@ function IdentityCard({ document }: { document: Document }) {
     <Card className="shadow-md rounded-2xl">
       <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle className="text-lg">
-          {documentTypeLabel[document.documentType]}
+          {getDocumentTypeLabel(t)[document.documentType]}
         </CardTitle>
         <p>
-          <span className="font-medium">Side:</span> {sideLabel[document.side]}
+          <span className="font-medium">
+            {t("identityVerification.side")}:{" "}
+          </span>{" "}
+          {getSideLabel(t)[document.side]}
         </p>
         {getStatusBadge()}
       </CardHeader>
@@ -60,18 +76,15 @@ function IdentityCard({ document }: { document: Document }) {
         {/* Info */}
         <div className="text-sm space-y-1">
           <p>
-            <span className="font-medium">Side:</span> {document.side}
-          </p>
-          <p>
-            <span className="font-medium">File size:</span>{" "}
-            {formatFileSize(document.fileSize)}
-          </p>
-          <p>
-            <span className="font-medium">Uploaded:</span>{" "}
+            <span className="font-bold">
+              {t("identityVerification.uploadedAt")}:
+            </span>{" "}
             {formatDate(document.uploadedAt)}
           </p>
           <p>
-            <span className="font-medium">Verified at:</span>{" "}
+            <span className="font-bold">
+              {t("identityVerification.verifyAt")}:
+            </span>{" "}
             {formatDate(document.verifiedAt)}
           </p>
         </div>
@@ -79,7 +92,10 @@ function IdentityCard({ document }: { document: Document }) {
         {/* Notes */}
         {document.notes && (
           <div className="text-sm">
-            <span className="font-medium">Notes:</span> {document.notes}
+            <span className="font-bold">
+              {t("identityVerification.notes")}:{" "}
+            </span>{" "}
+            {document.notes}
           </div>
         )}
 
@@ -87,7 +103,9 @@ function IdentityCard({ document }: { document: Document }) {
         {document.verificationStatus === "rejected" &&
           document.rejectionReason && (
             <div className="text-sm text-red-500">
-              <span className="font-medium">Reason:</span>{" "}
+              <span className="font-bold">
+                {t("identityVerification.reason")}:{" "}
+              </span>{" "}
               {document.rejectionReason}
             </div>
           )}

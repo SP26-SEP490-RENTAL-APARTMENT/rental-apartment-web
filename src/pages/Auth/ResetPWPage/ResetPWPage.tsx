@@ -16,10 +16,13 @@ import { Label } from "@/components/ui/label";
 import { authApi } from "@/services/publicApi/authApi";
 import { Check, Eye, EyeOff, Loader2, Lock, Mail } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
 
 function ResetPWPage() {
+  const { t: userT } = useTranslation("user");
+  const { t: commonT } = useTranslation("common");
   const [isShowPassword, setIsShowPassword] = useState(false);
   const [form, setForm] = useState({
     email: "",
@@ -66,19 +69,19 @@ function ResetPWPage() {
   return (
     <Card className="w-full max-w-sm">
       <CardHeader className="text-center">
-        <CardTitle>Reset Password</CardTitle>
-        <CardDescription>Set a new password for your account</CardDescription>
+        <CardTitle>{commonT("description.resetPassword")}</CardTitle>
+        <CardDescription>{commonT("description.setNewPassword")}</CardDescription>
       </CardHeader>
       <CardContent>
         <form className="space-y-6" onSubmit={handleResetPassword}>
           <div className="flex flex-col gap-6">
             <div className="grid gap-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email">{userT("profile.email")}</Label>
               <InputGroup>
                 <InputGroupInput
                   id="email"
                   type="email"
-                  placeholder="Email"
+                  placeholder={userT("profile.email")}
                   value={form.email}
                   onChange={(e) => setForm({ ...form, email: e.target.value })}
                 />
@@ -89,12 +92,12 @@ function ResetPWPage() {
             </div>
 
             <div className="grid gap-2">
-              <Label htmlFor="code">Code</Label>
+              <Label htmlFor="code">{userT("auth.verificationCode")}</Label>
               <InputGroup>
                 <InputGroupInput
                   id="code"
                   type="text"
-                  placeholder="Code"
+                  placeholder={userT("auth.verificationCode")}
                   value={form.code}
                   onChange={(e) => setForm({ ...form, code: e.target.value })}
                 />
@@ -105,12 +108,12 @@ function ResetPWPage() {
             </div>
 
             <div className="grid gap-2">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password">{userT("auth.password")}</Label>
               <InputGroup>
                 <InputGroupInput
                   type={isShowPassword ? "text" : "password"}
                   id="password"
-                  placeholder="New Password"
+                  placeholder={userT("auth.password")}
                   value={form.password}
                   onChange={(e) =>
                     setForm({ ...form, password: e.target.value })
@@ -131,12 +134,12 @@ function ResetPWPage() {
             </div>
 
             <div className="grid gap-2">
-              <Label htmlFor="confirmPassword">Confirm Password</Label>
+              <Label htmlFor="confirmPassword">{userT("auth.confirmPassword")}</Label>
               <InputGroup>
                 <InputGroupInput
                   type={isShowPassword ? "text" : "password"}
                   id="confirmPassword"
-                  placeholder="Confirm Password"
+                  placeholder={userT("auth.confirmPassword")}
                   value={form.confirmPassword}
                   onChange={(e) =>
                     setForm({ ...form, confirmPassword: e.target.value })
@@ -161,7 +164,7 @@ function ResetPWPage() {
             {isSubmitting ? (
               <Loader2 className="animate-spin h-4 w-4" />
             ) : (
-              "Reset Password"
+              userT("auth.resetPassword")
             )}
           </Button>
         </form>
