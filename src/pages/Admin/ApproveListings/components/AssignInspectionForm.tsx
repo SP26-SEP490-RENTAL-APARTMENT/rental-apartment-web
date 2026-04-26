@@ -93,10 +93,10 @@ function AssignInspectionForm({
         <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
           <div className="grid gap-4 py-4">
             {/* Apartment */}
-            <div className="grid gap-2">
+            {/* <div className="grid gap-2">
               <Label htmlFor="apartmentId">Apartment</Label>
               <input disabled id="apartmentId" {...register("apartmentId")} />
-            </div>
+            </div> */}
 
             {/* Inspector */}
             <div className="grid gap-2">

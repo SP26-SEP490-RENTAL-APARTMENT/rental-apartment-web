@@ -1,10 +1,26 @@
 import type { Apartment } from "@/types/apartment";
 import type { ColumnDef } from "@tanstack/react-table";
 import ListingAction from "./ListingAction";
+import { Badge } from "@/components/ui/badge";
+
+const getInspectionStatusBadge = (inspectionStatus?: string | null) => {
+  switch (inspectionStatus) {
+    case "scheduled":
+      return <Badge className="bg-blue-500 text-white">Scheduled</Badge>;
+    case "in_progress":
+      return <Badge className="bg-green-500 text-white">In progress</Badge>;
+    case "pending":
+      return <Badge className="bg-yellow-500 text-white">Pending</Badge>;
+    case "passed":
+      return <Badge className="bg-gray-500 text-white">Passed</Badge>;
+    default:
+      return <Badge variant="secondary">Not scheduled</Badge>;
+  }
+};
 
 export const ListingColumns = (
   onApproveApartment: (id: string) => void,
-  onAssignInspection: (id: string) => void
+  onAssignInspection: (id: string) => void,
 ): ColumnDef<Apartment>[] => [
   {
     accessorKey: "title",
@@ -20,16 +36,17 @@ export const ListingColumns = (
     header: "Status",
     cell: ({ row }) => {
       const status = row.original.status;
-      return status.charAt(0).toUpperCase() + status.slice(1);
+      return (
+        <Badge variant="secondary">
+          {status.charAt(0).toUpperCase() + status.slice(1)}
+        </Badge>
+      );
     },
   },
   {
     accessorKey: "inspectionStatus",
     header: "Inspection Status",
-    cell: ({ row }) => {
-      const inspectionStatus = row.original.inspectionStatus;
-      return inspectionStatus ? inspectionStatus.charAt(0).toUpperCase() + inspectionStatus.slice(1) : "Not Inspected";
-    },
+    cell: ({ row }) => getInspectionStatusBadge(row.original.inspectionStatus),
   },
   {
     id: "actions",
@@ -37,7 +54,11 @@ export const ListingColumns = (
     cell: ({ row }) => {
       const listing = row.original;
       return (
-        <ListingAction listings={listing} onAppvrove={onApproveApartment} onAssign={onAssignInspection} />
+        <ListingAction
+          listings={listing}
+          onAppvrove={onApproveApartment}
+          onAssign={onAssignInspection}
+        />
       );
     },
   },

@@ -37,14 +37,6 @@ export const NearbyColumns = (
         header: "City",
       },
       {
-        accessorKey: "longitude",
-        header: "Longitude",
-      },
-      {
-        accessorKey: "latitude",
-        header: "Latitude",
-      },
-      {
         id: "actions",
         header: "Actions",
         cell: ({ row }) => {

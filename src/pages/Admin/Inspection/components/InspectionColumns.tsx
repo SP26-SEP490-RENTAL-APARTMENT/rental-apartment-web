@@ -2,6 +2,22 @@ import { Button } from "@/components/ui/button";
 import type { Inspection } from "@/types/inspection";
 import type { ColumnDef } from "@tanstack/react-table";
 import InspectionAction from "./InspectionAction";
+import { Badge } from "@/components/ui/badge";
+
+const getInspectionStatusBadge = (inspectionStatus: string) => {
+  switch (inspectionStatus) {
+    case "scheduled":
+      return <Badge className="bg-blue-500 text-white">Scheduled</Badge>;
+    case "in_progress":
+      return <Badge className="bg-green-500 text-white">In progress</Badge>;
+    case "pending":
+      return <Badge className="bg-yellow-500 text-white">Pending</Badge>;
+    case "passed":
+      return <Badge className="bg-gray-500 text-white">Passed</Badge>;
+    default:
+      return <Badge variant="secondary">Not scheduled</Badge>;
+  }
+};
 
 export const InspectionColumns = (
   onStartInspection: (id: string) => void,
@@ -34,7 +50,7 @@ export const InspectionColumns = (
     header: "Status",
     cell: ({ row }) => {
       const status = row.original.status;
-      return status.charAt(0).toUpperCase() + status.slice(1);
+      return getInspectionStatusBadge(status);
     },
   },
   {

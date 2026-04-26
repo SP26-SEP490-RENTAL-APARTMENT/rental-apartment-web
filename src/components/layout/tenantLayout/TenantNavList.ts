@@ -1,5 +1,5 @@
 import { useAuthStore } from "@/store/authStore";
-import { Album, BookUser, History, IdCard } from "lucide-react";
+import { Album, BookUser, History } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 export const useTenantNavList = () => {
@@ -14,11 +14,11 @@ export const useTenantNavList = () => {
       url: "/tenant/profile",
       icon: BookUser,
     },
-    {
-      title: t("identityVerification.label"),
-      url: "/tenant/identity",
-      icon: IdCard,
-    },
+    // {
+    //   title: t("identityVerification.label"),
+    //   url: "/tenant/identity",
+    //   icon: IdCard,
+    // },
     ...(isExactTenantLandlord
       ? [
           {

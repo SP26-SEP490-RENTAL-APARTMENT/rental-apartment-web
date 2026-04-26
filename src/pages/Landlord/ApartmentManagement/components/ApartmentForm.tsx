@@ -8,13 +8,6 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import {
   createApartmentSchema,
@@ -26,19 +19,7 @@ import type { Apartment } from "@/types/apartment";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
-
-const cities = ["TP. Hồ Chí Minh", "Hà Nội", "Đà Nẵng"];
-
-const districtsHCM = [
-  "Quận 1",
-  "Quận 2",
-  "Quận 3",
-  "Quận 4",
-  "Quận 5",
-  "Quận 7",
-  "Bình Thạnh",
-  "Thủ Đức",
-];
+import AddressAutocomplete from "./AddressAutocomplete";
 
 export interface ApartmentFormProps {
   isOpen: boolean;
@@ -50,12 +31,12 @@ export interface ApartmentFormProps {
   mode: "create" | "update";
 }
 
-const generateLatLng = () => {
-  return {
-    lat: 10.7 + Math.random() * 0.1,
-    lng: 106.6 + Math.random() * 0.1,
-  };
-};
+// const generateLatLng = () => {
+//   return {
+//     lat: 10.7 + Math.random() * 0.1,
+//     lng: 106.6 + Math.random() * 0.1,
+//   };
+// };
 
 function ApartmentForm({
   isOpen,
@@ -68,6 +49,10 @@ function ApartmentForm({
   const schema = isCreate ? createApartmentSchema : updateApartmentSchema;
 
   const [preview, setPreview] = useState<string[]>([]);
+  const [coords, setCoords] = useState<{
+    lat: number;
+    lng: number;
+  } | null>(null);
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
 
   const {
@@ -102,6 +87,11 @@ function ApartmentForm({
     name: "isPetAllowed",
   });
 
+  const currentAddress = useWatch({
+    control,
+    name: "address",
+  });
+
   // Log validation errors for debugging
   useEffect(() => {
     if (Object.keys(errors).length > 0) {
@@ -132,6 +122,7 @@ function ApartmentForm({
       queueMicrotask(() => {
         setPreview([]);
         setSelectedFiles([]);
+        setCoords(null);
       });
     } else if (apartment) {
       reset({
@@ -150,6 +141,13 @@ function ApartmentForm({
       queueMicrotask(() => {
         setPreview(apartment.photos || []);
         setSelectedFiles([]);
+        // Set coordinates for existing apartment
+        if (apartment.latitude && apartment.longitude) {
+          setCoords({
+            lat: apartment.latitude,
+            lng: apartment.longitude,
+          });
+        }
       });
     }
   }, [apartment, mode, reset, isCreate, isOpen]);
@@ -180,7 +178,6 @@ function ApartmentForm({
   const handleFormSubmit = async (
     data: CreateApartmentFormData | UpdateApartmentFormData,
   ) => {
-
     // Validate photos for create mode
     if (isCreate) {
       if (selectedFiles.length === 0) {
@@ -195,7 +192,6 @@ function ApartmentForm({
       }
     }
 
-    const { lat, lng } = generateLatLng();
     try {
       if (isCreate) {
         // Create mode: use FormData for file upload
@@ -212,8 +208,8 @@ function ApartmentForm({
         formData.append("address", String(data.address));
         formData.append("district", String(data.district));
         formData.append("city", String(data.city));
-        formData.append("latitude", String(lat));
-        formData.append("longitude", String(lng));
+        formData.append("latitude", String(coords?.lat));
+        formData.append("longitude", String(coords?.lng));
         formData.append("basePricePerNight", String(data.basePricePerNight));
 
         // Add photos
@@ -334,15 +330,22 @@ function ApartmentForm({
 
             {/* ADDRESS */}
             <div className="grid gap-2">
-              <Label htmlFor="address">Address *</Label>
-              <Input
-                id="address"
-                placeholder="123 Nguyễn Văn Cừ"
-                {...register("address")}
+              <Label>Address *</Label>
+
+              <AddressAutocomplete
+                value={currentAddress}
+                onSelect={(data) => {
+                  setValue("address", data.address);
+                  setValue("city", data.city);
+                  setValue("district", data.district);
+
+                  setCoords({
+                    lat: data.lat,
+                    lng: data.lng,
+                  });
+                }}
               />
-              <p className="text-xs text-muted-foreground">
-                Enter street and house number
-              </p>
+
               {errors.address && (
                 <p className="text-sm text-destructive">
                   {errors.address.message}
@@ -351,21 +354,7 @@ function ApartmentForm({
             </div>
 
             {/* GRID: DISTRICT & CITY */}
-            <div className="grid grid-cols-2 gap-4">
-              {/* <div className="grid gap-2">
-                <Label htmlFor="district">District *</Label>
-                <Input
-                  id="district"
-                  placeholder="District"
-                  {...register("district")}
-                />
-                {errors.district && (
-                  <p className="text-sm text-destructive">
-                    {errors.district.message}
-                  </p>
-                )}
-              </div> */}
-
+            {/* <div className="grid grid-cols-2 gap-4">
               <div className="grid gap-2">
                 <Label>District *</Label>
                 <Select
@@ -403,7 +392,7 @@ function ApartmentForm({
                   </SelectContent>
                 </Select>
               </div>
-            </div>
+            </div> */}
             {/* PET ALLOWED */}
             <div className="grid gap-3">
               <Label
