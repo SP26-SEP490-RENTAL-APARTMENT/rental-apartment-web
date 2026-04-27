@@ -46,6 +46,8 @@ export const indentityApi = {
     apiConfig.privateApi.get("/identity/my-documents", { params }),
   createIdentity: (data: FormData) =>
     apiConfig.privateApi.post("/identity/documents", data),
+  uploadCCCD: (data: FormData) =>
+    apiConfig.privateApi.post("/id-recognition/upload", data),
 };
 
 export const packageApi = {
@@ -77,4 +79,17 @@ export const profileApi = {
   getProfile: () => apiConfig.privateApi.get("/User/me"),
   updateProfile: (data: UserProfileFormData) =>
     apiConfig.privateApi.put("/User/me", data),
+};
+
+export const supportTicketApi = {
+  createTicket: (data: {
+    subject: string;
+    description: string;
+    category: string;
+    priority: string;
+  }) => apiConfig.privateApi.post("/SupportTicket", data),
+  getMyTickets: (params: ParamsProp) =>
+    apiConfig.privateApi.get("/SupportTicket/my", { params }),
+  // getTicketById: (ticketId: string) =>
+  //   apiConfig.privateApi.get(`/SupportTicket/${ticketId}`),
 };

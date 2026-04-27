@@ -40,6 +40,7 @@ import MySubscription from "./pages/Landlord/MySubscription/MySubscription";
 import RequestResetPW from "./pages/Auth/RequestResetPW/RequestResetPW";
 import ResetPWPage from "./pages/Auth/ResetPWPage/ResetPWPage";
 import HomePage from "./pages/Home/Home";
+import SupportRequest from "./pages/Tenant/SupportRequest/SupportRequest";
 
 /**
  * App Component - Simplified routing setup
@@ -233,6 +234,14 @@ export default function App() {
             element={
               <ProtectedRoute requiredRoles={["tenant", "landlord"]}>
                 <WishlistPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path={ROUTES.TENANT_SUPPORT_REQUEST}
+            element={
+              <ProtectedRoute requiredRoles={["tenant", "landlord"]}>
+                <SupportRequest />
               </ProtectedRoute>
             }
           />

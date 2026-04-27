@@ -1,0 +1,45 @@
+{
+    "support": {
+        "title": "Support Tickets",
+        "description": "Manage your support requests and track resolutions",
+        "newTicket": "New Ticket",
+        "createFirstTicket": "Create Your First Ticket",
+        "noTickets": "No tickets found",
+        "noTicketsDescription": "You don't have any support tickets yet.",
+        "viewDetails": "View Details",
+        "resolutionNotes": "Resolution Notes",
+        "categories": {
+            "booking_issue": "Booking Issue",
+            "payment_problem": "Payment Problem",
+            "listing_problem": "Listing Problem",
+            "account_verification": "Account Verification",
+            "cancellation": "Cancellation",
+            "dispute": "Dispute",
+            "property_quality": "Property Quality",
+            "other": "Other"
+        },
+        "priorities": {
+            "low": "Low",
+            "medium": "Medium",
+            "high": "High",
+            "urgent": "Urgent"
+        },
+        "statuses": {
+            "open": "Open",
+            "in_progress": "In Progress",
+            "resolved": "Resolved",
+            "closed": "Closed",
+            "escalated": "Escalated"
+        },
+        "filters": {
+            "search": "Search by subject or ticket ID...",
+            "statusPlaceholder": "Filter by status",
+            "priorityPlaceholder": "Filter by priority",
+            "categoryPlaceholder": "Filter by category",
+            "reset": "Reset Filters",
+            "allStatus": "All Status",
+            "allPriority": "All Priority",
+            "allCategory": "All Category"
+        }
+    }
+}

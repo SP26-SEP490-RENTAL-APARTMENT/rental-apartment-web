@@ -1,12 +1,13 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { profileApi } from "@/services/privateApi/tenantApi";
+import { profileApi, indentityApi } from "@/services/privateApi/tenantApi";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import type { UserProfileFormData } from "@/schemas/userProfileSchema";
 import { toast } from "sonner";
 import ProfileDialog from "./components/ProfileDialog";
+import CCCDUploadDialog from "./components/CCCDUploadDialog";
 import type { UserProfile } from "@/types/user";
 import { useTranslation } from "react-i18next";
 import {
@@ -19,6 +20,7 @@ import {
   Edit2,
   CheckCircle2,
   AlertCircle,
+  Upload,
 } from "lucide-react";
 
 function Profile() {
@@ -26,6 +28,8 @@ function Profile() {
   const { t: commontT } = useTranslation("common");
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isCCCDDialogOpen, setIsCCCDDialogOpen] = useState(false);
+  const [isUploadingCCCD, setIsUploadingCCCD] = useState(false);
 
   const fetchProfile = async () => {
     try {
@@ -49,6 +53,31 @@ function Profile() {
     } catch (error: any) {
       console.log(error);
       toast.error(commontT("toast.profileUpdateFailed"));
+    }
+  };
+
+  const handleUploadCCCD = async (file: File) => {
+    setIsUploadingCCCD(true);
+    try {
+      const formData = new FormData();
+      formData.append("Image", file);
+
+      await indentityApi.uploadCCCD(formData);
+      toast.success(
+        commontT("toast.cccdUploadSuccess") || "CCCD uploaded successfully!",
+      );
+      setIsCCCDDialogOpen(false);
+      await fetchProfile();
+    } catch (error: any) {
+      console.log(error);
+      const errorMessage =
+        error?.response?.data?.message ||
+        commontT("toast.cccdUploadFailed") ||
+        "Upload failed";
+      toast.error(errorMessage);
+      throw new Error(errorMessage);
+    } finally {
+      setIsUploadingCCCD(false);
     }
   };
 
@@ -218,7 +247,15 @@ function Profile() {
           </Card>
 
           {/* Action Button */}
-          <div className="flex justify-end">
+          <div className="flex justify-end gap-2">
+            <Button
+              onClick={() => setIsCCCDDialogOpen(true)}
+              className="bg-linear-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-semibold gap-2 px-6"
+            >
+              <Upload className="h-4 w-4" />
+              {commontT("button.uploadCCCD")}
+            </Button>
+
             <Button
               onClick={() => setIsDialogOpen(true)}
               className="bg-linear-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold gap-2 px-6"
@@ -239,6 +276,14 @@ function Profile() {
           profileData={profile}
         />
       )}
+
+      {/* CCCD Upload Dialog */}
+      <CCCDUploadDialog
+        open={isCCCDDialogOpen}
+        onClose={() => setIsCCCDDialogOpen(false)}
+        onUpload={handleUploadCCCD}
+        isLoading={isUploadingCCCD}
+      />
     </div>
   );
 }

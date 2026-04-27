@@ -1,0 +1,45 @@
+{
+    "support": {
+        "title": "Yêu cầu Hỗ trợ",
+        "description": "Quản lý các yêu cầu hỗ trợ của bạn và theo dõi giải pháp",
+        "newTicket": "Tạo Yêu cầu Mới",
+        "createFirstTicket": "Tạo Yêu cầu Đầu tiên của Bạn",
+        "noTickets": "Không tìm thấy yêu cầu nào",
+        "noTicketsDescription": "Bạn chưa có yêu cầu hỗ trợ nào.",
+        "viewDetails": "Xem Chi tiết",
+        "resolutionNotes": "Ghi chú Giải pháp",
+        "categories": {
+            "booking_issue": "Vấn đề Đặt phòng",
+            "payment_problem": "Vấn đề Thanh toán",
+            "listing_problem": "Vấn đề Danh sách",
+            "account_verification": "Xác minh Tài khoản",
+            "cancellation": "Hủy bỏ",
+            "dispute": "Tranh chấp",
+            "property_quality": "Chất lượng Tài sản",
+            "other": "Khác"
+        },
+        "priorities": {
+            "low": "Thấp",
+            "medium": "Trung bình",
+            "high": "Cao",
+            "urgent": "Khẩn cấp"
+        },
+        "statuses": {
+            "open": "Mở",
+            "in_progress": "Đang xử lý",
+            "resolved": "Đã giải quyết",
+            "closed": "Đóng",
+            "escalated": "Được Nâng cao"
+        },
+        "filters": {
+            "search": "Tìm kiếm theo chủ đề hoặc ID yêu cầu...",
+            "statusPlaceholder": "Lọc theo trạng thái",
+            "priorityPlaceholder": "Lọc theo độ ưu tiên",
+            "categoryPlaceholder": "Lọc theo danh mục",
+            "reset": "Đặt lại Bộ lọc",
+            "allStatus": "Tất cả Trạng thái",
+            "allPriority": "Tất cả Độ ưu tiên",
+            "allCategory": "Tất cả Danh mục"
+        }
+    }
+}

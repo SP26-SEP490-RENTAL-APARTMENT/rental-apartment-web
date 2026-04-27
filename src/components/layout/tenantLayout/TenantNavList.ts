@@ -1,5 +1,5 @@
 import { useAuthStore } from "@/store/authStore";
-import { Album, BookUser, History } from "lucide-react";
+import { Album, BookUser, History, Wrench } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 export const useTenantNavList = () => {
@@ -13,6 +13,11 @@ export const useTenantNavList = () => {
       title: t("profile.profile"),
       url: "/tenant/profile",
       icon: BookUser,
+    },
+    {
+      title: t("support.label"),
+      url: "/tenant/support-request",
+      icon: Wrench,
     },
     // {
     //   title: t("identityVerification.label"),

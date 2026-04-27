@@ -98,5 +98,21 @@
     "collection": {
         "label": "Bô sưu tập",
         "collectionUnit": "bộ sưu tập"
+    },
+    "CCCD": {
+        "uploadFrontFace": "Tải lên mặt trước của CCCD/CMND"
+    },
+    "support": {
+        "label": "Yêu cầu hỗ trợ",
+        "description": "Submit and manage your support requests",
+        "newRequest": "New Support Request",
+        "subject": "Subject",
+        "message": "Message",
+        "submit": "Submit Request",
+        "status": "Status",
+        "open": "Open",
+        "inProgress": "In Progress",
+        "closed": "Closed",
+        "noRequests": "No support requests found"
     }
 }

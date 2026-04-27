@@ -21,7 +21,10 @@
         "becomeLandlord": "Become a landlord",
         "becomeTenant": "Become a tenant",
         "landlordDashboard": "Landlord dashboard",
-        "adminDashboard": "Admin dashboard"
+        "adminDashboard": "Admin dashboard",
+        "uploadCCCD": "Upload CCCD",
+        "upload": "Upload",
+        "newTicket": "New Ticket"
     },
     "description": {
         "apartment": "Find your perfect stay with our wide selection of apartments. Whether you're looking for a cozy studio or a spacious family home, we have options to suit every need and budget.",
@@ -61,6 +64,15 @@
         "loginSuccess": "Logged in successfully",
         "loginFailed": "Failed to log in",
         "deleteCollectionSuccess": "Deleted collection successfully",
-        "deleteCollectionFailed": "Failed to delete collection"
+        "deleteCollectionFailed": "Failed to delete collection",
+        "registrationSuccess": "Registration successful",
+        "registrationFailed": "Failed to register",
+        "cccdUploadSuccess": "Uploaded CCCD successfully",
+        "cccdUploadFailed": "Failed to upload CCCD"
+    },
+    "label": {
+        "selectFile": "Click to select or drag image",
+        "supportedFormats": "Supported formats JPG, PNG (Max 10MB)",
+        "uploading": "Uploading..."
     }
 }

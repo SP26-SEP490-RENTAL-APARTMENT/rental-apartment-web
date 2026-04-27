@@ -98,5 +98,21 @@
     "collection": {
         "label": "My Collections",
         "collectionUnit": "collections"
+    },
+    "CCCD": {
+        "uploadFrontFace": "Upload front face of your CCCD"
+    },
+    "support": {
+        "label": "Support Requests",
+        "description": "Submit and manage your support requests",
+        "newRequest": "New Support Request",
+        "subject": "Subject",
+        "message": "Message",
+        "submit": "Submit Request",
+        "status": "Status",
+        "open": "Open",
+        "inProgress": "In Progress",
+        "closed": "Closed",
+        "noRequests": "No support requests found"
     }
 }
