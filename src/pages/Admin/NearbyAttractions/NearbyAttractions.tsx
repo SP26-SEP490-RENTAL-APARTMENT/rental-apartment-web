@@ -4,35 +4,49 @@ import type { NearbyAttraction } from "@/types/nearbyAttraction";
 import { useCallback, useEffect, useState } from "react";
 import { NearbyColumns } from "./components/NearbyColumns";
 import { toast } from "sonner";
-import type { CreateNearbyAttractionFormData, UpdateNearbyAttractionFormData } from "@/schemas/nearbyAttractionSchema";
+import type {
+  CreateNearbyAttractionFormData,
+  UpdateNearbyAttractionFormData,
+} from "@/schemas/nearbyAttractionSchema";
 import { Button } from "@/components/ui/button";
 import { Plus, MapPin } from "lucide-react";
 import NearbyAttractionForm from "./components/NearbyAttractionForm";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import type { Filter } from "@/components/ui/managementFilter/ManagementFilter";
+import ManagementFilter from "@/components/ui/managementFilter/ManagementFilter";
+import { nearbySortByList, nearbyTypeList } from "@/constants/sortByList";
+import NearbyFilter from "./components/NearbyFilter";
 
 function NearbyAttractions() {
-  const [nearbyAttractions, setNearbyAttractions] = useState<NearbyAttraction[]>([]);
+  const [nearbyAttractions, setNearbyAttractions] = useState<
+    NearbyAttraction[]
+  >([]);
   const [page, setPage] = useState(1);
-  const [pageSize] = useState(8);
-  const [sortBy] = useState<string>("attractionId");
-  const [sortOrder] = useState<"asc" | "desc">("asc");
-  const [search] = useState<string>("");
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(false);
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const [selectedAttraction, setSelectedAttraction] = useState<NearbyAttraction | null>(null);
+  const [selectedAttraction, setSelectedAttraction] =
+    useState<NearbyAttraction | null>(null);
   const [formMode, setFormMode] = useState<"create" | "update">("create");
+  const [filters, setFilters] = useState<Filter>({
+    sortBy: nearbySortByList[0]?.value || "",
+    sortOrder: "asc",
+    search: "",
+  });
+  const [type, setType] = useState("all");
 
   const fetchNearby = useCallback(async () => {
     setLoading(true);
     try {
-      const response = await nearbyAttractionManagementApi.getAllNearbyAttractions({
-        page,
-        pageSize,
-        search,
-        sortBy,
-        sortOrder,
-      });
+      const response =
+        await nearbyAttractionManagementApi.getAllNearbyAttractions({
+          page,
+          pageSize: 10,
+          search: filters.search,
+          sortBy: filters.sortBy,
+          sortOrder: filters.sortOrder,
+          type: type === "all" ? "" : type,
+        });
       setNearbyAttractions(response.data.items);
       setTotal(response.data.totalCount);
     } catch (error) {
@@ -40,7 +54,7 @@ function NearbyAttractions() {
     } finally {
       setLoading(false);
     }
-  }, [page, pageSize, search, sortBy, sortOrder]);
+  }, [page, filters, type]);
 
   const handleDeleteNearby = async (attractionId: string) => {
     try {
@@ -112,6 +126,15 @@ function NearbyAttractions() {
     setSelectedAttraction(null);
   };
 
+  const handleResetFilters = () => {
+    setFilters({
+      search: "",
+      sortBy: nearbySortByList[0]?.value || "",
+      sortOrder: "asc",
+    });
+    setType("all");
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
@@ -123,7 +146,9 @@ function NearbyAttractions() {
                 <MapPin className="h-6 w-6 text-rose-600" />
               </div>
               <div>
-                <h1 className="text-3xl font-bold text-gray-900">Nearby Attractions</h1>
+                <h1 className="text-3xl font-bold text-gray-900">
+                  Nearby Attractions
+                </h1>
                 <p className="text-gray-600 mt-1">
                   Manage attractions near properties
                 </p>
@@ -131,7 +156,7 @@ function NearbyAttractions() {
             </div>
             <Button
               onClick={triggerCreateNearby}
-              className="bg-gradient-to-r from-rose-600 to-rose-700 hover:from-rose-700 hover:to-rose-800 text-white font-semibold gap-2"
+              className="bg-linear-to-r from-rose-600 to-rose-700 hover:from-rose-700 hover:to-rose-800 text-white font-semibold gap-2"
             >
               <Plus className="h-4 w-4" />
               Add Attraction
@@ -141,18 +166,33 @@ function NearbyAttractions() {
       </div>
 
       {/* Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+        <Card className="border-0 shadow-sm">
+          <CardContent className="flex gap-3 items-center">
+            <ManagementFilter
+              filter={filters}
+              setFilter={setFilters}
+              sortByList={nearbySortByList}
+            />
+            <NearbyFilter
+              setType={setType}
+              type={type}
+              typeList={nearbyTypeList}
+            />
+            <Button variant="outline" onClick={handleResetFilters}>
+              Reset Filters
+            </Button>
+          </CardContent>
+        </Card>
         <Card className="border-0 shadow-sm">
           <CardHeader className="border-b border-gray-100">
-            <CardTitle>
-              Attractions ({total})
-            </CardTitle>
+            <CardTitle>Attractions ({total})</CardTitle>
           </CardHeader>
           <CardContent className="pt-6">
             <DataTable
               columns={NearbyColumns(handleDeleteNearby, triggerEditNearby)}
               data={nearbyAttractions}
-              limit={pageSize}
+              limit={10}
               loading={loading}
               page={page}
               total={total}
@@ -175,4 +215,3 @@ function NearbyAttractions() {
 }
 
 export default NearbyAttractions;
-    

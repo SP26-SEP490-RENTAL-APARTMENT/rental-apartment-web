@@ -1,4 +1,4 @@
-export interface ParamsProp extends DateParamsProps {
+export interface ParamsProp extends FiltersParamsProps {
   page: number;
   pageSize: number;
   sortBy?: string;
@@ -6,7 +6,13 @@ export interface ParamsProp extends DateParamsProps {
   search?: string;
 }
 
-export interface DateParamsProps {
+export interface FiltersParamsProps {
   fromDate?: Date;
   toDate?: Date;
+  role?: string;
+  status?: string;
+  priority?: string;
+  category?: string;
+  inspectionStatus?: string;
+  type?: string;
 }

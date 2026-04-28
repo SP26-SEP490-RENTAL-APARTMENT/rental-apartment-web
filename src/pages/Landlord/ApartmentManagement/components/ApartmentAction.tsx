@@ -218,7 +218,7 @@ function ApartmentAction({
                         htmlFor={amenity.amenityId}
                         className="text-sm cursor-pointer"
                       >
-                        {amenity.nameVi || amenity.nameEn}
+                        {amenity.nameEn}
                       </label>
                     </div>
                   ))}

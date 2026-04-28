@@ -8,22 +8,23 @@ import {
 } from "@/components/ui/select";
 
 interface Props {
-  role: string;
-  setRole: (role: string) => void;
-  roleList: { label: string; value: string }[];
+  type: string;
+  setType: (type: string) => void;
+  typeList: { label: string; value: string }[];
 }
-function UserFilter({ role, setRole, roleList }: Props) {
+
+function NearbyFilter({ type, setType, typeList }: Props) {
   return (
     <div>
-      <Select value={role} onValueChange={(value) => setRole(value)}>
+      <Select value={type} onValueChange={(value) => setType(value)}>
         <SelectTrigger className="w-45">
-          <SelectValue placeholder="Select role" />
+          <SelectValue placeholder="Select type" />
         </SelectTrigger>
 
         <SelectContent>
           <SelectGroup>
-            <SelectItem value="all">All Roles</SelectItem>
-            {roleList.map((item) => (
+            <SelectItem value="all">All</SelectItem>
+            {typeList.map((item) => (
               <SelectItem key={item.value} value={item.value}>
                 {item.label}
               </SelectItem>
@@ -35,4 +36,4 @@ function UserFilter({ role, setRole, roleList }: Props) {
   );
 }
 
-export default UserFilter;
+export default NearbyFilter;
