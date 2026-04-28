@@ -431,7 +431,7 @@ function ApartmentForm({
                 <div>
                   <Label htmlFor="photos">Upload Photos *</Label>
                   <p className="text-xs text-muted-foreground mt-1 mb-2">
-                    Chọn từ 1 đến 10 ảnh
+                    Max 10 photos
                   </p>
                   <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:border-gray-400 transition cursor-pointer">
                     <Input
@@ -444,11 +444,9 @@ function ApartmentForm({
                     />
                     <label htmlFor="photos" className="cursor-pointer block">
                       <div className="text-sm text-gray-600">
-                        <p className="font-medium">
-                          Kéo thả ảnh vào đây hoặc nhấp để chọn
-                        </p>
+                        
                         <p className="text-xs mt-1">
-                          PNG, JPG, GIF (tối đa 10 ảnh)
+                          PNG, JPG, GIF
                         </p>
                       </div>
                     </label>

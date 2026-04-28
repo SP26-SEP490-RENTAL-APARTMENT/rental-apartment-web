@@ -1,20 +1,16 @@
 import { Menu, LogOut, Users, Settings, CircleUser } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../../ui/button";
-import { useState } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import i18next from "i18next";
 import { useTranslation } from "react-i18next";
 import { useAuthStore } from "@/store/authStore";
 import { authApi } from "@/services/publicApi/authApi";
@@ -34,10 +30,6 @@ function Header() {
     localStorage.removeItem("auth-storage");
     window.location.href = "/";
   };
-
-  const [language, setLanguage] = useState(() => {
-    return localStorage.getItem("i18nextLng") || "en";
-  });
 
   const isLandlord = user?.role === "landlord" ? "tenant" : "landlord";
 
@@ -80,7 +72,7 @@ function Header() {
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-6">
             {/* Language Selector */}
-            <DropdownMenu>
+            {/* <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="sm">
                   {language === "en" ? "EN" : "VI"}
@@ -105,7 +97,7 @@ function Header() {
                   </DropdownMenuRadioItem>
                 </DropdownMenuRadioGroup>
               </DropdownMenuContent>
-            </DropdownMenu>
+            </DropdownMenu> */}
 
             {/* Auth Actions */}
             {isAuthenticated ? (
@@ -208,7 +200,7 @@ function Header() {
             </SheetTrigger>
             <SheetContent side="right" className="w-72">
               <div className="flex flex-col gap-4 mt-6">
-                <DropdownMenu>
+                {/* <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="outline" className="w-full">
                       {language === "en" ? "English" : "Tiếng Việt"}
@@ -233,7 +225,7 @@ function Header() {
                       </DropdownMenuRadioItem>
                     </DropdownMenuRadioGroup>
                   </DropdownMenuContent>
-                </DropdownMenu>
+                </DropdownMenu> */}
 
                 {isAuthenticated ? (
                   <>

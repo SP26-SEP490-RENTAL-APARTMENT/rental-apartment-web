@@ -90,6 +90,8 @@ export const supportTicketApi = {
   }) => apiConfig.privateApi.post("/SupportTicket", data),
   getMyTickets: (params: ParamsProp) =>
     apiConfig.privateApi.get("/SupportTicket/my", { params }),
+  getTicketDetail: (ticketId: string) =>
+    apiConfig.privateApi.get(`/SupportTicket/${ticketId}`),
   // getTicketById: (ticketId: string) =>
   //   apiConfig.privateApi.get(`/SupportTicket/${ticketId}`),
 };

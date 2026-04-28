@@ -7,6 +7,8 @@ import {
 } from "./components/SupportTicketFilters";
 import { SupportTicketCard } from "./components/SupportTicketCard";
 import { SupportTicketSkeleton } from "./components/SupportTicketSkeleton";
+import { CreateTicketDialog } from "./components/CreateTicketDialog";
+import { TicketDetailDialog } from "./components/TicketDetailDialog";
 import { Button } from "@/components/ui/button";
 import {
   Pagination,
@@ -22,11 +24,14 @@ import { toast } from "sonner";
 
 function SupportRequest() {
   const { t } = useTranslation("support");
-  const {t: commonT} = useTranslation("common");
+  const { t: commonT } = useTranslation("common");
   const [tickets, setTickets] = useState<SupportTicket[]>([]);
+  const [ticketDetail, setTicketDetail] = useState<SupportTicket | null>(null);
+  const [detailDialogOpen, setDetailDialogOpen] = useState(false);
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [createDialogOpen, setCreateDialogOpen] = useState(false);
   const [filters, setFilters] = useState<FilterState>({
     status: "all",
     priority: "all",
@@ -85,13 +90,17 @@ function SupportRequest() {
   };
 
   const handleViewTicket = (ticket: SupportTicket) => {
-    // TODO: Navigate to ticket detail page or open detail modal
-    console.log("View ticket:", ticket);
+    setDetailDialogOpen(true);
+    setTicketDetail(ticket);
   };
 
   const handleCreateTicket = () => {
-    // TODO: Navigate to create ticket page or open modal
-    console.log("Create new ticket");
+    setCreateDialogOpen(true);
+  };
+
+  const handleCreateTicketSuccess = () => {
+    setPage(1);
+    fetchMyTickets();
   };
 
   return (
@@ -102,7 +111,9 @@ function SupportRequest() {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-3xl font-bold">{t("support.title")}</h1>
-              <p className="text-blue-100 text-sm mt-2">{t("support.description")}</p>
+              <p className="text-blue-100 text-sm mt-2">
+                {t("support.description")}
+              </p>
             </div>
             <Button
               onClick={handleCreateTicket}
@@ -227,6 +238,20 @@ function SupportRequest() {
           )}
         </div>
       </div>
+
+      {/* Create Ticket Dialog */}
+      <CreateTicketDialog
+        open={createDialogOpen}
+        onOpenChange={setCreateDialogOpen}
+        onSuccess={handleCreateTicketSuccess}
+      />
+
+      {/* Ticket Detail Dialog */}
+      <TicketDetailDialog
+        open={detailDialogOpen}
+        onOpenChange={setDetailDialogOpen}
+        ticket={ticketDetail}
+      />
     </div>
   );
 }

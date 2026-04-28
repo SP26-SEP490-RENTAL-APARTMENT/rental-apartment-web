@@ -24,7 +24,10 @@
         "adminDashboard": "Admin dashboard",
         "uploadCCCD": "Upload CCCD",
         "upload": "Upload",
-        "newTicket": "New Ticket"
+        "newTicket": "New Ticket",
+        "create": "Create",
+        "creating": "Creating...",
+        "close": "Close"
     },
     "description": {
         "apartment": "Find your perfect stay with our wide selection of apartments. Whether you're looking for a cozy studio or a spacious family home, we have options to suit every need and budget.",

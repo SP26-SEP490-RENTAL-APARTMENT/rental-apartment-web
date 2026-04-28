@@ -41,12 +41,18 @@ import RequestResetPW from "./pages/Auth/RequestResetPW/RequestResetPW";
 import ResetPWPage from "./pages/Auth/ResetPWPage/ResetPWPage";
 import HomePage from "./pages/Home/Home";
 import SupportRequest from "./pages/Tenant/SupportRequest/SupportRequest";
+import { useEffect } from "react";
+import i18next from "i18next";
 
 /**
  * App Component - Simplified routing setup
  * All routes defined inline here for clarity
  */
 export default function App() {
+  useEffect(() => {
+    localStorage.removeItem("i18nextLng");
+    i18next.changeLanguage("en");
+  }, []);
   return (
     <BrowserRouter>
       <Routes>

@@ -3,7 +3,11 @@
         "title": "Support Tickets",
         "description": "Manage your support requests and track resolutions",
         "newTicket": "New Ticket",
+        "createTicket": "Create Support Ticket",
+        "createTicketDescription": "Fill in the form below to create a new support ticket. We'll get back to you as soon as possible.",
         "createFirstTicket": "Create Your First Ticket",
+        "ticketCreatedSuccess": "Ticket created successfully! We'll review it shortly.",
+        "createTicketError": "Failed to create ticket. Please try again.",
         "noTickets": "No tickets found",
         "noTicketsDescription": "You don't have any support tickets yet.",
         "viewDetails": "View Details",
@@ -40,6 +44,33 @@
             "allStatus": "All Status",
             "allPriority": "All Priority",
             "allCategory": "All Category"
+        },
+        "fields": {
+            "subject": "Subject",
+            "description": "Description",
+            "category": "Category",
+            "priority": "Priority"
+        },
+        "placeholders": {
+            "subject": "Enter a brief subject (minimum 5 characters)",
+            "description": "Describe your issue in detail (minimum 10 characters)",
+            "category": "Select a category",
+            "priority": "Select priority level"
+        },
+        "validation": {
+            "subjectRequired": "Subject is required",
+            "subjectMinLength": "Subject must be at least 5 characters",
+            "descriptionRequired": "Description is required",
+            "descriptionMinLength": "Description must be at least 10 characters",
+            "categoryRequired": "Please select a category",
+            "priorityRequired": "Please select a priority level"
+        },
+        "detail": {
+            "createdAt": "Created At",
+            "updatedAt": "Last Updated",
+            "resolutionNotes": "Resolution Notes",
+            "noResolutionNotes": "No resolution notes available",
+            "resolvedAt": "Resolved At"
         }
     }
 }

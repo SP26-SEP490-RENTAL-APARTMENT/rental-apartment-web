@@ -24,7 +24,10 @@
         "adminDashboard": "Bảng điều khiển admin",
         "uploadCCCD": "Tải lên CCCD/CMND",
         "upload": "Tải lên",
-        "newTicket": "Tạo yêu cầu"
+        "newTicket": "Tạo yêu cầu",
+        "create": "Tạo",
+        "creating": "Đang tạo...",
+        "close": "Đóng"
     },
     "description": {
         "apartment": "Tìm nơi ở hoàn hảo của bạn với sự lựa chọn rộng rãi các căn hộ. Cho dù bạn đang tìm kiếm một studio ấm cúng hay một ngôi nhà gia đình rộng rãi, chúng tôi có các lựa chọn phù hợp với mọi nhu cầu và ngân sách.",

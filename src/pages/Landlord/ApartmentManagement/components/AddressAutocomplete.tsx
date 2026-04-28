@@ -27,17 +27,15 @@ type Props = {
 };
 
 export default function AddressAutocomplete({ onSelect, value }: Props) {
-  const [inputValue, setInputValue] = useState(value || "");
+  const [inputValue, setInputValue] = useState<string>("");
   const [results, setResults] = useState<PhotonFeature[]>([]);
   const [loading, setLoading] = useState(false);
   const [showResults, setShowResults] = useState(false);
 
-  // Update inputValue when value prop changes (for edit mode)
+  // Sync inputValue with value prop when it changes from parent
   useEffect(() => {
-    if (value && value !== inputValue) {
-      setInputValue(value);
-    }
-  }, [value, inputValue]);
+    setInputValue(value || "");
+  }, [value]);
 
   const search = async (searchQuery: string) => {
     if (searchQuery.length < 3) {
@@ -65,7 +63,7 @@ export default function AddressAutocomplete({ onSelect, value }: Props) {
     }
   };
 
-  // Debounce search
+  // Debounce search based on inputValue changes (when user types)
   useEffect(() => {
     const timeout = setTimeout(() => {
       if (inputValue.length >= 3) {
@@ -102,6 +100,13 @@ export default function AddressAutocomplete({ onSelect, value }: Props) {
     };
   };
 
+  const handleResultClick = (data: ReturnType<typeof parseAddress>) => {
+    setInputValue(data.address);
+    setResults([]);
+    setShowResults(false);
+    onSelect(data);
+  };
+
   return (
     <div className="relative">
       <input
@@ -109,15 +114,17 @@ export default function AddressAutocomplete({ onSelect, value }: Props) {
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
         onFocus={() => results.length > 0 && setShowResults(true)}
-        onBlur={() => setTimeout(() => setShowResults(false), 200)}
-        placeholder="Nhập địa chỉ..."
+        onBlur={() => {
+          setShowResults(false);
+        }}
+        placeholder="Enter your address..."
         className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
       />
 
       {/* Loading indicator */}
       {loading && (
         <div className="absolute right-3 top-1/2 -translate-y-1/2">
-          <div className="text-xs text-gray-500">Đang tìm...</div>
+          <div className="text-xs text-gray-500">Searching...</div>
         </div>
       )}
 
@@ -130,11 +137,9 @@ export default function AddressAutocomplete({ onSelect, value }: Props) {
               <div
                 key={index}
                 className="px-3 py-2 hover:bg-blue-50 cursor-pointer border-b last:border-b-0 transition-colors"
-                onClick={() => {
-                  onSelect(data);
-                  setInputValue(data.address);
-                  setResults([]);
-                  setShowResults(false);
+                onMouseDown={(e) => {
+                  e.preventDefault();
+                  handleResultClick(parseAddress(item));
                 }}
               >
                 <div className="text-sm font-medium text-gray-900">
@@ -156,7 +161,7 @@ export default function AddressAutocomplete({ onSelect, value }: Props) {
         results.length === 0 && (
           <div className="absolute z-50 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg p-3">
             <p className="text-sm text-gray-500 text-center">
-              Không tìm thấy kết quả
+              No data found
             </p>
           </div>
         )}
