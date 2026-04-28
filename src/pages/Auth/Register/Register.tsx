@@ -52,10 +52,12 @@ function Register() {
         ...registerData,
         phone: String(registerData.phone),
       });
-      toast.success('ok');
-      navigate(ROUTES.LOGIN)
+      toast.success(commonT("toast.registrationSuccess"));
+      navigate(ROUTES.LOGIN);
     } catch (error: any) {
-      toast.error(error.response?.data?.message || 'no');
+      toast.error(
+        error.response?.data?.message || commonT("toast.registrationFailed"),
+      );
     }
   };
 

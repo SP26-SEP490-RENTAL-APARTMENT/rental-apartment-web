@@ -24,9 +24,10 @@ import {
 } from "@/schemas/nearbyAttractionSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import type { NearbyAttraction } from "@/types/nearbyAttraction";
+import AddressAutocomplete from "@/pages/Landlord/ApartmentManagement/components/AddressAutocomplete";
 
 export interface NearbyAttractionFormProps {
   isOpen: boolean;
@@ -56,10 +57,16 @@ function NearbyAttractionForm({
     handleSubmit,
     reset,
     control,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm<CreateNearbyAttractionFormData | UpdateNearbyAttractionFormData>({
     resolver: zodResolver(schema),
     mode: "onTouched",
+  });
+
+  const currentAddress = useWatch({
+    control,
+    name: "address",
   });
 
   useEffect(() => {
@@ -196,11 +203,14 @@ function NearbyAttractionForm({
 
             <div className="grid gap-2">
               <Label htmlFor="address">Address *</Label>
-              <Input
-                id="address"
-                type="text"
-                placeholder="Full address"
-                {...register("address")}
+              <AddressAutocomplete
+                value={currentAddress}
+                onSelect={(data) => {
+                  setValue("address", data.address);
+                  setValue("city", data.city);
+                  setValue("latitude", data.lat);
+                  setValue("longitude", data.lng);
+                }}
               />
               {errors.address && (
                 <p className="text-sm text-destructive">
@@ -209,7 +219,7 @@ function NearbyAttractionForm({
               )}
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            {/* <div className="grid grid-cols-2 gap-4">
               <div className="grid gap-2">
                 <Label htmlFor="latitude">Latitude *</Label>
                 <Input
@@ -241,7 +251,7 @@ function NearbyAttractionForm({
                   </p>
                 )}
               </div>
-            </div>
+            </div> */}
           </div>
 
           <DialogFooter>

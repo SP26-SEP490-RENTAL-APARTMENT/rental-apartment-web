@@ -1,6 +1,18 @@
 import type { Apartment } from "@/types/apartment";
 import type { ColumnDef } from "@tanstack/react-table";
 import ApartmentAction from "./ApartmentAction";
+import { Badge } from "@/components/ui/badge";
+
+const getStatusBadge = (status?: string | null) => {
+  switch (status) {
+    case "posted":
+      return <Badge className="bg-blue-500 text-white">Posted</Badge>;
+    case "pending_review":
+      return <Badge className="bg-gray-500 text-white">Pending review</Badge>;
+    default:
+      return <Badge variant="secondary">Draft</Badge>;
+  }
+};
 
 export const ApartmentColumns = (
   onDelete: (id: string) => void,
@@ -27,7 +39,7 @@ export const ApartmentColumns = (
     header: "Status",
     cell: ({ row }) => {
       const status = row.original.status;
-      return status.charAt(0).toUpperCase() + status.slice(1);
+      return getStatusBadge(status);
     },
   },
   {

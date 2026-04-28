@@ -29,7 +29,6 @@ import RoomManagement from "./pages/Landlord/RoomManagement/RoomManagement";
 import BookingConfirm from "./pages/Tenant/Bookings/Confirm/BookingConfirm";
 import Collections from "./pages/Tenant/Collections/Collections";
 import DocumentsManagement from "./pages/Admin/DocumentsManagement/DocumentsManagement";
-import CollectionLayout from "./components/layout/collectionLayout/CollectionLayout";
 import Identity from "./pages/Tenant/Identity/Identity";
 import WishlistPage from "./pages/Tenant/Wishlist/WishlistPage";
 import ApproveListings from "./pages/Admin/ApproveListings/ApproveListings";
@@ -41,12 +40,19 @@ import MySubscription from "./pages/Landlord/MySubscription/MySubscription";
 import RequestResetPW from "./pages/Auth/RequestResetPW/RequestResetPW";
 import ResetPWPage from "./pages/Auth/ResetPWPage/ResetPWPage";
 import HomePage from "./pages/Home/Home";
+import SupportRequest from "./pages/Tenant/SupportRequest/SupportRequest";
+import { useEffect } from "react";
+import i18next from "i18next";
 
 /**
  * App Component - Simplified routing setup
  * All routes defined inline here for clarity
  */
 export default function App() {
+  useEffect(() => {
+    localStorage.removeItem("i18nextLng");
+    i18next.changeLanguage("en");
+  }, []);
   return (
     <BrowserRouter>
       <Routes>
@@ -58,10 +64,7 @@ export default function App() {
             path={ROUTES.REQUEST_RESET_PASSWORD}
             element={<RequestResetPW />}
           />
-          <Route
-            path={ROUTES.RESET_PASSWORD}
-            element={<ResetPWPage />}
-          />
+          <Route path={ROUTES.RESET_PASSWORD} element={<ResetPWPage />} />
         </Route>
 
         {/* ========== Public Routes ========== */}
@@ -224,25 +227,30 @@ export default function App() {
               </ProtectedRoute>
             }
           />
-
-          <Route element={<CollectionLayout />}>
-            <Route
-              path={ROUTES.TENANT_COLLECTIONS}
-              element={
-                <ProtectedRoute requiredRoles={["tenant", "landlord"]}>
-                  <Collections />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path={ROUTES.TENANT_WISHLIST}
-              element={
-                <ProtectedRoute requiredRoles={["tenant", "landlord"]}>
-                  <WishlistPage />
-                </ProtectedRoute>
-              }
-            />
-          </Route>
+          <Route
+            path={ROUTES.TENANT_COLLECTIONS}
+            element={
+              <ProtectedRoute requiredRoles={["tenant", "landlord"]}>
+                <Collections />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path={ROUTES.TENANT_WISHLIST}
+            element={
+              <ProtectedRoute requiredRoles={["tenant", "landlord"]}>
+                <WishlistPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path={ROUTES.TENANT_SUPPORT_REQUEST}
+            element={
+              <ProtectedRoute requiredRoles={["tenant", "landlord"]}>
+                <SupportRequest />
+              </ProtectedRoute>
+            }
+          />
         </Route>
         <Route
           path={ROUTES.TENANT_FINISH_PAYMENT}

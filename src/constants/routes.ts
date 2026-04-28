@@ -50,6 +50,7 @@ export const TENANT_ROUTES = {
   WISHLIST: "/tenant/wishlist/collections/:collectionId/items",
   IDENTITY: "/tenant/identity",
   FINISH_PAYMENT: "/payment/success",
+  SUPPORT_REQUEST: "/tenant/support-request",
 } as const;
 
 // Error Routes
@@ -99,6 +100,7 @@ export const ROUTES = {
   TENANT_WISHLIST: TENANT_ROUTES.WISHLIST,
   TENANT_IDENTITY: TENANT_ROUTES.IDENTITY,
   TENANT_FINISH_PAYMENT: TENANT_ROUTES.FINISH_PAYMENT,
+  TENANT_SUPPORT_REQUEST: TENANT_ROUTES.SUPPORT_REQUEST,
 
   // Error
   NOT_FOUND: ERROR_ROUTES.NOT_FOUND,

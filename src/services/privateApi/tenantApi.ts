@@ -11,7 +11,20 @@ export const collectionsApi = {
     name: string;
     description: string;
   }): Promise<ApiResponse<null>> =>
-    apiConfig.privateApi.post("/tenant/collections", data),
+    apiConfig.privateApi.post("/tenant/wishlist/collections", data),
+  updateCollection: (
+    collectionId: string,
+    data: {
+      name: string;
+      description: string;
+    },
+  ): Promise<ApiResponse<null>> =>
+    apiConfig.privateApi.put(
+      `/tenant/wishlist/collections/${collectionId}`,
+      data,
+    ),
+  deleteCollection: (collectionId: string) =>
+    apiConfig.privateApi.delete(`/tenant/wishlist/collections/${collectionId}`),
   addWishlistToCollection: (data: {
     collectionId: string;
     apartmentId: string;
@@ -23,6 +36,9 @@ export const collectionsApi = {
       `/tenant/wishlist/collections/${collectionId}/items`,
       { params },
     ),
+
+  // deleteWishlistItem: (wishlistId: string) =>
+  //   apiConfig.privateApi.delete(`/tenant/wishlist/${wishlistId}`),
 };
 
 export const indentityApi = {
@@ -30,6 +46,8 @@ export const indentityApi = {
     apiConfig.privateApi.get("/identity/my-documents", { params }),
   createIdentity: (data: FormData) =>
     apiConfig.privateApi.post("/identity/documents", data),
+  uploadCCCD: (data: FormData) =>
+    apiConfig.privateApi.post("/id-recognition/upload", data),
 };
 
 export const packageApi = {
@@ -61,4 +79,19 @@ export const profileApi = {
   getProfile: () => apiConfig.privateApi.get("/User/me"),
   updateProfile: (data: UserProfileFormData) =>
     apiConfig.privateApi.put("/User/me", data),
+};
+
+export const supportTicketApi = {
+  createTicket: (data: {
+    subject: string;
+    description: string;
+    category: string;
+    priority: string;
+  }) => apiConfig.privateApi.post("/SupportTicket", data),
+  getMyTickets: (params: ParamsProp) =>
+    apiConfig.privateApi.get("/SupportTicket/my", { params }),
+  getTicketDetail: (ticketId: string) =>
+    apiConfig.privateApi.get(`/SupportTicket/${ticketId}`),
+  // getTicketById: (ticketId: string) =>
+  //   apiConfig.privateApi.get(`/SupportTicket/${ticketId}`),
 };

@@ -11,10 +11,6 @@ export const AmenityColumns = (
 
   return useMemo(
     () => [
-      {
-        accessorKey: "amenityId",
-        header: "Id",
-      },
       lang === "en"
         ? {
             accessorKey: "nameEn",

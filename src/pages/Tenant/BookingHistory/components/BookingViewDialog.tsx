@@ -10,6 +10,7 @@ import type { BookingHistory } from "@/types/bookingHistory";
 import { ReviewDialog } from "./ReviewDialog";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useGetPaymentMode, useGetStatus } from "@/lib/utils";
 
 export interface Props {
   open: boolean;
@@ -31,7 +32,7 @@ const formatDateTime = (date?: string | null) => {
 };
 
 function BookingViewDialog({ open, onClose, booking }: Props) {
-  const { t } = useTranslation("booking");
+  const { t } = useTranslation("user");
   const [showReviewDialog, setShowReviewDialog] = useState(false);
 
   const handleReviewClick = () => {
@@ -43,52 +44,85 @@ function BookingViewDialog({ open, onClose, booking }: Props) {
         <DialogContent className="max-w-2xl max-h-[90vh] overflow-hidden">
           <DialogHeader>
             <DialogTitle className="text-xl font-semibold">
-              {t("details")}
+              {t("booking.details")}
             </DialogTitle>
           </DialogHeader>
 
           <div className="space-y-6 overflow-y-auto max-h-[calc(90vh-80px)] pr-2">
             {/* Status + ID */}
             <div className="flex items-center justify-between">
-              <p className="text-sm text-muted-foreground">
-                {t("id")} {booking.bookingId}
-              </p>
               <Badge variant="default" className="capitalize">
-                {booking.status}
+                {useGetStatus(booking.status)}
               </Badge>
             </div>
 
             {/* Tenant */}
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <p className="text-sm text-muted-foreground">Name</p>
+                <p className="text-sm text-muted-foreground">
+                  {t("booking.name")}
+                </p>
                 <p className="font-medium">{booking.tenantFullName}</p>
               </div>
 
               <div>
-                <p className="text-sm text-muted-foreground">Guests</p>
-                <p className="font-medium">
-                  {booking.noOfAdults}
-                  {t("guestSeparator")}
-                  {booking.noOfInfants}
-                  {t("infantSeparator")}
-                  {booking.noOfPets}
-                  {t("petSuffix")}
+                <p className="text-sm text-muted-foreground">
+                  {t("booking.guests")}
                 </p>
+                <div className="flex flex-col">
+                  <p>
+                    {booking.noOfAdults} {t("booking.adults")}
+                  </p>
+                  {booking.noOfInfants > 0 && (
+                    <p>
+                      {booking.noOfInfants} {t("booking.infants")}
+                    </p>
+                  )}
+                  {booking.noOfPets > 0 && (
+                    <p>
+                      {booking.noOfPets} {t("booking.pets")}
+                    </p>
+                  )}
+                </div>
               </div>
             </div>
 
             {/* Dates */}
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <p className="text-sm text-muted-foreground">Check-in</p>
+                <p className="text-sm text-muted-foreground">
+                  {t("booking.checkIn")}
+                </p>
                 <p className="font-medium">{formatDate(booking.checkInDate)}</p>
               </div>
 
               <div>
-                <p className="text-sm text-muted-foreground">Check-out</p>
+                <p className="text-sm text-muted-foreground">
+                  {t("booking.checkOut")}
+                </p>
                 <p className="font-medium">
                   {formatDate(booking.checkOutDate)}
+                </p>
+              </div>
+            </div>
+
+            {/* Stay info */}
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <p className="text-sm text-muted-foreground">
+                  {t("booking.nights")}
+                </p>
+                <p className="font-medium">
+                  {booking.nights} {t("booking.nightsUnit")}
+                </p>
+              </div>
+
+              <div>
+                <p className="text-sm text-muted-foreground">
+                  {t("booking.paymentMode")}
+                </p>
+                <p className="font-medium">
+                  {useGetPaymentMode(booking.paymentMode)}
                 </p>
               </div>
             </div>
@@ -96,12 +130,12 @@ function BookingViewDialog({ open, onClose, booking }: Props) {
             {/* Actual Stay */}
             {(booking.actualCheckIn || booking.actualCheckOut) && (
               <div className="border rounded-lg p-4 space-y-3">
-                <p className="font-semibold">Actual Stay</p>
+                <p className="font-semibold">{t('booking.actualStay')}</p>
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <p className="text-sm text-muted-foreground">
-                      Actual Check-in
+                      {t('booking.actualCheckIn')}
                     </p>
                     <p className="font-medium">
                       {formatDateTime(booking.actualCheckIn)}
@@ -110,7 +144,7 @@ function BookingViewDialog({ open, onClose, booking }: Props) {
 
                   <div>
                     <p className="text-sm text-muted-foreground">
-                      Actual Check-out
+                      {t('booking.actualCheckOut')}
                     </p>
                     <p className="font-medium">
                       {formatDateTime(booking.actualCheckOut)}
@@ -120,53 +154,34 @@ function BookingViewDialog({ open, onClose, booking }: Props) {
               </div>
             )}
 
-            {/* Stay info */}
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <p className="text-sm text-muted-foreground">{t("nights")}</p>
-                <p className="font-medium">{booking.nights}</p>
-              </div>
-
-              <div>
-                <p className="text-sm text-muted-foreground">
-                  {t("paymentMode")}
-                </p>
-                <p className="font-medium capitalize">{booking.paymentMode}</p>
-              </div>
-            </div>
-
             {/* Payment */}
             <div className="border rounded-lg p-4 space-y-3">
-              <p className="font-semibold">{t("paymentSection")}</p>
+              <p className="font-semibold">{t("booking.paymentSection")}</p>
 
               <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">Package Price</span>
+                <span className="text-muted-foreground">
+                  {t("booking.packagePrice")}
+                </span>
                 <span>{formatCurrency(booking.packagePrice)}</span>
               </div>
 
               {booking.paymentMode !== "full" && (
                 <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">{t("deposit")}</span>
+                  <span className="text-muted-foreground">
+                    {t("booking.partialPayment")}
+                  </span>
                   <span>{formatCurrency(booking.depositAmount)}</span>
                 </div>
               )}
 
               <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">{t("total")}</span>
+                <span className="text-muted-foreground">
+                  {t("booking.totalPrice")}
+                </span>
                 <span className="font-semibold">
                   {formatCurrency(booking.totalPrice)}
                 </span>
               </div>
-            </div>
-
-            {/* Timeline */}
-            <div className="text-sm text-muted-foreground space-y-1">
-              <p>
-                {t("created")} {formatDate(booking.createdAt)}
-              </p>
-              <p>
-                {t("balanceDue")} {formatDate(booking.balanceDueDate)}
-              </p>
             </div>
 
             {/* {booking.actualCheckOut && ()} */}
@@ -176,7 +191,7 @@ function BookingViewDialog({ open, onClose, booking }: Props) {
                 className="text-gray-500 cursor-pointer"
                 variant="link"
               >
-                Đánh giá dịch vụ của chúng tôi
+                {t("booking.rateService")}
               </Button>
             </div>
           </div>

@@ -7,7 +7,6 @@ import {
   RollerCoaster,
   Ungroup,
   Package,
-  FileMinus,
   Hotel,
   Search,
 } from "lucide-react";
@@ -61,11 +60,11 @@ export const useAadminNavList = () => {
       url: "/admin/package-items",
       icon: Ungroup,
     },
-    {
-      title: "Documents",
-      url: "/admin/documents",
-      icon: FileMinus,
-    },
+    // {
+    //   title: "Documents",
+    //   url: "/admin/documents",
+    //   icon: FileMinus,
+    // },
     {
       title: "Approve Listings",
       url: "/admin/approve-listings",

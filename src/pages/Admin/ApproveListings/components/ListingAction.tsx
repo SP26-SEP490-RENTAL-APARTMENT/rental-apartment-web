@@ -13,7 +13,7 @@ import { CircleCheckBig, Eye, Search } from "lucide-react";
 export interface Props {
   listings: Apartment;
   onAppvrove: (apartmentId: string) => void;
-  onAssign: (apartmentId: string) => void
+  onAssign: (apartmentId: string) => void;
 }
 function ListingAction({ listings, onAppvrove, onAssign }: Props) {
   return (
@@ -41,13 +41,15 @@ function ListingAction({ listings, onAppvrove, onAssign }: Props) {
         <CircleCheckBig />
       </Button>
 
-      <Button
-      onClick={() => onAssign(listings.apartmentId)}
-        size="sm"
-        variant="outline"
-      >
-        <Search />
-      </Button>
+      {!listings.inspectionStatus && (
+        <Button
+          onClick={() => onAssign(listings.apartmentId)}
+          size="sm"
+          variant="outline"
+        >
+          <Search />
+        </Button>
+      )}
     </div>
   );
 }

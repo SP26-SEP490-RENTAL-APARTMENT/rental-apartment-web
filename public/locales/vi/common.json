@@ -21,7 +21,13 @@
         "becomeLandlord": "Trở thành chủ nhà",
         "becomeTenant": "Trở thành người thuê",
         "landlordDashboard": "Bảng điều khiển chủ nhà",
-        "adminDashboard": "Bảng điều khiển admin"
+        "adminDashboard": "Bảng điều khiển admin",
+        "uploadCCCD": "Tải lên CCCD/CMND",
+        "upload": "Tải lên",
+        "newTicket": "Tạo yêu cầu",
+        "create": "Tạo",
+        "creating": "Đang tạo...",
+        "close": "Đóng"
     },
     "description": {
         "apartment": "Tìm nơi ở hoàn hảo của bạn với sự lựa chọn rộng rãi các căn hộ. Cho dù bạn đang tìm kiếm một studio ấm cúng hay một ngôi nhà gia đình rộng rãi, chúng tôi có các lựa chọn phù hợp với mọi nhu cầu và ngân sách.",
@@ -36,7 +42,10 @@
         "resetPassword": "Đặt lại mật khẩu",
         "setNewPassword": "Đặt lại mật khẩu mới cho tài khoản của bạn",
         "availableApartments": "Các căn hộ có sẵn",
-        "noReviewYet": "Chưa có đánh giá nào"
+        "noReviewYet": "Chưa có đánh giá nào",
+        "deleteConfirm": "Xác nhận xóa",
+        "deleteConfirmation": "Bạn có chắc chắn muốn xóa không?",
+        "deleteWarning": "Hành động này không thể hoàn tác"
     },
     "slogan": {
         "primeLocation": "Vị trí tốt",
@@ -56,6 +65,17 @@
         "passwordResetSuccess": "Đặt lại mật khẩu thành công",
         "passwordResetFailed": "Không thể đặt lại mật khẩu",
         "loginSuccess": "Đăng nhập thành công",
-        "loginFailed": "Đăng nhập thất bại"
+        "loginFailed": "Đăng nhập thất bại",
+        "deleteCollectionSuccess": "Bộ sưu tập đã được xóa thành công",
+        "deleteCollectionFailed": "Không thể xóa bộ sưu tập",
+        "registrationSuccess": "Đăng ký thành công",
+        "registrationFailed": "Đăng ký thất bại",
+        "cccdUploadSuccess": "Tải lên CCCD/CMND thành công",
+        "cccdUploadFailed": "Tải lên CCCD/CMND thất bại"
+    },
+    "label": {
+        "selectFile": "Nhấp để chọn hoặc kéo thả hình ảnh",
+        "supportedFormats": "Hỗ trợ định dạng JPG, PNG (Tối đa 10MB)",
+        "uploading": "Đang tải lên..."
     }
 }

@@ -1,17 +1,67 @@
 import { TENANT_ROUTES } from "@/constants/routes";
 import type { Collection } from "@/types/collection";
-import { Heart, Star, Check, ChevronRight } from "lucide-react";
+import {
+  Heart,
+  Star,
+  Check,
+  ChevronRight,
+  MoreVertical,
+} from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { useTranslation } from "react-i18next";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { collectionsApi } from "@/services/privateApi/tenantApi";
+import { useState } from "react";
+import { toast } from "sonner";
 
 function CollectionBox({
   collection,
   isSelected = false,
+  onDelete,
+  onEdit,
 }: {
   collection: Collection;
   isSelected?: boolean;
+  onDelete?: () => void;
+  onEdit?: (collection: Collection) => void;
 }) {
   const navigate = useNavigate();
+  const { t } = useTranslation("common");
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  const handleDelete = async () => {
+    setIsDeleting(true);
+    try {
+      await collectionsApi.deleteCollection(collection.collectionId.toString());
+      toast.success(
+        t("toast.deleteCollectionSuccess") || "Collection deleted successfully",
+      );
+      setIsDialogOpen(false);
+      onDelete?.();
+    } catch (error) {
+      console.error("Error deleting collection:", error);
+      toast.error(
+        t("toast.deleteCollectionFailed") || "Failed to delete collection",
+      );
+    } finally {
+      setIsDeleting(false);
+    }
+  };
 
   return (
     <Card
@@ -23,20 +73,68 @@ function CollectionBox({
           ),
         )
       }
-      className={`border-0 cursor-pointer transition-all duration-300 hover:shadow-lg overflow-hidden group ${
+      className={`border-0 cursor-pointer pb-0 transition-all duration-300 hover:shadow-lg overflow-hidden group ${
         isSelected
           ? "ring-2 ring-purple-500 shadow-lg"
           : "shadow-sm hover:shadow-md"
       }`}
     >
-      <CardContent className="p-6 space-y-4">
+      <CardContent className="space-y-4">
+        <div onClick={(e) => e.stopPropagation()} className="flex justify-end">
+          {!collection?.isDefault && (
+            <DropdownMenu>
+              <DropdownMenuTrigger>
+                <MoreVertical className="w-5 h-5" />
+              </DropdownMenuTrigger>
+
+              <DropdownMenuContent>
+                <DropdownMenuItem onClick={() => onEdit?.(collection)}>
+                  {t("button.edit")}
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setIsDialogOpen(true)}>
+                  {t("button.delete")}
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
+          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>{t("description.deleteConfirm")}</DialogTitle>
+                <DialogDescription>
+                  {t("description.deleteWarning")}
+                </DialogDescription>
+              </DialogHeader>
+              <p>{t("description.deleteConfirmation")}</p>
+              <div className="flex justify-end gap-2 mt-4">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => setIsDialogOpen(false)}
+                  disabled={isDeleting}
+                >
+                  {t("button.cancel")}
+                </Button>
+                <Button
+                  className="cursor-pointer"
+                  size="sm"
+                  variant="destructive"
+                  onClick={handleDelete}
+                  disabled={isDeleting}
+                >
+                  {t("button.delete")}
+                </Button>
+              </div>
+            </DialogContent>
+          </Dialog>
+        </div>
         {/* Header with Icon and Badge */}
         <div className="flex items-start justify-between">
           <div
             className={`w-12 h-12 flex items-center justify-center rounded-xl transition-transform group-hover:scale-110 ${
               isSelected
-                ? "bg-gradient-to-br from-purple-200 to-purple-300 text-purple-700"
-                : "bg-gradient-to-br from-purple-100 to-purple-50 text-purple-500"
+                ? "bg-linear-to-br from-purple-200 to-purple-300 text-purple-700"
+                : "bg-linear-to-br from-purple-100 to-purple-50 text-purple-500"
             }`}
           >
             <Heart size={24} />
@@ -67,14 +165,7 @@ function CollectionBox({
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-between pt-2 border-t border-gray-100">
-          <span className="text-xs text-gray-400 font-medium">
-            {new Date(collection.createdAt).toLocaleDateString("en-US", {
-              month: "short",
-              day: "numeric",
-              year: "numeric",
-            })}
-          </span>
+        <div className="flex items-center justify-end border-t p-2 border-gray-100">
           <ChevronRight className="h-4 w-4 text-gray-300 group-hover:text-purple-600 transition-colors" />
         </div>
       </CardContent>

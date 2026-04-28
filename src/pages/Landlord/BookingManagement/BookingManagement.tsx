@@ -13,9 +13,19 @@ import type { OccupantFormData } from "@/schemas/occupantSchema";
 import { toast } from "sonner";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Calendar } from "lucide-react";
+import type { Apartment } from "@/types/apartment";
+import { apartmentApi } from "@/services/publicApi/apartmentApi";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import ApartmentDetailDialog from "@/components/ui/apartmentDetailDialog/ApartmentDetailDialog";
 
 function BookingManagement() {
   const [bookings, setBookings] = useState<BookingHistory[]>([]);
+  const [apartment, setApartment] = useState<Apartment | null>(null);
   const [occupantList, setOccupantList] = useState<Occupant[]>([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
@@ -77,6 +87,15 @@ function BookingManagement() {
     } catch (error) {
       console.log(error);
       toast.error("Failed to add occupant");
+    }
+  };
+
+  const fetchApartmentDetails = async (id: string) => {
+    try {
+      const response = await apartmentApi.getApartmentById(id);
+      setApartment(response.data.data);
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -181,6 +200,7 @@ function BookingManagement() {
                 handleCheckOut,
                 fetchOccupantList,
                 triggerAddOccupant,
+                fetchApartmentDetails
               )}
               data={bookings}
               limit={8}
@@ -205,6 +225,14 @@ function BookingManagement() {
         open={open.addOccupant}
         onSubmit={handleAddOccupant}
       />
+      <Dialog open={!!apartment} onOpenChange={() => setApartment(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{apartment?.title || "Apartment"}</DialogTitle>
+          </DialogHeader>
+          {apartment && <ApartmentDetailDialog apartment={apartment} />}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
