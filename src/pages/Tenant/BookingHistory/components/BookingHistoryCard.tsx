@@ -3,6 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import type { BookingHistory } from "@/types/bookingHistory";
 import { useTranslation } from "react-i18next";
 import { ChevronRight, CheckCircle2, Clock, Home } from "lucide-react";
+import { useGetStatus } from "@/lib/utils";
 
 export interface Props {
   data: BookingHistory;
@@ -33,10 +34,10 @@ const getPaymentModeColor = (mode: "full" | "partial") => {
 };
 
 export default function BookingHistoryCard({ data, onClick }: Props) {
-  const { t } = useTranslation("booking");
+  const { t } = useTranslation("user");
 
   const getPaymentModeLabel = (mode: "full" | "partial") => {
-    return mode === "full" ? t("fullPayment") : t("partialPayment");
+    return mode === "full" ? t("booking.fullPayment") : t("booking.partialPayment");
   };
 
   return (
@@ -53,11 +54,11 @@ export default function BookingHistoryCard({ data, onClick }: Props) {
                 <Home className="h-4 w-4 text-blue-600" />
               </div>
               <p className="font-semibold text-gray-900 text-lg">
-                Booking #{data.bookingId.slice(0, 8).toUpperCase()}
+                {t("booking.booking")} #{data.bookingId.slice(0, 8).toUpperCase()}
               </p>
             </div>
             <p className="text-xs text-gray-500">
-              Booked on {formatDate(data.createdAt)}
+              {t("booking.bookedOn")} {formatDate(data.createdAt)}
             </p>
           </div>
 
@@ -65,14 +66,14 @@ export default function BookingHistoryCard({ data, onClick }: Props) {
           <div className="flex flex-col items-end gap-3">
             <div className="flex gap-2 flex-wrap justify-end">
               <Badge className={getStatusColor(data.status)}>
-                {data.status.charAt(0).toUpperCase() + data.status.slice(1)}
+                {useGetStatus(data.status)}
               </Badge>
               <Badge className={getPaymentModeColor(data.paymentMode)}>
                 {getPaymentModeLabel(data.paymentMode)}
               </Badge>
             </div>
             <div className="text-right">
-              <p className="text-sm text-gray-600 mb-1">{t("totalPrice")}</p>
+              <p className="text-sm text-gray-600 mb-1">{t("booking.totalPrice")}</p>
               <p className="text-2xl font-bold text-blue-600">
                 {formatCurrency(data.totalPrice)}
               </p>
@@ -87,7 +88,7 @@ export default function BookingHistoryCard({ data, onClick }: Props) {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
           {/* Check-in */}
           <div>
-            <p className="text-xs text-gray-500 font-medium mb-1">Check-in</p>
+            <p className="text-xs text-gray-500 font-medium mb-1">{t("booking.checkIn")}</p>
             <p className="font-semibold text-gray-900">
               {formatDate(data.checkInDate)}
             </p>
@@ -95,7 +96,7 @@ export default function BookingHistoryCard({ data, onClick }: Props) {
 
           {/* Check-out */}
           <div>
-            <p className="text-xs text-gray-500 font-medium mb-1">Check-out</p>
+            <p className="text-xs text-gray-500 font-medium mb-1">{t("booking.checkOut")}</p>
             <p className="font-semibold text-gray-900">
               {formatDate(data.checkOutDate)}
             </p>
@@ -103,17 +104,17 @@ export default function BookingHistoryCard({ data, onClick }: Props) {
 
           {/* Nights */}
           <div>
-            <p className="text-xs text-gray-500 font-medium mb-1">{t("nightsLabel")}</p>
+            <p className="text-xs text-gray-500 font-medium mb-1">{t("booking.nights")}</p>
             <p className="font-semibold text-gray-900">
-              {data.nights} {t("nightsUnit")}
+              {data.nights} {t("booking.nightsUnit")}
             </p>
           </div>
 
           {/* Guests */}
           <div>
-            <p className="text-xs text-gray-500 font-medium mb-1">Guests</p>
+            <p className="text-xs text-gray-500 font-medium mb-1">{t("booking.guests")}</p>
             <p className="font-semibold text-gray-900">
-              {data.noOfAdults} {t("adultsUnit")}
+              {data.noOfAdults} {t("booking.guestsUnit")}
             </p>
           </div>
         </div>
@@ -125,14 +126,14 @@ export default function BookingHistoryCard({ data, onClick }: Props) {
               <>
                 <CheckCircle2 className="h-4 w-4 text-green-600" />
                 <span className="text-sm font-medium text-green-600">
-                  {t("paid")}
+                  {t("booking.paid")}
                 </span>
               </>
             ) : (
               <>
                 <Clock className="h-4 w-4 text-amber-600" />
                 <span className="text-sm font-medium text-amber-600">
-                  {t("unpaid")}
+                  {t("booking.pending")}
                 </span>
               </>
             )}

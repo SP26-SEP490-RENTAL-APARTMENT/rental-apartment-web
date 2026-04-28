@@ -7,17 +7,11 @@ export const createApartmentSchema = z
     description: z.string().min(1, "Description is required"),
     maxOccupants: z.number().min(1, "Max occupants must be at least 1"),
     isPetAllowed: z.boolean(),
-    address: z.string().min(1, "Address is required"),
-    district: z.string().min(1, "District is required"),
-    city: z.string().min(1, "City is required"),
-    latitude: z
-      .number()
-      .min(-90)
-      .max(90, "Latitude must be between -90 and 90"),
-    longitude: z
-      .number()
-      .min(-180)
-      .max(180, "Longitude must be between -180 and 180"),
+    address: z.string().min(1),
+    city: z.string().optional(),
+    district: z.string().optional(),
+    latitude: z.number(),
+    longitude: z.number(),
     basePricePerNight: z
       .number()
       .min(0, "Price must be greater than or equal to 0"),
@@ -42,17 +36,11 @@ export const updateApartmentSchema = z
     description: z.string().min(1, "Description is required"),
     maxOccupants: z.number().min(1, "Max occupants must be at least 1"),
     isPetAllowed: z.boolean(),
-    address: z.string().min(1, "Address is required"),
-    district: z.string().min(1, "District is required"),
-    city: z.string().min(1, "City is required"),
-    latitude: z
-      .number()
-      .min(-90)
-      .max(90, "Latitude must be between -90 and 90"),
-    longitude: z
-      .number()
-      .min(-180)
-      .max(180, "Longitude must be between -180 and 180"),
+    address: z.string().min(1),
+    city: z.string().optional(),
+    district: z.string().optional(),
+    latitude: z.number(),
+    longitude: z.number(),
     basePricePerNight: z
       .number()
       .min(0, "Price must be greater than or equal to 0"),

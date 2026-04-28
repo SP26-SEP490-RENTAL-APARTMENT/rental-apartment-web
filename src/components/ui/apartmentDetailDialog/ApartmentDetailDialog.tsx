@@ -2,11 +2,24 @@ import type { Apartment } from "@/types/apartment";
 import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/store/authStore";
+import { Badge } from "../badge";
+import { useLocation } from "react-router-dom";
 
 interface Props {
   apartment: Apartment;
   onAddPhotos?: (apartmentId: string, files: File[]) => Promise<void>;
 }
+
+const getStatusBadge = (status?: string | null) => {
+  switch (status) {
+    case "posted":
+      return <Badge className="bg-blue-500 text-white">Posted</Badge>;
+    case "pending_review":
+      return <Badge className="bg-gray-500 text-white">Pending review</Badge>;
+    default:
+      return <Badge variant="secondary">Draft</Badge>;
+  }
+};
 
 function ApartmentDetailDialog({ apartment, onAddPhotos }: Props) {
   const { user } = useAuthStore();
@@ -15,6 +28,7 @@ function ApartmentDetailDialog({ apartment, onAddPhotos }: Props) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const location = useLocation();
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
@@ -93,27 +107,35 @@ function ApartmentDetailDialog({ apartment, onAddPhotos }: Props) {
       <div>
         <h2 className="text-xl font-semibold">{apartment.title}</h2>
         <p className="text-sm text-muted-foreground">
-          Chủ nhà: {apartment.landlordName}
+          Host: {apartment.landlordName}
         </p>
       </div>
 
       {/* ===== INFO ===== */}
       <div className="grid grid-cols-2 gap-4 text-sm border rounded-lg p-4">
-        <Info label="Giá / đêm" value={`${apartment.basePricePerNight.toLocaleString()} VND`} />
-        <Info label="Số người" value={apartment.maxOccupants} />
-        <Info label="Thú cưng" value={apartment.isPetAllowed ? "Cho phép" : "Không"} />
-        <Info label="Số thú tối đa" value={apartment.maxPets ?? "Không giới hạn"} />
-        <Info label="Trạng thái" value={apartment.status} />
+        <Info
+          label="Price / night"
+          value={`${apartment.basePricePerNight.toLocaleString()} VND`}
+        />
+        <Info label="Max occupant" value={apartment.maxOccupants} />
+        <Info
+          label="Pet"
+          value={apartment.isPetAllowed ? "Allow" : "Not allowed"}
+        />
+        {apartment.maxPets && (
+          <Info label="Max pet" value={apartment.maxPets} />
+        )}
+        <Info label="Status" value={getStatusBadge(apartment.status)} />
         <Info label="Booking" value={apartment.bookingStatus} />
         <Info
-          label="Ngày tạo"
+          label="Created at"
           value={new Date(apartment.createdAt).toLocaleDateString()}
         />
       </div>
 
       {/* ===== LOCATION ===== */}
       <div className="border rounded-lg p-4">
-        <p className="font-semibold mb-1">Địa chỉ</p>
+        <p className="font-semibold mb-1">Address</p>
         <p className="text-sm text-muted-foreground">
           {apartment.address}, {apartment.district}, {apartment.city}
         </p>
@@ -121,23 +143,23 @@ function ApartmentDetailDialog({ apartment, onAddPhotos }: Props) {
 
       {/* ===== DESCRIPTION ===== */}
       <div className="border rounded-lg p-4">
-        <p className="font-semibold mb-1">Mô tả</p>
+        <p className="font-semibold mb-1">Description</p>
         <p className="text-sm">{apartment.description}</p>
       </div>
 
       {/* ===== ROOM ===== */}
       {apartment.room && (
         <div className="border rounded-lg p-4 space-y-3">
-          <p className="font-semibold">Thông tin phòng</p>
+          <p className="font-semibold">Room infomation</p>
 
           <div className="grid grid-cols-2 gap-4 text-sm">
-            <Info label="Tên phòng" value={apartment.room.title} />
-            <Info label="Loại phòng" value={apartment.room.roomType} />
-            <Info label="Giường" value={apartment.room.bedType} />
-            <Info label="Diện tích" value={`${apartment.room.sizeSqm} m²`} />
+            <Info label="Title" value={apartment.room.title} />
+            <Info label="Room type" value={apartment.room.roomType} />
+            <Info label="Bed" value={apartment.room.bedType} />
+            <Info label="Size" value={`${apartment.room.sizeSqm} m²`} />
             <Info
-              label="WC riêng"
-              value={apartment.room.isPrivateBathroom ? "Có" : "Không"}
+              label="Private bathroom"
+              value={apartment.room.isPrivateBathroom ? "Yes" : "No"}
             />
           </div>
 
@@ -149,7 +171,7 @@ function ApartmentDetailDialog({ apartment, onAddPhotos }: Props) {
 
       {/* ===== AMENITIES ===== */}
       <div className="border rounded-lg p-4">
-        <p className="font-semibold mb-2">Tiện nghi</p>
+        <p className="font-semibold mb-2">Amenities</p>
 
         {apartment.amenities?.length > 0 ? (
           <div className="flex flex-wrap gap-2">
@@ -163,62 +185,61 @@ function ApartmentDetailDialog({ apartment, onAddPhotos }: Props) {
             ))}
           </div>
         ) : (
-          <p className="text-sm text-muted-foreground">Không có tiện nghi</p>
+          <p className="text-sm text-muted-foreground">No amenities</p>
         )}
       </div>
 
       {/* ===== ADD PHOTOS ===== */}
-      {user?.roles.includes("landlord") && (
-        <div className="border rounded-lg p-4 space-y-3">
-          <p className="font-semibold">Thêm ảnh</p>
+      {user?.roles.includes("landlord") &&
+        location.pathname.includes("/landlord/apartments") && (
+          <div className="border rounded-lg p-4 space-y-3">
+            <p className="font-semibold">Upload photos</p>
 
-          {error && (
-            <div className="text-sm text-destructive">{error}</div>
-          )}
+            {error && <div className="text-sm text-destructive">{error}</div>}
 
-          <input
-            ref={fileInputRef}
-            type="file"
-            multiple
-            accept="image/*"
-            onChange={handleFileSelect}
-            className="hidden"
-          />
+            <input
+              ref={fileInputRef}
+              type="file"
+              multiple
+              accept="image/*"
+              onChange={handleFileSelect}
+              className="hidden"
+            />
 
-          <Button
-            variant="outline"
-            onClick={() => fileInputRef.current?.click()}
-            className="w-full"
-          >
-            Chọn ảnh
-          </Button>
-
-          {previewUrls.length > 0 && (
-            <div className="grid grid-cols-4 gap-2">
-              {previewUrls.map((url, index) => (
-                <div key={index} className="relative">
-                  <img
-                    src={url}
-                    className="h-20 w-full object-cover rounded-md"
-                  />
-                  <button
-                    onClick={() => handleRemoveFile(index)}
-                    className="absolute top-1 right-1 bg-black/70 text-white text-xs px-1 rounded"
-                  >
-                    X
-                  </button>
-                </div>
-              ))}
-            </div>
-          )}
-
-          {selectedFiles.length > 0 && (
-            <Button onClick={handleSubmit} disabled={loading}>
-              {loading ? "Uploading..." : "Upload"}
+            <Button
+              variant="outline"
+              onClick={() => fileInputRef.current?.click()}
+              className="w-full"
+            >
+              Browse images
             </Button>
-          )}
-        </div>
-      )}
+
+            {previewUrls.length > 0 && (
+              <div className="grid grid-cols-4 gap-2">
+                {previewUrls.map((url, index) => (
+                  <div key={index} className="relative">
+                    <img
+                      src={url}
+                      className="h-20 w-full object-cover rounded-md"
+                    />
+                    <button
+                      onClick={() => handleRemoveFile(index)}
+                      className="absolute top-1 right-1 bg-black/70 text-white text-xs px-1 rounded"
+                    >
+                      X
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {selectedFiles.length > 0 && (
+              <Button onClick={handleSubmit} disabled={loading}>
+                {loading ? "Uploading..." : "Upload"}
+              </Button>
+            )}
+          </div>
+        )}
     </div>
   );
 }

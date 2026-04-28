@@ -19,8 +19,7 @@ import type {
   UpdateRoomFormData,
 } from "@/schemas/roomSchema";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Plus, DoorOpen } from "lucide-react";
+import { DoorOpen } from "lucide-react";
 
 function RoomManagement() {
   const [rooms, setRooms] = useState<Room[]>([]);
@@ -110,11 +109,11 @@ function RoomManagement() {
     setIsFormOpen(true);
   };
 
-  const handleAddRoom = () => {
-    setSelectedRoom(null);
-    setFormMode("create");
-    setIsFormOpen(true);
-  };
+  // const handleAddRoom = () => {
+  //   setSelectedRoom(null);
+  //   setFormMode("create");
+  //   setIsFormOpen(true);
+  // };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -135,13 +134,13 @@ function RoomManagement() {
                 </p>
               </div>
             </div>
-            <Button
+            {/* <Button
               onClick={handleAddRoom}
               className="bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white font-semibold gap-2"
             >
               <Plus className="h-4 w-4" />
               Add Room
-            </Button>
+            </Button> */}
           </div>
         </div>
       </div>

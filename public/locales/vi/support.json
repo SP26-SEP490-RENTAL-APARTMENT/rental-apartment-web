@@ -1,0 +1,76 @@
+{
+    "support": {
+        "title": "Yêu cầu Hỗ trợ",
+        "description": "Quản lý các yêu cầu hỗ trợ của bạn và theo dõi giải pháp",
+        "newTicket": "Tạo Yêu cầu Mới",
+        "createTicket": "Tạo Yêu cầu Hỗ trợ",
+        "createTicketDescription": "Điền vào biểu mẫu dưới đây để tạo yêu cầu hỗ trợ mới. Chúng tôi sẽ phản hồi bạn sớm nhất có thể.",
+        "createFirstTicket": "Tạo Yêu cầu Đầu tiên của Bạn",
+        "ticketCreatedSuccess": "Yêu cầu được tạo thành công! Chúng tôi sẽ xem xét nó trong thời gian sớm.",
+        "createTicketError": "Không thể tạo yêu cầu. Vui lòng thử lại.",
+        "noTickets": "Không tìm thấy yêu cầu nào",
+        "noTicketsDescription": "Bạn chưa có yêu cầu hỗ trợ nào.",
+        "viewDetails": "Xem Chi tiết",
+        "resolutionNotes": "Ghi chú Giải pháp",
+        "categories": {
+            "booking_issue": "Vấn đề Đặt phòng",
+            "payment_problem": "Vấn đề Thanh toán",
+            "listing_problem": "Vấn đề Danh sách",
+            "account_verification": "Xác minh Tài khoản",
+            "cancellation": "Hủy bỏ",
+            "dispute": "Tranh chấp",
+            "property_quality": "Chất lượng Tài sản",
+            "other": "Khác"
+        },
+        "priorities": {
+            "low": "Thấp",
+            "medium": "Trung bình",
+            "high": "Cao",
+            "urgent": "Khẩn cấp"
+        },
+        "statuses": {
+            "open": "Mở",
+            "in_progress": "Đang xử lý",
+            "resolved": "Đã giải quyết",
+            "closed": "Đóng",
+            "escalated": "Được Nâng cao"
+        },
+        "filters": {
+            "search": "Tìm kiếm theo chủ đề hoặc ID yêu cầu...",
+            "statusPlaceholder": "Lọc theo trạng thái",
+            "priorityPlaceholder": "Lọc theo độ ưu tiên",
+            "categoryPlaceholder": "Lọc theo danh mục",
+            "reset": "Đặt lại Bộ lọc",
+            "allStatus": "Tất cả Trạng thái",
+            "allPriority": "Tất cả Độ ưu tiên",
+            "allCategory": "Tất cả Danh mục"
+        },
+        "fields": {
+            "subject": "Chủ đề",
+            "description": "Mô tả",
+            "category": "Danh mục",
+            "priority": "Độ ưu tiên"
+        },
+        "placeholders": {
+            "subject": "Nhập một chủ đề ngắn (tối thiểu 5 ký tự)",
+            "description": "Mô tả vấn đề của bạn chi tiết (tối thiểu 10 ký tự)",
+            "category": "Chọn một danh mục",
+            "priority": "Chọn mức độ ưu tiên"
+        },
+        "validation": {
+            "subjectRequired": "Chủ đề là bắt buộc",
+            "subjectMinLength": "Chủ đề phải có ít nhất 5 ký tự",
+            "descriptionRequired": "Mô tả là bắt buộc",
+            "descriptionMinLength": "Mô tả phải có ít nhất 10 ký tự",
+            "categoryRequired": "Vui lòng chọn một danh mục",
+            "priorityRequired": "Vui lòng chọn mức độ ưu tiên"
+        },
+        "detail": {
+            "createdAt": "Ngày tạo",
+            "updatedAt": "Lần cập nhật cuối",
+            "resolutionNotes": "Ghi chú Giải pháp",
+            "noResolutionNotes": "Không có ghi chú giải pháp",
+            "resolvedAt": "Ngày giải quyết"
+        }
+    }
+}

@@ -104,17 +104,16 @@ function BookingAction({
     try {
       const response = await bookingManagementApi.getDOCFile(id);
 
+      // dùng luôn type từ BE
       const blob = new Blob([response.data], {
-        type: response.headers["content-type"], // lấy đúng type
+        type: response.headers["content-type"],
       });
 
       const url = window.URL.createObjectURL(blob);
 
       const link = document.createElement("a");
       link.href = url;
-
-      // nếu backend trả zip → đặt .zip
-      link.download = `residence-report-${id}.zip`;
+      link.download = `residence-report-${id}.docx`; // ❗ fix cứng docx
 
       document.body.appendChild(link);
       link.click();

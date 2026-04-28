@@ -1,26 +1,16 @@
-import {
-  Menu,
-  LogOut,
-  Users,
-  Settings,
-  CircleUser,
-} from "lucide-react";
+import { Menu, LogOut, Users, Settings, CircleUser } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../../ui/button";
-import { useState } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import i18next from "i18next";
 import { useTranslation } from "react-i18next";
 import { useAuthStore } from "@/store/authStore";
 import { authApi } from "@/services/publicApi/authApi";
@@ -40,10 +30,6 @@ function Header() {
     localStorage.removeItem("auth-storage");
     window.location.href = "/";
   };
-
-  const [language, setLanguage] = useState(() => {
-    return localStorage.getItem("i18nextLng") || "en";
-  });
 
   const isLandlord = user?.role === "landlord" ? "tenant" : "landlord";
 
@@ -86,7 +72,7 @@ function Header() {
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-6">
             {/* Language Selector */}
-            <DropdownMenu>
+            {/* <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="sm">
                   {language === "en" ? "EN" : "VI"}
@@ -111,7 +97,7 @@ function Header() {
                   </DropdownMenuRadioItem>
                 </DropdownMenuRadioGroup>
               </DropdownMenuContent>
-            </DropdownMenu>
+            </DropdownMenu> */}
 
             {/* Auth Actions */}
             {isAuthenticated ? (
@@ -141,7 +127,7 @@ function Header() {
                     <span>{t("button.profile")}</span>
                   </DropdownMenuItem>
                   <DropdownMenuGroup>
-                    {user?.role === "tenant" && (
+                    {user?.roles.includes("tenant") && (
                       <>
                         <DropdownMenuItem
                           onClick={() => navigate("/tenant/booking-history")}
@@ -152,7 +138,7 @@ function Header() {
                         </DropdownMenuItem>
                       </>
                     )}
-                    {user?.role === "landlord" && (
+                    {user?.roles.includes("landlord") && (
                       <DropdownMenuItem
                         onClick={() => navigate("/landlord/apartments")}
                         className="cursor-pointer"
@@ -161,28 +147,21 @@ function Header() {
                         <span>{t("button.landlordDashboard")}</span>
                       </DropdownMenuItem>
                     )}
-                    {user?.role === "admin" && (
-                      <DropdownMenuItem
-                        onClick={() => navigate("/admin/dashboard")}
-                        className="cursor-pointer"
-                      >
-                        <Settings className="mr-2 h-4 w-4" />
-                        <span>{t("button.adminDashboard")}</span>
-                      </DropdownMenuItem>
-                    )}
                   </DropdownMenuGroup>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem
-                    onClick={handleAddRole}
-                    className="cursor-pointer"
-                  >
-                    <Users className="mr-2 h-4 w-4" />
-                    <span>
-                      {isLandlord === "landlord"
-                        ? t("button.becomeLandlord")
-                        : t("button.becomeTenant")}
-                    </span>
-                  </DropdownMenuItem>
+                  {user?.roles.length === 1 && (
+                    <DropdownMenuItem
+                      onClick={handleAddRole}
+                      className="cursor-pointer"
+                    >
+                      <Users className="mr-2 h-4 w-4" />
+                      <span>
+                        {isLandlord === "landlord"
+                          ? t("button.becomeLandlord")
+                          : t("button.becomeTenant")}
+                      </span>
+                    </DropdownMenuItem>
+                  )}
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
                     onClick={handleLogout}
@@ -221,7 +200,7 @@ function Header() {
             </SheetTrigger>
             <SheetContent side="right" className="w-72">
               <div className="flex flex-col gap-4 mt-6">
-                <DropdownMenu>
+                {/* <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="outline" className="w-full">
                       {language === "en" ? "English" : "Tiếng Việt"}
@@ -246,7 +225,7 @@ function Header() {
                       </DropdownMenuRadioItem>
                     </DropdownMenuRadioGroup>
                   </DropdownMenuContent>
-                </DropdownMenu>
+                </DropdownMenu> */}
 
                 {isAuthenticated ? (
                   <>
