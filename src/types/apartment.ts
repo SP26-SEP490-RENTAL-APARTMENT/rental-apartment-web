@@ -7,6 +7,7 @@ export interface Apartment extends InspectionStatus {
   title: string;
   description: string;
   maxOccupants: number;
+  maxInfants: number;
   isPetAllowed: boolean;
   address: string;
   district: string;

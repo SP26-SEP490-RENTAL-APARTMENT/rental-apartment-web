@@ -17,7 +17,6 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { useTranslation } from "react-i18next";
 
 export interface AmenityFormProps {
   isOpen: boolean;
@@ -36,8 +35,6 @@ function AmenityForm({
   amenity,
   mode,
 }: AmenityFormProps) {
-  const { t } = useTranslation();
-  const { t: amenityTranslate } = useTranslation('amenity');
   const isCreate = mode === "create";
   const schema = isCreate ? createAmenitySchema : updateAmenitySchema;
 
@@ -84,7 +81,7 @@ function AmenityForm({
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-106.25">
         <DialogHeader>
-          <DialogTitle>{isCreate ? amenityTranslate("add") : amenityTranslate("edit")}</DialogTitle>
+          <DialogTitle>{isCreate ? 'Create amenity' : 'Edit amenity'}</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
           <div className="grid gap-4 py-4">
@@ -120,10 +117,10 @@ function AmenityForm({
           </div>
           <DialogFooter>
             <Button type="button" variant="outline" onClick={handleClose}>
-              {t("cancel")}
+              Cancel
             </Button>
             <Button type="submit" disabled={isSubmitting}>
-              {isSubmitting ? "loading" : isCreate ? t("create") : t("update")}
+              {isCreate ? 'Create' : 'Update'}
             </Button>
           </DialogFooter>
         </form>

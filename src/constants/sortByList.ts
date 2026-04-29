@@ -18,6 +18,11 @@ export const inspectionStatusList = [
   { label: "Passed", value: "passed" },
 ];
 
+export const inspectionSortByList = [
+  { label: "Apartment name", value: "apartmentName" },
+  { label: "Status", value: "status" },
+];
+
 export const listingSortByList = [
   { label: "Created At", value: "createdAt" },
   { label: "Title", value: "title" },
@@ -37,3 +42,22 @@ export const nearbyTypeList = [
   { label: "Shopping", value: "shopping" },
   { label: "Transport", value: "transport" },
 ];
+
+export const subscriptionPlanSortByList = [
+  { label: "Name", value: "name" },
+  { label: "Monthly Price", value: "priceMonthly" },
+  { label: "Annual Price", value: "priceAnnual" },
+  { label: "Max Apartments", value: "maxApartments" },
+];
+
+export const apartmentSortByList = [
+  { label: "Created At", value: "createdAt" },
+  { label: "Title", value: "title" },
+  { label: "Price / night", value: "basePricePerNight" },
+];
+
+export const apartmentStatusList = [
+  { label: "Posted", value: "posted" },
+  { label: "Pending", value: "pending_review" },
+  { label: "Draft", value: "draft" },
+]

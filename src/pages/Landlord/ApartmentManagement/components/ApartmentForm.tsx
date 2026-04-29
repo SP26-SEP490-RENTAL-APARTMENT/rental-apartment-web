@@ -70,6 +70,7 @@ function ApartmentForm({
           title: "",
           description: "",
           maxOccupants: 1,
+          maxInfants: 1,
           isPetAllowed: false,
           maxPets: 0,
           address: "",
@@ -110,6 +111,7 @@ function ApartmentForm({
         title: "",
         description: "",
         maxOccupants: 1,
+        maxInfants: 1,
         isPetAllowed: false,
         maxPets: 0,
         address: "",
@@ -129,6 +131,7 @@ function ApartmentForm({
         title: apartment.title || "",
         description: apartment.description || "",
         maxOccupants: apartment.maxOccupants || 1,
+        maxInfants: apartment.maxInfants || 1,
         isPetAllowed: apartment.isPetAllowed || false,
         maxPets: apartment.maxPets || 0,
         address: apartment.address || "",
@@ -201,6 +204,7 @@ function ApartmentForm({
         formData.append("title", String(data.title));
         formData.append("description", String(data.description));
         formData.append("maxOccupants", String(data.maxOccupants));
+        formData.append("maxInfants", String(data.maxInfants));
         formData.append("isPetAllowed", String(data.isPetAllowed));
         if (data.isPetAllowed && "maxPets" in data) {
           formData.append("maxPets", String(data.maxPets));
@@ -294,9 +298,9 @@ function ApartmentForm({
             </div>
 
             {/* GRID: MAX OCCUPANTS & PRICE */}
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-3 gap-4">
               <div className="grid gap-2">
-                <Label htmlFor="maxOccupants">Max Occupants *</Label>
+                <Label htmlFor="maxOccupants">Max Occupants</Label>
                 <Input
                   id="maxOccupants"
                   type="number"
@@ -306,6 +310,21 @@ function ApartmentForm({
                 {errors.maxOccupants && (
                   <p className="text-sm text-destructive">
                     {errors.maxOccupants.message}
+                  </p>
+                )}
+              </div>
+
+              <div className="grid gap-2">
+                <Label htmlFor="maxInfants">Max Infants</Label>
+                <Input
+                  id="maxInfants"
+                  type="number"
+                  placeholder="10"
+                  {...register("maxInfants", { valueAsNumber: true })}
+                />
+                {errors.maxInfants && (
+                  <p className="text-sm text-destructive">
+                    {errors.maxInfants.message}
                   </p>
                 )}
               </div>

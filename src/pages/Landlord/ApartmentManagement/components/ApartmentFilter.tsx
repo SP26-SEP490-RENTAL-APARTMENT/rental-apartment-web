@@ -7,7 +7,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-function InspectionFilter({
+function ApartmentFilter({
   status,
   setStatus,
   statusList,
@@ -38,4 +38,4 @@ function InspectionFilter({
   );
 }
 
-export default InspectionFilter;
+export default ApartmentFilter;

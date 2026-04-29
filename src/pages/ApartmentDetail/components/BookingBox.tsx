@@ -11,7 +11,6 @@ import type { ParamsProp } from "@/types/params";
 import { ROUTES } from "@/constants/routes";
 import type { Apartment } from "@/types/apartment";
 import { toast } from "sonner";
-import { useTranslation } from "react-i18next";
 import { CalendarIcon, Users, Zap } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -30,7 +29,6 @@ export interface Props {
 }
 
 function BookingBox({ apartmentId, onSubmit, apartment }: Props) {
-  const { t } = useTranslation("booking");
   const navigate = useNavigate();
   const [checkIn, setCheckIn] = useState<Date | undefined>(undefined);
   const [checkOut, setCheckOut] = useState<Date | undefined>(undefined);
@@ -128,7 +126,7 @@ function BookingBox({ apartmentId, onSubmit, apartment }: Props) {
     <Card className="shadow-xl border-0 bg-white overflow-hidden pt-0">
       <CardHeader className="bg-linear-to-r from-blue-600 to-blue-700 text-white py-6">
         <CardTitle className="text-center text-2xl font-bold">
-          {t("bookNow")}
+          Book Now
         </CardTitle>
       </CardHeader>
       <CardContent className="p-6 space-y-6">

@@ -10,11 +10,23 @@ import InspectionForm from "./components/InspectionForm";
 import ReviewForm from "./components/ReviewForm";
 import { apartmentApi } from "@/services/publicApi/apartmentApi";
 import type { Apartment } from "@/types/apartment";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import ApartmentDetailDialog from "@/components/ui/apartmentDetailDialog/ApartmentDetailDialog";
-import InspectionFilter, { type InspectionFilterValues } from "./components/InspectionFilter";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ClipboardCheck } from "lucide-react";
+import type { Filter } from "@/components/ui/managementFilter/ManagementFilter";
+import ManagementFilter from "@/components/ui/managementFilter/ManagementFilter";
+import {
+  inspectionSortByList,
+  inspectionStatusList,
+} from "@/constants/sortByList";
+import { Button } from "@/components/ui/button";
+import InspectionFilter from "./components/InspectionFilter";
 
 function Inspections() {
   const [inspections, setInspections] = useState<Inspection[]>([]);
@@ -27,13 +39,12 @@ function Inspections() {
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState({ decision: "approve", reason: "" });
   const [reviewForm, setReviewForm] = useState(false);
-  const [filters, setFilters] = useState<InspectionFilterValues>({
-    sortBy: "scheduledDate",
-    sortOrder: "desc",
-    status: "",
-    scheduledDate: "",
+  const [filters, setFilters] = useState<Filter>({
+    sortBy: "apartmentName",
+    sortOrder: "asc",
     search: "",
   });
+  const [status, setStatus] = useState("all");
 
   const fetchInspections = async () => {
     if (!user) return;
@@ -44,12 +55,11 @@ function Inspections() {
 
       const requestParams = {
         page,
-        pageSize: 8,
+        pageSize: 10,
         search: filters.search,
         sortBy: filters.sortBy,
         sortOrder: filters.sortOrder,
-        ...(filters.status && { status: filters.status }),
-        ...(filters.scheduledDate && { scheduledDate: filters.scheduledDate }),
+        status: status === "all" ? "" : status,
       };
 
       if (user.role === "admin") {
@@ -93,7 +103,7 @@ function Inspections() {
   useEffect(() => {
     fetchInspections();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [filters, user, page]);
+  }, [filters, user, page, status]);
 
   const handleStartInspection = async (id: string) => {
     try {
@@ -143,18 +153,13 @@ function Inspections() {
     setReviewForm(true);
   };
 
-  const handleFilterChange = (newFilters: InspectionFilterValues) => {
-    setFilters(newFilters);
-  };
-
   const handleResetFilters = () => {
     setFilters({
-      sortBy: "scheduledDate",
-      sortOrder: "desc",
-      status: "",
-      scheduledDate: "",
+      sortBy: "apartmentName",
+      sortOrder: "asc",
       search: "",
     });
+    setStatus("all");
   };
 
   return (
@@ -180,21 +185,27 @@ function Inspections() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
         {/* Filter Card */}
         <Card className="border-0 shadow-sm">
-          <CardContent className="pt-6">
-            <InspectionFilter
-              filters={filters}
-              onFilterChange={handleFilterChange}
-              onReset={handleResetFilters}
+          <CardContent className="flex gap-3 items-center">
+            <ManagementFilter
+              filter={filters}
+              setFilter={setFilters}
+              sortByList={inspectionSortByList}
             />
+            <InspectionFilter
+              setStatus={setStatus}
+              status={status}
+              statusList={inspectionStatusList}
+            />
+            <Button variant="outline" onClick={handleResetFilters}>
+              Reset Filters
+            </Button>
           </CardContent>
         </Card>
 
         {/* Data Table Card */}
         <Card className="border-0 shadow-sm">
           <CardHeader className="border-b border-gray-100">
-            <CardTitle>
-              Inspections ({totalCount})
-            </CardTitle>
+            <CardTitle>Inspections ({totalCount})</CardTitle>
           </CardHeader>
           <CardContent className="pt-6">
             <DataTable
@@ -205,7 +216,7 @@ function Inspections() {
                 handleGetApartment,
               )}
               data={inspections}
-              limit={8}
+              limit={10}
               loading={loading}
               onPageChange={handlePageChange}
               page={page}
@@ -245,4 +256,3 @@ function Inspections() {
 }
 
 export default Inspections;
-      
