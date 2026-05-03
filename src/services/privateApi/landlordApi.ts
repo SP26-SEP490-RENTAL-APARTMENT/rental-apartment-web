@@ -114,3 +114,8 @@ export const mySubscriptionApi = {
   getSubscriptionHistory: (params: ParamsProp) =>
     apiConfig.privateApi.get("/landlord/subscriptions/history", { params }),
 };
+
+export const paymentHistoryApi = {
+  getPaymentHistory: (params: ParamsProp) =>
+    apiConfig.privateApi.get("landlord/payments/history", { params }),
+};

@@ -15,4 +15,6 @@ export interface FiltersParamsProps {
   category?: string;
   inspectionStatus?: string;
   type?: string;
+  method?: string;
+  paymentPurpose?: string;
 }

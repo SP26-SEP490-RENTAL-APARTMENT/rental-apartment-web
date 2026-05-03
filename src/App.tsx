@@ -43,6 +43,7 @@ import HomePage from "./pages/Home/Home";
 import SupportRequest from "./pages/Tenant/SupportRequest/SupportRequest";
 import { useEffect } from "react";
 import i18next from "i18next";
+import PaymentHistories from "./pages/Landlord/PaymentHistory/PaymentHistories";
 
 /**
  * App Component - Simplified routing setup
@@ -188,6 +189,14 @@ export default function App() {
             element={
               <ProtectedRoute requiredRoles={["landlord", "tenant"]}>
                 <BookingManagement />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path={ROUTES.LANDLORD_PAYMENT_HISTORY}
+            element={
+              <ProtectedRoute requiredRoles={["landlord", "tenant"]}>
+                <PaymentHistories />
               </ProtectedRoute>
             }
           />

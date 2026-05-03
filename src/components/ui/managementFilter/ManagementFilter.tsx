@@ -1,4 +1,4 @@
-import { ArrowDownUp, Search } from "lucide-react";
+import { ArrowDownUp, Search, X } from "lucide-react";
 import { Button } from "../button";
 import { InputGroup, InputGroupAddon, InputGroupInput } from "../input-group";
 import {
@@ -39,6 +39,15 @@ function ManagementFilter({ filter, setFilter, sortByList }: Props) {
         <InputGroupAddon>
           <Search />
         </InputGroupAddon>
+        {filter.search && (
+          <InputGroupAddon
+            align="inline-end"
+            onClick={() => setFilter({ ...filter, search: "" })}
+            className="cursor-pointer"
+          >
+            <X className="bg-gray-400 text-white rounded-full" size={16} />
+          </InputGroupAddon>
+        )}
       </InputGroup>
 
       <Button

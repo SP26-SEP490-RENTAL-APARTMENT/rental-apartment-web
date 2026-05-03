@@ -341,6 +341,7 @@ function ApartmentManagement() {
   };
 
   const handleResetFilters = () => {
+    setPage(1);
     setFilters({
       search: "",
       sortBy: "createdAt",

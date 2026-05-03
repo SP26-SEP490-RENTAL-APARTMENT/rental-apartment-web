@@ -28,7 +28,7 @@ export const ADMIN_ROUTES = {
   PACKAGE: "/admin/packages",
   DOCUMENT: "/admin/documents",
   APPROVE_LISTINGS: "/admin/approve-listings",
-  INSPECTION: '/admin/inspection'
+  INSPECTION: "/admin/inspection",
 } as const;
 
 // Landlord Routes
@@ -37,6 +37,7 @@ export const LANDLORD_ROUTES = {
   APARTMENTS: "/landlord/apartments",
   ROOMS: "/landlord/rooms",
   BOOKING_MANAGEMENT: "/landlord/booking-management",
+  PAYMENT_HISTORY: "/landlord/payments-history",
   MY_SUBSCRIPTIONS: "/landlord/my-subscriptions",
 } as const;
 
@@ -67,7 +68,7 @@ export const ROUTES = {
   REGISTER: AUTH_ROUTES.REGISTER,
   REQUEST_RESET_PASSWORD: AUTH_ROUTES.REQUEST_RESET_PASSWORD,
   RESET_PASSWORD: AUTH_ROUTES.RESET_PASSWORD,
-  
+
   // Public
   HOME: PUBLIC_ROUTES.HOME,
   APARTMENT_DETAIL: PUBLIC_ROUTES.APARTMENT_DETAIL,
@@ -90,7 +91,8 @@ export const ROUTES = {
   LANDLORD_ROOMS: LANDLORD_ROUTES.ROOMS,
   LANDLORD_BOOKING_MANAGEMENT: LANDLORD_ROUTES.BOOKING_MANAGEMENT,
   LANDLORD_MY_SUBSCRIPTIONS: LANDLORD_ROUTES.MY_SUBSCRIPTIONS,
-  
+  LANDLORD_PAYMENT_HISTORY: LANDLORD_ROUTES.PAYMENT_HISTORY,
+
   // Tenant
   TENANT_PROFILE: TENANT_ROUTES.PROFILE,
   TENANT_DASHBOARD: TENANT_ROUTES.DASHBOARD,

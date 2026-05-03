@@ -60,4 +60,32 @@ export const apartmentStatusList = [
   { label: "Posted", value: "posted" },
   { label: "Pending", value: "pending_review" },
   { label: "Draft", value: "draft" },
-]
+];
+
+export const bookingSortByList = [
+  { label: "Created At", value: "createdAt" },
+  { label: "Nights", value: "nights" },
+  { label: "Total Price", value: "totalPrice" },
+];
+
+export const paymentSortByList = [
+  { label: "Paid At", value: "paidAt" },
+  { label: "Amount", value: "amount" },
+  { label: "Status", value: "status" },
+];
+
+export const paymentStatusList = [
+  { label: "Pending", value: "pending" },
+  { label: "Success", value: "success" },
+  { label: "Failed", value: "failed" },
+];
+
+export const paymentMethodList = [
+  { label: "Momo", value: "momo_wallet" },
+  { label: "Stripe", value: "stripe" },
+];
+
+export const paymentPurposeList = [
+  { label: "Full", value: "booking_full_payment" },
+  { label: "Deposit", value: "booking_deposit" },
+];

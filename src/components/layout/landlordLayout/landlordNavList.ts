@@ -4,6 +4,7 @@ import {
   CalendarCheck,
   Hotel,
   Layers,
+  CreditCard,
 } from "lucide-react";
 
 export const landlordNavList = [
@@ -26,6 +27,11 @@ export const landlordNavList = [
     title: "Bookings",
     url: "/landlord/booking-management",
     icon: CalendarCheck,
+  },
+  {
+    title: "Payments History",
+    url: "/landlord/payments-history",
+    icon: CreditCard,
   },
   {
     title: "My subscriptions",
