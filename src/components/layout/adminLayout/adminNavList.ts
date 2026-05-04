@@ -31,6 +31,11 @@ export const useAadminNavList = () => {
       icon: LayoutDashboard,
     },
     {
+      title: "Apartments",
+      url: "/admin/apartments",
+      icon: Hotel,
+    },
+    {
       title: "Users",
       url: "/admin/users",
       icon: User,

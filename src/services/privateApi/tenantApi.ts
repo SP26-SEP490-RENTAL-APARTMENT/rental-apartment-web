@@ -95,3 +95,8 @@ export const supportTicketApi = {
   // getTicketById: (ticketId: string) =>
   //   apiConfig.privateApi.get(`/SupportTicket/${ticketId}`),
 };
+
+export const tenantPaymentApi = {
+  getPaymentHistory: (params: ParamsProp) =>
+    apiConfig.privateApi.get("/tenant/payments/history", { params }),
+};

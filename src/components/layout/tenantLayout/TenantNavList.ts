@@ -1,5 +1,5 @@
 import { useAuthStore } from "@/store/authStore";
-import { Album, BookUser, History, Wrench } from "lucide-react";
+import { Album, BookUser, CreditCard, History, Wrench } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 export const useTenantNavList = () => {
@@ -30,6 +30,11 @@ export const useTenantNavList = () => {
             title: t("booking.label"),
             url: "/tenant/booking-history",
             icon: History,
+          },
+          {
+            title: "Payment History",
+            url: "/tenant/payment-history",
+            icon: CreditCard,
           },
           {
             title: t("collection.label"),

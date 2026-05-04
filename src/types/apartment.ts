@@ -22,6 +22,8 @@ export interface Apartment extends InspectionStatus {
   photos: string[];
   room: Room;
   amenities: Amenity[];
+  isFavorite?: boolean;
+  collectionId?: string;
 }
 
 export interface Room {

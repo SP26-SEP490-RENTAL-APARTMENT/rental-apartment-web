@@ -29,6 +29,7 @@ export const ADMIN_ROUTES = {
   DOCUMENT: "/admin/documents",
   APPROVE_LISTINGS: "/admin/approve-listings",
   INSPECTION: "/admin/inspection",
+  APARTMENTS: "/admin/apartments",
 } as const;
 
 // Landlord Routes
@@ -52,6 +53,7 @@ export const TENANT_ROUTES = {
   IDENTITY: "/tenant/identity",
   FINISH_PAYMENT: "/payment/success",
   SUPPORT_REQUEST: "/tenant/support-request",
+  PAYMENT_HISTORY: "/tenant/payment-history",
 } as const;
 
 // Error Routes
@@ -84,6 +86,7 @@ export const ROUTES = {
   ADMIN_DOCUMENT: ADMIN_ROUTES.DOCUMENT,
   ADMIN_APPROVE_LISTINGS: ADMIN_ROUTES.APPROVE_LISTINGS,
   ADMIN_INSPECTION: ADMIN_ROUTES.INSPECTION,
+  ADMIN_APARTMENTS: ADMIN_ROUTES.APARTMENTS,
 
   // Landlord
   LANDLORD_DASHBOARD: LANDLORD_ROUTES.DASHBOARD,
@@ -103,6 +106,7 @@ export const ROUTES = {
   TENANT_IDENTITY: TENANT_ROUTES.IDENTITY,
   TENANT_FINISH_PAYMENT: TENANT_ROUTES.FINISH_PAYMENT,
   TENANT_SUPPORT_REQUEST: TENANT_ROUTES.SUPPORT_REQUEST,
+  TENANT_PAYMENT_HISTORY: TENANT_ROUTES.PAYMENT_HISTORY,
 
   // Error
   NOT_FOUND: ERROR_ROUTES.NOT_FOUND,
