@@ -9,7 +9,7 @@ import type { CatalogFormData } from "@/schemas/catalogSchema";
 import { toast } from "sonner";
 import CatalogForm from "./components/CatalogForm";
 import RunReportDialog from "./components/RunReportDialog";
-import { BOOKING, GENERAL, REVENUE } from "@/constants/reportBody";
+import { BOOKING, BOOKING_STATUS, GENERAL, REVENUE } from "@/constants/reportBody";
 import RevenueLineChart from "./components/RevenueLineChart";
 import { useChartStore } from "@/store/chartStore";
 import GeneralCard from "./components/GeneralCard";
@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import BookingLineChart from "./components/BookingLineChart";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import BookingStatusPieChart from "./components/BookingStatusPieChart";
 // import BookStatusPieChart from "./components/BookStatusPieChart";
 
 function AdminDashboard() {
@@ -75,6 +76,7 @@ function AdminDashboard() {
   const REPORT_BODY_MAP: Record<string, any> = {
     Revenue: REVENUE,
     Booking: BOOKING,
+    "Booking Status": BOOKING_STATUS,
   };
 
   const handleRunReport = async () => {
@@ -129,7 +131,7 @@ function AdminDashboard() {
           </div>
           <Button
             onClick={() => setOpen({ ...open, catalog: true })}
-            className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold gap-2"
+            className="bg-linear-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold gap-2"
           >
             <Plus className="h-4 w-4" />
             Create Report
@@ -164,14 +166,13 @@ function AdminDashboard() {
         {/* Charts Section */}
         <div className="space-y-6">
           {chartData && selectedReport?.name === "Revenue" && (
-            <Card className="border-0 shadow-sm">
-              <RevenueLineChart data={chartData} />
-            </Card>
+            <RevenueLineChart data={chartData} />
           )}
           {chartData && selectedReport?.name === "Booking" && (
-            <Card className="border-0 shadow-sm">
-              <BookingLineChart data={chartData} />
-            </Card>
+            <BookingLineChart data={chartData} />
+          )}
+          {chartData && selectedReport?.name === "Booking Status" && (
+            <BookingStatusPieChart data={chartData} />
           )}
         </div>
 

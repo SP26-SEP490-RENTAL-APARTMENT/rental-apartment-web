@@ -74,12 +74,12 @@ function ListingApproveForm({ isOpen, onClose, apartmentId, onSubmit }: Props) {
         <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
           <div className="grid gap-4 py-4">
             {/* Document ID */}
-            <div className="grid gap-2">
+            {/* <div className="grid gap-2">
               <Label htmlFor="documentId">Document ID</Label>
               <div className="bg-gray-100 p-2 rounded text-sm break-all">
                 {apartmentId}
-              </div>
-            </div>
+              </div> 
+            </div> */}
 
             {/* Approval Decision */}
             <div className="grid gap-2">
@@ -132,7 +132,7 @@ function ListingApproveForm({ isOpen, onClose, apartmentId, onSubmit }: Props) {
             )}
           </div>
 
-          <DialogFooter className="gap-2 sm:gap-0">
+          <DialogFooter className="flex gap-2">
             <Button
               type="button"
               variant="outline"

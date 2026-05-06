@@ -89,3 +89,9 @@ export const paymentPurposeList = [
   { label: "Full", value: "booking_full_payment" },
   { label: "Deposit", value: "booking_deposit" },
 ];
+
+export const supportTicketSortByList = [
+  { label: "Created At", value: "createdAt" },
+  { label: "Priority", value: "priority" },
+  { label: "Status", value: "status" },
+];

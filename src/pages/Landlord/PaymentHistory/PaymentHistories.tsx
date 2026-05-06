@@ -69,9 +69,9 @@ function PaymentHistories() {
       sortOrder: "desc",
     });
     setAddFilters({
-      method: "all",
-      status: "all",
-      paymentPurpose: "all",
+      method: "",
+      status: "",
+      paymentPurpose: "",
     });
   };
 

@@ -18,7 +18,7 @@ function HeroSection() {
         {/* Features Grid */}
         <div className="grid md:grid-cols-3 gap-6 mb-8">
           <div className="flex items-center gap-3 bg-white bg-opacity-10 backdrop-blur rounded-lg p-4 hover:shadow-2xl transition-shadow duration-300">
-            <MapPin className="h-10 w-10 shrink-0 fill-yellow-500" />
+            <MapPin className="h-10 w-10 shrink-0 fill-blue-600" />
             <div>
               <p className="font-semibold text-black">
                 {t("slogan.primeLocation")}
@@ -29,7 +29,7 @@ function HeroSection() {
             </div>
           </div>
           <div className="flex items-center gap-3 bg-white bg-opacity-10 backdrop-blur rounded-lg p-4 hover:shadow-2xl transition-shadow duration-300">
-            <Star className="h-10 w-10 shrink-0 fill-orange-500" />
+            <Star className="h-10 w-10 shrink-0 fill-blue-600" />
             <div>
               <p className="font-semibold text-black">
                 {t("slogan.verifiedListings")}
@@ -40,7 +40,7 @@ function HeroSection() {
             </div>
           </div>
           <div className="flex items-center gap-3 bg-white bg-opacity-10 backdrop-blur rounded-lg p-4 hover:shadow-2xl transition-shadow duration-300">
-            <Shield className="h-10 w-10 shrink-0 fill-blue-500" />
+            <Shield className="h-10 w-10 shrink-0 fill-blue-600" />
             <div>
               <p className="font-semibold text-black">
                 {t("slogan.secureBooking")}

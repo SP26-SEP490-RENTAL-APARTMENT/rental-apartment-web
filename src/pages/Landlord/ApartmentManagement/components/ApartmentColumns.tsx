@@ -39,6 +39,7 @@ export const ApartmentColumns = (
   onViewPackage: (apartmentId: string) => void,
   onSendApprove: (apartmentId: string) => void,
   onAddPhotos: (apartmentId: string, files: File[]) => Promise<void>,
+  onChangePrice: (apartmentId: string) => void,
 ): ColumnDef<Apartment>[] => [
   {
     accessorKey: "title",
@@ -82,6 +83,7 @@ export const ApartmentColumns = (
           onViewPackage={onViewPackage}
           onSendApprove={onSendApprove}
           onAddPhotos={onAddPhotos}
+          onChangePrice={onChangePrice}
         />
       );
     },

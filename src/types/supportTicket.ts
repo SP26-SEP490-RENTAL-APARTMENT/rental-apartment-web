@@ -11,4 +11,11 @@ export interface SupportTicket {
   resolvedAt: string | null;
   resolveBy: string | null;
   resolutionNotes: string | null;
+  attachments?: Attachment[];
+}
+
+interface Attachment {
+  attachmentId: string;
+  ticketId: string;
+  fileUrl: string;
 }

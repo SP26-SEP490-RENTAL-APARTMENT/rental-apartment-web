@@ -46,6 +46,7 @@ import i18next from "i18next";
 import PaymentHistories from "./pages/Landlord/PaymentHistory/PaymentHistories";
 import Payment from "./pages/Tenant/PaymentHistory/Payment";
 import AllApartment from "./pages/Admin/AllApartments/AllApartment";
+import SupportManagement from "./pages/Admin/AdminSupport/SupportManagement";
 
 /**
  * App Component - Simplified routing setup
@@ -163,6 +164,14 @@ export default function App() {
             element={
               <ProtectedRoute requiredRoles={["admin", "staff"]}>
                 <Inspections />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path={ROUTES.ADMIN_SUPPORT}
+            element={
+              <ProtectedRoute requiredRoles={["admin", "staff"]}>
+                <SupportManagement />
               </ProtectedRoute>
             }
           />

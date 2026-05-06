@@ -38,6 +38,7 @@ import {
   apartmentStatusList,
 } from "@/constants/sortByList";
 import ApartmentFilter from "./components/ApartmentFilter";
+import GeneralDialog from "./components/PriceDialog/GeneralDialog";
 
 function ApartmentManagement() {
   const [note, setNote] = useState<string>("");
@@ -73,6 +74,7 @@ function ApartmentManagement() {
     availabilityForm: false,
     packageDialog: false,
     sendApproveForm: false,
+    priceChangeForm: false
   });
 
   const fetchApartmentList = useCallback(async () => {
@@ -258,9 +260,9 @@ function ApartmentManagement() {
       setNote(""); // reset
       setIsOpen((prev) => ({ ...prev, sendApproveForm: false }));
       fetchApartmentList();
-    } catch (error) {
+    } catch (error: any) {
       console.log(error);
-      toast.error("Failed to send for approval");
+      toast.error(error?.response?.data?.message || "Failed to send apartment for approval");
     }
   };
 
@@ -331,6 +333,11 @@ function ApartmentManagement() {
     setSelectedApartmentId(apartmentId);
     setIsOpen((prev) => ({ ...prev, sendApproveForm: true }));
   };
+
+  const triggerChangePrice = (apartmentId: string) => {
+    setSelectedApartmentId(apartmentId);
+    setIsOpen((prev) => ({ ...prev, priceChangeForm: true }));
+  }
 
   const handlePackageItemAdded = async (packageId: string) => {
     console.log(packageId);
@@ -414,6 +421,7 @@ function ApartmentManagement() {
                 triggerViewPackage,
                 triggerSendApprove,
                 handleAddPhotos,
+                triggerChangePrice
               )}
               data={apartmentList}
               limit={10}
@@ -498,6 +506,14 @@ function ApartmentManagement() {
         onClose={() =>
           setIsOpen((prev) => ({ ...prev, sendApproveForm: false }))
         }
+      />
+
+      <GeneralDialog
+        open={isOpen.priceChangeForm}
+        onClose={() =>
+          setIsOpen((prev) => ({ ...prev, priceChangeForm: false }))
+        }
+        apartmentId={selectedApartmentId}
       />
     </div>
   );

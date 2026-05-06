@@ -36,11 +36,11 @@ function PaymentFilter({
           setAddFilters({ ...addFilters, status: value })
         }
       >
-        <SelectTrigger className="w-45">
+        <SelectTrigger className="w-45 bg-blue-100">
           <SelectValue placeholder="Select status" />
         </SelectTrigger>
 
-        <SelectContent>
+        <SelectContent className="bg-blue-200">
           <SelectGroup>
             <SelectItem value="all">All</SelectItem>
             {statusList.map((item) => (
@@ -58,11 +58,11 @@ function PaymentFilter({
           setAddFilters({ ...addFilters, method: value })
         }
       >
-        <SelectTrigger className="w-45">
+        <SelectTrigger className="w-45 bg-blue-200">
           <SelectValue placeholder="Select method" />
         </SelectTrigger>
 
-        <SelectContent>
+        <SelectContent className="bg-blue-300">
           <SelectGroup>
             <SelectItem value="all">All</SelectItem>
             {methodList.map((item) => (
@@ -80,11 +80,11 @@ function PaymentFilter({
           setAddFilters({ ...addFilters, paymentPurpose: value })
         }
       >
-        <SelectTrigger className="w-45">
+        <SelectTrigger className="w-45 bg-blue-300">
           <SelectValue placeholder="Select payment type" />
         </SelectTrigger>
 
-        <SelectContent>
+        <SelectContent className="bg-blue-400">
           <SelectGroup>
             <SelectItem value="all">All</SelectItem>
             {paymentPurposeList.map((item) => (

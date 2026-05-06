@@ -67,7 +67,7 @@ export function SupportTicketCard({ ticket, onView }: SupportTicketCardProps) {
           className="w-full justify-between text-blue-600 hover:text-blue-700"
           onClick={() => onView?.(ticket)}
         >
-          <span>{t("viewDetails")}</span>
+          <span>View</span>
           <ArrowRight className="h-4 w-4" />
         </Button>
       </CardContent>

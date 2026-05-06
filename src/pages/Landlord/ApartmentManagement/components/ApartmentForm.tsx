@@ -357,6 +357,8 @@ function ApartmentForm({
                   setValue("address", data.address);
                   setValue("city", data.city);
                   setValue("district", data.district);
+                  setValue("latitude", data.lat);
+                  setValue("longitude", data.lng);
 
                   setCoords({
                     lat: data.lat,
@@ -463,10 +465,7 @@ function ApartmentForm({
                     />
                     <label htmlFor="photos" className="cursor-pointer block">
                       <div className="text-sm text-gray-600">
-                        
-                        <p className="text-xs mt-1">
-                          PNG, JPG, GIF
-                        </p>
+                        <p className="text-xs mt-1">PNG, JPG, GIF</p>
                       </div>
                     </label>
                   </div>

@@ -181,3 +181,8 @@ export const adminApartmentApi = {
       reason,
     }),
 };
+
+export const supportManagementApi = {
+  getAllRequests: (params: ParamsProp) =>
+    apiConfig.privateApi.get("/SupportTicket", { params }),
+};

@@ -86,6 +86,9 @@ function CatalogForm({ isOpen, onClose, onSubmit }: Props) {
                         <SelectItem value="Booking">
                           Booking
                         </SelectItem>
+                        <SelectItem value="Booking Status">
+                          Booking Status
+                        </SelectItem>
                       </SelectGroup>
                     </SelectContent>
                   </Select>

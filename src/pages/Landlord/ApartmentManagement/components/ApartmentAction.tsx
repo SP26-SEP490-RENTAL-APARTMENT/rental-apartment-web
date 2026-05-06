@@ -18,6 +18,7 @@ import {
   Pen,
   MoreVertical,
   Package,
+  Coins,
 } from "lucide-react";
 import { useState } from "react";
 import useAmenity from "@/hooks/useAmenity";
@@ -46,6 +47,7 @@ interface Props {
   onViewPackage: (apartmentId: string) => void;
   onSendApprove: (apartmentId: string) => void;
   onAddPhotos: (apartmentId: string, files: File[]) => Promise<void>;
+  onChangePrice: (apartmentId: string) => void;
 }
 function ApartmentAction({
   apartment,
@@ -58,6 +60,7 @@ function ApartmentAction({
   onViewPackage,
   onSendApprove,
   onAddPhotos,
+  onChangePrice,
 }: Props) {
   const [selectedAmenities, setSelectedAmenities] = useState<string[]>([]);
   const [loadingSubmit, setLoadingSubmit] = useState(false);
@@ -154,6 +157,23 @@ function ApartmentAction({
             </TooltipTrigger>
             <TooltipContent>
               <p>Add package</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                size="sm"
+                className="bg-gray-300 text-black hover:bg-gray-400"
+                onClick={() => onChangePrice(apartment.apartmentId)}
+              >
+                <Coins />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Smart pricing</p>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>

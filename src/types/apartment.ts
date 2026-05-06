@@ -24,6 +24,15 @@ export interface Apartment extends InspectionStatus {
   amenities: Amenity[];
   isFavorite?: boolean;
   collectionId?: string;
+  priceChanges: PriceChange[];
+}
+
+export interface PriceChange {
+  oldPricePerNight: number;
+  newPricePerNight: number;
+  reason: string;
+  startDate: string;
+  endDate: string;
 }
 
 export interface Room {

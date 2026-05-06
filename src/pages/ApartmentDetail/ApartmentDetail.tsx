@@ -139,15 +139,7 @@ function ApartmentDetail() {
             {/* Apartment Info */}
             {apartment && (
               <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
-                <ApartmentInfo
-                  description={apartment.description}
-                  address={apartment.address}
-                  district={apartment.district}
-                  price={apartment.basePricePerNight}
-                  isPetAllowed={apartment.isPetAllowed}
-                  maxOccupants={apartment.maxOccupants}
-                  landlordName={apartment.landlordName}
-                />
+                <ApartmentInfo apartment={apartment} />
               </div>
             )}
 
