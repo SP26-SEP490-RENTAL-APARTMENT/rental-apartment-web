@@ -5,6 +5,7 @@ import { Heart, MapPin, PawPrint, Users } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../button";
 import { useState } from "react";
+import { getDisplayPrice } from "./getPrice";
 
 interface ApartmentCardProps {
   apartment: Apartment;
@@ -14,6 +15,8 @@ interface ApartmentCardProps {
 function ApartmentCard({ apartment, onClickHeart }: ApartmentCardProps) {
   const navigate = useNavigate();
   const [isHeartHovered, setIsHeartHovered] = useState(false);
+
+  const { min, max } = getDisplayPrice(apartment);
 
   return (
     <Card
@@ -37,7 +40,10 @@ function ApartmentCard({ apartment, onClickHeart }: ApartmentCardProps) {
 
         {/* PRICE BADGE */}
         <div className="absolute top-3 left-3 bg-linear-to-r from-blue-600 to-blue-700 text-white px-3 py-1.5 rounded-lg shadow-md text-sm font-bold">
-          {apartment.basePricePerNight.toLocaleString('vi-VN')} VNĐ/night
+          {min === max
+            ? min.toLocaleString("vi-VN")
+            : `${min.toLocaleString("vi-VN")} - ${max.toLocaleString("vi-VN")}`}{" "}
+          VNĐ/night
         </div>
 
         {/* HEART BUTTON */}

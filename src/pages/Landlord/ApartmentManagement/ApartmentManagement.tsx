@@ -31,17 +31,27 @@ import PackageDialog from "./components/PackageDialog";
 import SubmitApproveForm from "./components/SubmitApproveForm";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Plus, Building2 } from "lucide-react";
+import type { Filter } from "@/components/ui/managementFilter/ManagementFilter";
+import ManagementFilter from "@/components/ui/managementFilter/ManagementFilter";
+import {
+  apartmentSortByList,
+  apartmentStatusList,
+} from "@/constants/sortByList";
+import ApartmentFilter from "./components/ApartmentFilter";
+import GeneralDialog from "./components/PriceDialog/GeneralDialog";
 
 function ApartmentManagement() {
   const [note, setNote] = useState<string>("");
   const [packages, setPackages] = useState<Package[]>([]);
   const [apartmentList, setApartmentList] = useState<Apartment[]>([]);
   const [page, setPage] = useState<number>(1);
-  const [pageSize] = useState<number>(5);
   const [total, setTotal] = useState<number>(0);
-  const [search] = useState<string>("");
-  // const [sortBy] = useState<string>("");
-  // const [sortOrder] = useState<string>("");
+  const [filters, setFilters] = useState<Filter>({
+    search: "",
+    sortBy: "createdAt",
+    sortOrder: "desc",
+  });
+  const [status, setStatus] = useState<string>("all");
   const [loading, setLoading] = useState<boolean>(false);
 
   const [formMode, setFormMode] = useState<"create" | "update">("create");
@@ -64,6 +74,7 @@ function ApartmentManagement() {
     availabilityForm: false,
     packageDialog: false,
     sendApproveForm: false,
+    priceChangeForm: false
   });
 
   const fetchApartmentList = useCallback(async () => {
@@ -71,10 +82,11 @@ function ApartmentManagement() {
     try {
       const response = await apartmentManagementApi.getApartments({
         page,
-        pageSize,
-        search,
-        sortBy: 'createdAt',
-        sortOrder: 'desc',
+        pageSize: 10,
+        search: filters.search,
+        sortBy: filters.sortBy,
+        sortOrder: filters.sortOrder,
+        status: status === "all" ? "" : status,
       });
       setApartmentList(response.data.items);
       setTotal(response.data.totalCount);
@@ -84,7 +96,7 @@ function ApartmentManagement() {
     } finally {
       setLoading(false);
     }
-  }, [page, pageSize, search]);
+  }, [page, filters, status]);
 
   const handleCreateApartment = async (
     data: CreateApartmentFormData | UpdateApartmentFormData,
@@ -248,9 +260,9 @@ function ApartmentManagement() {
       setNote(""); // reset
       setIsOpen((prev) => ({ ...prev, sendApproveForm: false }));
       fetchApartmentList();
-    } catch (error) {
+    } catch (error: any) {
       console.log(error);
-      toast.error("Failed to send for approval");
+      toast.error(error?.response?.data?.message || "Failed to send apartment for approval");
     }
   };
 
@@ -322,6 +334,11 @@ function ApartmentManagement() {
     setIsOpen((prev) => ({ ...prev, sendApproveForm: true }));
   };
 
+  const triggerChangePrice = (apartmentId: string) => {
+    setSelectedApartmentId(apartmentId);
+    setIsOpen((prev) => ({ ...prev, priceChangeForm: true }));
+  }
+
   const handlePackageItemAdded = async (packageId: string) => {
     console.log(packageId);
 
@@ -330,6 +347,15 @@ function ApartmentManagement() {
     }
   };
 
+  const handleResetFilters = () => {
+    setPage(1);
+    setFilters({
+      search: "",
+      sortBy: "createdAt",
+      sortOrder: "desc",
+    });
+    setStatus("all");
+  };
   return (
     <div className="min-h-screen bg-gray-50 space-y-8">
       {/* Header */}
@@ -351,7 +377,7 @@ function ApartmentManagement() {
             </div>
             <Button
               onClick={handleAddNew}
-              className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold gap-2 cursor-pointer"
+              className="bg-linear-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold gap-2 cursor-pointer"
             >
               <Plus className="h-4 w-4" />
               Add Property
@@ -360,7 +386,24 @@ function ApartmentManagement() {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+        <Card className="border-0 shadow-sm">
+          <CardContent className="flex gap-3 items-center">
+            <ManagementFilter
+              filter={filters}
+              setFilter={setFilters}
+              sortByList={apartmentSortByList}
+            />
+            <ApartmentFilter
+              setStatus={setStatus}
+              status={status}
+              statusList={apartmentStatusList}
+            />
+            <Button variant="outline" onClick={handleResetFilters}>
+              Reset Filters
+            </Button>
+          </CardContent>
+        </Card>
         {/* Data Table Card */}
         <Card className="border-0 shadow-sm">
           <CardHeader className="border-b border-gray-100">
@@ -378,9 +421,10 @@ function ApartmentManagement() {
                 triggerViewPackage,
                 triggerSendApprove,
                 handleAddPhotos,
+                triggerChangePrice
               )}
               data={apartmentList}
-              limit={pageSize}
+              limit={10}
               loading={loading}
               page={page}
               total={total}
@@ -462,6 +506,14 @@ function ApartmentManagement() {
         onClose={() =>
           setIsOpen((prev) => ({ ...prev, sendApproveForm: false }))
         }
+      />
+
+      <GeneralDialog
+        open={isOpen.priceChangeForm}
+        onClose={() =>
+          setIsOpen((prev) => ({ ...prev, priceChangeForm: false }))
+        }
+        apartmentId={selectedApartmentId}
       />
     </div>
   );

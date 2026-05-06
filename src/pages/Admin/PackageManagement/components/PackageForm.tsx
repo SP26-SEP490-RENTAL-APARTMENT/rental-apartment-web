@@ -104,18 +104,17 @@ function PackageForm({
         <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
           <div className="grid gap-4 py-4">
             {/* NAME */}
-            <div className="grid gap-2">
-              <Label>Apartment</Label>
-              <Input disabled type="text" {...register("apartmentId")} />
+            
+              <Input disabled type="hidden" {...register("apartmentId")} />
               {errors.apartmentId && (
                 <p className="text-sm text-destructive">
                   {errors.apartmentId.message}
                 </p>
               )}
-            </div>
+            
             <div className="grid gap-2">
               <Label>Name</Label>
-              <Input type="text" {...register("name")} />
+              <Input type="text" {...register("name")} placeholder="Pickup, cleaning,..." />
               {errors.name && (
                 <p className="text-sm text-destructive">
                   {errors.name.message}
@@ -124,7 +123,7 @@ function PackageForm({
             </div>
             <div className="grid gap-2">
               <Label>Description</Label>
-              <Input type="text" {...register("description")} />
+              <Input type="text" {...register("description")} placeholder="A basic package..." />
               {errors.description && (
                 <p className="text-sm text-destructive">
                   {errors.description.message}

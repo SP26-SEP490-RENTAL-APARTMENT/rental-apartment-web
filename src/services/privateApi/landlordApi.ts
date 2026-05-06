@@ -114,3 +114,21 @@ export const mySubscriptionApi = {
   getSubscriptionHistory: (params: ParamsProp) =>
     apiConfig.privateApi.get("/landlord/subscriptions/history", { params }),
 };
+
+export const paymentHistoryApi = {
+  getPaymentHistory: (params: ParamsProp) =>
+    apiConfig.privateApi.get("/landlord/payments/history", { params }),
+};
+
+export const priceChangeApi = {
+  manualPriceChange: (
+    apartmentId: string,
+    data: {
+      startDate: string;
+      endDate: string;
+      fixedPricePerNight: number;
+      priceType: string;
+    },
+  ) =>
+    apiConfig.privateApi.post(`/landlord/apartments/${apartmentId}/pricing/manual`, data),
+};

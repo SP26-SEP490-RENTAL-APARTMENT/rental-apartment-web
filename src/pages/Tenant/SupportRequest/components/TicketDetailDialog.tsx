@@ -88,6 +88,34 @@ export function TicketDetailDialog({
             </div>
           </div>
 
+          {ticket.attachments && ticket.attachments.length > 0 && (
+            <div className="space-y-3">
+              <h3 className="text-sm font-semibold text-gray-700">
+                Attachments
+              </h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                {ticket.attachments.map((attachment, index) => (
+                  <div
+                    key={index}
+                    className="group relative overflow-hidden rounded-lg border border-gray-200 bg-gray-50 shadow-sm transition-all hover:shadow-md hover:border-gray-300"
+                  >
+                    <div className="aspect-square overflow-hidden">
+                      <img
+                        src={attachment.fileUrl}
+                        alt={`Attachment ${index + 1}`}
+                        className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
+                        onError={(e) => {
+                          e.currentTarget.src =
+                            "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Crect fill='%23f3f4f6' width='100' height='100'/%3E%3Ctext x='50%25' y='50%25' font-size='14' fill='%239ca3af' text-anchor='middle' dominant-baseline='middle'%3EImage Error%3C/text%3E%3C/svg%3E";
+                        }}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* Resolution Section (if exists) */}
           {(ticket.status === "resolved" || ticket.resolutionNotes) && (
             <>

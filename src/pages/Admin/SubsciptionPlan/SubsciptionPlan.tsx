@@ -6,36 +6,46 @@ import { SubscriptionPlanColumns } from "./components/SubscriptionPlanColumns";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Plus, Zap } from "lucide-react";
-import type { CreateSubscriptionPlanFormData, UpdateSubscriptionPlanFormData } from "@/schemas/subscriptionPlanSchema";
+import type {
+  CreateSubscriptionPlanFormData,
+  UpdateSubscriptionPlanFormData,
+} from "@/schemas/subscriptionPlanSchema";
 import SubscriptionPlanForm from "./components/SubscriptionPlanForm";
-import SubscriptionPlanFilter from "./components/SubscriptionPlanFilter";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import type { Filter } from "@/components/ui/managementFilter/ManagementFilter";
+import ManagementFilter from "@/components/ui/managementFilter/ManagementFilter";
+import { subscriptionPlanSortByList } from "@/constants/sortByList";
 
 function SubsciptionPlan() {
   const [data, setData] = useState<SubscriptionPlan[]>([]);
   const [page, setPage] = useState(1);
   const [pageSize] = useState(8);
   const [total, setTotal] = useState(0);
-  const [search, setSearch] = useState("");
-  const [sortBy, setSortBy] = useState<keyof SubscriptionPlan>("name");
-  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
   const [loading, setLoading] = useState(false);
+  const [filters, setFilters] = useState<Filter>({
+    search: "",
+    sortBy: "name",
+    sortOrder: "asc",
+  });
 
   // Form state
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const [selectedPlan, setSelectedPlan] = useState<SubscriptionPlan | null>(null);
+  const [selectedPlan, setSelectedPlan] = useState<SubscriptionPlan | null>(
+    null,
+  );
   const [formMode, setFormMode] = useState<"create" | "update">("create");
 
   const fetchSubscriptionPlans = async () => {
     setLoading(true);
     try {
-      const response = await subscriptionPlanManagementApi.getAllSubscriptionPlans({
-        page,
-        pageSize,
-        search,
-        sortBy,
-        sortOrder,
-      });
+      const response =
+        await subscriptionPlanManagementApi.getAllSubscriptionPlans({
+          page,
+          pageSize,
+          search: filters.search,
+          sortBy: filters.sortBy,
+          sortOrder: filters.sortOrder,
+        });
       setData(response.data.items);
       setTotal(response.data.totalCount);
     } catch (error) {
@@ -47,7 +57,9 @@ function SubsciptionPlan() {
 
   const handleDeleteSubscriptionPlan = async (subscriptionPlanId: string) => {
     try {
-      await subscriptionPlanManagementApi.deleteSubscriptionPlan(subscriptionPlanId);
+      await subscriptionPlanManagementApi.deleteSubscriptionPlan(
+        subscriptionPlanId,
+      );
       toast.success("Subscription plan deleted successfully");
       fetchSubscriptionPlans();
     } catch (error: any) {
@@ -102,7 +114,7 @@ function SubsciptionPlan() {
   useEffect(() => {
     fetchSubscriptionPlans();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page, pageSize, search, sortBy, sortOrder]);
+  }, [page, pageSize, filters]);
 
   const handlePageChange = (newPage: number) => {
     setPage(newPage);
@@ -129,7 +141,7 @@ function SubsciptionPlan() {
             </div>
             <Button
               onClick={triggerCreateSubscriptionPlan}
-              className="bg-gradient-to-r from-yellow-600 to-yellow-700 hover:from-yellow-700 hover:to-yellow-800 text-white font-semibold gap-2"
+              className="bg-linear-to-r from-yellow-600 to-yellow-700 hover:from-yellow-700 hover:to-yellow-800 text-white font-semibold gap-2"
             >
               <Plus className="h-4 w-4" />
               New Plan
@@ -142,14 +154,11 @@ function SubsciptionPlan() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
         {/* Filter Card */}
         <Card className="border-0 shadow-sm">
-          <CardContent className="pt-6">
-            <SubscriptionPlanFilter
-              onSearchChange={setSearch}
-              onSortByChange={setSortBy}
-              onSortOrderChange={setSortOrder}
-              search={search}
-              sortBy={sortBy}
-              sortOrder={sortOrder}
+          <CardContent className="flex gap-3 items-center">
+            <ManagementFilter
+              filter={filters}
+              setFilter={setFilters}
+              sortByList={subscriptionPlanSortByList}
             />
           </CardContent>
         </Card>
@@ -157,9 +166,7 @@ function SubsciptionPlan() {
         {/* Data Table Card */}
         <Card className="border-0 shadow-sm">
           <CardHeader className="border-b border-gray-100">
-            <CardTitle>
-              Plans ({total})
-            </CardTitle>
+            <CardTitle>Plans ({total})</CardTitle>
           </CardHeader>
           <CardContent className="pt-6">
             <DataTable
@@ -195,4 +202,3 @@ function SubsciptionPlan() {
 }
 
 export default SubsciptionPlan;
-    

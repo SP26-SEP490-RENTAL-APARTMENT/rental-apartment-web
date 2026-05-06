@@ -11,6 +11,15 @@ import type { AssignInspectionFormData } from "@/schemas/assignInspection";
 import { inspectionApi } from "@/services/privateApi/adminApi";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CheckCircle2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  inspectionStatusList,
+  listingSortByList,
+} from "@/constants/sortByList";
+import ManagementFilter, {
+  type Filter,
+} from "@/components/ui/managementFilter/ManagementFilter";
+import ApproveListingFilter from "./components/ApproveListingFilter";
 
 function ApproveListings() {
   const [approveListings, setApproveListings] = useState<Apartment[]>([]);
@@ -20,16 +29,23 @@ function ApproveListings() {
   const [loading, setLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [inspectionForm, setInspectionForm] = useState(false);
+  const [filter, setFilter] = useState<Filter>({
+    search: "",
+    sortOrder: "asc",
+    sortBy: listingSortByList[0]?.value || "",
+  });
+  const [inspectionStatus, setInspectionStatus] = useState<string>("all");
 
   const fetchApproveListings = useCallback(async () => {
     setLoading(true);
     try {
       const response = await apartmentManagementApi.getApproveListings({
         page,
-        pageSize: 8,
-        search: "",
-        sortBy: "createdAt",
-        sortOrder: "desc",
+        pageSize: 10,
+        search: filter.search,
+        sortBy: filter.sortBy,
+        sortOrder: filter.sortOrder,
+        inspectionStatus: inspectionStatus === "all" ? "" : inspectionStatus,
       });
       setApproveListings(response.data.items);
       setTotalCount(response.data.totalCount);
@@ -38,7 +54,7 @@ function ApproveListings() {
     } finally {
       setLoading(false);
     }
-  }, [page]);
+  }, [page, filter, inspectionStatus]);
 
   const handleApprove = async (data: ListingApproveFormData) => {
     try {
@@ -81,6 +97,15 @@ function ApproveListings() {
     setPage(newPage);
   };
 
+  const handleResetFilters = () => {
+    setFilter({
+      search: "",
+      sortOrder: "asc",
+      sortBy: listingSortByList[0]?.value || "",
+    });
+    setInspectionStatus("all");
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
@@ -91,7 +116,9 @@ function ApproveListings() {
               <CheckCircle2 className="h-6 w-6 text-cyan-600" />
             </div>
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">Approve Listings</h1>
+              <h1 className="text-3xl font-bold text-gray-900">
+                Approve Listings
+              </h1>
               <p className="text-gray-600 mt-1">
                 Review and approve new property listings
               </p>
@@ -101,17 +128,33 @@ function ApproveListings() {
       </div>
 
       {/* Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+        <Card className="border-0 shadow-sm">
+          <CardContent className="flex gap-3 items-center">
+            <ManagementFilter
+              filter={filter}
+              setFilter={setFilter}
+              sortByList={listingSortByList}
+            />
+            <ApproveListingFilter
+              setStatus={setInspectionStatus}
+              status={inspectionStatus}
+              statusList={inspectionStatusList}
+            />
+            <Button variant="outline" onClick={handleResetFilters}>
+              Reset Filters
+            </Button>
+          </CardContent>
+        </Card>
+
         <Card className="border-0 shadow-sm">
           <CardHeader className="border-b border-gray-100">
-            <CardTitle>
-              Pending Approvals ({totalCount})
-            </CardTitle>
+            <CardTitle>Pending Approvals ({totalCount})</CardTitle>
           </CardHeader>
           <CardContent className="pt-6">
             <DataTable
               data={approveListings}
-              limit={8}
+              limit={10}
               loading={loading}
               onPageChange={handlePageChange}
               columns={ListingColumns(triggerApprove, triggerAssignInspection)}
@@ -142,4 +185,3 @@ function ApproveListings() {
 }
 
 export default ApproveListings;
-  

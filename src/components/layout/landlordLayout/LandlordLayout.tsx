@@ -13,7 +13,7 @@ function LandlordLayout() {
             <SidebarTrigger />
           </div>
 
-          <div className="p-6">
+          <div className="">
             <Outlet />
           </div>
         </main>

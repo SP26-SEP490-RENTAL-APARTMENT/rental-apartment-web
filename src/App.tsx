@@ -43,6 +43,10 @@ import HomePage from "./pages/Home/Home";
 import SupportRequest from "./pages/Tenant/SupportRequest/SupportRequest";
 import { useEffect } from "react";
 import i18next from "i18next";
+import PaymentHistories from "./pages/Landlord/PaymentHistory/PaymentHistories";
+import Payment from "./pages/Tenant/PaymentHistory/Payment";
+import AllApartment from "./pages/Admin/AllApartments/AllApartment";
+import SupportManagement from "./pages/Admin/AdminSupport/SupportManagement";
 
 /**
  * App Component - Simplified routing setup
@@ -88,6 +92,14 @@ export default function App() {
             element={
               <ProtectedRoute requiredRoles={["admin"]}>
                 <UserManagement />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path={ROUTES.ADMIN_APARTMENTS}
+            element={
+              <ProtectedRoute requiredRoles={["admin"]}>
+                <AllApartment />
               </ProtectedRoute>
             }
           />
@@ -155,6 +167,14 @@ export default function App() {
               </ProtectedRoute>
             }
           />
+          <Route
+            path={ROUTES.ADMIN_SUPPORT}
+            element={
+              <ProtectedRoute requiredRoles={["admin", "staff"]}>
+                <SupportManagement />
+              </ProtectedRoute>
+            }
+          />
         </Route>
 
         {/* ========== Landlord Routes ========== */}
@@ -188,6 +208,14 @@ export default function App() {
             element={
               <ProtectedRoute requiredRoles={["landlord", "tenant"]}>
                 <BookingManagement />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path={ROUTES.LANDLORD_PAYMENT_HISTORY}
+            element={
+              <ProtectedRoute requiredRoles={["landlord", "tenant"]}>
+                <PaymentHistories />
               </ProtectedRoute>
             }
           />
@@ -248,6 +276,14 @@ export default function App() {
             element={
               <ProtectedRoute requiredRoles={["tenant", "landlord"]}>
                 <SupportRequest />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path={ROUTES.TENANT_PAYMENT_HISTORY}
+            element={
+              <ProtectedRoute requiredRoles={["tenant", "landlord"]}>
+                <Payment />
               </ProtectedRoute>
             }
           />

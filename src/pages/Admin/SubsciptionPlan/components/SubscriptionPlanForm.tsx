@@ -37,8 +37,7 @@ function SubscriptionPlanForm({
   subscriptionPlan,
   mode,
 }: SubscriptionPlanFormProps) {
-   const { t } = useTranslation();
-  const { t: sub } = useTranslation("subscriptionPlan");
+  const { t } = useTranslation();
 
   const isCreate = mode === "create";
   const schema = isCreate
@@ -104,16 +103,15 @@ function SubscriptionPlanForm({
       <DialogContent className="sm:max-w-106.25">
         <DialogHeader>
           <DialogTitle>
-            {isCreate ? sub("createSubscriptionPlan") : sub("editSubscriptionPlan")}
+            {isCreate ? "Create subscription plan" : "Edit subscription plan"}
           </DialogTitle>
         </DialogHeader>
 
         <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
           <div className="grid gap-4 py-4">
-
             {/* NAME */}
             <div className="grid gap-2">
-              <Label>{sub("subscriptionName")}</Label>
+              <Label>Name</Label>
               <Input {...register("name")} />
               {errors.name && (
                 <p className="text-sm text-destructive">
@@ -124,7 +122,7 @@ function SubscriptionPlanForm({
 
             {/* DESCRIPTION */}
             <div className="grid gap-2">
-              <Label>{sub("subscriptionPlanDescription")}</Label>
+              <Label>Description</Label>
               <Input {...register("description")} />
               {errors.description && (
                 <p className="text-sm text-destructive">
@@ -135,7 +133,7 @@ function SubscriptionPlanForm({
 
             {/* PRICE MONTHLY */}
             <div className="grid gap-2">
-              <Label>{sub("subscriptionPriceMonthly")}</Label>
+              <Label>Month price</Label>
               <Input
                 type="number"
                 {...register("priceMonthly", { valueAsNumber: true })}
@@ -149,7 +147,7 @@ function SubscriptionPlanForm({
 
             {/* PRICE ANNUAL */}
             <div className="grid gap-2">
-              <Label>{sub("subscriptionPriceAnnual")}</Label>
+              <Label>Annual price</Label>
               <Input
                 type="number"
                 {...register("priceAnnual", { valueAsNumber: true })}
@@ -163,7 +161,7 @@ function SubscriptionPlanForm({
 
             {/* MAX APARTMENTS */}
             <div className="grid gap-2">
-              <Label>{sub("maxApartments")}</Label>
+              <Label>Max appartment</Label>
               <Input
                 type="number"
                 {...register("maxApartments", { valueAsNumber: true })}
@@ -177,7 +175,7 @@ function SubscriptionPlanForm({
 
             {/* FEATURES */}
             <div className="grid gap-2">
-              <Label>{sub("subscriptionFeature")}</Label>
+              <Label>Features</Label>
               <Input {...register("features")} />
               {errors.features && (
                 <p className="text-sm text-destructive">
@@ -188,12 +186,10 @@ function SubscriptionPlanForm({
 
             {/* IS ACTIVE */}
             <div className="grid gap-2">
-              <Label>{sub("isActive")}</Label>
+              <Label>Active</Label>
               <RadioGroup
                 value={watchedIsActive ? "true" : "false"}
-                onValueChange={(val) =>
-                  setValue("isActive", val === "true")
-                }
+                onValueChange={(val) => setValue("isActive", val === "true")}
                 className="flex gap-6"
               >
                 <div className="flex items-center gap-2">
@@ -216,14 +212,10 @@ function SubscriptionPlanForm({
 
           <DialogFooter>
             <Button type="button" variant="outline" onClick={handleClose}>
-              {t("cancel")}
+              Cancel
             </Button>
             <Button type="submit" disabled={isSubmitting}>
-              {isSubmitting
-                ? t("loading")
-                : isCreate
-                ? t("create")
-                : t("update")}
+              {isCreate ? "Create" : "Update"}
             </Button>
           </DialogFooter>
         </form>
