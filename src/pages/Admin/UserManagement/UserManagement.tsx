@@ -9,8 +9,14 @@ import type { User } from "@/types/user";
 import { toast } from "sonner";
 import { Plus, Users } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import type { CreateUserFormData, UpdateUserFormData } from "@/schemas/userSchema";
+import type {
+  CreateUserFormData,
+  UpdateUserFormData,
+} from "@/schemas/userSchema";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import type { Filter } from "@/components/ui/managementFilter/ManagementFilter";
+import { roleList, sortByList } from "../../../constants/sortByList";
+import ManagementFilter from "@/components/ui/managementFilter/ManagementFilter";
 
 function UserManagement() {
   const { t: userTranslation } = useTranslation("user");
@@ -18,13 +24,13 @@ function UserManagement() {
   const [data, setData] = useState<User[]>([]);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
-  const [pageSize] = useState(8);
   const [total, setTotal] = useState(0);
-  const [search, setSearch] = useState("");
-  const [sortBy, setSortBy] = useState<keyof User>("fullName");
-  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
-
-  // Form state
+  const [filter, setFilter] = useState<Filter>({
+    search: "",
+    sortOrder: "asc",
+    sortBy: sortByList[0]?.value || "",
+  });
+  const [role, setRole] = useState<string>("all");
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [formMode, setFormMode] = useState<"create" | "update">("create");
@@ -34,10 +40,11 @@ function UserManagement() {
     try {
       const response = await userManagementApi.getAllUsers({
         page,
-        pageSize,
-        search,
-        sortBy,
-        sortOrder,
+        pageSize: 10,
+        search: filter.search,
+        sortBy: filter.sortBy,
+        sortOrder: filter.sortOrder,
+        role: role === "all" ? "" : role,
       });
 
       setData(response.data.items);
@@ -116,10 +123,19 @@ function UserManagement() {
 
   useEffect(() => {
     fetchUsers();
-  }, [page, pageSize, search, sortBy, sortOrder]);
+  }, [page, filter, role]);
 
   const handlePageChange = (newPage: number) => {
     setPage(newPage);
+  };
+
+  const handleResetFilters = () => {
+    setFilter({
+      search: "",
+      sortOrder: "asc",
+      sortBy: sortByList[0]?.value || "",
+    });
+    setRole("all");
   };
 
   return (
@@ -143,7 +159,7 @@ function UserManagement() {
             </div>
             <Button
               onClick={handleCreateNewUser}
-              className="bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white font-semibold gap-2"
+              className="bg-linear-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white font-semibold gap-2"
             >
               <Plus className="h-4 w-4" />
               New User
@@ -156,24 +172,23 @@ function UserManagement() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
         {/* Filter Card */}
         <Card className="border-0 shadow-sm">
-          <CardContent className="pt-6">
-            <UserFilter
-              search={search}
-              sortBy={sortBy}
-              sortOrder={sortOrder}
-              onSearchChange={setSearch}
-              onSortByChange={setSortBy}
-              onSortOrderChange={setSortOrder}
+          <CardContent className="flex gap-3 items-center">
+            <ManagementFilter
+              filter={filter}
+              setFilter={setFilter}
+              sortByList={sortByList}
             />
+            <UserFilter role={role} roleList={roleList} setRole={setRole} />
+            <Button variant="outline" onClick={handleResetFilters}>
+              Reset Filters
+            </Button>
           </CardContent>
         </Card>
 
         {/* Data Table Card */}
         <Card className="border-0 shadow-sm">
           <CardHeader className="border-b border-gray-100">
-            <CardTitle>
-              Users ({total})
-            </CardTitle>
+            <CardTitle>Users ({total})</CardTitle>
           </CardHeader>
           <CardContent className="pt-6">
             <DataTable
@@ -181,7 +196,7 @@ function UserManagement() {
               data={data}
               total={total}
               page={page}
-              limit={pageSize}
+              limit={10}
               onPageChange={handlePageChange}
               loading={loading}
             />
@@ -202,4 +217,3 @@ function UserManagement() {
 }
 
 export default UserManagement;
-  

@@ -38,10 +38,14 @@ function SubmitApproveForm({
           }}
         >
           <div className="space-y-4">
-            <div className="grid gap-2">
-              <Label htmlFor="apartmentId">Apartment</Label>
-              <Input value={apartmentId} disabled id="apartmentId" />
-            </div>
+
+              <Input
+                value={apartmentId}
+                type="hidden"
+                disabled
+                id="apartmentId"
+              />
+
 
             <div className="grid gap-2">
               <Label htmlFor="note">Note</Label>

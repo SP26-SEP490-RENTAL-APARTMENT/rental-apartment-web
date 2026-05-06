@@ -25,7 +25,7 @@ function BookingHistories() {
     try {
       const response = await bookingApi.getBookingHistory({
         page,
-        pageSize: 6,
+        pageSize: 10,
         sortBy: "createdAt",
         sortOrder: "desc",
         search: "",
@@ -48,7 +48,7 @@ function BookingHistories() {
     setIsDialogOpen(true);
   };
 
-  const totalPage = Math.ceil(totalCount / 6);
+  const totalPage = Math.ceil(totalCount / 10);
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">

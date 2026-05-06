@@ -166,8 +166,23 @@ export const inspectionApi = {
 export const reportApi = {
   getCatalog: (params: ParamsProp) =>
     apiConfig.privateApi.get("/reports/catalog", { params }),
-  createReport: (data: CatalogFormData) => apiConfig.privateApi.post("/reports", data),
+  createReport: (data: CatalogFormData) =>
+    apiConfig.privateApi.post("/reports", data),
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   runReport: (reportId: string, data: any) =>
     apiConfig.privateApi.post(`/reports/${reportId}/run`, data),
+};
+
+export const adminApartmentApi = {
+  getApartments: (params: ParamsProp) =>
+    apiConfig.privateApi.get("/apartments", { params }),
+  unPublish: (apartmentId: string, reason: string) =>
+    apiConfig.privateApi.post(`/apartments/${apartmentId}/unpublish`, {
+      reason,
+    }),
+};
+
+export const supportManagementApi = {
+  getAllRequests: (params: ParamsProp) =>
+    apiConfig.privateApi.get("/SupportTicket", { params }),
 };

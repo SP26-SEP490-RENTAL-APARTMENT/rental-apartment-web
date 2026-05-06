@@ -75,17 +75,17 @@ function RoomForm({ isOpen, mode, onClose, onSubmit, room, apartment }: Props) {
     }
   }, [room, isCreate, reset, apartment?.apartmentId]);
   const handleFormSubmit = async (
-      data: CreateRoomFormData | UpdateRoomFormData,
-    ) => {
-      try {
-        await onSubmit(data);
-        reset();
-        onClose();
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      } catch (error) {
-        /* empty */
-      }
-    };
+    data: CreateRoomFormData | UpdateRoomFormData,
+  ) => {
+    try {
+      await onSubmit(data);
+      reset();
+      onClose();
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (error) {
+      /* empty */
+    }
+  };
   const handleClose = () => {
     reset();
     onClose();
@@ -99,18 +99,17 @@ function RoomForm({ isOpen, mode, onClose, onSubmit, room, apartment }: Props) {
         <form className="space-y-4" onSubmit={handleSubmit(handleFormSubmit)}>
           <div className="grid gap-4 py-4">
             {/* NAME */}
-            <div className="grid gap-2">
-              <Label>Apartment</Label>
-              <Input disabled type="text" {...register("apartmentId")} />
-              {errors.apartmentId && (
-                <p className="text-sm text-destructive">
-                  {errors.apartmentId.message}
-                </p>
-              )}
-            </div>
+
+            <Input disabled type="hidden" {...register("apartmentId")} />
+            {errors.apartmentId && (
+              <p className="text-sm text-destructive">
+                {errors.apartmentId.message}
+              </p>
+            )}
+
             <div className="grid gap-2">
               <Label>Title</Label>
-              <Input type="text" {...register("title")} />
+              <Input type="text" {...register("title")} placeholder="King, queen,..." />
               {errors.title && (
                 <p className="text-sm text-destructive">
                   {errors.title.message}
@@ -119,7 +118,7 @@ function RoomForm({ isOpen, mode, onClose, onSubmit, room, apartment }: Props) {
             </div>
             <div className="grid gap-2">
               <Label>Description</Label>
-              <Input type="text" {...register("description")} />
+              <Input type="text" {...register("description")} placeholder="A private bed with..." />
               {errors.description && (
                 <p className="text-sm text-destructive">
                   {errors.description.message}

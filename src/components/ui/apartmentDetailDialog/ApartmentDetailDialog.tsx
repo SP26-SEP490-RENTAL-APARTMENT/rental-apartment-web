@@ -118,6 +118,7 @@ function ApartmentDetailDialog({ apartment, onAddPhotos }: Props) {
           value={`${apartment.basePricePerNight.toLocaleString()} VND`}
         />
         <Info label="Max occupant" value={apartment.maxOccupants} />
+        <Info label="Max infants" value={apartment.maxInfants} />
         <Info
           label="Pet"
           value={apartment.isPetAllowed ? "Allow" : "Not allowed"}

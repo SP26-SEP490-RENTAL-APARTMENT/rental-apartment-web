@@ -9,6 +9,7 @@ import {
   Package,
   Hotel,
   Search,
+  Ticket,
 } from "lucide-react";
 
 export const useAadminNavList = () => {
@@ -21,6 +22,11 @@ export const useAadminNavList = () => {
         url: "/admin/inspection",
         icon: Search,
       },
+      {
+        title: "Support",
+        url: "/admin/support",
+        icon: Ticket,
+      },
     ];
   }
 
@@ -29,6 +35,11 @@ export const useAadminNavList = () => {
       title: "Dashboard",
       url: "/admin/dashboard",
       icon: LayoutDashboard,
+    },
+    {
+      title: "Apartments",
+      url: "/admin/apartments",
+      icon: Hotel,
     },
     {
       title: "Users",
@@ -74,6 +85,11 @@ export const useAadminNavList = () => {
       title: "Inspection",
       url: "/admin/inspection",
       icon: Search,
+    },
+    {
+      title: "Support",
+      url: "/admin/support",
+      icon: Ticket,
     },
   ];
 };

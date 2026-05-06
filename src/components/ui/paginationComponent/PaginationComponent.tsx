@@ -46,6 +46,7 @@ function PaginationComponent({
               <span className="px-2 text-gray-500">...</span>
             ) : (
               <PaginationLink
+              className="cursor-pointer"
                 isActive={p === page}
                 onClick={() => onPageChange(p)}
               >

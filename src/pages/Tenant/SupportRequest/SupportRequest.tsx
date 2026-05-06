@@ -1,10 +1,7 @@
 import { supportTicketApi } from "@/services/privateApi/tenantApi";
 import type { SupportTicket } from "@/types/supportTicket";
 import { useCallback, useEffect, useState } from "react";
-import {
-  SupportTicketFilters,
-  type FilterState,
-} from "./components/SupportTicketFilters";
+import { SupportTicketFilters } from "./components/SupportTicketFilters";
 import { SupportTicketCard } from "./components/SupportTicketCard";
 import { SupportTicketSkeleton } from "./components/SupportTicketSkeleton";
 import { CreateTicketDialog } from "./components/CreateTicketDialog";
@@ -21,6 +18,10 @@ import {
 import { Plus, AlertCircle } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
+import type { Filter } from "@/components/ui/managementFilter/ManagementFilter";
+import ManagementFilter from "@/components/ui/managementFilter/ManagementFilter";
+import { supportTicketSortByList } from "@/constants/sortByList";
+import { Card, CardContent } from "@/components/ui/card";
 
 function SupportRequest() {
   const { t } = useTranslation("support");
@@ -32,11 +33,15 @@ function SupportRequest() {
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(false);
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
-  const [filters, setFilters] = useState<FilterState>({
-    status: "all",
-    priority: "all",
-    category: "all",
+  const [filters, setFilters] = useState<Filter>({
     search: "",
+    sortBy: "createdAt",
+    sortOrder: "desc",
+  });
+  const [addFilters, setAddFilters] = useState({
+    status: "",
+    priority: "",
+    category: "",
   });
 
   const pageSize = 9;
@@ -45,28 +50,18 @@ function SupportRequest() {
   const fetchMyTickets = useCallback(async () => {
     setLoading(true);
     try {
-      const params: any = {
+      const response = await supportTicketApi.getMyTickets({
         page,
-        pageSize,
-        sortBy: "createdAt",
-        sortOrder: "desc",
-      };
-
-      // Add filters to params if they are not "all"
-      if (filters.status !== "all") {
-        params.status = filters.status;
-      }
-      if (filters.priority !== "all") {
-        params.priority = filters.priority;
-      }
-      if (filters.category !== "all") {
-        params.category = filters.category;
-      }
-      if (filters.search) {
-        params.search = filters.search;
-      }
-
-      const response = await supportTicketApi.getMyTickets(params);
+        pageSize: 10,
+        search: filters.search,
+        sortBy: filters.sortBy,
+        sortOrder: filters.sortOrder,
+        category:
+          addFilters.category === "all" ? undefined : addFilters.category,
+        priority:
+          addFilters.priority === "all" ? undefined : addFilters.priority,
+        status: addFilters.status === "all" ? undefined : addFilters.status,
+      });
       setTickets(response.data.items);
       setTotal(response.data.totalCount);
     } catch (error: any) {
@@ -75,19 +70,29 @@ function SupportRequest() {
     } finally {
       setLoading(false);
     }
-  }, [page, filters]);
+  }, [page, filters, addFilters]);
 
   useEffect(() => {
     setPage(1); // Reset to page 1 when filters change
-  }, [filters]);
+  }, [filters, addFilters]);
 
   useEffect(() => {
     fetchMyTickets();
   }, [fetchMyTickets]);
 
-  const handleFilterChange = (newFilters: FilterState) => {
-    setFilters(newFilters);
-  };
+  // const handleResetFilters = () => {
+  //   setPage(1);
+  //   setFilters({
+  //     search: "",
+  //     sortBy: "createdAt",
+  //     sortOrder: "desc",
+  //   });
+  //   setAddFilters({
+  //     status: "",
+  //     priority: "",
+  //     category: "",
+  //   });
+  // };
 
   const handleViewTicket = (ticket: SupportTicket) => {
     setDetailDialogOpen(true);
@@ -131,9 +136,18 @@ function SupportRequest() {
         <div className="space-y-6">
           {/* Filters */}
           <SupportTicketFilters
-            onFilterChange={handleFilterChange}
-            isLoading={loading}
+            addFilters={addFilters}
+            setAddFilters={setAddFilters}
           />
+          <Card>
+            <CardContent>
+              <ManagementFilter
+                filter={filters}
+                setFilter={setFilters}
+                sortByList={supportTicketSortByList}
+              />
+            </CardContent>
+          </Card>
 
           {/* Empty State */}
           {!loading && tickets.length === 0 && (

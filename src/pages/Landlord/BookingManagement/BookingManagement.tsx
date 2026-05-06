@@ -3,9 +3,6 @@ import { bookingManagementApi } from "@/services/privateApi/landlordApi";
 import type { BookingHistory } from "@/types/bookingHistory";
 import { useCallback, useEffect, useState } from "react";
 import { BookingColumns } from "./components/BookingColumns";
-import BookingManagementFilter, {
-  type BookingFilterValues,
-} from "./components/BookingManagementFilter";
 import type { Occupant } from "@/types/occupant";
 import ViewOccupantDialog from "./components/ViewOccupantDialog";
 import AddOccupantDialog from "./components/AddOccupantDialog";
@@ -22,6 +19,9 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import ApartmentDetailDialog from "@/components/ui/apartmentDetailDialog/ApartmentDetailDialog";
+import ManagementFilter, { type Filter } from "@/components/ui/managementFilter/ManagementFilter";
+import { bookingSortByList } from "@/constants/sortByList";
+import { Button } from "@/components/ui/button";
 
 function BookingManagement() {
   const [bookings, setBookings] = useState<BookingHistory[]>([]);
@@ -30,7 +30,7 @@ function BookingManagement() {
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [totalCount, setTotalCount] = useState(0);
-  const [filters, setFilters] = useState<BookingFilterValues>({
+  const [filters, setFilters] = useState<Filter>({
     search: "",
     sortBy: "createdAt",
     sortOrder: "desc",
@@ -45,7 +45,7 @@ function BookingManagement() {
     try {
       const response = await bookingManagementApi.getBookings({
         page,
-        pageSize: 8,
+        pageSize: 10,
         search: filters.search,
         sortBy: filters.sortBy,
         sortOrder: filters.sortOrder,
@@ -171,20 +171,16 @@ function BookingManagement() {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Filter Section */}
-        <Card className="border-0 shadow-sm mb-8">
-          <CardHeader className="border-b border-gray-100">
-            <CardTitle>Search & Filter</CardTitle>
-          </CardHeader>
-          <CardContent className="pt-6">
-            <BookingManagementFilter
-              filters={filters}
-              onFilterChange={(values) => {
-                setPage(1);
-                setFilters(values);
-              }}
-              onReset={handleResetFilters}
+        <Card className="border-0 shadow-sm">
+          <CardContent className="flex gap-3 items-center">
+            <ManagementFilter
+              filter={filters}
+              setFilter={setFilters}
+              sortByList={bookingSortByList}
             />
+            <Button variant="outline" onClick={handleResetFilters}>
+              Reset Filters
+            </Button>
           </CardContent>
         </Card>
 
@@ -203,7 +199,7 @@ function BookingManagement() {
                 fetchApartmentDetails
               )}
               data={bookings}
-              limit={8}
+              limit={10}
               loading={loading}
               total={totalCount}
               page={page}

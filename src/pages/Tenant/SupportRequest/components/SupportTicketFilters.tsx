@@ -1,42 +1,31 @@
-import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
+  SelectGroup,
   SelectItem,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
-import { Search, X } from "lucide-react";
-import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
 interface SupportTicketFiltersProps {
-  onFilterChange: (filters: FilterState) => void;
-  isLoading?: boolean;
+  addFilters: AddFilter;
+  setAddFilters: (filters: AddFilter) => void;
 }
 
-export interface FilterState {
+export interface AddFilter {
   status: string;
   priority: string;
   category: string;
-  search: string;
 }
 
 export function SupportTicketFilters({
-  onFilterChange,
-  isLoading,
+  addFilters,
+  setAddFilters,
 }: SupportTicketFiltersProps) {
   const { t } = useTranslation("support");
-  const [filters, setFilters] = useState<FilterState>({
-    status: "all",
-    priority: "all",
-    category: "all",
-    search: "",
-  });
 
-  const statusOptions = [
-    { value: "all", label: t("support.filters.allStatus") },
+  const statusList = [
     { value: "open", label: t("support.statuses.open") },
     { value: "in_progress", label: t("support.statuses.in_progress") },
     { value: "resolved", label: t("support.statuses.resolved") },
@@ -45,7 +34,6 @@ export function SupportTicketFilters({
   ];
 
   const priorityOptions = [
-    { value: "all", label: t("support.filters.allPriority") },
     { value: "low", label: t("support.priorities.low") },
     { value: "medium", label: t("support.priorities.medium") },
     { value: "high", label: t("support.priorities.high") },
@@ -53,7 +41,6 @@ export function SupportTicketFilters({
   ];
 
   const categoryOptions = [
-    { value: "all", label: t("support.filters.allCategory") },
     { value: "booking_issue", label: t("support.categories.booking_issue") },
     { value: "payment_problem", label: t("support.categories.payment_problem") },
     { value: "listing_problem", label: t("support.categories.listing_problem") },
@@ -67,110 +54,73 @@ export function SupportTicketFilters({
     { value: "other", label: t("support.categories.other") },
   ];
 
-  const handleFilterChange = (key: keyof FilterState, value: string) => {
-    const newFilters = { ...filters, [key]: value };
-    setFilters(newFilters);
-    onFilterChange(newFilters);
-  };
-
-  const handleReset = () => {
-    const resetFilters = {
-      status: "all",
-      priority: "all",
-      category: "all",
-      search: "",
-    };
-    setFilters(resetFilters);
-    onFilterChange(resetFilters);
-  };
-
-  const hasActiveFilters =
-    filters.status !== "all" ||
-    filters.priority !== "all" ||
-    filters.category !== "all" ||
-    filters.search !== "";
-
   return (
-    <div className="bg-white rounded-lg border border-gray-200 p-4 space-y-4">
-      {/* Search Input */}
-      <div className="relative">
-        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-        <Input
-          placeholder={t("support.filters.search")}
-          className="pl-10"
-          value={filters.search}
-          onChange={(e) => handleFilterChange("search", e.target.value)}
-          disabled={isLoading}
-        />
-      </div>
+    <div className="flex gap-3 items-center">
+      <Select
+        value={addFilters.status}
+        onValueChange={(value) =>
+          setAddFilters({ ...addFilters, status: value })
+        }
+      >
+        <SelectTrigger className="w-45 bg-blue-100">
+          <SelectValue placeholder="Select status" />
+        </SelectTrigger>
 
-      {/* Filters Row */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-        <Select
-          value={filters.status}
-          onValueChange={(value) => handleFilterChange("status", value)}
-          disabled={isLoading}
-        >
-          <SelectTrigger>
-            <SelectValue placeholder={t("filters.statusPlaceholder")} />
-          </SelectTrigger>
-          <SelectContent>
-            {statusOptions.map((option) => (
-              <SelectItem key={option.value} value={option.value}>
-                {option.label}
+        <SelectContent className="bg-blue-200">
+          <SelectGroup>
+            <SelectItem value="all">All</SelectItem>
+            {statusList.map((item) => (
+              <SelectItem key={item.value} value={item.value}>
+                {item.label}
               </SelectItem>
             ))}
-          </SelectContent>
-        </Select>
+          </SelectGroup>
+        </SelectContent>
+      </Select>
 
-        <Select
-          value={filters.priority}
-          onValueChange={(value) => handleFilterChange("priority", value)}
-          disabled={isLoading}
-        >
-          <SelectTrigger>
-            <SelectValue placeholder={t("filters.priorityPlaceholder")} />
-          </SelectTrigger>
-          <SelectContent>
-            {priorityOptions.map((option) => (
-              <SelectItem key={option.value} value={option.value}>
-                {option.label}
+      <Select
+        value={addFilters.category}
+        onValueChange={(value) =>
+          setAddFilters({ ...addFilters, category: value })
+        }
+      >
+        <SelectTrigger className="w-45 bg-blue-200">
+          <SelectValue placeholder="Select category" />
+        </SelectTrigger>
+
+        <SelectContent className="bg-blue-300">
+          <SelectGroup>
+            <SelectItem value="all">All</SelectItem>
+            {categoryOptions.map((item) => (
+              <SelectItem key={item.value} value={item.value}>
+                {item.label}
               </SelectItem>
             ))}
-          </SelectContent>
-        </Select>
+          </SelectGroup>
+        </SelectContent>
+      </Select>
 
-        <Select
-          value={filters.category}
-          onValueChange={(value) => handleFilterChange("category", value)}
-          disabled={isLoading}
-        >
-          <SelectTrigger>
-            <SelectValue placeholder={t("filters.categoryPlaceholder")} />
-          </SelectTrigger>
-          <SelectContent>
-            {categoryOptions.map((option) => (
-              <SelectItem key={option.value} value={option.value}>
-                {option.label}
+      <Select
+        value={addFilters.priority}
+        onValueChange={(value) =>
+          setAddFilters({ ...addFilters, priority: value })
+        }
+      >
+        <SelectTrigger className="w-45 bg-blue-300">
+          <SelectValue placeholder="Select priority" />
+        </SelectTrigger>
+
+        <SelectContent className="bg-blue-400">
+          <SelectGroup>
+            <SelectItem value="all">All</SelectItem>
+            {priorityOptions.map((item) => (
+              <SelectItem key={item.value} value={item.value}>
+                {item.label}
               </SelectItem>
             ))}
-          </SelectContent>
-        </Select>
-      </div>
-
-      {/* Reset Button */}
-      {hasActiveFilters && (
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={handleReset}
-          disabled={isLoading}
-          className="w-full md:w-auto"
-        >
-          <X className="h-4 w-4 mr-2" />
-          {t("filters.reset")}
-        </Button>
-      )}
+          </SelectGroup>
+        </SelectContent>
+      </Select>
     </div>
   );
 }

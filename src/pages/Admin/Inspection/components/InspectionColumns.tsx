@@ -64,6 +64,10 @@ export const InspectionColumns = (
   {
     accessorKey: "approvedAt",
     header: "Approve at",
+    cell: ({ row }) => {
+      const approvedAt = row.original.approvedAt;
+      return approvedAt ? new Date(approvedAt).toLocaleString() : "N/A";
+    },
   },
   {
     id: "actions",

@@ -82,16 +82,17 @@ export const profileApi = {
 };
 
 export const supportTicketApi = {
-  createTicket: (data: {
-    subject: string;
-    description: string;
-    category: string;
-    priority: string;
-  }) => apiConfig.privateApi.post("/SupportTicket", data),
+  createTicket: (data: FormData) =>
+    apiConfig.privateApi.post("/SupportTicket", data),
   getMyTickets: (params: ParamsProp) =>
     apiConfig.privateApi.get("/SupportTicket/my", { params }),
   getTicketDetail: (ticketId: string) =>
     apiConfig.privateApi.get(`/SupportTicket/${ticketId}`),
   // getTicketById: (ticketId: string) =>
   //   apiConfig.privateApi.get(`/SupportTicket/${ticketId}`),
+};
+
+export const tenantPaymentApi = {
+  getPaymentHistory: (params: ParamsProp) =>
+    apiConfig.privateApi.get("/tenant/payments/history", { params }),
 };
