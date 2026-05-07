@@ -77,6 +77,7 @@ function ApproveListings() {
     try {
       await inspectionApi.assignInspection(data);
       toast.success("Assign successfully");
+      fetchApproveListings();
       setInspectionForm(false);
     } catch (error) {
       toast.error("Fail");

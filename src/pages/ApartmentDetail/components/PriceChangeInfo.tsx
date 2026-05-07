@@ -55,7 +55,9 @@ export default function PriceChangeInfo({
     <div className="flex items-center gap-5 text-sm px-3 py-2">
       {/* left */}
       <span className="text-muted-foreground">
-        {formatDate(startDate)} - {formatDate(endDate)}
+        {startDate === endDate
+          ? formatDate(startDate)
+          : `${formatDate(startDate)} - ${formatDate(endDate)}`}
       </span>
 
       {/* middle */}

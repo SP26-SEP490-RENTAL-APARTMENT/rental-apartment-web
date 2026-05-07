@@ -1,6 +1,7 @@
 import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog";
 import { useState } from "react";
 import ManualForm from "./ManualForm";
+import BulkForm from "./BulkForm";
 
 interface Props {
   open: boolean;
@@ -46,7 +47,7 @@ function GeneralDialog({ open, onClose, apartmentId }: Props) {
           {mode === "manual" ? (
             <ManualForm onClose={onClose} apartmentId={apartmentId} />
           ) : (
-            <p>Bulk price update functionality goes here.</p>
+            <BulkForm onClose={onClose} apartmentId={apartmentId} />
           )}
         </div>
       </DialogContent>

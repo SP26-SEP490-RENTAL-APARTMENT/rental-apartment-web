@@ -129,8 +129,6 @@ function InspectionForm({ open, onClose, onSubmit }: Props) {
                 className="cursor-pointer"
               />
 
-              <p className="text-xs text-gray-500">Bạn có thể chọn nhiều ảnh</p>
-
               {errors.Photos && (
                 <p className="text-red-500 text-sm">{errors.Photos.message}</p>
               )}
