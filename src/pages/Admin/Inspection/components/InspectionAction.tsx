@@ -32,14 +32,14 @@ function InspectionAction({
           </Button>
         </DialogTrigger>
 
-        <DialogContent className="max-w-xl">
+        <DialogContent className="max-w-xl max-h-[90vh] flex flex-col">
           <DialogHeader>
             <DialogTitle className="text-xl font-semibold">
               Inspection
             </DialogTitle>
           </DialogHeader>
 
-          <div className="space-y-4 text-sm">
+          <div className="space-y-4 text-sm overflow-y-auto flex-1">
             {/* Status + Condition */}
             <div className="flex items-center justify-between">
               <span className="font-medium text-muted-foreground">Status</span>

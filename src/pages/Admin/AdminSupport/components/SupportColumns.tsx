@@ -2,23 +2,143 @@ import type { SupportTicket } from "@/types/supportTicket";
 import type { ColumnDef } from "@tanstack/react-table";
 import SupportAction from "./SupportAction";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 
-// const getInspectionStatusBadge = (inspectionStatus: string) => {
-//   switch (inspectionStatus) {
-//     case "scheduled":
-//       return <Badge className="bg-blue-500 text-white">Scheduled</Badge>;
-//     case "in_progress":
-//       return <Badge className="bg-green-500 text-white">In progress</Badge>;
-//     case "pending":
-//       return <Badge className="bg-yellow-500 text-white">Pending</Badge>;
-//     case "passed":
-//       return <Badge className="bg-gray-500 text-white">Passed</Badge>;
-//     default:
-//       return <Badge variant="secondary">Not scheduled</Badge>;
-//   }
-// };
+const getCategoryBadge = (category: string) => {
+  switch (category) {
+    case "booking_issue":
+      return (
+        <Badge className="bg-blue-100 text-blue-800 border-blue-200">
+          Booking issue
+        </Badge>
+      );
 
-export const SupportColumns = (): ColumnDef<SupportTicket>[] => [
+    case "payment_problem":
+      return (
+        <Badge className="bg-red-100 text-red-800 border-red-200">
+          Payment problem
+        </Badge>
+      );
+
+    case "listing_problem":
+      return (
+        <Badge className="bg-orange-100 text-orange-800 border-orange-200">
+          Listing problem
+        </Badge>
+      );
+
+    case "account_verification":
+      return (
+        <Badge className="bg-cyan-100 text-cyan-800 border-cyan-200">
+          Account verification
+        </Badge>
+      );
+
+    case "cancellation":
+      return (
+        <Badge className="bg-yellow-100 text-yellow-800 border-yellow-200">
+          Cancellation
+        </Badge>
+      );
+
+    case "dispute":
+      return (
+        <Badge className="bg-purple-100 text-purple-800 border-purple-200">
+          Dispute
+        </Badge>
+      );
+
+    case "property_quality":
+      return (
+        <Badge className="bg-indigo-100 text-indigo-800 border-indigo-200">
+          Property quality
+        </Badge>
+      );
+
+    case "other":
+      return <Badge variant="secondary">Other</Badge>;
+
+    default:
+      return <Badge variant="outline">Unknown</Badge>;
+  }
+};
+
+const getPriorityBadge = (priority: string) => {
+  switch (priority) {
+    case "low":
+      return (
+        <Badge className="bg-gray-100 text-gray-800 border-gray-200">Low</Badge>
+      );
+
+    case "medium":
+      return (
+        <Badge className="bg-blue-100 text-blue-800 border-blue-200">
+          Medium
+        </Badge>
+      );
+
+    case "high":
+      return (
+        <Badge className="bg-orange-100 text-orange-800 border-orange-200">
+          High
+        </Badge>
+      );
+
+    case "urgent":
+      return (
+        <Badge className="bg-red-100 text-red-800 border-red-200">Urgent</Badge>
+      );
+
+    default:
+      return <Badge variant="outline">Unknown</Badge>;
+  }
+};
+
+const getStatusBadge = (status: string) => {
+  switch (status) {
+    case "open":
+      return (
+        <Badge className="bg-yellow-100 text-yellow-800 border-yellow-200">
+          Open
+        </Badge>
+      );
+
+    case "in_progress":
+      return (
+        <Badge className="bg-blue-100 text-blue-800 border-blue-200">
+          In progress
+        </Badge>
+      );
+
+    case "resolved":
+      return (
+        <Badge className="bg-green-100 text-green-800 border-green-200">
+          Resolved
+        </Badge>
+      );
+
+    case "closed":
+      return (
+        <Badge className="bg-gray-100 text-gray-800 border-gray-200">
+          Closed
+        </Badge>
+      );
+
+    case "escalated":
+      return (
+        <Badge className="bg-red-100 text-red-800 border-red-200">
+          Escalated
+        </Badge>
+      );
+
+    default:
+      return <Badge variant="outline">Unknown</Badge>;
+  }
+};
+
+export const SupportColumns = (
+  onResolve: (supportId: string) => void,
+): ColumnDef<SupportTicket>[] => [
   {
     accessorKey: "userId",
     header: "User",
@@ -41,25 +161,25 @@ export const SupportColumns = (): ColumnDef<SupportTicket>[] => [
   {
     accessorKey: "category",
     header: "Category",
+    cell: ({ row }) => {
+      const category = row.original.category;
+      return getCategoryBadge(category);
+    },
   },
   {
     accessorKey: "priority",
     header: "Priority",
+    cell: ({ row }) => {
+      const priority = row.original.priority;
+      return getPriorityBadge(priority);
+    },
   },
   {
     accessorKey: "status",
     header: "Status",
     cell: ({ row }) => {
       const status = row.original.status;
-      return status;
-    },
-  },
-  {
-    accessorKey: "resolvedAt",
-    header: "Resolved At",
-    cell: ({ row }) => {
-      const resolvedAt = row.original.resolvedAt;
-      return resolvedAt ? new Date(resolvedAt).toLocaleString() : "N/A";
+      return getStatusBadge(status);
     },
   },
   {
@@ -67,7 +187,7 @@ export const SupportColumns = (): ColumnDef<SupportTicket>[] => [
     header: "Actions",
     cell: ({ row }) => {
       const support = row.original;
-      return <SupportAction support={support} />;
+      return <SupportAction support={support} onResolve={onResolve} />;
     },
   },
 ];

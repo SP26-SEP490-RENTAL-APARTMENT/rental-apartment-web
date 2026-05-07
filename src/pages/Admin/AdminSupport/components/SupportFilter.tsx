@@ -6,24 +6,26 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { supportCategoryOptions, supportPriorityOptions, supportStatusList } from "@/constants/sortByList";
-
-interface SupportTicketFiltersProps {
-  addFilters: AddFilter;
-  setAddFilters: (filters: AddFilter) => void;
-}
-
-export interface AddFilter {
+interface addFilters {
   status: string;
   priority: string;
   category: string;
 }
 
-export function SupportTicketFilters({
+interface Props {
+  addFilters: addFilters;
+  setAddFilters: (filters: addFilters) => void;
+  statusList: { label: string; value: string }[];
+  priorityList: { label: string; value: string }[];
+  categoryList: { label: string; value: string }[];
+}
+function SupportFilter({
   addFilters,
   setAddFilters,
-}: SupportTicketFiltersProps) {
-
+  statusList,
+  priorityList,
+  categoryList,
+}: Props) {
   return (
     <div className="flex gap-3 items-center">
       <Select
@@ -36,32 +38,10 @@ export function SupportTicketFilters({
           <SelectValue placeholder="Select status" />
         </SelectTrigger>
 
-        <SelectContent className="bg-blue-200">
+        <SelectContent className="bg-blue-100">
           <SelectGroup>
             <SelectItem value="all">All</SelectItem>
-            {supportStatusList.map((item) => (
-              <SelectItem key={item.value} value={item.value}>
-                {item.label}
-              </SelectItem>
-            ))}
-          </SelectGroup>
-        </SelectContent>
-      </Select>
-
-      <Select
-        value={addFilters.category}
-        onValueChange={(value) =>
-          setAddFilters({ ...addFilters, category: value })
-        }
-      >
-        <SelectTrigger className="w-45 bg-blue-200">
-          <SelectValue placeholder="Select category" />
-        </SelectTrigger>
-
-        <SelectContent className="bg-blue-300">
-          <SelectGroup>
-            <SelectItem value="all">All</SelectItem>
-            {supportCategoryOptions.map((item) => (
+            {statusList.map((item) => (
               <SelectItem key={item.value} value={item.value}>
                 {item.label}
               </SelectItem>
@@ -76,14 +56,36 @@ export function SupportTicketFilters({
           setAddFilters({ ...addFilters, priority: value })
         }
       >
-        <SelectTrigger className="w-45 bg-blue-300">
+        <SelectTrigger className="w-45 bg-blue-100">
           <SelectValue placeholder="Select priority" />
         </SelectTrigger>
 
-        <SelectContent className="bg-blue-400">
+        <SelectContent className="bg-blue-100">
           <SelectGroup>
             <SelectItem value="all">All</SelectItem>
-            {supportPriorityOptions.map((item) => (
+            {priorityList.map((item) => (
+              <SelectItem key={item.value} value={item.value}>
+                {item.label}
+              </SelectItem>
+            ))}
+          </SelectGroup>
+        </SelectContent>
+      </Select>
+
+      <Select
+        value={addFilters.category}
+        onValueChange={(value) =>
+          setAddFilters({ ...addFilters, category: value })
+        }
+      >
+        <SelectTrigger className="w-45 bg-blue-100">
+          <SelectValue placeholder="Select category" />
+        </SelectTrigger>
+
+        <SelectContent className="bg-blue-100">
+          <SelectGroup>
+            <SelectItem value="all">All</SelectItem>
+            {categoryList.map((item) => (
               <SelectItem key={item.value} value={item.value}>
                 {item.label}
               </SelectItem>
@@ -94,3 +96,5 @@ export function SupportTicketFilters({
     </div>
   );
 }
+
+export default SupportFilter;

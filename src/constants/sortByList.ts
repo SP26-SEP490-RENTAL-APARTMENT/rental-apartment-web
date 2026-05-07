@@ -95,3 +95,32 @@ export const supportTicketSortByList = [
   { label: "Priority", value: "priority" },
   { label: "Status", value: "status" },
 ];
+
+export const supportStatusList = [
+  { value: "open", label: "Open" },
+  { value: "in_progress", label: "In Progress" },
+  { value: "resolved", label: "Resolved" },
+  { value: "closed", label: "Closed" },
+  { value: "escalated", label: "Escalated" },
+];
+
+export const supportPriorityOptions = [
+  { value: "low", label: "Low" },
+  { value: "medium", label: "Medium" },
+  { value: "high", label: "High" },
+  { value: "urgent", label: "Urgent" },
+];
+
+export const supportCategoryOptions = [
+  { value: "booking_issue", label: "Booking Issue" },
+  { value: "payment_problem", label: "Payment Problem" },
+  { value: "listing_problem", label: "Listing Problem" },
+  {
+    value: "account_verification",
+    label: "Account Verification",
+  },
+  { value: "cancellation", label: "Cancellation" },
+  { value: "dispute", label: "Dispute" },
+  { value: "property_quality", label: "Property Quality" },
+  { value: "other", label: "Other" },
+];

@@ -74,7 +74,7 @@ function ApartmentManagement() {
     availabilityForm: false,
     packageDialog: false,
     sendApproveForm: false,
-    priceChangeForm: false
+    priceChangeForm: false,
   });
 
   const fetchApartmentList = useCallback(async () => {
@@ -103,8 +103,6 @@ function ApartmentManagement() {
   ) => {
     try {
       await apartmentManagementApi.createApartment(data as unknown as FormData);
-      console.log(data);
-
       toast.success("Apartment created successfully");
       fetchApartmentList();
     } catch (error: unknown) {
@@ -262,7 +260,10 @@ function ApartmentManagement() {
       fetchApartmentList();
     } catch (error: any) {
       console.log(error);
-      toast.error(error?.response?.data?.message || "Failed to send apartment for approval");
+      toast.error(
+        error?.response?.data?.message ||
+          "Failed to send apartment for approval",
+      );
     }
   };
 
@@ -337,7 +338,7 @@ function ApartmentManagement() {
   const triggerChangePrice = (apartmentId: string) => {
     setSelectedApartmentId(apartmentId);
     setIsOpen((prev) => ({ ...prev, priceChangeForm: true }));
-  }
+  };
 
   const handlePackageItemAdded = async (packageId: string) => {
     console.log(packageId);
@@ -421,7 +422,7 @@ function ApartmentManagement() {
                 triggerViewPackage,
                 triggerSendApprove,
                 handleAddPhotos,
-                triggerChangePrice
+                triggerChangePrice,
               )}
               data={apartmentList}
               limit={10}

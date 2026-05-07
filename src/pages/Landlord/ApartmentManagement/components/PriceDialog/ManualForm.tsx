@@ -118,7 +118,7 @@ function ManualForm({ onClose, apartmentId }: Props) {
         </Select>
       </div>
 
-      <div className="flex justify-end gap-2">
+      <div className="flex justify-end gap-2 mt-10">
         <Button type="button" variant="outline" onClick={onClose}>
           Cancel
         </Button>

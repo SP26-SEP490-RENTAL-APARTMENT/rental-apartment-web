@@ -68,8 +68,8 @@
         "detail": {
             "createdAt": "Created At",
             "updatedAt": "Last Updated",
-            "resolutionNotes": "Resolution Notes",
-            "noResolutionNotes": "No resolution notes available",
+            "resolutionNotes": "Solution Notes",
+            "noResolutionNotes": "No solution notes available",
             "resolvedAt": "Resolved At"
         }
     }

@@ -59,9 +59,7 @@ function CollectionForm({
     e.preventDefault();
 
     if (!isFormValid) {
-      toast.error(
-        t("toast.collectionNameRequired") || "Collection name is required",
-      );
+      toast.error("Collection name is required");
       return;
     }
 
@@ -76,10 +74,7 @@ function CollectionForm({
             description: formData.description.trim(),
           },
         );
-        toast.success(
-          t("toast.updateCollectionSuccess") ||
-            "Collection updated successfully",
-        );
+        toast.success("Collection updated successfully");
       } else {
         // Create collection
         await collectionsApi.createCollection({
@@ -97,8 +92,8 @@ function CollectionForm({
       console.error("Error submitting collection:", error);
       toast.error(
         isEditing
-          ? t("toast.updateCollectionFailed") || "Failed to update collection"
-          : t("toast.createCollectionFailed") || "Failed to create collection",
+          ? "Failed to update collection"
+          : "Failed to create collection",
       );
     } finally {
       setIsLoading(false);
@@ -107,30 +102,24 @@ function CollectionForm({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[500px]">
+      <DialogContent className="sm:max-w-125">
         <DialogHeader>
-          <DialogTitle>
-            {isEditing ? t("button.edit") : t("button.create")} Collection
-          </DialogTitle>
+          <DialogTitle>{isEditing ? "Edit" : "Create"} Collection</DialogTitle>
           <DialogDescription>
             {isEditing
-              ? t("description.updateCollectionDescription") ||
-                "Update your collection details"
-              : t("description.createCollectionDescription") ||
-                "Create a new collection to organize your favorites"}
+              ? "Update your collection details"
+              : "Create a new collection to organize your favorites"}
           </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
             <label htmlFor="name" className="text-sm font-medium text-gray-700">
-              {t("form.collectionName") || "Collection Name"} *
+              Collection Name
             </label>
             <Input
               id="name"
-              placeholder={
-                t("form.collectionNamePlaceholder") || "My Collection"
-              }
+              placeholder="My Collection"
               value={formData.name}
               onChange={(e) =>
                 setFormData({ ...formData, name: e.target.value })
@@ -147,14 +136,11 @@ function CollectionForm({
               htmlFor="description"
               className="text-sm font-medium text-gray-700"
             >
-              {t("form.collectionDescription") || "Description"}
+              Description
             </label>
             <Textarea
               id="description"
-              placeholder={
-                t("form.collectionDescriptionPlaceholder") ||
-                "Describe your collection..."
-              }
+              placeholder="Describe your collection..."
               value={formData.description}
               onChange={(e) =>
                 setFormData({ ...formData, description: e.target.value })
@@ -176,7 +162,7 @@ function CollectionForm({
               onClick={() => onOpenChange(false)}
               disabled={isLoading}
             >
-              {t("button.cancel")}
+              Cancel
             </Button>
             <Button
               type="submit"
@@ -184,9 +170,7 @@ function CollectionForm({
               className="bg-purple-600 hover:bg-purple-700"
             >
               {isLoading && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
-              {isEditing
-                ? t("button.update") || "Update"
-                : t("button.create") || "Create"}
+              {isEditing ? "Update" : "Create"}
             </Button>
           </div>
         </form>

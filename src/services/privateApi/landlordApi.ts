@@ -130,5 +130,21 @@ export const priceChangeApi = {
       priceType: string;
     },
   ) =>
-    apiConfig.privateApi.post(`/landlord/apartments/${apartmentId}/pricing/manual`, data),
+    apiConfig.privateApi.post(
+      `/landlord/apartments/${apartmentId}/pricing/manual`,
+      data,
+    ),
+  bulkPriceChange: (
+    apartmentId: string,
+    data: {
+      fromDate: string;
+      toDate: string;
+      daysOfWeek: string[];
+      fixedPricePerNight: number;
+    },
+  ) =>
+    apiConfig.privateApi.post(
+      `/landlord/apartments/${apartmentId}/pricing/manual/bulk-weekdays`,
+      data,
+    ),
 };

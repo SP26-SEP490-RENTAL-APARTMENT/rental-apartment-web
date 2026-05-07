@@ -6,17 +6,34 @@ import type { SupportTicket } from "@/types/supportTicket";
 import { Ticket } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { SupportColumns } from "./components/SupportColumns";
+import ManagementFilter from "@/components/ui/managementFilter/ManagementFilter";
+import {
+  supportCategoryOptions,
+  supportPriorityOptions,
+  supportStatusList,
+  supportTicketSortByList,
+} from "@/constants/sortByList";
+import { Button } from "@/components/ui/button";
+import SupportFilter from "./components/SupportFilter";
+import ResolveForm from "./components/ResolveForm";
 
 function SupportManagement() {
   const [supports, setSupports] = useState<SupportTicket[]>([]);
   const [totalCount, setTotalCount] = useState(0);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
-  const [filters] = useState<Filter>({
+  const [filters, setFilters] = useState<Filter>({
     sortBy: "createdAt",
     sortOrder: "asc",
     search: "",
   });
+  const [addFilters, setAddFilters] = useState({
+    status: "",
+    priority: "",
+    category: "",
+  });
+  const [resolveDialog, setResolveDialog] = useState(false);
+  const [selectedSupportId, setSelectedSupportId] = useState("");
 
   const fetchSupports = useCallback(async () => {
     setLoading(true);
@@ -27,6 +44,9 @@ function SupportManagement() {
         search: filters.search,
         sortBy: filters.sortBy,
         sortOrder: filters.sortOrder,
+        status: addFilters.status === "all" ? "" : addFilters.status,
+        priority: addFilters.priority === "all" ? "" : addFilters.priority,
+        category: addFilters.category === "all" ? "" : addFilters.category,
       });
       setSupports(response.data.items);
       setTotalCount(response.data.totalCount);
@@ -35,7 +55,7 @@ function SupportManagement() {
     } finally {
       setLoading(false);
     }
-  }, [page, filters]);
+  }, [page, filters, addFilters]);
 
   useEffect(() => {
     fetchSupports();
@@ -43,6 +63,25 @@ function SupportManagement() {
 
   const handlePageChange = (newPage: number) => {
     setPage(newPage);
+  };
+
+  const handleResetFilters = () => {
+    setPage(1);
+    setFilters({
+      sortBy: "createdAt",
+      sortOrder: "asc",
+      search: "",
+    });
+    setAddFilters({
+      status: "",
+      priority: "",
+      category: "",
+    });
+  };
+
+  const triggerResolveDialog = (supportId: string) => {
+    setSelectedSupportId(supportId);
+    setResolveDialog(true);
   };
 
   return (
@@ -67,23 +106,25 @@ function SupportManagement() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
         {/* Filter Card */}
-        {/* <Card className="border-0 shadow-sm">
+        <Card className="border-0 shadow-sm">
           <CardContent className="flex gap-3 items-center">
             <ManagementFilter
               filter={filters}
               setFilter={setFilters}
-              sortByList={inspectionSortByList}
+              sortByList={supportTicketSortByList}
             />
-            <InspectionFilter
-              setStatus={setStatus}
-              status={status}
-              statusList={inspectionStatusList}
+            <SupportFilter
+              addFilters={addFilters}
+              setAddFilters={setAddFilters}
+              statusList={supportStatusList}
+              priorityList={supportPriorityOptions}
+              categoryList={supportCategoryOptions}
             />
             <Button variant="outline" onClick={handleResetFilters}>
               Reset Filters
             </Button>
           </CardContent>
-        </Card> */}
+        </Card>
 
         {/* Data Table Card */}
         <Card className="border-0 shadow-sm">
@@ -92,7 +133,7 @@ function SupportManagement() {
           </CardHeader>
           <CardContent className="pt-6">
             <DataTable
-              columns={SupportColumns()}
+              columns={SupportColumns(triggerResolveDialog)}
               data={supports}
               limit={10}
               loading={loading}
@@ -103,6 +144,13 @@ function SupportManagement() {
           </CardContent>
         </Card>
       </div>
+
+      <ResolveForm
+        onClose={() => setResolveDialog(false)}
+        open={resolveDialog}
+        refetch={fetchSupports}
+        supportId={selectedSupportId}
+      />
     </div>
   );
 }
