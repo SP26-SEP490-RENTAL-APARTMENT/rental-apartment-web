@@ -6,7 +6,16 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   assignInspectionSchema,
   type AssignInspectionFormData,
@@ -15,7 +24,7 @@ import { userManagementApi } from "@/services/privateApi/adminApi";
 import type { User } from "@/types/user";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 
 export interface Props {
   isOpen: boolean;
@@ -58,6 +67,7 @@ function AssignInspectionForm({
     register,
     handleSubmit,
     reset,
+    control,
     formState: { errors, isSubmitting },
   } = useForm<AssignInspectionFormData>({
     resolver: zodResolver(assignInspectionSchema),
@@ -101,18 +111,26 @@ function AssignInspectionForm({
             {/* Inspector */}
             <div className="grid gap-2">
               <Label htmlFor="inspectorId">Inspector *</Label>
-              <select
-                id="inspectorId"
-                {...register("inspectorId")}
-                className="border rounded px-3 py-2"
-              >
-                <option value="">Select inspector</option>
-                {staffList.map((staff) => (
-                  <option key={staff.userId} value={staff.userId}>
-                    {staff.fullName}
-                  </option>
-                ))}
-              </select>
+              <Controller
+                name="inspectorId"
+                control={control}
+                render={({ field }) => (
+                  <Select value={field.value} onValueChange={field.onChange}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select inspector" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        {staffList.map((staff) => (
+                          <SelectItem key={staff.userId} value={staff.userId}>
+                            {staff.fullName}
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                )}
+              />
               {errors.inspectorId && (
                 <p className="text-sm text-red-500">
                   {errors.inspectorId.message}
@@ -123,7 +141,7 @@ function AssignInspectionForm({
             {/* Scheduled Date */}
             <div className="grid gap-2">
               <Label htmlFor="scheduledDate">Scheduled Date *</Label>
-              <input
+              <Input
                 type="date"
                 {...register("scheduledDate")}
                 className="border rounded px-3 py-2"
@@ -136,7 +154,7 @@ function AssignInspectionForm({
             </div>
           </div>
 
-          <DialogFooter className="gap-2 sm:gap-0">
+          <DialogFooter className="gap-2">
             <Button
               type="button"
               variant="outline"

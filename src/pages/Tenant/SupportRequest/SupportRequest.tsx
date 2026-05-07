@@ -1,7 +1,6 @@
 import { supportTicketApi } from "@/services/privateApi/tenantApi";
 import type { SupportTicket } from "@/types/supportTicket";
 import { useCallback, useEffect, useState } from "react";
-import { SupportTicketFilters } from "./components/SupportTicketFilters";
 import { SupportTicketCard } from "./components/SupportTicketCard";
 import { SupportTicketSkeleton } from "./components/SupportTicketSkeleton";
 import { CreateTicketDialog } from "./components/CreateTicketDialog";
@@ -38,7 +37,7 @@ function SupportRequest() {
     sortBy: "createdAt",
     sortOrder: "desc",
   });
-  const [addFilters, setAddFilters] = useState({
+  const [addFilters] = useState({
     status: "",
     priority: "",
     category: "",
@@ -135,10 +134,10 @@ function SupportRequest() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="space-y-6">
           {/* Filters */}
-          <SupportTicketFilters
+          {/* <SupportTicketFilters
             addFilters={addFilters}
             setAddFilters={setAddFilters}
-          />
+          /> */}
           <Card>
             <CardContent>
               <ManagementFilter
@@ -265,6 +264,7 @@ function SupportRequest() {
         open={detailDialogOpen}
         onOpenChange={setDetailDialogOpen}
         ticket={ticketDetail}
+        refetch={fetchMyTickets}
       />
     </div>
   );

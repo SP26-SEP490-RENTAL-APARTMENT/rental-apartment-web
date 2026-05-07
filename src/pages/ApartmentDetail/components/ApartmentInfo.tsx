@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/tooltip";
 import type { Apartment } from "@/types/apartment";
 import {
+  Baby,
   CircleCheck,
   CircleX,
   HandCoins,
@@ -94,10 +95,37 @@ function ApartmentInfo({ apartment }: ApartmentInfoProps) {
             <div className="flex gap-1 items-center">
               <Zap size={12} className="text-gray-400 fill-gray-400" />{" "}
               <p className="text-gray-400 text-sm">
-                Price may vary by date {min.toLocaleString("vi-VN")} ~ {max.toLocaleString("vi-VN")} ₫
+                Price may vary by date {min.toLocaleString("vi-VN")} ~{" "}
+                {max.toLocaleString("vi-VN")} ₫
               </p>
             </div>
           )}
+        </div>
+
+        <div className="space-y-1">
+          <div className="flex items-center gap-2 text-gray-500">
+            <Users size={16} />
+            <span className="text-sm">{t("apartment.maxOccupants")}</span>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <span className="rounded-full bg-blue-100 px-3 py-1 text-sm font-semibold text-blue-700">
+              {apartment.maxOccupants} people
+            </span>
+          </div>
+        </div>
+
+        <div className="space-y-1">
+          <div className="flex items-center gap-2 text-gray-500">
+            <Baby size={16} />
+            <span className="text-sm">Max infants</span>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <span className="rounded-full bg-pink-100 px-3 py-1 text-sm font-semibold text-pink-700">
+              {apartment.maxInfants} infants
+            </span>
+          </div>
         </div>
 
         {/* Pet */}
@@ -110,34 +138,28 @@ function ApartmentInfo({ apartment }: ApartmentInfoProps) {
           <div className="flex items-center gap-2 font-medium">
             {apartment.isPetAllowed ? (
               <>
+                <CircleCheck className="text-green-600" size={18} />
+
                 <span className="text-green-600">
                   {t("apartment.allowPets")}
                 </span>
-                <CircleCheck className="text-green-600" size={18} />
-                <p className="text-lg font-semibold text-gray-900">
-                  ({apartment.maxPets})
-                </p>
+
+                {apartment.maxPets && apartment.maxPets > 0 && (
+                  <span className="rounded-full bg-green-100 px-2.5 py-0.5 text-sm font-semibold text-green-700">
+                    {apartment.maxPets} pets
+                  </span>
+                )}
               </>
             ) : (
               <>
+                <CircleX className="text-red-500" size={18} />
+
                 <span className="text-red-500">
                   {t("apartment.notAllowPets")}
                 </span>
-                <CircleX className="text-red-500" size={18} />
               </>
             )}
           </div>
-        </div>
-
-        {/* Occupants */}
-        <div className="space-y-1">
-          <div className="flex items-center gap-2 text-gray-500">
-            <Users size={16} />
-            <span className="text-sm">{t("apartment.maxOccupants")}</span>
-          </div>
-          <p className="text-lg font-semibold text-gray-900">
-            {apartment.maxOccupants}
-          </p>
         </div>
       </div>
     </div>

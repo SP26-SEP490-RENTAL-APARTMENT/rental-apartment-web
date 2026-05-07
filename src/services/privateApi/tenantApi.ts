@@ -88,6 +88,10 @@ export const supportTicketApi = {
     apiConfig.privateApi.get("/SupportTicket/my", { params }),
   getTicketDetail: (ticketId: string) =>
     apiConfig.privateApi.get(`/SupportTicket/${ticketId}`),
+  respondToSolution: (
+    ticketId: string,
+    data: { newStatus: string; statusChangeNotes: string },
+  ) => apiConfig.privateApi.patch(`/SupportTicket/${ticketId}/status`, data),
   // getTicketById: (ticketId: string) =>
   //   apiConfig.privateApi.get(`/SupportTicket/${ticketId}`),
 };

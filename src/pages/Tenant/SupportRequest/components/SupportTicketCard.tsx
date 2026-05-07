@@ -13,7 +13,7 @@ interface SupportTicketCardProps {
 }
 
 export function SupportTicketCard({ ticket, onView }: SupportTicketCardProps) {
-  const { i18n, t } = useTranslation("support");
+  const { i18n } = useTranslation("support");
   const locale = i18n.language === "vi" ? vi : enUS;
 
   const createdDate = new Date(ticket.createdAt);
@@ -53,7 +53,7 @@ export function SupportTicketCard({ ticket, onView }: SupportTicketCardProps) {
         {ticket.status === "resolved" && ticket.resolutionNotes && (
           <div className="bg-green-50 border border-green-200 rounded p-3 mb-4">
             <p className="text-xs font-semibold text-green-900 mb-1">
-              {t("resolutionNotes")}
+              Solution Notes
             </p>
             <p className="text-xs text-green-800 line-clamp-2">
               {ticket.resolutionNotes}

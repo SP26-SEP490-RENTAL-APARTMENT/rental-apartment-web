@@ -231,6 +231,8 @@ function ApartmentForm({
             | CreateApartmentFormData
             | UpdateApartmentFormData,
         );
+        console.log(formData);
+        
       } else {
         // Update mode: use regular form data (JSON)
         await onSubmit(data);

@@ -185,4 +185,14 @@ export const adminApartmentApi = {
 export const supportManagementApi = {
   getAllRequests: (params: ParamsProp) =>
     apiConfig.privateApi.get("/SupportTicket", { params }),
+  resolveProblem: (supportId: string, resolutionNotes: string) =>
+    apiConfig.privateApi.post(
+      `/SupportTicket/${supportId}/resolve`,
+      resolutionNotes,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      },
+    ),
 };

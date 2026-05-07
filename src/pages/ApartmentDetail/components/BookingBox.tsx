@@ -278,7 +278,7 @@ function BookingBox({ apartmentId, onSubmit, apartment }: Props) {
                 id="infants"
                 type="number"
                 min="0"
-                max="3"
+                max={apartment.maxInfants}
                 value={noOfInfants}
                 onChange={(e) => setNoOfInfants(Number(e.target.value))}
                 className="border-gray-300"
@@ -295,6 +295,7 @@ function BookingBox({ apartmentId, onSubmit, apartment }: Props) {
                 id="pets"
                 type="number"
                 min="0"
+                max={apartment.maxPets}
                 value={noOfPets}
                 onChange={(e) => setNoOfPets(Number(e.target.value))}
                 className="border-gray-300"
@@ -321,14 +322,14 @@ function BookingBox({ apartmentId, onSubmit, apartment }: Props) {
             <Select
               value={packageId ?? ""}
               onValueChange={(value) => {
-                setPackageId(value === "" ? null : value);
+                setPackageId(value === "noPackage" ? null : value);
               }}
             >
               <SelectTrigger className="border-gray-300">
                 <SelectValue placeholder="Select a package" />
               </SelectTrigger>
               <SelectContent>
-                {/* <SelectItem value="">No Package</SelectItem> */}
+                <SelectItem value="noPackage">No Package</SelectItem>
                 {packages?.map((pkg) => (
                   <SelectItem key={pkg.packageId} value={pkg.packageId}>
                     {pkg.name} - {pkg.currency} {pkg.price.toLocaleString()}
@@ -352,7 +353,7 @@ function BookingBox({ apartmentId, onSubmit, apartment }: Props) {
           </Button>
           {checkIn && checkOut && noOfAdults >= 1 && (
             <Button
-              className="w-full cursor-pointer bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-semibold py-2.5"
+              className="w-full cursor-pointer bg-linear-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-semibold py-2.5"
               onClick={handleBook}
             >
               Reserve Now
