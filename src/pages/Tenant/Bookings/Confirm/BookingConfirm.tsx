@@ -19,6 +19,8 @@ import {
   Users,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
 
 function BookingConfirm() {
   const navigate = useNavigate();
@@ -41,6 +43,7 @@ function BookingConfirm() {
       checkOutDateTime: quoteData?.checkOutDateTime || "",
       nights: quoteData?.nights || 1,
       noOfAdults: quoteData?.noOfAdults || 1,
+      noOfChildren: quoteData?.noOfChildren || 0,
       noOfInfants: quoteData?.noOfInfants || 0,
       noOfPets: quoteData?.noOfPets || 0,
       packageId: quoteData?.packageId || null,
@@ -181,8 +184,9 @@ function BookingConfirm() {
                         Guests
                       </p>
                       <p className="text-lg font-medium text-gray-900">
-                        {quoteData.noOfAdults + quoteData.noOfInfants}
-                        {quoteData.noOfPets > 0 && ` + ${quoteData.noOfPets}P`}
+                        {quoteData.noOfAdults +
+                          quoteData.noOfInfants +
+                          quoteData.noOfChildren}
                       </p>
                     </div>
                   </div>
@@ -208,7 +212,7 @@ function BookingConfirm() {
                   </div>
                   <div className="flex justify-between items-center text-sm">
                     <span className="text-gray-600">
-                      Base amount ({quoteData.nights}N)
+                      Base amount ({quoteData.nights} nights)
                     </span>
                     <span className="font-medium text-gray-900">
                       {quoteData.baseAmount.toLocaleString("vi-VN")} đ
@@ -241,13 +245,21 @@ function BookingConfirm() {
               </CardTitle>
             </CardHeader>
             <CardContent className="pt-6">
-              <div className="grid grid-cols-3 gap-4 mb-6">
+              <div className="grid grid-cols-4 gap-4 mb-6">
                 <div className="bg-blue-50 rounded-lg p-3">
                   <p className="text-xs font-semibold text-gray-500 uppercase">
                     Adults
                   </p>
                   <p className="text-2xl font-bold text-gray-900">
                     {quoteData.noOfAdults}
+                  </p>
+                </div>
+                <div className="bg-blue-50 rounded-lg p-3">
+                  <p className="text-xs font-semibold text-gray-500 uppercase">
+                    Children
+                  </p>
+                  <p className="text-2xl font-bold text-gray-900">
+                    {quoteData.noOfChildren}
                   </p>
                 </div>
                 <div className="bg-purple-50 rounded-lg p-3">
@@ -288,27 +300,23 @@ function BookingConfirm() {
                   name="paymentMode"
                   control={control}
                   render={({ field }) => (
-                    <div className="flex gap-3">
-                      <label
-                        className="flex-1 flex items-center p-4 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-blue-400 transition"
-                        style={{
-                          borderColor:
-                            field.value === "partial"
-                              ? "rgb(59, 130, 246)"
-                              : undefined,
-                          backgroundColor:
-                            field.value === "partial"
-                              ? "rgb(239, 246, 255)"
-                              : undefined,
-                        }}
+                    <RadioGroup
+                      value={field.value}
+                      onValueChange={field.onChange}
+                      className="flex gap-3"
+                    >
+                      <div
+                        className={`flex-1 flex items-center space-x-3 rounded-lg border-2 p-4 transition cursor-pointer ${
+                          field.value === "partial"
+                            ? "border-blue-500 bg-blue-50"
+                            : "border-gray-200 hover:border-blue-400"
+                        }`}
                       >
-                        <input
-                          {...field}
-                          type="radio"
-                          value="partial"
-                          className="w-4 h-4 accent-blue-600"
-                        />
-                        <span className="ml-3">
+                        <RadioGroupItem value="partial" id="partial" />
+                        <Label
+                          htmlFor="partial"
+                          className="flex-1 cursor-pointer"
+                        >
                           <span className="block font-medium text-gray-900">
                             Deposit
                           </span>
@@ -316,37 +324,27 @@ function BookingConfirm() {
                             {quoteData.suggestedDeposit.toLocaleString("vi-VN")}{" "}
                             đ
                           </span>
-                        </span>
-                      </label>
-                      <label
-                        className="flex-1 flex items-center p-4 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-blue-400 transition"
-                        style={{
-                          borderColor:
-                            field.value === "full"
-                              ? "rgb(59, 130, 246)"
-                              : undefined,
-                          backgroundColor:
-                            field.value === "full"
-                              ? "rgb(239, 246, 255)"
-                              : undefined,
-                        }}
+                        </Label>
+                      </div>
+
+                      <div
+                        className={`flex-1 flex items-center space-x-3 rounded-lg border-2 p-4 transition cursor-pointer ${
+                          field.value === "full"
+                            ? "border-blue-500 bg-blue-50"
+                            : "border-gray-200 hover:border-blue-400"
+                        }`}
                       >
-                        <input
-                          {...field}
-                          type="radio"
-                          value="full"
-                          className="w-4 h-4 accent-blue-600"
-                        />
-                        <span className="ml-3">
+                        <RadioGroupItem value="full" id="full" />
+                        <Label htmlFor="full" className="flex-1 cursor-pointer">
                           <span className="block font-medium text-gray-900">
                             Full Payment
                           </span>
                           <span className="block text-sm text-green-600">
                             {quoteData.totalPrice.toLocaleString("vi-VN")} đ
                           </span>
-                        </span>
-                      </label>
-                    </div>
+                        </Label>
+                      </div>
+                    </RadioGroup>
                   )}
                 />
               </div>
@@ -360,64 +358,50 @@ function BookingConfirm() {
                   name="paymentProvider"
                   control={control}
                   render={({ field }) => (
-                    <div className="space-y-2">
-                      <label
-                        className="flex items-center p-3 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-blue-400 transition"
-                        style={{
-                          borderColor:
-                            field.value === "stripe"
-                              ? "rgb(59, 130, 246)"
-                              : undefined,
-                          backgroundColor:
-                            field.value === "stripe"
-                              ? "rgb(239, 246, 255)"
-                              : undefined,
-                        }}
+                    <RadioGroup
+                      value={field.value}
+                      onValueChange={field.onChange}
+                      className="space-y-3"
+                    >
+                      <div
+                        className={`flex items-center space-x-3 rounded-lg border-2 p-4 transition cursor-pointer ${
+                          field.value === "stripe"
+                            ? "border-blue-500 bg-blue-50"
+                            : "border-gray-200 hover:border-blue-400"
+                        }`}
                       >
-                        <input
-                          {...field}
-                          type="radio"
-                          value="stripe"
-                          className="w-4 h-4 accent-blue-600"
-                        />
-                        <span className="ml-3">
+                        <RadioGroupItem value="stripe" id="stripe" />
+                        <Label
+                          htmlFor="stripe"
+                          className="flex-1 cursor-pointer"
+                        >
                           <span className="font-medium text-gray-900">
                             Stripe
                           </span>
-                          <span className="text-sm text-gray-500 ml-1">
+                          <span className="ml-1 text-sm text-gray-500">
                             (Credit/Debit Card)
                           </span>
-                        </span>
-                      </label>
-                      <label
-                        className="flex items-center p-3 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-blue-400 transition"
-                        style={{
-                          borderColor:
-                            field.value === "momo"
-                              ? "rgb(59, 130, 246)"
-                              : undefined,
-                          backgroundColor:
-                            field.value === "momo"
-                              ? "rgb(239, 246, 255)"
-                              : undefined,
-                        }}
+                        </Label>
+                      </div>
+
+                      <div
+                        className={`flex items-center space-x-3 rounded-lg border-2 p-4 transition cursor-pointer ${
+                          field.value === "momo"
+                            ? "border-blue-500 bg-blue-50"
+                            : "border-gray-200 hover:border-blue-400"
+                        }`}
                       >
-                        <input
-                          {...field}
-                          type="radio"
-                          value="momo"
-                          className="w-4 h-4 accent-blue-600"
-                        />
-                        <span className="ml-3">
+                        <RadioGroupItem value="momo" id="momo" />
+                        <Label htmlFor="momo" className="flex-1 cursor-pointer">
                           <span className="font-medium text-gray-900">
                             Momo
                           </span>
-                          <span className="text-sm text-gray-500 ml-1">
+                          <span className="ml-1 text-sm text-gray-500">
                             (Mobile Wallet)
                           </span>
-                        </span>
-                      </label>
-                    </div>
+                        </Label>
+                      </div>
+                    </RadioGroup>
                   )}
                 />
                 {errors.paymentProvider && (

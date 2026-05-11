@@ -19,6 +19,7 @@ import {
   MoreVertical,
   Package,
   Coins,
+  BadgePlus,
 } from "lucide-react";
 import { useState } from "react";
 import useAmenity from "@/hooks/useAmenity";
@@ -48,6 +49,7 @@ interface Props {
   onSendApprove: (apartmentId: string) => void;
   onAddPhotos: (apartmentId: string, files: File[]) => Promise<void>;
   onChangePrice: (apartmentId: string) => void;
+  onViewPriceChange: (apartmentId: string) => void;
 }
 function ApartmentAction({
   apartment,
@@ -61,6 +63,7 @@ function ApartmentAction({
   onSendApprove,
   onAddPhotos,
   onChangePrice,
+  onViewPriceChange
 }: Props) {
   const [selectedAmenities, setSelectedAmenities] = useState<string[]>([]);
   const [loadingSubmit, setLoadingSubmit] = useState(false);
@@ -161,22 +164,30 @@ function ApartmentAction({
           </Tooltip>
         </TooltipProvider>
 
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              size="sm"
+              className="bg-gray-300 text-black hover:bg-gray-400"
+            >
+              <Coins />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <div>
               <Button
                 size="sm"
-                className="bg-gray-300 text-black hover:bg-gray-400"
+                variant="secondary"
                 onClick={() => onChangePrice(apartment.apartmentId)}
               >
-                <Coins />
+                <BadgePlus />
               </Button>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>Smart pricing</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
+              <Button size="sm" onClick={() => onViewPriceChange(apartment.apartmentId)}>
+                <Eye />
+              </Button>
+            </div>
+          </TooltipContent>
+        </Tooltip>
 
         <Dialog>
           <DialogTrigger asChild>

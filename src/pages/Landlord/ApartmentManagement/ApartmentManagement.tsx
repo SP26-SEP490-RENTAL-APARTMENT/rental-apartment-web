@@ -2,6 +2,7 @@ import DataTable from "@/components/ui/dataTable/DataTable";
 import { Button } from "@/components/ui/button";
 import {
   apartmentManagementApi,
+  priceChangeApi,
   roomManagementApi,
 } from "@/services/privateApi/landlordApi";
 import type { Apartment } from "@/types/apartment";
@@ -39,11 +40,14 @@ import {
 } from "@/constants/sortByList";
 import ApartmentFilter from "./components/ApartmentFilter";
 import GeneralDialog from "./components/PriceDialog/GeneralDialog";
+import type { PriceChange } from "@/types/priceChange";
+import PriceChangeDialog from "./components/PriceDialog/PriceChangeDialog";
 
 function ApartmentManagement() {
   const [note, setNote] = useState<string>("");
   const [packages, setPackages] = useState<Package[]>([]);
   const [apartmentList, setApartmentList] = useState<Apartment[]>([]);
+  const [priceChanges, setPriceChanges] = useState<PriceChange[]>([]);
   const [page, setPage] = useState<number>(1);
   const [total, setTotal] = useState<number>(0);
   const [filters, setFilters] = useState<Filter>({
@@ -75,6 +79,7 @@ function ApartmentManagement() {
     packageDialog: false,
     sendApproveForm: false,
     priceChangeForm: false,
+    priceChangeDialog: false,
   });
 
   const fetchApartmentList = useCallback(async () => {
@@ -289,6 +294,16 @@ function ApartmentManagement() {
     }
   };
 
+  const handleGetPriceChange = async (id: string) => {
+    try {
+      const response = await priceChangeApi.getPriceChanges(id)
+      setPriceChanges(response.data);
+    } catch (error) {
+      console.log(error);
+      
+    }
+  }
+
   useEffect(() => {
     fetchApartmentList();
   }, [fetchApartmentList]);
@@ -347,6 +362,11 @@ function ApartmentManagement() {
       await fetchPackageDetail(selectedApartmentId);
     }
   };
+
+  const triggerViewPriceChange = (apartmentId: string) => {
+    handleGetPriceChange(apartmentId);
+    setIsOpen((prev) => ({ ...prev, priceChangeDialog: true }));
+  }
 
   const handleResetFilters = () => {
     setPage(1);
@@ -423,6 +443,7 @@ function ApartmentManagement() {
                 triggerSendApprove,
                 handleAddPhotos,
                 triggerChangePrice,
+                triggerViewPriceChange,
               )}
               data={apartmentList}
               limit={10}
@@ -515,6 +536,14 @@ function ApartmentManagement() {
           setIsOpen((prev) => ({ ...prev, priceChangeForm: false }))
         }
         apartmentId={selectedApartmentId}
+      />
+
+      <PriceChangeDialog
+        open={isOpen.priceChangeDialog}
+        onClose={() =>
+          setIsOpen((prev) => ({ ...prev, priceChangeDialog: false }))
+        }
+        priceChanges={priceChanges}
       />
     </div>
   );
