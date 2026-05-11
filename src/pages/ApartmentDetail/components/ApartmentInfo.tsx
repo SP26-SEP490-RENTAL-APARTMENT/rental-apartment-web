@@ -118,7 +118,7 @@ function ApartmentInfo({ apartment }: ApartmentInfoProps) {
         <div className="space-y-1">
           <div className="flex items-center gap-2 text-gray-500">
             <Baby size={16} />
-            <span className="text-sm">Max infants</span>
+            <span className="text-sm">Maximum infants</span>
           </div>
 
           <div className="flex items-center gap-2">

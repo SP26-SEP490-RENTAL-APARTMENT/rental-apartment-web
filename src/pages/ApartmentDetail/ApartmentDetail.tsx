@@ -1,6 +1,6 @@
 import type { Apartment, Room } from "@/types/apartment";
 import ApartmentInfo from "./components/ApartmentInfo";
-import BookingBox from "./components/BookingBox";
+import BookingBox from "./components/BookingQuote/BookingBox";
 import CommentSection from "./components/CommentSection";
 import ImageCarousel from "./components/ImageCarousel";
 import { useEffect, useState } from "react";
