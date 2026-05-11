@@ -9,9 +9,12 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
 } from "@/components/ui/dropdown-menu";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useTranslation } from "react-i18next";
+import i18next from "i18next";
 import { useAuthStore } from "@/store/authStore";
 import { authApi } from "@/services/publicApi/authApi";
 
@@ -21,9 +24,10 @@ import Logo from "@/components/ui/logo/Logo";
 
 function Header() {
   const navigate = useNavigate();
-  const { t } = useTranslation("common");
+  const { t, i18n } = useTranslation("common");
   const isAuthenticated = useAuthStore.getState().isAuthenticated;
   const { logout, user, login } = useAuthStore();
+  const language = i18n.language;
 
   const handleLogout = () => {
     logout();
@@ -72,7 +76,7 @@ function Header() {
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-6">
             {/* Language Selector */}
-            {/* <DropdownMenu>
+            <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="sm">
                   {language === "en" ? "EN" : "VI"}
@@ -81,7 +85,7 @@ function Header() {
               <DropdownMenuContent align="end">
                 <DropdownMenuRadioGroup
                   value={language}
-                  onValueChange={setLanguage}
+                  onValueChange={(lang) => i18next.changeLanguage(lang)}
                 >
                   <DropdownMenuRadioItem
                     onClick={() => i18next.changeLanguage("en")}
@@ -97,7 +101,7 @@ function Header() {
                   </DropdownMenuRadioItem>
                 </DropdownMenuRadioGroup>
               </DropdownMenuContent>
-            </DropdownMenu> */}
+            </DropdownMenu>
 
             {/* Auth Actions */}
             {isAuthenticated ? (
@@ -200,7 +204,7 @@ function Header() {
             </SheetTrigger>
             <SheetContent side="right" className="w-72">
               <div className="flex flex-col gap-4 mt-6">
-                {/* <DropdownMenu>
+                <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="outline" className="w-full">
                       {language === "en" ? "English" : "Tiếng Việt"}
@@ -209,7 +213,7 @@ function Header() {
                   <DropdownMenuContent>
                     <DropdownMenuRadioGroup
                       value={language}
-                      onValueChange={setLanguage}
+                      onValueChange={(lang) => i18next.changeLanguage(lang)}
                     >
                       <DropdownMenuRadioItem
                         onClick={() => i18next.changeLanguage("en")}
@@ -225,7 +229,7 @@ function Header() {
                       </DropdownMenuRadioItem>
                     </DropdownMenuRadioGroup>
                   </DropdownMenuContent>
-                </DropdownMenu> */}
+                </DropdownMenu>
 
                 {isAuthenticated ? (
                   <>

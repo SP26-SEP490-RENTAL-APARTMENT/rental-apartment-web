@@ -121,6 +121,8 @@ export const paymentHistoryApi = {
 };
 
 export const priceChangeApi = {
+  getPriceChanges: (apartmentId: string) =>
+    apiConfig.privateApi.get(`/landlord/apartments/${apartmentId}/pricing/price-changes`),
   manualPriceChange: (
     apartmentId: string,
     data: {

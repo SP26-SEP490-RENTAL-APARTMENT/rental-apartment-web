@@ -1,10 +1,8 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
-import * as Popover from "@radix-ui/react-popover";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useFormatDate } from "@/utils/utils";
 import { bookingApi, packageApi } from "@/services/privateApi/tenantApi";
 import type { Package } from "@/types/package";
 import type { ParamsProp } from "@/types/params";
@@ -21,6 +19,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import type { DateRange } from "react-day-picker";
+import { format } from "date-fns";
+import BookingSummary from "./BookingSummary";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import PriceDay from "./PriceDay";
 
 export interface Props {
   apartmentId: string;
@@ -34,11 +41,12 @@ function BookingBox({ apartmentId, onSubmit, apartment }: Props) {
   const [checkOut, setCheckOut] = useState<Date | undefined>(undefined);
   const [noOfAdults, setNoOfAdults] = useState(1);
   const [noOfInfants, setNoOfInfants] = useState(0);
+  const [noOfChildren, setNoOfChildren] = useState(0);
   const [noOfPets, setNoOfPets] = useState(0);
   const [packageId, setPackageId] = useState<string | null>(null);
   const [packages, setPackages] = useState<Package[]>([]);
   const [loadingPackages, setLoadingPackages] = useState(false);
-  const formatDates = useFormatDate();
+  const [range, setRange] = useState<DateRange | undefined>();
 
   // Fetch packages on component mount
   useEffect(() => {
@@ -96,6 +104,7 @@ function BookingBox({ apartmentId, onSubmit, apartment }: Props) {
       noOfAdults,
       noOfInfants,
       noOfPets,
+      noOfChildren,
       packageId,
     };
 
@@ -126,7 +135,15 @@ function BookingBox({ apartmentId, onSubmit, apartment }: Props) {
     <Card className="shadow-xl border-0 bg-white overflow-hidden pt-0">
       <CardHeader className="bg-linear-to-r from-blue-600 to-blue-700 text-white py-6">
         <CardTitle className="text-center text-2xl font-bold">
-          Book Now
+          {checkIn && checkOut ? (
+            <BookingSummary
+              apartment={apartment}
+              checkIn={range?.from}
+              checkOut={range?.to}
+            />
+          ) : (
+            "Book Now"
+          )}
         </CardTitle>
       </CardHeader>
       <CardContent className="p-6 space-y-6">
@@ -136,111 +153,53 @@ function BookingBox({ apartmentId, onSubmit, apartment }: Props) {
             <CalendarIcon className="h-4 w-4 text-blue-600" />
             Check-in & Check-out
           </Label>
-          <div className="flex gap-2">
-            <div className="flex-1">
-              <Popover.Root>
-                <Popover.Trigger asChild>
-                  <Button
-                    variant="outline"
-                    className="w-full justify-start text-left font-normal border-gray-300 hover:bg-gray-50"
-                  >
-                    {checkIn ? formatDates(checkIn) : "Select date"}
-                  </Button>
-                </Popover.Trigger>
 
-                <Popover.Content className="p-3 bg-white flex flex-col gap-2 rounded-lg shadow-lg">
-                  <Calendar
-                    mode="single"
-                    selected={checkIn}
-                    onSelect={(date) => {
-                      if (date) {
-                        const newDate = new Date(date);
-                        if (checkIn) {
-                          newDate.setHours(
-                            checkIn.getHours(),
-                            checkIn.getMinutes(),
-                          );
-                        }
-                        setCheckIn(newDate);
-                      }
-                    }}
-                    disabled={disableCheckIn}
-                  />
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button
+                variant="outline"
+                className="w-full justify-start border-gray-300"
+              >
+                {range?.from ? (
+                  range.to ? (
+                    <>
+                      {format(range.from, "dd/MM/yyyy")} -{" "}
+                      {format(range.to, "dd/MM/yyyy")}
+                    </>
+                  ) : (
+                    format(range.from, "dd/MM/yyyy")
+                  )
+                ) : (
+                  "Select stay dates"
+                )}
+              </Button>
+            </PopoverTrigger>
 
-                  <input
-                    type="time"
-                    className="border border-gray-300 rounded p-2 text-sm"
-                    value={
-                      checkIn
-                        ? `${String(checkIn.getHours()).padStart(2, "0")}:${String(
-                            checkIn.getMinutes(),
-                          ).padStart(2, "0")}`
-                        : ""
-                    }
-                    onChange={(e) => {
-                      if (!checkIn) return;
-                      const [h, m] = e.target.value.split(":").map(Number);
-                      const newDate = new Date(checkIn);
-                      newDate.setHours(h, m);
-                      setCheckIn(newDate);
-                    }}
-                  />
-                </Popover.Content>
-              </Popover.Root>
-            </div>
+            <PopoverContent
+              align="start"
+              className="w-auto p-4 bg-white border rounded-xl shadow-xl z-50"
+            >
+              <Calendar
+                mode="range"
+                numberOfMonths={2}
+                selected={range}
+                onSelect={(value) => {
+                  setRange(value);
 
-            <div className="flex-1">
-              <Popover.Root>
-                <Popover.Trigger asChild>
-                  <Button
-                    variant="outline"
-                    className="w-full justify-start text-left font-normal border-gray-300 hover:bg-gray-50"
-                  >
-                    {checkOut ? formatDates(checkOut) : "Select date"}
-                  </Button>
-                </Popover.Trigger>
-
-                <Popover.Content className="p-3 bg-white flex flex-col gap-2 rounded-lg shadow-lg">
-                  <Calendar
-                    mode="single"
-                    selected={checkOut}
-                    onSelect={(date) => {
-                      if (date) {
-                        const newDate = new Date(date);
-                        if (checkOut) {
-                          newDate.setHours(
-                            checkOut.getHours(),
-                            checkOut.getMinutes(),
-                          );
-                        }
-                        setCheckOut(newDate);
-                      }
-                    }}
-                    disabled={disableCheckIn}
-                  />
-
-                  <input
-                    type="time"
-                    className="border border-gray-300 rounded p-2 text-sm"
-                    value={
-                      checkOut
-                        ? `${String(checkOut.getHours()).padStart(2, "0")}:${String(
-                            checkOut.getMinutes(),
-                          ).padStart(2, "0")}`
-                        : ""
-                    }
-                    onChange={(e) => {
-                      if (!checkOut) return;
-                      const [h, m] = e.target.value.split(":").map(Number);
-                      const newDate = new Date(checkOut);
-                      newDate.setHours(h, m);
-                      setCheckOut(newDate);
-                    }}
-                  />
-                </Popover.Content>
-              </Popover.Root>
-            </div>
-          </div>
+                  if (value?.from) setCheckIn(value.from);
+                  if (value?.to) setCheckOut(value.to);
+                }}
+                disabled={disableCheckIn}
+                components={{
+                  DayButton: ({ day, ...props }) => (
+                    <button {...props} className="h-12 w-12">
+                      <PriceDay date={day.date} apartment={apartment} />
+                    </button>
+                  ),
+                }}
+              />
+            </PopoverContent>
+          </Popover>
         </div>
 
         {/* Guests */}
@@ -255,17 +214,51 @@ function BookingBox({ apartmentId, onSubmit, apartment }: Props) {
                 htmlFor="adults"
                 className="text-xs text-gray-700 mb-1 block"
               >
-                Adults
+                Occupants
               </Label>
-              <Input
-                id="adults"
-                type="number"
-                min="1"
-                max={apartment.maxOccupants}
-                value={noOfAdults}
-                onChange={(e) => setNoOfAdults(Number(e.target.value))}
-                className="border-gray-300"
-              />
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className="w-full justify-start border-gray-300"
+                  >
+                    {(noOfAdults + noOfChildren) | 0}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent
+                  align="start"
+                  className="grid grid-cols-2 gap-2 w-full"
+                >
+                  <div className="grid gap-2">
+                    <Label className="text-xs text-gray-700 mb-1 block">
+                      Adults
+                    </Label>
+                    <Input
+                      id="adults"
+                      type="number"
+                      min="0"
+                      max={apartment.maxOccupants - noOfChildren}
+                      value={noOfAdults}
+                      onChange={(e) => setNoOfAdults(Number(e.target.value))}
+                      className="border-gray-300"
+                    />
+                  </div>
+                  <div className="grid gap-2">
+                    <Label className="text-xs text-gray-700 mb-1 block">
+                      Children (2-12 years)
+                    </Label>
+                    <Input
+                      id="children"
+                      type="number"
+                      min="0"
+                      max={apartment.maxOccupants - noOfAdults}
+                      value={noOfChildren}
+                      onChange={(e) => setNoOfChildren(Number(e.target.value))}
+                      className="border-gray-300"
+                    />
+                  </div>
+                </PopoverContent>
+              </Popover>
             </div>
             <div>
               <Label
@@ -295,7 +288,7 @@ function BookingBox({ apartmentId, onSubmit, apartment }: Props) {
                 id="pets"
                 type="number"
                 min="0"
-                max={apartment.maxPets}
+                max={apartment.isPetAllowed ? apartment.maxPets || 0 : 0}
                 value={noOfPets}
                 onChange={(e) => setNoOfPets(Number(e.target.value))}
                 className="border-gray-300"
@@ -326,7 +319,7 @@ function BookingBox({ apartmentId, onSubmit, apartment }: Props) {
               }}
             >
               <SelectTrigger className="border-gray-300">
-                <SelectValue placeholder="Select a package" />
+                <SelectValue placeholder="No Package" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="noPackage">No Package</SelectItem>

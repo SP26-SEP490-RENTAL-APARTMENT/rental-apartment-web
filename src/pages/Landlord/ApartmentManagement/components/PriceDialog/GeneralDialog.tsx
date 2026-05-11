@@ -1,4 +1,4 @@
-import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useState } from "react";
 import ManualForm from "./ManualForm";
 import BulkForm from "./BulkForm";
@@ -15,7 +15,9 @@ function GeneralDialog({ open, onClose, apartmentId }: Props) {
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent>
-        <DialogHeader />
+        <DialogHeader>
+          <DialogTitle>Change Price</DialogTitle>
+        </DialogHeader>
 
         {/* Segmented control */}
         <div className="w-full mb-4">
