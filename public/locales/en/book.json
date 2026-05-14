@@ -12,7 +12,12 @@
         "isPetAllowed": "Pets allowed",
         "maxOccupants": "Maximum occupants",
         "allowPets": "Allow pets",
-        "notAllowPets": "Do not allow pets"
+        "notAllowPets": "Do not allow pets",
+        "people": "people",
+        "infants": "infants",
+        "maxInfants": "Maximum infants",
+        "priceWarning": "Price may vary by date",
+        "night": "night"
     },
     "room": {
         "roomType": "Room type",
@@ -30,5 +35,77 @@
     },
     "location": {
         "location": "Location"
+    },
+    "booking": {
+        "bookNow": "Book Now",
+        "checkIn": "Check-in",
+        "checkOut": "Check-out",
+        "selectDate": "Select date",
+        "guests": "Guests",
+        "occupants": "Occupants",
+        "infants": "Infants",
+        "children": "Children",
+        "adults": "Adults",
+        "years": "years",
+        "package": "Package",
+        "checkAvailability": "Check availability",
+        "reserve": "Reserve",
+        "pets": "pets",
+        "noPackage": "No Package",
+        "for": "for",
+        "nights": "nights",
+        "loadingPackages": "Loading packages...",
+        "noPackagesAvailable": "No packages available",
+        "maxOccupantsWarning": "The total number of adults and children must not exceed {{maxOccupants}}."
+    },
+    "avai": {
+        "title": "Available Dates",
+        "available": "Available",
+        "unavailable": "Unavailable",
+        "status": "Status",
+        "noBlockedSlots": "No blocked slots",
+        "noAvailableSlots": "No available slots"
+    },
+    "confirm": {
+        "paymentProvider": "Payment Provider",
+        "full": "Full Payment",
+        "deposit": "Deposit",
+        "back": "Back",
+        "confirmNPay": "Confirm & Pay",
+        "creditCard": "Credit Card",
+        "momoWallet": "Momo Wallet",
+        "selectPaymentOption": "Select Payment Option",
+        "paymentMethod": "Payment Method",
+        "guestInfo": "Guest Information",
+        "title": "Confirm Your Booking",
+        "description": "Please review your booking details before confirming.",
+        "detail": {
+            "title": "Booking Details",
+            "checkIn": "Check-in",
+            "checkOut": "Check-out",
+            "duration": "Duration",
+            "guests": "Guests"
+        },
+        "price": {
+            "title": "Price Breakdown",
+            "nightlyRate": "Nightly Rate",
+            "nights": "Nights",
+            "package": "Package",
+            "baseAmount": "Base Amount",
+            "total": "Total"
+        }
+    },
+    "finish": {
+        "notFound": "Booking not found",
+        "title": "Payment Successful",
+        "subtitle": "Thank you for your payment! Your booking is now confirmed.",
+        "bookDate": "Booking Date",
+        "guestDetails": "Guest Details",
+        "duration": "Duration",
+        "guests": "Guests",
+        "night": "night",
+        "paymentInfo": "Payment Information",
+        "bookingHistory": "View Booking History",
+        "home": "Back to Home"
     }
 }

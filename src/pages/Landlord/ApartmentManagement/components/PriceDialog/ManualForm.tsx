@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/select";
 import { priceChangeApi } from "@/services/privateApi/landlordApi";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
 interface Props {
@@ -28,6 +29,7 @@ const priceTypeList = [
   { label: "Manual override", value: "manual_override" },
 ];
 function ManualForm({ onClose, apartmentId }: Props) {
+  const { t } = useTranslation("landlord");
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({
     startDate: "",
@@ -66,7 +68,7 @@ function ManualForm({ onClose, apartmentId }: Props) {
     <form className="space-y-6" onSubmit={handleChangePrice}>
       <div className="grid grid-cols-2 gap-6">
         <div className="grid gap-2">
-          <Label>Start date</Label>
+          <Label>{t("priceChange.manualForm.startDate")}</Label>
           <Input
             type="date"
             value={form.startDate}
@@ -74,7 +76,7 @@ function ManualForm({ onClose, apartmentId }: Props) {
           />
         </div>
         <div className="grid gap-2">
-          <Label>End date</Label>
+          <Label>{t("priceChange.manualForm.endDate")}</Label>
           <Input
             type="date"
             value={form.endDate}
@@ -84,7 +86,7 @@ function ManualForm({ onClose, apartmentId }: Props) {
       </div>
 
       <div className="grid gap-2">
-        <Label>New price / night</Label>
+        <Label>{t("priceChange.manualForm.newPrice")}</Label>
         <Input
           min={0}
           type="number"
@@ -97,13 +99,13 @@ function ManualForm({ onClose, apartmentId }: Props) {
       </div>
 
       <div className="grid gap-2">
-        <Label>Price type</Label>
+        <Label>{t("priceChange.manualForm.priceType")}</Label>
         <Select
           value={form.priceType}
           onValueChange={(value) => setForm({ ...form, priceType: value })}
         >
           <SelectTrigger className="w-45">
-            <SelectValue placeholder="Select price type" />
+            <SelectValue placeholder={t("priceChange.manualForm.priceType")} />
           </SelectTrigger>
 
           <SelectContent>
@@ -120,10 +122,10 @@ function ManualForm({ onClose, apartmentId }: Props) {
 
       <div className="flex justify-end gap-2 mt-10">
         <Button type="button" variant="outline" onClick={onClose}>
-          Cancel
+          {t("priceChange.button.cancel")}
         </Button>
         <Button type="submit" disabled={loading}>
-          {loading ? "Updating..." : "Update Price"}
+          {t("priceChange.button.update")}
         </Button>
       </div>
     </form>

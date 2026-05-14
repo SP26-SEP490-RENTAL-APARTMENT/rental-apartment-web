@@ -35,15 +35,18 @@ import { Plus, Building2 } from "lucide-react";
 import type { Filter } from "@/components/ui/managementFilter/ManagementFilter";
 import ManagementFilter from "@/components/ui/managementFilter/ManagementFilter";
 import {
-  apartmentSortByList,
-  apartmentStatusList,
+  ApartmentSortByList,
+  ApartmentStatusList,
 } from "@/constants/sortByList";
 import ApartmentFilter from "./components/ApartmentFilter";
 import GeneralDialog from "./components/PriceDialog/GeneralDialog";
 import type { PriceChange } from "@/types/priceChange";
 import PriceChangeDialog from "./components/PriceDialog/PriceChangeDialog";
+import { useTranslation } from "react-i18next";
 
 function ApartmentManagement() {
+  const { t } = useTranslation("landlord");
+  const { t: commonT } = useTranslation("common");
   const [note, setNote] = useState<string>("");
   const [packages, setPackages] = useState<Package[]>([]);
   const [apartmentList, setApartmentList] = useState<Apartment[]>([]);
@@ -296,13 +299,12 @@ function ApartmentManagement() {
 
   const handleGetPriceChange = async (id: string) => {
     try {
-      const response = await priceChangeApi.getPriceChanges(id)
+      const response = await priceChangeApi.getPriceChanges(id);
       setPriceChanges(response.data);
     } catch (error) {
       console.log(error);
-      
     }
-  }
+  };
 
   useEffect(() => {
     fetchApartmentList();
@@ -366,7 +368,7 @@ function ApartmentManagement() {
   const triggerViewPriceChange = (apartmentId: string) => {
     handleGetPriceChange(apartmentId);
     setIsOpen((prev) => ({ ...prev, priceChangeDialog: true }));
-  }
+  };
 
   const handleResetFilters = () => {
     setPage(1);
@@ -389,10 +391,10 @@ function ApartmentManagement() {
               </div>
               <div>
                 <h1 className="text-3xl font-bold text-gray-900">
-                  Property Management
+                  {t("apartment.title")}
                 </h1>
                 <p className="text-gray-600 mt-1">
-                  Manage your apartments and properties
+                  {t("apartment.description")}
                 </p>
               </div>
             </div>
@@ -401,7 +403,7 @@ function ApartmentManagement() {
               className="bg-linear-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold gap-2 cursor-pointer"
             >
               <Plus className="h-4 w-4" />
-              Add Property
+              {t("apartment.button.add")}
             </Button>
           </div>
         </div>
@@ -413,22 +415,24 @@ function ApartmentManagement() {
             <ManagementFilter
               filter={filters}
               setFilter={setFilters}
-              sortByList={apartmentSortByList}
+              sortByList={ApartmentSortByList()}
             />
             <ApartmentFilter
               setStatus={setStatus}
               status={status}
-              statusList={apartmentStatusList}
+              statusList={ApartmentStatusList()}
             />
             <Button variant="outline" onClick={handleResetFilters}>
-              Reset Filters
+              {commonT("button.resetFilters")}
             </Button>
           </CardContent>
         </Card>
         {/* Data Table Card */}
         <Card className="border-0 shadow-sm">
           <CardHeader className="border-b border-gray-100">
-            <CardTitle>Your Properties ({total})</CardTitle>
+            <CardTitle>
+              {t("apartment.totalApartments")} ({total})
+            </CardTitle>
           </CardHeader>
           <CardContent className="pt-6">
             <DataTable

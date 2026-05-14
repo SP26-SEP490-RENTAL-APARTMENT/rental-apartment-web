@@ -26,6 +26,7 @@ import type { Apartment, Room } from "@/types/apartment";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 
 export interface Props {
   isOpen: boolean;
@@ -36,6 +37,8 @@ export interface Props {
   apartment: Apartment | null;
 }
 function RoomForm({ isOpen, mode, onClose, onSubmit, room, apartment }: Props) {
+  const { t } = useTranslation("landlord");
+  const { t: statusT } = useTranslation("status");
   const isCreate = mode === "create";
   const schema = isCreate ? createRoomSchema : updateRoomSchema;
   const {
@@ -94,7 +97,7 @@ function RoomForm({ isOpen, mode, onClose, onSubmit, room, apartment }: Props) {
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-106.25">
         <DialogHeader>
-          <DialogTitle>{isCreate ? "Create Room" : "Edit Room"}</DialogTitle>
+          <DialogTitle>{isCreate ? t("apartment.room.createTitle") : t("apartment.room.updateTitle")}</DialogTitle>
         </DialogHeader>
         <form className="space-y-4" onSubmit={handleSubmit(handleFormSubmit)}>
           <div className="grid gap-4 py-4">
@@ -108,8 +111,12 @@ function RoomForm({ isOpen, mode, onClose, onSubmit, room, apartment }: Props) {
             )}
 
             <div className="grid gap-2">
-              <Label>Title</Label>
-              <Input type="text" {...register("title")} placeholder="King, queen,..." />
+              <Label>{t("apartment.room.title")}</Label>
+              <Input
+                type="text"
+                {...register("title")}
+                placeholder={t("apartment.room.titlePlaceholder")}
+              />
               {errors.title && (
                 <p className="text-sm text-destructive">
                   {errors.title.message}
@@ -117,8 +124,12 @@ function RoomForm({ isOpen, mode, onClose, onSubmit, room, apartment }: Props) {
               )}
             </div>
             <div className="grid gap-2">
-              <Label>Description</Label>
-              <Input type="text" {...register("description")} placeholder="A private bed with..." />
+              <Label>{t("apartment.room.description")}</Label>
+              <Input
+                type="text"
+                {...register("description")}
+                placeholder={t("apartment.room.descriptionPlaceholder")}
+              />
               {errors.description && (
                 <p className="text-sm text-destructive">
                   {errors.description.message}
@@ -126,7 +137,7 @@ function RoomForm({ isOpen, mode, onClose, onSubmit, room, apartment }: Props) {
               )}
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="roomType">Room type</Label>
+              <Label htmlFor="roomType">{t("apartment.room.type")}</Label>
               <Controller
                 name="roomType"
                 control={control}
@@ -140,14 +151,20 @@ function RoomForm({ isOpen, mode, onClose, onSubmit, room, apartment }: Props) {
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="private_single">
-                        Private Single
+                        {statusT("room.roomType.pSingle")}
                       </SelectItem>
                       <SelectItem value="private_double">
-                        Private Double
+                        {statusT("room.roomType.pDouble")}
                       </SelectItem>
-                      <SelectItem value="shared_bed">Shared Bed</SelectItem>
-                      <SelectItem value="studio">Studio</SelectItem>
-                      <SelectItem value="other">Other</SelectItem>
+                      <SelectItem value="shared_bed">
+                        {statusT("room.roomType.sBed")}
+                      </SelectItem>
+                      <SelectItem value="studio">
+                        {statusT("room.roomType.studio")}
+                      </SelectItem>
+                      <SelectItem value="other">
+                        {statusT("room.roomType.other")}
+                      </SelectItem>
                     </SelectContent>
                   </Select>
                 )}
@@ -159,7 +176,7 @@ function RoomForm({ isOpen, mode, onClose, onSubmit, room, apartment }: Props) {
               )}
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="bedType">Bed type</Label>
+              <Label htmlFor="bedType">{t("apartment.room.bed")}</Label>
               <Controller
                 name="bedType"
                 control={control}
@@ -172,12 +189,24 @@ function RoomForm({ isOpen, mode, onClose, onSubmit, room, apartment }: Props) {
                       <SelectValue placeholder="Select a type" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="single">Single</SelectItem>
-                      <SelectItem value="double">Double</SelectItem>
-                      <SelectItem value="queen">Queen</SelectItem>
-                      <SelectItem value="king">King</SelectItem>
-                      <SelectItem value="bunk">Bunk</SelectItem>
-                      <SelectItem value="shared">Shared</SelectItem>
+                      <SelectItem value="single">
+                        {statusT("room.bedType.single")}
+                      </SelectItem>
+                      <SelectItem value="double">
+                        {statusT("room.bedType.double")}
+                      </SelectItem>
+                      <SelectItem value="queen">
+                        {statusT("room.bedType.queen")}
+                      </SelectItem>
+                      <SelectItem value="king">
+                        {statusT("room.bedType.king")}
+                      </SelectItem>
+                      <SelectItem value="bunk">
+                        {statusT("room.bedType.bunk")}
+                      </SelectItem>
+                      <SelectItem value="shared">
+                        {statusT("room.bedType.shared")}
+                      </SelectItem>
                     </SelectContent>
                   </Select>
                 )}
@@ -189,7 +218,7 @@ function RoomForm({ isOpen, mode, onClose, onSubmit, room, apartment }: Props) {
               )}
             </div>
             <div className="grid gap-2">
-              <Label>Size</Label>
+              <Label>{t("apartment.room.size")}</Label>
               <Input
                 type="number"
                 {...register("sizeSqm", { valueAsNumber: true })}
@@ -201,7 +230,7 @@ function RoomForm({ isOpen, mode, onClose, onSubmit, room, apartment }: Props) {
               )}
             </div>
             <div className="grid gap-2">
-              <Label>Private bathroom</Label>
+              <Label>{t("apartment.room.privateBathroom")}</Label>
               <RadioGroup
                 value={watchedIsActive ? "true" : "false"}
                 onValueChange={(val) =>
@@ -211,11 +240,11 @@ function RoomForm({ isOpen, mode, onClose, onSubmit, room, apartment }: Props) {
               >
                 <div className="flex items-center gap-2">
                   <RadioGroupItem value="true" id="active-yes" />
-                  <Label htmlFor="active-yes">Yes</Label>
+                  <Label htmlFor="active-yes">{t("apartment.infor.yes")}</Label>
                 </div>
                 <div className="flex items-center gap-2">
                   <RadioGroupItem value="false" id="active-no" />
-                  <Label htmlFor="active-no">No</Label>
+                  <Label htmlFor="active-no">{t("apartment.infor.no")}</Label>
                 </div>
               </RadioGroup>
 
@@ -229,10 +258,10 @@ function RoomForm({ isOpen, mode, onClose, onSubmit, room, apartment }: Props) {
 
           <DialogFooter>
             <Button type="button" variant="outline" onClick={handleClose}>
-              Cancel
+              {t("apartment.button.cancel")}
             </Button>
             <Button type="submit" disabled={isSubmitting}>
-              {isSubmitting ? "Loading" : isCreate ? "Create" : "Update"}
+              {isCreate ? t("apartment.room.create") : t("apartment.room.update")}
             </Button>
           </DialogFooter>
         </form>

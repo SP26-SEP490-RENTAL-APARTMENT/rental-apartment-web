@@ -3,6 +3,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { priceChangeApi } from "@/services/privateApi/landlordApi";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
 const daysOfWeekList = [
@@ -21,6 +22,7 @@ interface Props {
 }
 
 function BulkForm({ onClose, apartmentId }: Props) {
+  const { t } = useTranslation("landlord");
   const [loading, setLoading] = useState(false);
   const [dateError, setDateError] = useState("");
   const [form, setForm] = useState({
@@ -45,7 +47,7 @@ function BulkForm({ onClose, apartmentId }: Props) {
 
     if (newForm.fromDate && newForm.toDate) {
       if (!validateDateRange(newForm.fromDate, newForm.toDate)) {
-        setDateError("Date range must be at least 7 days");
+        setDateError(t("priceChange.bulkForm.dateRangeError"));
       } else {
         setDateError("");
       }
@@ -65,12 +67,12 @@ function BulkForm({ onClose, apartmentId }: Props) {
     e.preventDefault();
 
     if (!validateDateRange(form.fromDate, form.toDate)) {
-      toast.error("Date range must be at least 7 days");
+      toast.error(t("priceChange.bulkForm.dateRangeError"));
       return;
     }
 
     if (form.daysOfWeek.length === 0) {
-      toast.error("Please select at least one day");
+      toast.error(t("priceChange.bulkForm.selectDateError"));
       return;
     }
 
@@ -103,7 +105,7 @@ function BulkForm({ onClose, apartmentId }: Props) {
     <form className="space-y-6" onSubmit={handleChangePrice}>
       <div className="grid grid-cols-2 gap-6">
         <div className="grid gap-2">
-          <Label>From date</Label>
+          <Label>{t("priceChange.bulkForm.fromDate")}</Label>
           <Input
             type="date"
             value={form.fromDate}
@@ -111,7 +113,7 @@ function BulkForm({ onClose, apartmentId }: Props) {
           />
         </div>
         <div className="grid gap-2">
-          <Label>To date</Label>
+          <Label>{t("priceChange.bulkForm.toDate")}</Label>
           <Input
             type="date"
             value={form.toDate}
@@ -122,7 +124,7 @@ function BulkForm({ onClose, apartmentId }: Props) {
       </div>
 
       <div className="grid gap-2">
-        <Label>New price / night</Label>
+        <Label>{t("priceChange.bulkForm.newPrice")}</Label>
         <Input
           min={0}
           type="number"
@@ -135,7 +137,7 @@ function BulkForm({ onClose, apartmentId }: Props) {
       </div>
 
       <div className="grid gap-2">
-        <Label>Days of the week</Label>
+        <Label>{t("priceChange.bulkForm.daysOfWeek")}</Label>
         <div className="flex flex-wrap gap-2 p-3 border border-gray-200 rounded-lg bg-white">
           {daysOfWeekList.map((item) => (
             <button
@@ -154,20 +156,20 @@ function BulkForm({ onClose, apartmentId }: Props) {
         </div>
         {form.daysOfWeek.length === 0 && (
           <p className="text-sm text-amber-600">
-            Please select at least one day
+            {t("priceChange.bulkForm.selectDateError")}
           </p>
         )}
       </div>
 
       <div className="flex justify-end gap-2 mt-10">
         <Button type="button" variant="outline" onClick={onClose}>
-          Cancel
+          {t("priceChange.button.cancel")}
         </Button>
         <Button
           type="submit"
           disabled={loading || dateError !== "" || form.daysOfWeek.length === 0}
         >
-          {loading ? "Updating..." : "Update Price"}
+          {t("priceChange.button.update")}
         </Button>
       </div>
     </form>

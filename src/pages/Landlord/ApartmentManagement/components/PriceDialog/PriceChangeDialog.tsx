@@ -8,6 +8,7 @@ import {
 import { Card, CardContent } from "@/components/ui/card";
 import { ArrowRight, CalendarDays, TrendingUp } from "lucide-react";
 import type { PriceChange } from "@/types/priceChange";
+import { useTranslation } from "react-i18next";
 
 interface Props {
   open: boolean;
@@ -32,18 +33,19 @@ const formatCurrency = (value: number) =>
   }).format(value);
 
 function PriceChangeDialog({ open, onClose, priceChanges }: Props) {
+  const { t } = useTranslation("landlord");
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="max-w-2xl">
         <DialogHeader>
           <DialogTitle className="text-xl font-bold">
-            Price Changes History
+            {t("priceChangeHistory.title")}
           </DialogTitle>
         </DialogHeader>
 
         {priceChanges.length === 0 ? (
           <div className="py-10 text-center text-muted-foreground">
-            No price changes recorded for this apartment.
+            {t("priceChangeHistory.noChanges")}
           </div>
         ) : (
           <div className="max-h-125 space-y-4 overflow-y-auto pr-2">
@@ -75,7 +77,9 @@ function PriceChangeDialog({ open, onClose, priceChanges }: Props) {
                   {/* price */}
                   <div className="flex items-center justify-center gap-4 rounded-lg bg-slate-50 p-4">
                     <div className="text-center">
-                      <p className="text-xs text-muted-foreground">Old Price</p>
+                      <p className="text-xs text-muted-foreground">
+                        {t("priceChangeHistory.oldPrice")}
+                      </p>
                       <p className="text-lg font-semibold text-slate-500 line-through">
                         {formatCurrency(change.oldPricePerNight)}
                       </p>
@@ -84,7 +88,9 @@ function PriceChangeDialog({ open, onClose, priceChanges }: Props) {
                     <ArrowRight className="h-5 w-5 text-blue-500" />
 
                     <div className="text-center">
-                      <p className="text-xs text-muted-foreground">New Price</p>
+                      <p className="text-xs text-muted-foreground">
+                        {t("priceChangeHistory.newPrice")}
+                      </p>
                       <p className="text-xl font-bold text-green-600">
                         {formatCurrency(change.newPricePerNight)}
                       </p>

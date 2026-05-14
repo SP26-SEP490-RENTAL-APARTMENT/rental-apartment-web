@@ -10,7 +10,7 @@ i18n
   .init({
     fallbackLng: "en",
 
-    ns: ["common"],
+    ns: ["common", "landlord", "book"],
     defaultNS: "common",
 
     backend: {
@@ -19,7 +19,10 @@ i18n
 
     interpolation: {
       escapeValue: false,
+      formatSeparator: ",",
     },
+
+    returnObjects: true,
   });
 
 export default i18n;

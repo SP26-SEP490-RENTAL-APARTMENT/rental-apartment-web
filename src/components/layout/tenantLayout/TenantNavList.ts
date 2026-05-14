@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 
 export const useTenantNavList = () => {
   const { t } = useTranslation("user");
+  const {t: paymentT} = useTranslation("paymentHistory");
   const { user } = useAuthStore();
 
   const isExactTenantLandlord = user?.roles.includes("tenant");
@@ -32,7 +33,7 @@ export const useTenantNavList = () => {
             icon: History,
           },
           {
-            title: "Payment History",
+            title: paymentT("payment.title"),
             url: "/tenant/payment-history",
             icon: CreditCard,
           },

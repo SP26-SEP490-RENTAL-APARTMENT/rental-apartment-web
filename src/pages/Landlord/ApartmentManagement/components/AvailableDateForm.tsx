@@ -16,6 +16,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 import { Trash2, Plus } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 export interface AvailableDateFormProps {
   isOpen: boolean;
@@ -30,6 +31,7 @@ function AvailableDateForm({
   onSubmit,
   // apartmentId,
 }: AvailableDateFormProps) {
+  const { t } = useTranslation("landlord");
   const {
     register,
     handleSubmit,
@@ -87,7 +89,7 @@ function AvailableDateForm({
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Add Available Dates</DialogTitle>
+          <DialogTitle>{t("availability.form.title")}</DialogTitle>
         </DialogHeader>
 
         <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
@@ -99,7 +101,7 @@ function AvailableDateForm({
               >
                 <div className="flex justify-between items-center mb-2">
                   <Label className="text-sm font-medium">
-                    Date Range {index + 1}
+                    {t("availability.form.dateRange")} {index + 1}
                   </Label>
                   {fields.length > 1 && (
                     <Button
@@ -120,7 +122,7 @@ function AvailableDateForm({
                     htmlFor={`ranges.${index}.startDate`}
                     className="text-xs"
                   >
-                    Start Date *
+                    {t("availability.form.startDate")} *
                   </Label>
                   <Input
                     id={`ranges.${index}.startDate`}
@@ -143,7 +145,7 @@ function AvailableDateForm({
                     htmlFor={`ranges.${index}.endDate`}
                     className="text-xs"
                   >
-                    End Date *
+                    {t("availability.form.endDate")} *
                   </Label>
                   <Input
                     id={`ranges.${index}.endDate`}
@@ -163,11 +165,11 @@ function AvailableDateForm({
                 {/* Reason */}
                 <div className="grid gap-2">
                   <Label htmlFor={`ranges.${index}.reason`} className="text-xs">
-                    Reason *
+                    {t("availability.form.reason")} *
                   </Label>
                   <Input
                     id={`ranges.${index}.reason`}
-                    placeholder="e.g., Maintenance, Special Event, etc."
+                    placeholder={t("availability.form.reasonPlaceholder")}
                     disabled={isSubmitting}
                     {...register(`ranges.${index}.reason`)}
                   />
@@ -198,7 +200,7 @@ function AvailableDateForm({
               className="w-full"
             >
               <Plus className="w-4 h-4 mr-2" />
-              Add Another Date Range
+              {t("availability.form.addRange")}
             </Button>
           </div>
 
@@ -209,10 +211,10 @@ function AvailableDateForm({
               onClick={handleClose}
               disabled={isSubmitting}
             >
-              Cancel
+              {t("availability.form.cancel")}
             </Button>
             <Button type="submit" disabled={isSubmitting}>
-              {isSubmitting ? "Saving..." : "Save Available Dates"}
+              {t("availability.form.save")}
             </Button>
           </DialogFooter>
         </form>

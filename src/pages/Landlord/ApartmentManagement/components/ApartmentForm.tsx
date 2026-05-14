@@ -20,6 +20,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import AddressAutocomplete from "./AddressAutocomplete";
+import { useTranslation } from "react-i18next";
 
 export interface ApartmentFormProps {
   isOpen: boolean;
@@ -45,6 +46,7 @@ function ApartmentForm({
   apartment,
   mode,
 }: ApartmentFormProps) {
+  const { t } = useTranslation("landlord");
   const isCreate = mode === "create";
   const schema = isCreate ? createApartmentSchema : updateApartmentSchema;
 
@@ -263,7 +265,7 @@ function ApartmentForm({
       <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>
-            {isCreate ? "Add New Apartment" : "Edit Apartment"}
+            {isCreate ? t("apartment.addApartment.addTitle") : t("apartment.addApartment.updateTitle")}
           </DialogTitle>
         </DialogHeader>
 
@@ -271,10 +273,10 @@ function ApartmentForm({
           <div className="grid gap-4 py-4">
             {/* TITLE */}
             <div className="grid gap-2">
-              <Label htmlFor="title">Title *</Label>
+              <Label htmlFor="title">{t("apartment.addApartment.title")} *</Label>
               <Input
                 id="title"
-                placeholder="Apartment title"
+                placeholder={t("apartment.addApartment.titlePlaceholder")}
                 {...register("title")}
               />
               {errors.title && (
@@ -286,10 +288,10 @@ function ApartmentForm({
 
             {/* DESCRIPTION */}
             <div className="grid gap-2">
-              <Label htmlFor="description">Description *</Label>
+              <Label htmlFor="description">{t("apartment.addApartment.description")} *</Label>
               <Textarea
                 id="description"
-                placeholder="Apartment description"
+                placeholder={t("apartment.addApartment.descriptionPlaceholder")}
                 {...register("description")}
               />
               {errors.description && (
@@ -302,7 +304,7 @@ function ApartmentForm({
             {/* GRID: MAX OCCUPANTS & PRICE */}
             <div className="grid grid-cols-3 gap-4">
               <div className="grid gap-2">
-                <Label htmlFor="maxOccupants">Max Occupants</Label>
+                <Label htmlFor="maxOccupants">{t("apartment.addApartment.maxOccupancy")}</Label>
                 <Input
                   id="maxOccupants"
                   type="number"
@@ -317,7 +319,7 @@ function ApartmentForm({
               </div>
 
               <div className="grid gap-2">
-                <Label htmlFor="maxInfants">Max Infants</Label>
+                <Label htmlFor="maxInfants">{t("apartment.addApartment.maxInfants")}</Label>
                 <Input
                   id="maxInfants"
                   type="number"
@@ -333,7 +335,7 @@ function ApartmentForm({
 
               <div className="grid gap-2">
                 <Label htmlFor="basePricePerNight">
-                  Base Price per Night *
+                  {t("apartment.addApartment.price")} *
                 </Label>
                 <Input
                   id="basePricePerNight"
@@ -351,7 +353,7 @@ function ApartmentForm({
 
             {/* ADDRESS */}
             <div className="grid gap-2">
-              <Label>Address *</Label>
+              <Label htmlFor="address">{t("apartment.addApartment.address")} *</Label>
 
               <AddressAutocomplete
                 value={currentAddress}
@@ -428,15 +430,15 @@ function ApartmentForm({
                   className="w-4 h-4"
                   {...register("isPetAllowed")}
                 />
-                <span>Allow pets</span>
+                <span>{t("apartment.addApartment.allowPets")}</span>
               </Label>
               {isPetAllowed && (
                 <div className="grid gap-2 pl-7">
-                  <Label htmlFor="maxPets">Max pets</Label>
+                  <Label htmlFor="maxPets">{t("apartment.addApartment.maxPets")}</Label>
                   <Input
                     id="maxPets"
                     type="number"
-                    placeholder="Enter maximum number of pets"
+                    min={0}
                     {...register("maxPets", { valueAsNumber: true })}
                   />
                   {errors.maxPets && (
@@ -452,9 +454,9 @@ function ApartmentForm({
             {isCreate && (
               <div className="grid gap-3">
                 <div>
-                  <Label htmlFor="photos">Upload Photos *</Label>
+                  <Label htmlFor="photos">{t("apartment.addApartment.uploadPhotos")} *</Label>
                   <p className="text-xs text-muted-foreground mt-1 mb-2">
-                    Max 10 photos
+                    {t("apartment.addApartment.photoGuidelines")}
                   </p>
                   <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:border-gray-400 transition cursor-pointer">
                     <Input
@@ -479,7 +481,7 @@ function ApartmentForm({
             {preview.length > 0 && (
               <div className="grid gap-3">
                 <div className="flex justify-between items-center">
-                  <Label>Ảnh đã chọn ({preview.length}/10)</Label>
+                  <Label>{t("apartment.addApartment.selectedPhotos")} ({preview.length}/10)</Label>
                 </div>
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
                   {preview.map((src, idx) => (
@@ -519,17 +521,11 @@ function ApartmentForm({
               onClick={handleClose}
               disabled={isSubmitting}
             >
-              Cancel
+              {t("apartment.button.cancel")}
             </Button>
 
             <Button type="submit" disabled={isSubmitting}>
-              {isSubmitting
-                ? isCreate
-                  ? "Creating..."
-                  : "Updating..."
-                : isCreate
-                  ? "Create Apartment"
-                  : "Update Apartment"}
+              {isCreate ? t("apartment.button.create") : t("apartment.button.update")}
             </Button>
           </DialogFooter>
         </form>

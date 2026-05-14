@@ -7,6 +7,8 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { useTranslation } from "react-i18next";
 
 export type Props = {
   note: string;
@@ -24,11 +26,12 @@ function SubmitApproveForm({
   isOpen,
   onClose,
 }: Props) {
+  const {t} = useTranslation('landlord');
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Submit for review</DialogTitle>
+          <DialogTitle>{t("approve.title")}</DialogTitle>
         </DialogHeader>
 
         <form
@@ -48,8 +51,9 @@ function SubmitApproveForm({
 
 
             <div className="grid gap-2">
-              <Label htmlFor="note">Note</Label>
-              <Input
+              <Label htmlFor="note">{t("approve.note")}</Label>
+              <Textarea
+                placeholder={t("approve.placeholderNote")}
                 value={note}
                 onChange={(e) => setNote(e.target.value)}
                 id="note"
@@ -58,7 +62,7 @@ function SubmitApproveForm({
           </div>
 
           <div className="flex justify-center mt-4">
-            <Button type="submit">Submit</Button>
+            <Button type="submit">{t("approve.submit")}</Button>
           </div>
         </form>
       </DialogContent>

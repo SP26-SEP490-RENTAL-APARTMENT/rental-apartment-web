@@ -7,7 +7,7 @@ import { CheckCircle, Calendar, Users, CreditCard, Home } from "lucide-react";
 
 function FinishPayment() {
   const navigate = useNavigate();
-  const { t } = useTranslation("tenant");
+  const { t } = useTranslation("book");
   const bookingData = useBookingStore((state) => state.bookingData);
   const clearBookingData = useBookingStore((state) => state.clearBookingData);
 
@@ -19,7 +19,7 @@ function FinishPayment() {
   if (!bookingData) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        {t("finishPayment.notFound")}
+        {t("finish.notFound")}
       </div>
     );
   }
@@ -33,7 +33,7 @@ function FinishPayment() {
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4 py-8">
       <Card className="w-full max-w-2xl rounded-xl shadow-sm border-0">
-        <CardHeader className="bg-gradient-to-r from-green-600 to-green-700 text-white rounded-t-xl">
+        <CardHeader className="bg-linear-to-r from-green-600 to-green-700 text-white rounded-t-xl">
           <div className="text-center py-6">
             <div className="flex justify-center mb-4">
               <div className="p-3 bg-green-500 bg-opacity-30 rounded-full">
@@ -41,9 +41,9 @@ function FinishPayment() {
               </div>
             </div>
             <CardTitle className="text-3xl font-bold">
-              {t("finishPayment.title")}
+              {t("finish.title")}
             </CardTitle>
-            <p className="text-green-100 mt-2">{t("finishPayment.subtitle")}</p>
+            <p className="text-green-100 mt-2">{t("finish.subtitle")}</p>
           </div>
         </CardHeader>
 
@@ -54,7 +54,7 @@ function FinishPayment() {
             <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
               <div className="flex items-center gap-2 mb-3">
                 <Calendar className="h-5 w-5 text-blue-600" />
-                <h3 className="font-semibold text-gray-900">Booking Dates</h3>
+                <h3 className="font-semibold text-gray-900">{t("finish.bookDate")}</h3>
               </div>
               <div className="space-y-2">
                 <div>
@@ -80,23 +80,23 @@ function FinishPayment() {
             <div className="bg-purple-50 rounded-lg p-4 border border-purple-200">
               <div className="flex items-center gap-2 mb-3">
                 <Users className="h-5 w-5 text-purple-600" />
-                <h3 className="font-semibold text-gray-900">Guest Details</h3>
+                <h3 className="font-semibold text-gray-900">{t("finish.guestDetails")}</h3>
               </div>
               <div className="space-y-2">
                 <div>
                   <p className="text-xs font-semibold text-gray-500 uppercase">
-                    Duration
+                    {t("finish.duration")}
                   </p>
                   <p className="text-lg font-medium text-gray-900">
-                    {bookingData.nights} {t("booking.nightsUnit")}
+                    {bookingData.nights} {t("booking.night")}
                   </p>
                 </div>
                 <div>
                   <p className="text-xs font-semibold text-gray-500 uppercase">
-                    Guests
+                    {t("finish.guests")}
                   </p>
                   <p className="text-lg font-medium text-gray-900">
-                    {totalGuests} {totalGuests > 1 ? "people" : "person"}
+                    {totalGuests}
                   </p>
                 </div>
               </div>
@@ -108,12 +108,12 @@ function FinishPayment() {
             <CardContent className="pt-6">
               <div className="flex items-center gap-2 mb-3">
                 <CreditCard className="h-5 w-5 text-amber-600" />
-                <h3 className="font-semibold text-gray-900">Payment Mode</h3>
+                <h3 className="font-semibold text-gray-900">{t("finish.paymentInfo")}</h3>
               </div>
               <p className="text-lg font-medium text-amber-900">
                 {bookingData.paymentMode === "partial"
-                  ? t("finishPayment.depositMode")
-                  : t("finishPayment.fullMode")}
+                  ? t("confirm.deposit")
+                  : t("confirm.full")}
               </p>
             </CardContent>
           </Card>
@@ -125,10 +125,10 @@ function FinishPayment() {
           <div className="flex flex-col gap-3">
             <Button
               onClick={() => handleNavigate("/tenant/booking-history")}
-              className="w-full h-11 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-semibold gap-2"
+              className="w-full h-11 bg-linear-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-semibold gap-2"
             >
               <Calendar className="h-4 w-4" />
-              {t("finishPayment.viewBookings")}
+              {t("finish.bookingHistory")}
             </Button>
 
             <Button
@@ -137,7 +137,7 @@ function FinishPayment() {
               className="w-full h-11 font-semibold gap-2"
             >
               <Home className="h-4 w-4" />
-              {t("finishPayment.backHome")}
+              {t("finish.home")}
             </Button>
           </div>
         </CardContent>

@@ -6,6 +6,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useTranslation } from "react-i18next";
 
 interface addFilters {
   method: string;
@@ -28,6 +29,7 @@ function PaymentFilter({
   methodList,
   paymentPurposeList,
 }: Props) {
+  const { t } = useTranslation("filter");
   return (
     <div className="flex gap-3 items-center">
       <Select
@@ -37,12 +39,12 @@ function PaymentFilter({
         }
       >
         <SelectTrigger className="w-45 bg-blue-100">
-          <SelectValue placeholder="Select status" />
+          <SelectValue placeholder={t("selectStatus")} />
         </SelectTrigger>
 
-        <SelectContent className="bg-blue-200">
+        <SelectContent className="bg-blue-100">
           <SelectGroup>
-            <SelectItem value="all">All</SelectItem>
+            <SelectItem value="all">{t("all")}</SelectItem>
             {statusList.map((item) => (
               <SelectItem key={item.value} value={item.value}>
                 {item.label}
@@ -58,13 +60,13 @@ function PaymentFilter({
           setAddFilters({ ...addFilters, method: value })
         }
       >
-        <SelectTrigger className="w-45 bg-blue-200">
-          <SelectValue placeholder="Select method" />
+        <SelectTrigger className="w-45 bg-blue-100">
+          <SelectValue placeholder={t("selectMethod")} />
         </SelectTrigger>
 
-        <SelectContent className="bg-blue-300">
+        <SelectContent className="bg-blue-100">
           <SelectGroup>
-            <SelectItem value="all">All</SelectItem>
+            <SelectItem value="all">{t("all")}</SelectItem>
             {methodList.map((item) => (
               <SelectItem key={item.value} value={item.value}>
                 {item.label}
@@ -80,13 +82,13 @@ function PaymentFilter({
           setAddFilters({ ...addFilters, paymentPurpose: value })
         }
       >
-        <SelectTrigger className="w-45 bg-blue-300">
-          <SelectValue placeholder="Select payment type" />
+        <SelectTrigger className="w-45 bg-blue-100">
+          <SelectValue placeholder={t("selectPaymentType")} />
         </SelectTrigger>
 
-        <SelectContent className="bg-blue-400">
+        <SelectContent className="bg-blue-100">
           <SelectGroup>
-            <SelectItem value="all">All</SelectItem>
+            <SelectItem value="all">{t("all")}</SelectItem>
             {paymentPurposeList.map((item) => (
               <SelectItem key={item.value} value={item.value}>
                 {item.label}

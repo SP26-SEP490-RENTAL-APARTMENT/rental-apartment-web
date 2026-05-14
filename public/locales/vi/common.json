@@ -27,7 +27,12 @@
         "newTicket": "Tạo yêu cầu",
         "create": "Tạo",
         "creating": "Đang tạo...",
-        "close": "Đóng"
+        "close": "Đóng",
+        "submitResponse": "Gửi phản hồi",
+        "browse": "Duyệt",
+        "page": "Trang",
+        "of": "của",
+        "resetFilters": "Đặt lại"
     },
     "description": {
         "apartment": "Tìm nơi ở hoàn hảo của bạn với sự lựa chọn rộng rãi các căn hộ. Cho dù bạn đang tìm kiếm một studio ấm cúng hay một ngôi nhà gia đình rộng rãi, chúng tôi có các lựa chọn phù hợp với mọi nhu cầu và ngân sách.",
@@ -77,5 +82,10 @@
         "selectFile": "Nhấp để chọn hoặc kéo thả hình ảnh",
         "supportedFormats": "Hỗ trợ định dạng JPG, PNG (Tối đa 10MB)",
         "uploading": "Đang tải lên..."
+    },
+    "delete": {
+        "title": "Xác nhận xóa",
+        "description": "Hành động này sẽ loại bỏ vĩnh viễn {{item}} khỏi hệ thống.",
+        "message": "Bạn có chắc chắn muốn xóa {{item}} này không?"
     }
 }

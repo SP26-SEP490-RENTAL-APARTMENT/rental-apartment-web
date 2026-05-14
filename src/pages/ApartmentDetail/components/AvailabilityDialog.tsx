@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import type { Availability } from "@/types/availability";
 import { formatDate } from "@/lib/utils";
+import { useTranslation } from "react-i18next";
 
 type Props = {
   isOpen: boolean;
@@ -16,7 +17,7 @@ type Props = {
 };
 
 export default function AvailabilityDialog({ isOpen, onClose, data }: Props) {
-
+  const { t } = useTranslation("book");
 
   if (!data) return null;
 
@@ -24,11 +25,11 @@ export default function AvailabilityDialog({ isOpen, onClose, data }: Props) {
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-3xl">
         <DialogHeader>
-          <DialogTitle>Availability</DialogTitle>
+          <DialogTitle>{t("avai.title")}</DialogTitle>
         </DialogHeader>
 
         {/* Tổng quan */}
-        <div className="space-y-2">
+        {/* <div className="space-y-2">
           <div>
             Status: <Badge variant="outline">{data.bookingStatus}</Badge>
           </div>
@@ -39,14 +40,14 @@ export default function AvailabilityDialog({ isOpen, onClose, data }: Props) {
           </div>
         </div>
 
-        <Separator />
+        <Separator /> */}
 
         {/* Available */}
         <div>
-          <h3 className="font-semibold mb-2">Available</h3>
+          <h3 className="font-semibold mb-2">{t("avai.available")}</h3>
 
           {data.availablePeriods.length === 0 ? (
-            <p className="text-sm text-gray-400">No available slots</p>
+            <p className="text-sm text-gray-400">{t("avai.noAvailableSlots")}</p>
           ) : (
             <div className="space-y-2">
               {data.availablePeriods.map((item, index) => (
@@ -75,10 +76,10 @@ export default function AvailabilityDialog({ isOpen, onClose, data }: Props) {
 
         {/* Unavailable */}
         <div>
-          <h3 className="font-semibold mb-2">Unavailable</h3>
+          <h3 className="font-semibold mb-2">{t("avai.unavailable")}</h3>
 
           {data.unavailablePeriods.length === 0 ? (
-            <p className="text-sm text-gray-400">No blocked slots</p>
+            <p className="text-sm text-gray-400">{t("avai.noBlockedSlots")}</p>
           ) : (
             <div className="space-y-2">
               {data.unavailablePeriods.map((item, index) => (

@@ -38,6 +38,7 @@ export function TicketDetailDialog({
   refetch,
 }: TicketDetailDialogProps) {
   const { t: commonT } = useTranslation("common");
+  const { t } = useTranslation("support");
   const [adminResponse, setAdminResponse] = useState(false);
   const [form, setForm] = useState({
     newStatus: "",
@@ -85,7 +86,7 @@ export function TicketDetailDialog({
               className="gap-2"
             >
               <MessageSquare className="w-4 h-4" />
-              <p>Solution Response</p>
+              <p>{t("support.detail.solutionResponse")}</p>
               {adminResponse ? (
                 <ChevronUp className="w-4 h-4" />
               ) : (
@@ -103,19 +104,18 @@ export function TicketDetailDialog({
               <div className="flex items-center gap-2">
                 <MessageSquare className="w-5 h-5 text-blue-600 dark:text-blue-400" />
                 <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
-                  Provide Admin Response
+                  {t("support.response.title")}
                 </h3>
               </div>
               <p className="text-sm text-slate-600 dark:text-slate-400">
-                Accept or reject the customer's solution request. Additional
-                details can be provided if rejecting.
+                {t("support.response.description")}
               </p>
             </div>
 
             {/* Response Options */}
             <div className="space-y-4">
               <Label className="text-base font-semibold text-slate-900 dark:text-slate-100">
-                Solution Decision
+                {t("support.response.decision")}
               </Label>
               <RadioGroup
                 value={form.newStatus}
@@ -136,11 +136,11 @@ export function TicketDetailDialog({
 
                     <div className="flex flex-col">
                       <span className="font-medium text-slate-900 dark:text-slate-100">
-                        Accept Solution
+                        {t("support.response.accept")}
                       </span>
 
                       <span className="text-xs text-slate-600 dark:text-slate-400">
-                        Mark the ticket as resolved
+                        {t("support.response.acceptDescription")}
                       </span>
                     </div>
                   </div>
@@ -158,11 +158,11 @@ export function TicketDetailDialog({
 
                     <div className="flex flex-col">
                       <span className="font-medium text-slate-900 dark:text-slate-100">
-                        Reject Solution
+                        {t("support.response.reject")}
                       </span>
 
                       <span className="text-xs text-slate-600 dark:text-slate-400">
-                        Request additional information from tenant
+                        {t("support.response.rejectDescription")}
                       </span>
                     </div>
                   </div>
@@ -179,15 +179,15 @@ export function TicketDetailDialog({
                     htmlFor="notes"
                     className="text-base font-semibold text-slate-900 dark:text-slate-100"
                   >
-                    Rejection Details
+                    {t("support.response.rejectDetail")}
                   </Label>
                 </div>
                 <p className="text-xs text-slate-600 dark:text-slate-400 ml-3">
-                  Provide specific feedback about why the solution was rejected
+                  {t("support.response.rejectDetailDescription")}
                 </p>
                 <Textarea
                   id="notes"
-                  placeholder="Explain what additional information or actions are needed..."
+                  placeholder={t("support.response.reasonPlaceholder")}
                   value={form.statusChangeNotes}
                   onChange={(e) =>
                     setForm({ ...form, statusChangeNotes: e.target.value })
@@ -206,7 +206,7 @@ export function TicketDetailDialog({
                 className="gap-2 bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800"
               >
                 <Send className="w-4 h-4" />
-                {loading ? "Submitting..." : "Submit Response"}
+                {commonT("button.submitResponse")}
               </Button>
               <Button
                 variant="outline"
@@ -216,7 +216,7 @@ export function TicketDetailDialog({
                 }}
                 disabled={loading}
               >
-                Cancel
+                {commonT("button.cancel")}
               </Button>
             </div>
           </div>

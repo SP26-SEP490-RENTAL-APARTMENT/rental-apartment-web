@@ -1,0 +1,62 @@
+{
+    "all": "Tất cả",
+    "apartment": {
+        "draft": "Nháp",
+        "pending": "Chờ duyệt",
+        "posted": "Đã đăng",
+        "blocked": "Bị chặn",
+        "archived": "Đã lưu trữ"
+    },
+    "inspection": {
+        "scheduled": "Đã lên lịch",
+        "in_progress": "Đang thực hiện",
+        "pending": "Chờ duyệt",
+        "passed": "Đã qua kiểm tra",
+        "not_scheduled": "Chưa lên lịch"
+    },
+    "room": {
+        "pBathroom": "Phòng tắm riêng",
+        "sBathroom": "Phòng tắm chung",
+        "roomType": {
+            "pSingle": "Đơn riêng",
+            "pDouble": "Đôi riêng",
+            "sBed": "Giường chung",
+            "studio": "Studio",
+            "other": "Khác"
+        },
+        "bedType": {
+            "single": "Đơn",
+            "double": "Đôi",
+            "queen": "Queen",
+            "king": "King",
+            "bunk": "Giường xếp",
+            "shared": "Chung"
+        }
+    },
+    "booking": {
+        "pending": "Chờ",
+        "confirmed": "Đã xác nhận",
+        "cancelled": "Đã hủy",
+        "completed": "Hoàn thành",
+        "disputed": "Tranh chấp",
+        "negotiating": "Đang thương lượng",
+        "paid": "Đã thanh toán",
+        "unknown": "Không xác định"
+    },
+    "payment": {
+        "full": "Thanh toán đầy đủ",
+        "partial": "Thanh toán một phần",
+        "deposit": "Đặt cọc",
+        "success": "Thành công",
+        "failed": "Thất bại",
+        "refunded": "Đã hoàn tiền",
+        "pending": "Chờ xử lý"
+    },
+    "priceReason": {
+        "peak": "Mùa cao điểm",
+        "low": "Mùa thấp điểm",
+        "special": "Sự kiện đặc biệt",
+        "manual": "Điều chỉnh thủ công",
+        "other": "Khác"
+    }
+}

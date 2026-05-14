@@ -1,7 +1,13 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { useState } from "react";
 import ManualForm from "./ManualForm";
 import BulkForm from "./BulkForm";
+import { useTranslation } from "react-i18next";
 
 interface Props {
   open: boolean;
@@ -10,13 +16,14 @@ interface Props {
 }
 
 function GeneralDialog({ open, onClose, apartmentId }: Props) {
+  const { t } = useTranslation("landlord");
   const [mode, setMode] = useState<"manual" | "bulk">("manual");
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Change Price</DialogTitle>
+          <DialogTitle>{t("priceChange.title")}</DialogTitle>
         </DialogHeader>
 
         {/* Segmented control */}
@@ -32,14 +39,14 @@ function GeneralDialog({ open, onClose, apartmentId }: Props) {
               onClick={() => setMode("manual")}
               className="relative z-10 flex-1 py-2 text-sm font-medium text-center"
             >
-              Custom Dates (Manual)
+              {t("priceChange.manualForm.title")}
             </button>
 
             <button
               onClick={() => setMode("bulk")}
               className="relative z-10 flex-1 py-2 text-sm font-medium text-center"
             >
-              Pricing Rules (Bulk)
+              {t("priceChange.bulkForm.title")}
             </button>
           </div>
         </div>

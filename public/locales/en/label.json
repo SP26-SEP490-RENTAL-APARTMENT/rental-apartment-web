@@ -1,0 +1,9 @@
+{
+    "landlord": {
+        "apartments": "Apartments",
+        "bookings": "Bookings",
+        "rooms": "Rooms",
+        "payments": "Payment History",
+        "subscriptions": "Subscriptions"
+    }
+}

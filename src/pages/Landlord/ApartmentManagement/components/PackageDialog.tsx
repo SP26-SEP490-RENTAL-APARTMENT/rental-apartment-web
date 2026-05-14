@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/dialog";
 import { formatPrice } from "@/lib/utils";
 import type { Package, PackageItem } from "@/types/package";
-import { Badge, Plus, Loader2, X } from "lucide-react";
+import { Plus, Loader2, X } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -16,6 +16,8 @@ import {
   packageManagementApi,
 } from "@/services/privateApi/adminApi";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
+import { Badge } from "@/components/ui/badge";
 
 export interface Props {
   isOpen: boolean;
@@ -25,6 +27,7 @@ export interface Props {
 }
 
 function PackageDialog({ isOpen, onClose, packages, onAddSuccess }: Props) {
+  const { t } = useTranslation("landlord");
   const [selectedPackageId, setSelectedPackageId] = useState<string>("");
   const [availableItems, setAvailableItems] = useState<PackageItem[]>([]);
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
@@ -93,13 +96,13 @@ function PackageDialog({ isOpen, onClose, packages, onAddSuccess }: Props) {
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Package list</DialogTitle>
+          <DialogTitle>{t("package.infor.title")}</DialogTitle>
         </DialogHeader>
 
         <div className="space-y-4">
           {!packages || packages.length === 0 ? (
             <p className="text-sm text-muted-foreground">
-              No packages available
+              {t("package.infor.noPackages")}
             </p>
           ) : (
             packages.map((pkg) => (
@@ -123,17 +126,17 @@ function PackageDialog({ isOpen, onClose, packages, onAddSuccess }: Props) {
                 {/* Info */}
                 <div className="grid grid-cols-2 gap-3 text-sm">
                   <p>
-                    <span className="font-medium">Price:</span>{" "}
+                    <span className="font-medium">{t("package.form.price")}:</span>{" "}
                     {formatPrice(pkg.price, pkg.currency)}
                   </p>
 
                   <p>
-                    <span className="font-medium">Max bookings:</span>{" "}
+                    <span className="font-medium">{t("package.form.maxBookings")}:</span>{" "}
                     {pkg.maxBookings ?? "Unlimited"}
                   </p>
 
                   <p>
-                    <span className="font-medium">Created:</span>{" "}
+                    <span className="font-medium">{t("package.form.createdAt")}:</span>{" "}
                     {new Date(pkg.createdAt).toLocaleString()}
                   </p>
                 </div>
@@ -142,7 +145,7 @@ function PackageDialog({ isOpen, onClose, packages, onAddSuccess }: Props) {
                 <div className="space-y-2">
                   <div className="flex justify-between items-center">
                     <p className="font-medium text-sm">
-                      Items ({pkg.items.length})
+                      {t("package.infor.items")} ({pkg.items.length})
                     </p>
                     <Dialog
                       open={isFormOpen && selectedPackageId === pkg.packageId}

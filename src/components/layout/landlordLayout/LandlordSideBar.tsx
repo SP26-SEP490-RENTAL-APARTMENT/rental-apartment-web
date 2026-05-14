@@ -11,11 +11,13 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { landlordNavList } from "./landlordNavList";
 import { LogOut } from "lucide-react";
 import { useAuthStore } from "@/store/authStore";
 import Logo from "@/components/ui/logo/Logo";
+import { useLandlordNavList } from "./landlordNavList";
+import { useTranslation } from "react-i18next";
 function LandlordSideBar() {
+  const { t } = useTranslation("common");
   const { state } = useSidebar();
   const { logout } = useAuthStore();
 
@@ -35,7 +37,7 @@ function LandlordSideBar() {
           <hr className="my-2" />
           <SidebarGroupContent>
             <SidebarMenu>
-              {landlordNavList.map((item) => {
+              {useLandlordNavList().map((item) => {
                 const Icon = item.icon;
 
                 return (
@@ -64,7 +66,7 @@ function LandlordSideBar() {
           <SidebarMenuItem>
             <SidebarMenuButton onClick={handleLogout}>
               <LogOut className="h-4 w-4" />
-              {state === "expanded" && <span>Logout</span>}
+              {state === "expanded" && <span>{t("button.logout")}</span>}
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>

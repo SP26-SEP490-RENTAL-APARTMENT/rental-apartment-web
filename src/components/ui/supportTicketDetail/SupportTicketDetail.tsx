@@ -65,7 +65,7 @@ function SupportTicketDetail({ ticket }: { ticket: SupportTicket }) {
 
       {ticket.attachments && ticket.attachments.length > 0 && (
         <div className="space-y-3">
-          <h3 className="text-sm font-semibold text-gray-700">Attachments</h3>
+          <h3 className="text-sm font-semibold text-gray-700">{t("support.attachments")}</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
             {ticket.attachments.map((attachment, index) => (
               <div

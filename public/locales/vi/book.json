@@ -12,7 +12,12 @@
         "isPetAllowed": "Cho phép thú cưng",
         "maxOccupants": "Số người tối đa",
         "allowPets": "Cho phép",
-        "notAllowPets": "Không cho phép"
+        "notAllowPets": "Không cho phép",
+        "people": "người",
+        "infants": "em bé",
+        "maxInfants": "Số em bé tối đa",
+        "priceWarning": "Giá có thể thay đổi theo ngày",
+        "night": "đêm"
     },
     "room": {
         "roomType": "Loại phòng",
@@ -30,5 +35,77 @@
     },
     "location": {
         "location": "Vị trí"
+    },
+    "booking": {
+        "bookNow": "Đặt ngay",
+        "checkIn": "Check-in",
+        "checkOut": "Check-out",
+        "selectDate": "Chọn ngày",
+        "guests": "Khách",
+        "occupants": "Người ở",
+        "infants": "Trẻ sơ sinh",
+        "children": "Trẻ em",
+        "adults": "Người lớn",
+        "years": "tuổi",
+        "package": "Gói",
+        "checkAvailability": "Xem ngày khả dụng",
+        "reserve": "Đặt phòng",
+        "pets": "thú cưng",
+        "noPackage": "Không có gói",
+        "for": "cho",
+        "nights": "đêm",
+        "loadingPackages": "Đang tải gói...",
+        "noPackagesAvailable": "Không có gói nào",
+        "maxOccupantsWarning": "Tổng số người lớn và trẻ em không được vượt quá {{maxOccupants}}."
+    },
+    "avai": {
+        "title": "Các ngày khả dụng",
+        "available": "Khả dụng",
+        "unavailable": "Không khả dụng",
+        "status": "Trạng thái",
+        "noBlockedSlots": "Không có slot bị chặn",
+        "noAvailableSlots": "Không có slot khả dụng"
+    },
+    "confirm": {
+        "paymentProvider": "Cung cấp thanh toán",
+        "full": "Thanh toán đầy đủ",
+        "deposit": "Đặt cọc",
+        "back": "Quay lại",
+        "confirmNPay": "Xác nhận & Thanh toán",
+        "creditCard": "Thẻ tín dụng",
+        "momoWallet": "Ví Momo",
+        "selectPaymentOption": "Chọn phương thức thanh toán",
+        "paymentMethod": "Phương thức thanh toán",
+        "guestInfo": "Thông tin khách",
+        "title": "Xác nhận đặt phòng",
+        "description": "Vui lòng xem lại thông tin đặt phòng trước khi xác nhận.",
+        "detail": {
+            "title": "Chi tiết đặt phòng",
+            "checkIn": "Check-in",
+            "checkOut": "Check-out",
+            "duration": "Thời gian",
+            "guests": "Khách"
+        },
+        "price": {
+            "title": "Bảng giá",
+            "nightlyRate": "Giá mỗi đêm",
+            "nights": "Đêm",
+            "package": "Gói",
+            "baseAmount": "Thành tiền cơ bản",
+            "total": "Tổng cộng"
+        }
+    },
+    "finish": {
+        "notFound": "Đặt phòng không tìm thấy",
+        "title": "Thanh toán Thành công",
+        "subtitle": "Cảm ơn bạn đã thanh toán! Đặt phòng của bạn đã được xác nhận.",
+        "bookDate": "Ngày đặt phòng",
+        "guestDetails": "Thông tin khách hàng",
+        "duration": "Thời lượng",
+        "guests": "Khách",
+        "night": "đêm",
+        "paymentInfo": "Thông tin thanh toán",
+        "bookingHistory": "Xem Lịch sử Đặt phòng",
+        "home": "Quay lại Trang Chủ"
     }
 }

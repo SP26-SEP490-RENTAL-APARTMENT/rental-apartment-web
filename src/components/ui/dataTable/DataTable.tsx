@@ -14,6 +14,7 @@ import {
 } from "../table";
 import { Button } from "../button";
 import { Skeleton } from "../skeleton";
+import { useTranslation } from "react-i18next";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -34,6 +35,7 @@ function DataTable<TData, TValue>({
   onPageChange,
   loading = false,
 }: DataTableProps<TData, TValue>) {
+  const { t } = useTranslation("common");
   const isServerSide = !!onPageChange;
 
   const table = useReactTable({
@@ -118,10 +120,10 @@ function DataTable<TData, TValue>({
           onClick={() => table.previousPage()}
           disabled={!table.getCanPreviousPage()}
         >
-          Previous
+          {t("button.previous")}
         </Button>
         <span className="text-sm">
-          Page {page} of {Math.ceil((total || 0) / limit)}
+          {t("button.page")} {page} {t("button.of")} {Math.ceil((total || 0) / limit)}
         </span>
         <Button
           variant="outline"
@@ -129,7 +131,7 @@ function DataTable<TData, TValue>({
           onClick={() => table.nextPage()}
           disabled={!table.getCanNextPage()}
         >
-          Next
+          {t("button.next")}
         </Button>
       </div>
     </div>

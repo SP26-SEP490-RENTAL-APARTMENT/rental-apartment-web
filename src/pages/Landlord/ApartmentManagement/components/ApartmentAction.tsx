@@ -36,6 +36,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useTranslation } from "react-i18next";
 
 interface Props {
   apartment: Apartment;
@@ -63,8 +64,11 @@ function ApartmentAction({
   onSendApprove,
   onAddPhotos,
   onChangePrice,
-  onViewPriceChange
+  onViewPriceChange,
 }: Props) {
+  const { t } = useTranslation("landlord");
+  const { i18n } = useTranslation();
+  const { t: commonT } = useTranslation("common");
   const [selectedAmenities, setSelectedAmenities] = useState<string[]>([]);
   const [loadingSubmit, setLoadingSubmit] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -130,7 +134,7 @@ function ApartmentAction({
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Detail</DialogTitle>
+              <DialogTitle>{t("apartment.infor.details")}</DialogTitle>
             </DialogHeader>
             <ApartmentDetailDialog
               apartment={apartment}
@@ -159,7 +163,7 @@ function ApartmentAction({
               </Button>
             </TooltipTrigger>
             <TooltipContent>
-              <p>Add package</p>
+              <p>{t("package.button.add")}</p>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
@@ -182,7 +186,10 @@ function ApartmentAction({
               >
                 <BadgePlus />
               </Button>
-              <Button size="sm" onClick={() => onViewPriceChange(apartment.apartmentId)}>
+              <Button
+                size="sm"
+                onClick={() => onViewPriceChange(apartment.apartmentId)}
+              >
                 <Eye />
               </Button>
             </div>
@@ -197,17 +204,22 @@ function ApartmentAction({
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Confirm Delete</DialogTitle>
+              <DialogTitle>{commonT("delete.title")}</DialogTitle>
               <DialogDescription>
-                This action will permanently remove the apartment from the
-                system.
+                {commonT("delete.description", {
+                  item: i18n.language === "vi" ? "căn hộ" : "apartment",
+                })}
               </DialogDescription>
             </DialogHeader>
-            <p>Are you sure you want to delete this apartment?</p>
+            <p>
+              {commonT("delete.message", {
+                item: i18n.language === "vi" ? "căn hộ" : "apartment",
+              })}
+            </p>
             <div className="flex justify-end gap-2 mt-4">
               <DialogTrigger asChild>
                 <Button className="cursor-pointer" size="sm" variant="outline">
-                  Cancel
+                  {commonT("button.cancel")}
                 </Button>
               </DialogTrigger>
               <Button
@@ -216,7 +228,7 @@ function ApartmentAction({
                 variant="destructive"
                 onClick={handleDelete}
               >
-                Delete
+                {commonT("button.delete")}
               </Button>
             </div>
           </DialogContent>
@@ -229,20 +241,20 @@ function ApartmentAction({
 
           <DropdownMenuContent>
             <DropdownMenuItem onClick={() => onCreateRoom(apartment)}>
-              Add room
+              {t("button.addRoom")}
             </DropdownMenuItem>
             <DropdownMenuItem
               onClick={() => onViewPackage(apartment.apartmentId)}
             >
-              Add package items
+              {t("button.addPackageItems")}
             </DropdownMenuItem>
             <DropdownMenuItem onClick={() => setDialogOpen(true)}>
-              Add amenities
+              {t("button.addAmenity")}
             </DropdownMenuItem>
             <DropdownMenuItem
               onClick={() => onAddAvailability(apartment.apartmentId)}
             >
-              Add availability
+              {t("button.addAvailability")}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -250,9 +262,9 @@ function ApartmentAction({
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
           <DialogContent className="max-w-2xl">
             <DialogHeader>
-              <DialogTitle>Add Amenities</DialogTitle>
+              <DialogTitle>{t("apartment.amenity.addForm.title")}</DialogTitle>
               <DialogDescription>
-                Select amenities to add to this apartment
+                {t("apartment.amenity.addForm.description")}
               </DialogDescription>
             </DialogHeader>
 
@@ -267,7 +279,7 @@ function ApartmentAction({
               {selectedAmenities.length > 0 && (
                 <div>
                   <p className="text-sm font-medium mb-2">
-                    Selected Amenities:
+                    {t("apartment.amenity.addForm.selected")}
                   </p>
                   <div className="flex flex-wrap gap-2">
                     {selectedAmenities.map((amenityId) => {
@@ -297,7 +309,9 @@ function ApartmentAction({
 
               {/* AMENITIES LIST */}
               <div>
-                <p className="text-sm font-medium mb-2">Available Amenities:</p>
+                <p className="text-sm font-medium mb-2">
+                  {t("apartment.amenity.addForm.available")}
+                </p>
                 {loading ? (
                   <div className="flex items-center justify-center py-6">
                     <Loader2 className="animate-spin" size={20} />
@@ -322,7 +336,9 @@ function ApartmentAction({
                           htmlFor={amenity.amenityId}
                           className="text-sm cursor-pointer"
                         >
-                          {amenity.nameEn}
+                          {i18n?.language === "vi"
+                            ? amenity.nameVi
+                            : amenity.nameEn}
                         </label>
                       </div>
                     ))}
@@ -339,7 +355,7 @@ function ApartmentAction({
             <div className="flex justify-end gap-2 mt-6">
               <DialogTrigger asChild>
                 <Button variant="outline" size="sm">
-                  Cancel
+                  {t("apartment.amenity.addForm.cancel")}
                 </Button>
               </DialogTrigger>
               <Button
@@ -350,7 +366,7 @@ function ApartmentAction({
                 {loadingSubmit && (
                   <Loader2 className="mr-2 animate-spin" size={16} />
                 )}
-                Add Amenities
+                {t("apartment.amenity.addForm.addButton")}
               </Button>
             </div>
           </DialogContent>

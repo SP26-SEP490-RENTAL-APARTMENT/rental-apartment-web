@@ -1,0 +1,13 @@
+{
+    "payment": {
+        "title": "Lịch sử Thanh toán",
+        "description": "Xem lịch sử thanh toán và chi tiết giao dịch của bạn.",
+        "card": {
+            "upfront": "Thanh toán trước",
+            "deposit": "Thanh toán đặt cọc",
+            "fullBooking": "Thanh toán toàn bộ đặt phòng",
+            "depositBooking": "Thanh toán đặt cọc đặt phòng",
+            "other": "Khác"
+        }
+    }
+}

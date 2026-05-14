@@ -21,8 +21,11 @@ import {
 import { Button } from "@/components/ui/button";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
+import { useTranslation } from "react-i18next";
 
 function BookingConfirm() {
+  const { t } = useTranslation("book");
+  const { i18n } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
   const [error, setError] = useState<string | null>(null);
@@ -73,6 +76,8 @@ function BookingConfirm() {
     return null;
   }
 
+  const getViDate = () => (i18n.language === "vi" ? "vi-VN" : "en-US");
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Sticky Header */}
@@ -89,11 +94,9 @@ function BookingConfirm() {
             </Button>
             <div>
               <h1 className="text-3xl font-bold text-gray-900">
-                Confirm Booking
+                {t("confirm.title")}
               </h1>
-              <p className="text-gray-600 mt-1">
-                Review and complete your reservation
-              </p>
+              <p className="text-gray-600 mt-1">{t("confirm.description")}</p>
             </div>
           </div>
         </div>
@@ -132,18 +135,18 @@ function BookingConfirm() {
               <CardHeader className="border-b border-gray-100">
                 <CardTitle className="flex items-center gap-2">
                   <Calendar className="h-5 w-5 text-blue-600" />
-                  Booking Details
+                  {t("confirm.detail.title")}
                 </CardTitle>
               </CardHeader>
               <CardContent className="pt-6 space-y-4">
                 <div className="space-y-3">
                   <div>
                     <p className="text-xs font-semibold text-gray-500 uppercase">
-                      Check-in
+                      {t("confirm.detail.checkIn")}
                     </p>
                     <p className="text-lg font-medium text-gray-900">
                       {new Date(quoteData.checkInDateTime).toLocaleDateString(
-                        "en-US",
+                        getViDate(),
                         {
                           weekday: "short",
                           year: "numeric",
@@ -155,11 +158,11 @@ function BookingConfirm() {
                   </div>
                   <div>
                     <p className="text-xs font-semibold text-gray-500 uppercase">
-                      Check-out
+                      {t("confirm.detail.checkOut")}
                     </p>
                     <p className="text-lg font-medium text-gray-900">
                       {new Date(quoteData.checkOutDateTime).toLocaleDateString(
-                        "en-US",
+                        getViDate(),
                         {
                           weekday: "short",
                           year: "numeric",
@@ -173,15 +176,15 @@ function BookingConfirm() {
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <p className="text-xs font-semibold text-gray-500 uppercase">
-                        Duration
+                        {t("confirm.detail.duration")}
                       </p>
                       <p className="text-lg font-medium text-gray-900">
-                        {quoteData.nights} nights
+                        {quoteData.nights} {t("booking.nights")}
                       </p>
                     </div>
                     <div>
                       <p className="text-xs font-semibold text-gray-500 uppercase">
-                        Guests
+                        {t("confirm.detail.guests")}
                       </p>
                       <p className="text-lg font-medium text-gray-900">
                         {quoteData.noOfAdults +
@@ -199,34 +202,41 @@ function BookingConfirm() {
               <CardHeader className="border-b border-gray-100">
                 <CardTitle className="flex items-center gap-2">
                   <DollarSign className="h-5 w-5 text-green-600" />
-                  Price Breakdown
+                  {t("confirm.price.title")}
                 </CardTitle>
               </CardHeader>
               <CardContent className="pt-6 space-y-3">
                 <div className="space-y-2">
                   <div className="flex justify-between items-center text-sm">
-                    <span className="text-gray-600">Nightly rate</span>
+                    <span className="text-gray-600">
+                      {t("confirm.price.nightlyRate")}
+                    </span>
                     <span className="font-medium text-gray-900">
                       {quoteData.basePricePerNight.toLocaleString("vi-VN")} đ
                     </span>
                   </div>
                   <div className="flex justify-between items-center text-sm">
                     <span className="text-gray-600">
-                      Base amount ({quoteData.nights} nights)
+                      {t("confirm.price.baseAmount")} ({quoteData.nights}{" "}
+                      {t("confirm.price.nights")})
                     </span>
                     <span className="font-medium text-gray-900">
                       {quoteData.baseAmount.toLocaleString("vi-VN")} đ
                     </span>
                   </div>
                   <div className="flex justify-between items-center text-sm">
-                    <span className="text-gray-600">Package</span>
+                    <span className="text-gray-600">
+                      {t("confirm.price.package")}
+                    </span>
                     <span className="font-medium text-gray-900">
                       {quoteData.packageAmount.toLocaleString("vi-VN")} đ
                     </span>
                   </div>
                   <Separator className="my-3" />
                   <div className="flex justify-between items-center text-lg">
-                    <span className="font-semibold text-gray-900">Total</span>
+                    <span className="font-semibold text-gray-900">
+                      {t("confirm.price.total")}
+                    </span>
                     <span className="font-bold text-green-600">
                       {quoteData.totalPrice.toLocaleString("vi-VN")} đ
                     </span>
@@ -241,14 +251,14 @@ function BookingConfirm() {
             <CardHeader className="border-b border-gray-100">
               <CardTitle className="flex items-center gap-2">
                 <Users className="h-5 w-5 text-blue-600" />
-                Guest Information
+                {t("confirm.guestInfo")}
               </CardTitle>
             </CardHeader>
             <CardContent className="pt-6">
               <div className="grid grid-cols-4 gap-4 mb-6">
                 <div className="bg-blue-50 rounded-lg p-3">
                   <p className="text-xs font-semibold text-gray-500 uppercase">
-                    Adults
+                    {t("booking.adults")}
                   </p>
                   <p className="text-2xl font-bold text-gray-900">
                     {quoteData.noOfAdults}
@@ -256,7 +266,7 @@ function BookingConfirm() {
                 </div>
                 <div className="bg-blue-50 rounded-lg p-3">
                   <p className="text-xs font-semibold text-gray-500 uppercase">
-                    Children
+                    {t("booking.children")}
                   </p>
                   <p className="text-2xl font-bold text-gray-900">
                     {quoteData.noOfChildren}
@@ -264,7 +274,7 @@ function BookingConfirm() {
                 </div>
                 <div className="bg-purple-50 rounded-lg p-3">
                   <p className="text-xs font-semibold text-gray-500 uppercase">
-                    Infants
+                    {t("booking.infants")}
                   </p>
                   <p className="text-2xl font-bold text-gray-900">
                     {quoteData.noOfInfants}
@@ -272,7 +282,7 @@ function BookingConfirm() {
                 </div>
                 <div className="bg-orange-50 rounded-lg p-3">
                   <p className="text-xs font-semibold text-gray-500 uppercase">
-                    Pets
+                    {t("booking.pets")}
                   </p>
                   <p className="text-2xl font-bold text-gray-900">
                     {quoteData.noOfPets}
@@ -287,15 +297,16 @@ function BookingConfirm() {
             <CardHeader className="border-b border-gray-100">
               <CardTitle className="flex items-center gap-2">
                 <CreditCard className="h-5 w-5 text-purple-600" />
-                Payment Method
+                {t("confirm.paymentMethod")}
               </CardTitle>
             </CardHeader>
             <CardContent className="pt-6 space-y-6">
               {/* Payment Mode */}
               <div>
                 <label className="block text-sm font-semibold text-gray-900 mb-3">
-                  Select Payment Option
+                  {t("confirm.selectPaymentOption")}
                 </label>
+
                 <Controller
                   name="paymentMode"
                   control={control}
@@ -303,47 +314,48 @@ function BookingConfirm() {
                     <RadioGroup
                       value={field.value}
                       onValueChange={field.onChange}
-                      className="flex gap-3"
+                      className="grid md:grid-cols-2 gap-3"
                     >
-                      <div
-                        className={`flex-1 flex items-center space-x-3 rounded-lg border-2 p-4 transition cursor-pointer ${
+                      {/* Partial */}
+                      <Label
+                        htmlFor="partial"
+                        className={`flex items-center gap-3 rounded-lg border-2 p-4 cursor-pointer transition-all ${
                           field.value === "partial"
                             ? "border-blue-500 bg-blue-50"
                             : "border-gray-200 hover:border-blue-400"
                         }`}
                       >
                         <RadioGroupItem value="partial" id="partial" />
-                        <Label
-                          htmlFor="partial"
-                          className="flex-1 cursor-pointer"
-                        >
+                        <div className="flex-1">
                           <span className="block font-medium text-gray-900">
-                            Deposit
+                            {t("confirm.deposit")}
                           </span>
                           <span className="block text-sm text-green-600">
                             {quoteData.suggestedDeposit.toLocaleString("vi-VN")}{" "}
                             đ
                           </span>
-                        </Label>
-                      </div>
+                        </div>
+                      </Label>
 
-                      <div
-                        className={`flex-1 flex items-center space-x-3 rounded-lg border-2 p-4 transition cursor-pointer ${
+                      {/* Full */}
+                      <Label
+                        htmlFor="full"
+                        className={`flex items-center gap-3 rounded-lg border-2 p-4 cursor-pointer transition-all ${
                           field.value === "full"
                             ? "border-blue-500 bg-blue-50"
                             : "border-gray-200 hover:border-blue-400"
                         }`}
                       >
                         <RadioGroupItem value="full" id="full" />
-                        <Label htmlFor="full" className="flex-1 cursor-pointer">
+                        <div className="flex-1">
                           <span className="block font-medium text-gray-900">
-                            Full Payment
+                            {t("confirm.full")}
                           </span>
                           <span className="block text-sm text-green-600">
                             {quoteData.totalPrice.toLocaleString("vi-VN")} đ
                           </span>
-                        </Label>
-                      </div>
+                        </div>
+                      </Label>
                     </RadioGroup>
                   )}
                 />
@@ -352,8 +364,9 @@ function BookingConfirm() {
               {/* Payment Provider */}
               <div>
                 <label className="block text-sm font-semibold text-gray-900 mb-3">
-                  Payment Provider
+                  {t("confirm.paymentProvider")}
                 </label>
+
                 <Controller
                   name="paymentProvider"
                   control={control}
@@ -363,47 +376,49 @@ function BookingConfirm() {
                       onValueChange={field.onChange}
                       className="space-y-3"
                     >
-                      <div
-                        className={`flex items-center space-x-3 rounded-lg border-2 p-4 transition cursor-pointer ${
+                      {/* Stripe */}
+                      <Label
+                        htmlFor="stripe"
+                        className={`flex items-center gap-3 rounded-lg border-2 p-4 cursor-pointer transition-all ${
                           field.value === "stripe"
                             ? "border-blue-500 bg-blue-50"
                             : "border-gray-200 hover:border-blue-400"
                         }`}
                       >
                         <RadioGroupItem value="stripe" id="stripe" />
-                        <Label
-                          htmlFor="stripe"
-                          className="flex-1 cursor-pointer"
-                        >
+                        <div className="flex-1">
                           <span className="font-medium text-gray-900">
                             Stripe
                           </span>
                           <span className="ml-1 text-sm text-gray-500">
-                            (Credit/Debit Card)
+                            ({t("confirm.creditCard")})
                           </span>
-                        </Label>
-                      </div>
+                        </div>
+                      </Label>
 
-                      <div
-                        className={`flex items-center space-x-3 rounded-lg border-2 p-4 transition cursor-pointer ${
+                      {/* Momo */}
+                      <Label
+                        htmlFor="momo"
+                        className={`flex items-center gap-3 rounded-lg border-2 p-4 cursor-pointer transition-all ${
                           field.value === "momo"
                             ? "border-blue-500 bg-blue-50"
                             : "border-gray-200 hover:border-blue-400"
                         }`}
                       >
                         <RadioGroupItem value="momo" id="momo" />
-                        <Label htmlFor="momo" className="flex-1 cursor-pointer">
+                        <div className="flex-1">
                           <span className="font-medium text-gray-900">
                             Momo
                           </span>
                           <span className="ml-1 text-sm text-gray-500">
-                            (Mobile Wallet)
+                            ({t("confirm.momoWallet")})
                           </span>
-                        </Label>
-                      </div>
+                        </div>
+                      </Label>
                     </RadioGroup>
                   )}
                 />
+
                 {errors.paymentProvider && (
                   <p className="mt-2 text-sm text-red-600">
                     {errors.paymentProvider.message}
@@ -461,14 +476,14 @@ function BookingConfirm() {
               className="flex-1 h-11"
             >
               <ArrowLeft className="h-4 w-4 mr-2" />
-              Back
+              {t("confirm.back")}
             </Button>
             <Button
               type="submit"
               disabled={isSubmitting}
-              className="flex-1 h-11 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-semibold"
+              className="flex-1 h-11 bg-linear-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-semibold"
             >
-              {isSubmitting ? "Processing..." : "Confirm & Pay"}
+              {t("confirm.confirmNPay")}
             </Button>
           </div>
         </form>

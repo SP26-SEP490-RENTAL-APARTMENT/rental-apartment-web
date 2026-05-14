@@ -19,11 +19,15 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import ApartmentDetailDialog from "@/components/ui/apartmentDetailDialog/ApartmentDetailDialog";
-import ManagementFilter, { type Filter } from "@/components/ui/managementFilter/ManagementFilter";
-import { bookingSortByList } from "@/constants/sortByList";
+import ManagementFilter, {
+  type Filter,
+} from "@/components/ui/managementFilter/ManagementFilter";
+import { BookingSortByList } from "@/constants/sortByList";
 import { Button } from "@/components/ui/button";
+import { useTranslation } from "react-i18next";
 
 function BookingManagement() {
+  const { t } = useTranslation("common");
   const [bookings, setBookings] = useState<BookingHistory[]>([]);
   const [apartment, setApartment] = useState<Apartment | null>(null);
   const [occupantList, setOccupantList] = useState<Occupant[]>([]);
@@ -170,16 +174,16 @@ function BookingManagement() {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
         <Card className="border-0 shadow-sm">
           <CardContent className="flex gap-3 items-center">
             <ManagementFilter
               filter={filters}
               setFilter={setFilters}
-              sortByList={bookingSortByList}
+              sortByList={BookingSortByList()}
             />
             <Button variant="outline" onClick={handleResetFilters}>
-              Reset Filters
+              {t("button.resetFilters")}
             </Button>
           </CardContent>
         </Card>
@@ -196,7 +200,7 @@ function BookingManagement() {
                 handleCheckOut,
                 fetchOccupantList,
                 triggerAddOccupant,
-                fetchApartmentDetails
+                fetchApartmentDetails,
               )}
               data={bookings}
               limit={10}

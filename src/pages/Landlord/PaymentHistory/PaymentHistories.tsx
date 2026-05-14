@@ -10,13 +10,16 @@ import ManagementFilter from "@/components/ui/managementFilter/ManagementFilter"
 import { Button } from "@/components/ui/button";
 import {
   paymentMethodList,
-  paymentPurposeList,
-  paymentSortByList,
-  paymentStatusList,
+  PaymentPurposeList,
+  PaymentSortByList,
+  PaymentStatusList,
 } from "@/constants/sortByList";
 import PaymentFilter from "./Components/PaymentFilter";
+import { useTranslation } from "react-i18next";
 
 function PaymentHistories() {
+  const { t } = useTranslation("common");
+  const { t: landlordT } = useTranslation("landlord");
   const [paymentHistory, setPaymentHistory] = useState<PaymentHistory[]>([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
@@ -85,10 +88,10 @@ function PaymentHistories() {
             </div>
             <div>
               <h1 className="text-3xl font-bold text-gray-900">
-                Payment History
+                {landlordT("payment.title")}
               </h1>
               <p className="text-gray-600 mt-1">
-                View and manage payment transactions
+                {landlordT("payment.description")}
               </p>
             </div>
           </div>
@@ -97,22 +100,27 @@ function PaymentHistories() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
         <Card className="border-0 shadow-sm">
-          <CardContent className="flex gap-3 items-center">
-            <ManagementFilter
-              filter={filters}
-              setFilter={setFilters}
-              sortByList={paymentSortByList}
-            />
-            <PaymentFilter
-              addFilters={addFilters}
-              setAddFilters={setAddFilters}
-              methodList={paymentMethodList}
-              statusList={paymentStatusList}
-              paymentPurposeList={paymentPurposeList}
-            />
-            <Button variant="outline" onClick={handleResetFilters}>
-              Reset Filters
-            </Button>
+          <CardContent>
+            <div className="flex gap-3 items-center">
+              <ManagementFilter
+                filter={filters}
+                setFilter={setFilters}
+                sortByList={PaymentSortByList()}
+              />
+              <PaymentFilter
+                addFilters={addFilters}
+                setAddFilters={setAddFilters}
+                methodList={paymentMethodList}
+                statusList={PaymentStatusList()}
+                paymentPurposeList={PaymentPurposeList()}
+              />
+            </div>
+
+            <div className="flex justify-end mt-3">
+              <Button variant="outline" onClick={handleResetFilters}>
+                {t("button.resetFilters")}
+              </Button>
+            </div>
           </CardContent>
         </Card>
 

@@ -5,8 +5,10 @@ import { useCallback, useEffect, useState } from "react";
 import PaymentCard from "./components/PaymentCard";
 import PaginationComponent from "@/components/ui/paginationComponent/PaginationComponent";
 import { Card, CardContent } from "@/components/ui/card";
+import { useTranslation } from "react-i18next";
 
 function Payment() {
+  const {t} = useTranslation("paymentHistory");
   const [payments, setPayments] = useState<PaymentHistory[]>([]);
   const [page, setPage] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
@@ -45,11 +47,11 @@ function Payment() {
               <CreditCard className="h-6 w-6 text-blue-600" />
             </div>
             <h1 className="text-3xl font-bold text-gray-900">
-              Payment History
+              {t("payment.title")}
             </h1>
           </div>
           <p className="text-gray-600">
-            View your payment history and transaction details.
+            {t("payment.description")}
           </p>
         </div>
 

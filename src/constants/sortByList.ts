@@ -1,3 +1,5 @@
+import { useTranslation } from "react-i18next";
+
 export const sortByList = [
   { label: "Full Name", value: "fullName" },
   { label: "Email", value: "email" },
@@ -50,45 +52,63 @@ export const subscriptionPlanSortByList = [
   { label: "Max Apartments", value: "maxApartments" },
 ];
 
-export const apartmentSortByList = [
-  { label: "Created At", value: "createdAt" },
-  { label: "Title", value: "title" },
-  { label: "Price / night", value: "basePricePerNight" },
-];
+export const ApartmentSortByList = () => {
+  const { t } = useTranslation("filter");
+  return [
+    { label: t("option.createdAt"), value: "createdAt" },
+    { label: t("option.title"), value: "title" },
+    { label: t("option.pricePerNight"), value: "basePricePerNight" },
+  ];
+};
 
-export const apartmentStatusList = [
-  { label: "Posted", value: "posted" },
-  { label: "Pending", value: "pending_review" },
-  { label: "Draft", value: "draft" },
-];
+export const ApartmentStatusList = () => {
+  const { t } = useTranslation("status");
+  return [
+    { label: t("apartment.posted"), value: "posted" },
+    { label: t("apartment.pending"), value: "pending_review" },
+    { label: t("apartment.draft"), value: "draft" },
+  ];
+};
 
-export const bookingSortByList = [
-  { label: "Created At", value: "createdAt" },
-  { label: "Nights", value: "nights" },
-  { label: "Total Price", value: "totalPrice" },
-];
+export const BookingSortByList = () => {
+  const { t } = useTranslation("filter");
+  return [
+    { label: t("option.createdAt"), value: "createdAt" },
+    { label: t("option.nights"), value: "nights" },
+    { label: t("option.totalPrice"), value: "totalPrice" },
+  ];
+};
 
-export const paymentSortByList = [
-  { label: "Paid At", value: "paidAt" },
-  { label: "Amount", value: "amount" },
-  { label: "Status", value: "status" },
-];
+export const PaymentSortByList = () => {
+  const { t } = useTranslation("filter");
+  return [
+    { label: t("option.paidAt"), value: "paidAt" },
+    { label: t("option.amount"), value: "amount" },
+    { label: t("option.status"), value: "status" },
+  ];
+};
 
-export const paymentStatusList = [
-  { label: "Pending", value: "pending" },
-  { label: "Success", value: "success" },
-  { label: "Failed", value: "failed" },
-];
+export const PaymentStatusList = () => {
+  const { t } = useTranslation("status");
+  return [
+    { label: t("payment.pending"), value: "pending" },
+    { label: t("payment.success"), value: "success" },
+    { label: t("payment.failed"), value: "failed" },
+  ];
+};
 
 export const paymentMethodList = [
   { label: "Momo", value: "momo_wallet" },
   { label: "Stripe", value: "stripe" },
 ];
 
-export const paymentPurposeList = [
-  { label: "Full", value: "booking_full_payment" },
-  { label: "Deposit", value: "booking_deposit" },
-];
+export const PaymentPurposeList = () => {
+  const { t } = useTranslation("status");
+  return [
+    { label: t("payment.full"), value: "booking_full_payment" },
+    { label: t("payment.deposit"), value: "booking_deposit" },
+  ];
+};
 
 export const supportTicketSortByList = [
   { label: "Created At", value: "createdAt" },

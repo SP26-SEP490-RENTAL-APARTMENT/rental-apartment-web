@@ -1,0 +1,62 @@
+{
+    "all": "All",
+    "apartment": {
+        "draft": "Draft",
+        "pending": "Pending Review",
+        "posted": "Posted",
+        "blocked": "Blocked",
+        "archived": "Archived"
+    },
+    "inspection": {
+        "scheduled": "Scheduled",
+        "in_progress": "In Progress",
+        "pending": "Pending",
+        "passed": "Passed",
+        "not_scheduled": "Not Scheduled"
+    },
+    "room": {
+        "pBathroom": "Private Bathroom",
+        "sBathroom": "Shared Bathroom",
+        "roomType": {
+            "pSingle": "Private Single",
+            "pDouble": "Private Double",
+            "sBed": "Shared Bed",
+            "studio": "Studio",
+            "other": "Other"
+        },
+        "bedType": {
+            "single": "Single",
+            "double": "Double",
+            "queen": "Queen",
+            "king": "King",
+            "bunk": "Bunk",
+            "shared": "Shared"
+        }
+    },
+    "booking": {
+        "pending": "Pending",
+        "confirmed": "Confirmed",
+        "cancelled": "Cancelled",
+        "completed": "Completed",
+        "disputed": "Disputed",
+        "negotiating": "Negotiating",
+        "paid": "Paid",
+        "unknown": "Unknown"
+    },
+    "payment": {
+        "full": "Full Payment",
+        "deposit": "Deposit",
+        "partial": "Partial Payment",
+        "success": "Success",
+        "failed": "Failed",
+        "refunded": "Refunded",
+        "pending": "Pending"
+    },
+    "priceReason": {
+        "peak": "Peak Season",
+        "low": "Low Season",
+        "special": "Special Event",
+        "manual": "Manual Adjustment",
+        "other": "Other"
+    }
+}

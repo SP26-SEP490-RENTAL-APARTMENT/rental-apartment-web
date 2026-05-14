@@ -20,6 +20,7 @@ import type { Package } from "@/types/package";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 
 export interface Props {
   isOpen: boolean;
@@ -37,6 +38,7 @@ function PackageForm({
   mode,
   apartment,
 }: Props) {
+  const { t } = useTranslation("landlord");
   const isCreate = mode === "create";
   const schema = isCreate ? createPackageSchema : updatePackageSchema;
   const {
@@ -98,23 +100,27 @@ function PackageForm({
       <DialogContent className="sm:max-w-106.25">
         <DialogHeader>
           <DialogTitle>
-            {isCreate ? "Create Package" : "Edit Package"}
+            {isCreate ? t("package.form.title") : "Edit Package"}
           </DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
           <div className="grid gap-4 py-4">
             {/* NAME */}
-            
-              <Input disabled type="hidden" {...register("apartmentId")} />
-              {errors.apartmentId && (
-                <p className="text-sm text-destructive">
-                  {errors.apartmentId.message}
-                </p>
-              )}
-            
+
+            <Input disabled type="hidden" {...register("apartmentId")} />
+            {errors.apartmentId && (
+              <p className="text-sm text-destructive">
+                {errors.apartmentId.message}
+              </p>
+            )}
+
             <div className="grid gap-2">
-              <Label>Name</Label>
-              <Input type="text" {...register("name")} placeholder="Pickup, cleaning,..." />
+              <Label>{t("package.form.name")}</Label>
+              <Input
+                type="text"
+                {...register("name")}
+                placeholder={t("package.form.namePlaceholder")}
+              />
               {errors.name && (
                 <p className="text-sm text-destructive">
                   {errors.name.message}
@@ -122,8 +128,12 @@ function PackageForm({
               )}
             </div>
             <div className="grid gap-2">
-              <Label>Description</Label>
-              <Input type="text" {...register("description")} placeholder="A basic package..." />
+              <Label>{t("package.form.description")}</Label>
+              <Input
+                type="text"
+                {...register("description")}
+                placeholder={t("package.form.descriptionPlaceholder")}
+              />
               {errors.description && (
                 <p className="text-sm text-destructive">
                   {errors.description.message}
@@ -131,7 +141,7 @@ function PackageForm({
               )}
             </div>
             <div className="grid gap-2">
-              <Label>Price</Label>
+              <Label>{t("package.form.price")}</Label>
               <Input
                 type="number"
                 {...register("price", { valueAsNumber: true })}
@@ -143,7 +153,7 @@ function PackageForm({
               )}
             </div>
             <div className="grid gap-2">
-              <Label>Currency</Label>
+              <Label>{t("package.form.currency")}</Label>
               <Input
                 placeholder="VND / USA"
                 type="text"
@@ -156,7 +166,7 @@ function PackageForm({
               )}
             </div>
             <div className="grid gap-2">
-              <Label>Active</Label>
+              <Label>{t("package.form.active")}</Label>
               <RadioGroup
                 value={watchedIsActive ? "true" : "false"}
                 onValueChange={(val) => setValue("isActive", val === "true")}
@@ -164,11 +174,11 @@ function PackageForm({
               >
                 <div className="flex items-center gap-2">
                   <RadioGroupItem value="true" id="active-yes" />
-                  <Label htmlFor="active-yes">Yes</Label>
+                  <Label htmlFor="active-yes">{t("package.form.yes")}</Label>
                 </div>
                 <div className="flex items-center gap-2">
                   <RadioGroupItem value="false" id="active-no" />
-                  <Label htmlFor="active-no">No</Label>
+                  <Label htmlFor="active-no">{t("package.form.no")}</Label>
                 </div>
               </RadioGroup>
 
@@ -179,7 +189,7 @@ function PackageForm({
               )}
             </div>
             <div className="grid gap-2">
-              <Label>Max bookings</Label>
+              <Label>{t("package.form.maxBookings")}</Label>
               <Input
                 type="number"
                 {...register("maxBookings", { valueAsNumber: true })}
@@ -194,10 +204,10 @@ function PackageForm({
 
           <DialogFooter>
             <Button type="button" variant="outline" onClick={handleClose}>
-              Cancel
+              {t("package.button.cancel")}
             </Button>
             <Button type="submit" disabled={isSubmitting}>
-              {isSubmitting ? "Loading" : isCreate ? "Create" : "Update"}
+              {isCreate ? t("package.button.create") : "Update"}
             </Button>
           </DialogFooter>
         </form>

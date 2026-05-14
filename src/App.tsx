@@ -41,8 +41,6 @@ import RequestResetPW from "./pages/Auth/RequestResetPW/RequestResetPW";
 import ResetPWPage from "./pages/Auth/ResetPWPage/ResetPWPage";
 import HomePage from "./pages/Home/Home";
 import SupportRequest from "./pages/Tenant/SupportRequest/SupportRequest";
-import { useEffect } from "react";
-import i18next from "i18next";
 import PaymentHistories from "./pages/Landlord/PaymentHistory/PaymentHistories";
 import Payment from "./pages/Tenant/PaymentHistory/Payment";
 import AllApartment from "./pages/Admin/AllApartments/AllApartment";
@@ -53,10 +51,6 @@ import SupportManagement from "./pages/Admin/AdminSupport/SupportManagement";
  * All routes defined inline here for clarity
  */
 export default function App() {
-  useEffect(() => {
-    localStorage.removeItem("i18nextLng");
-    i18next.changeLanguage("en");
-  }, []);
   return (
     <BrowserRouter>
       <Routes>

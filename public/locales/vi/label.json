@@ -1,0 +1,9 @@
+{
+    "landlord": {
+        "apartments": "Căn hộ",
+        "bookings": "Đặt phòng",
+        "rooms": "Phòng",
+        "payments": "Lịch sử thanh toán",
+        "subscriptions": "Đăng ký"
+    }
+}

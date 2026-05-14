@@ -9,6 +9,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../select";
+import { useTranslation } from "react-i18next";
 
 export interface Filter {
   search: string;
@@ -28,11 +29,12 @@ interface Props {
 }
 
 function ManagementFilter({ filter, setFilter, sortByList }: Props) {
+  const { t } = useTranslation("filter");
   return (
     <div className="flex gap-3">
       <InputGroup className="max-w-xs">
         <InputGroupInput
-          placeholder="Search anything..."
+          placeholder={t("label.searchPlaceholder")}
           value={filter.search}
           onChange={(e) => setFilter({ ...filter, search: e.target.value })}
         />
@@ -60,11 +62,11 @@ function ManagementFilter({ filter, setFilter, sortByList }: Props) {
       >
         {filter.sortOrder === "asc" ? (
           <p className="flex items-center gap-2">
-            Asc <ArrowDownUp size={16} />
+            {t("label.asc")} <ArrowDownUp size={16} />
           </p>
         ) : (
           <p className="flex items-center gap-2">
-            Desc <ArrowDownUp size={16} />
+            {t("label.desc")} <ArrowDownUp size={16} />
           </p>
         )}
       </Button>

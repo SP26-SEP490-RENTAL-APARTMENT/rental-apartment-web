@@ -7,6 +7,7 @@ export interface BookingHistory {
     nights: number
     noOfAdults: number
     noOfInfants: number
+    noOfChildren: number
     noOfPets: number
     totalPrice: number
     packageId: string

@@ -1,0 +1,13 @@
+{
+    "payment": {
+        "title": "Payment History",
+        "description": "View your payment history and transaction details.",
+        "card": {
+            "upfront": "Upfront Payment",
+            "deposit": "Deposit Payment",
+            "fullBooking": "Full Booking Payment",
+            "depositBooking": "Deposit Booking Payment",
+            "other": "Other"
+        }
+    }
+}

@@ -12,6 +12,8 @@
         "noTicketsDescription": "You don't have any support tickets yet.",
         "viewDetails": "View Details",
         "resolutionNotes": "Resolution Notes",
+        "attachments": "Attachments",
+        "uploadImage": "Upload Image",
         "categories": {
             "booking_issue": "Booking Issue",
             "payment_problem": "Payment Problem",
@@ -70,7 +72,20 @@
             "updatedAt": "Last Updated",
             "resolutionNotes": "Solution Notes",
             "noResolutionNotes": "No solution notes available",
-            "resolvedAt": "Resolved At"
+            "resolvedAt": "Resolved At",
+            "solutionResponse": "Solution Response"
+        },
+        "response": {
+            "title": "Submit Your Response",
+            "description": "Accept or reject the customer's solution request. Additional details can be provided if rejecting.",
+            "decision": "Solution Decision",
+            "accept": "Accept Solution",
+            "acceptDescription": "Mark the ticket as resolved",
+            "reject": "Reject Solution",
+            "rejectDescription": "Request additional response from the customer",
+            "rejectDetail": "Reject Detail",
+            "rejectDetailDescription": "Provide additional details for rejecting the solution",
+            "reasonPlaceholder": "Explain what additional information you need from the customer to resolve the issue"
         }
     }
 }

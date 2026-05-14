@@ -1,4 +1,8 @@
 {
+    "all": "All",
+    "selectStatus": "Select Status",
+    "selectMethod": "Select Payment Method",
+    "selectPaymentType": "Select Payment Type",
     "apartment": {
         "pricePerNight": "Price per night",
         "maxOccupant": "Max occupant",
@@ -11,6 +15,17 @@
         "search": "Search",
         "asc": "Ascending",
         "desc": "Descending",
-        "clearFilters": "Clear filters"
+        "clearFilters": "Clear filters",
+        "searchPlaceholder": "Search anything..."
+    },
+    "option": {
+        "title": "Title",
+        "createdAt": "Created at",
+        "pricePerNight": "Price per night",
+        "nights": "Nights",
+        "totalPrice": "Total price",
+        "paidAt": "Paid at",
+        "amount": "Amount",
+        "status": "Status"
     }
 }

@@ -1,4 +1,8 @@
 {
+    "all": "Tất cả",
+    "selectStatus": "Chọn trạng thái",
+    "selectMethod": "Chọn phương thức thanh toán",
+    "selectPaymentType": "Chọn loại thanh toán",
     "apartment": {
         "pricePerNight": "Giá mỗi đêm",
         "maxOccupant": "Số người tối đa",
@@ -11,6 +15,17 @@
         "search": "Tìm kiếm",
         "asc": "Tăng dần",
         "desc": "Giảm dần",
-        "clearFilters": "Xóa bộ lọc"
+        "clearFilters": "Xóa bộ lọc",
+        "searchPlaceholder": "Tìm kiếm..."
+    },
+    "option": {
+        "title": "Tên căn hộ",
+        "createdAt": "Ngày tạo",
+        "pricePerNight": "Giá mỗi đêm",
+        "nights": "Số đêm",
+        "totalPrice": "Tổng giá",
+        "paidAt": "Ngày thanh toán",
+        "amount": "Số tiền",
+        "status": "Trạng thái"
     }
 }

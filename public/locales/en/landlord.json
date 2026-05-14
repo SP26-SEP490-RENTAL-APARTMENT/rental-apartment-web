@@ -1,0 +1,228 @@
+{
+    "apartment": {
+        "title": "Apartment Management",
+        "description": "Manage your apartments and properties",
+        "totalApartments": "Total Apartments",
+        "actions": "Actions",
+        "button": {
+            "add": "Add Apartment",
+            "cancel": "Cancel",
+            "create": "Create Apartment",
+            "update": "Update Apartment"
+        },
+        "addApartment": {
+            "addTitle": "Add New Apartment",
+            "updateTitle": "Update Apartment",
+            "title": "Title",
+            "titlePlaceholder": "Enter apartment title",
+            "description": "Description",
+            "descriptionPlaceholder": "Enter apartment description",
+            "address": "Address",
+            "addressPlaceholder": "Enter the full address",
+            "maxOccupancy": "Max Occupancy",
+            "maxInfants": "Max Infants",
+            "price": "Price per Night",
+            "allowPets": "Allow Pets",
+            "maxPets": "Max Pets",
+            "uploadPhotos": "Upload Photos",
+            "photoGuidelines": "You can upload up to 10 photos",
+            "selectedPhotos": "Selected Photos"
+        },
+        "infor": {
+            "host": "Host",
+            "details": "Apartment Details",
+            "title": "Apartment Title",
+            "price": "Price per Night",
+            "status": "Status",
+            "inspectionStatus": "Inspection Status",
+            "actions": "Actions",
+            "createdAt": "Created At",
+            "bookingStatus": "Booking Status",
+            "address": "Address",
+            "description": "Description",
+            "browsePhotos": "Browse Photos",
+            "uploadPhotos": "Upload Photos",
+            "yes": "Yes",
+            "no": "No"
+        },
+        "room": {
+            "apartment": "Apartment",
+            "createTitle": "Create New Room",
+            "updateTitle": "Update Room",
+            "info": "Room Information",
+            "title": "Room Title",
+            "titlePlaceholder": "Enter room title",
+            "description": "Room Description",
+            "descriptionPlaceholder": "Enter room description",
+            "type": "Room Type",
+            "bed": "Bed Type",
+            "privateBathroom": "Private Bathroom",
+            "size": "Size",
+            "create": "Create Room",
+            "update": "Update Room"
+        },
+        "amenity": {
+            "title": "Amenity",
+            "addForm": {
+                "title": "Add Amenity",
+                "description": "Select amenities to add to the apartment",
+                "available": "Available Amenities",
+                "selected": "Selected Amenities",
+                "addButton": "Add Amenity",
+                "cancel": "Cancel"
+            }
+        }
+    },
+    "package": {
+        "form": {
+            "name": "Package Name",
+            "namePlaceholder": "Enter package name",
+            "description": "Description",
+            "descriptionPlaceholder": "Enter package description",
+            "price": "Price",
+            "currency": "Currency",
+            "active": "Active",
+            "maxBookings": "Max Bookings",
+            "yes": "Yes",
+            "no": "No",
+            "createdAt": "Created At"
+        },
+        "button": {
+            "add": "Add Package",
+            "cancel": "Cancel",
+            "create": "Create Package"
+        },
+        "infor": {
+            "title": "Package List",
+            "name": "Package Name",
+            "noPackages": "No packages available",
+            "items": "Items"
+        }
+    },
+    "priceChange": {
+        "title": "Price Change",
+        "manualForm": {
+            "title": "Manual Price Change",
+            "startDate": "Start Date",
+            "endDate": "End Date",
+            "newPrice": "New Price / Night",
+            "priceType": "Price Type"
+        },
+        "bulkForm": {
+            "title": "Bulk Price Change",
+            "fromDate": "From Date",
+            "toDate": "To Date",
+            "newPrice": "New Price / Night",
+            "daysOfWeek": "Days of the Week",
+            "percentageChange": "Percentage Change",
+            "priceType": "Price Type",
+            "dateRangeError": "Date range must be at least 7 days",
+            "selectDateError": "Please select at least one day of the week"
+        },
+        "button": {
+            "update": "Update Price",
+            "cancel": "Cancel"
+        }
+    },
+    "priceChangeHistory": {
+        "title": "Price Changes History",
+        "oldPrice": "Old Price",
+        "newPrice": "New Price",
+        "noChanges": "No price changes found"
+    },
+    "availability": {
+        "form": {
+            "title": "Add Unavailable Dates",
+            "dateRange": "Date Range",
+            "reason": "Reason",
+            "startDate": "Start Date",
+            "endDate": "End Date",
+            "reasonPlaceholder": "Maintenance, Booking, etc.",
+            "addRange": "Add Another Date Range",
+            "cancel": "Cancel",
+            "save": "Save"
+        }
+    },
+    "approve": {
+        "title": "Submit Apartment for Approval",
+        "note": "Note",
+        "placeholderNote": "Please provide any notes or comments for the approver",
+        "submit": "Submit"
+    },
+    "button": {
+        "addRoom": "Add Room",
+        "addAmenity": "Add Amenity",
+        "addAvailability": "Add Unavailable Dates",
+        "addPackageItems": "Add Items to Package"
+    },
+    "booking": {
+        "apartment": "Apartment",
+        "tenant": "Tenant",
+        "status": "Status",
+        "bookAt": "Booked At",
+        "price": "Total Price",
+        "actions": "Actions",
+        "dialog": {
+            "title": "Booking Details",
+            "checkIn": "Check-in Date",
+            "checkOut": "Check-out Date",
+            "nights": "Nights",
+            "adults": "Adults",
+            "children": "Children",
+            "infants": "Infants",
+            "actualStay": "Actual Stay",
+            "package": "Package",
+            "deposit": "Deposit",
+            "depositStatus": "Deposit Status",
+            "balanceDueDate": "Balance Due Date",
+            "createdAt": "Created At",
+            "paid": "Paid",
+            "unpaid": "Unpaid",
+            "submit": "Create Resident Report"
+        },
+        "form": {
+            "checkIn": "Check-in Booking",
+            "checkOut": "Check-out Booking",
+            "checkInDate": "Check-in Date",
+            "checkOutDate": "Check-out Date",
+            "notes": "Notes",
+            "cancel": "Cancel",
+            "notesPlaceholder": "Add a note"
+        }
+    },
+    "occupant": {
+        "title": "Temporary Residents List",
+        "occupant": "Occupant",
+        "form": {
+            "title": "Add Temporary Resident",
+            "fullName": "Full Name",
+            "passport": "Passport Number",
+            "nationalID": "National ID",
+            "nationality": "Nationality",
+            "DOB": "Date of Birth",
+            "gender": "Gender",
+            "email": "Email",
+            "phone": "Phone Number",
+            "imgae": "Passport or ID Photo",
+            "cancel": "Cancel",
+            "submit": "Add Temporary Resident",
+            "title1": "Personal Information",
+            "title2": "Identification",
+            "title3": "Proof Photo",
+            "title4": "Identification Documents",
+            "uploadImage": "Upload Image"
+        }
+    },
+    "payment": {
+        "title": "Payment History",
+        "description": "View and manage your payment history",
+        "type": "Payment Type",
+        "method": "Payment Method",
+        "status": "Status",
+        "paidAt": "Paid At",
+        "amount": "Amount",
+        "refundBooking": "Refund",
+        "fullBooking": "Full Booking Payment",
+        "depositBooking": "Deposit Booking Payment"
+    }
+}

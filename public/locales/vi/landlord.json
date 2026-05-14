@@ -1,0 +1,231 @@
+{
+    "apartment": {
+        "title": "Quản Lý Căn Hộ",
+        "description": "Quản lý căn hộ và tài sản của bạn",
+        "totalApartments": "Tổng Số Căn Hộ",
+        "actions": "Hành Động",
+        "button": {
+            "add": "Thêm Căn Hộ",
+            "cancel": "Hủy",
+            "create": "Tạo Căn Hộ",
+            "update": "Cập Nhật Căn Hộ"
+        },
+        "addApartment": {
+            "addTitle": "Thêm Căn Hộ Mới",
+            "updateTitle": "Cập Nhật Căn Hộ",
+            "title": "Tên Căn Hộ",
+            "titlePlaceholder": "Nhập tên căn hộ",
+            "description": "Mô Tả",
+            "descriptionPlaceholder": "Nhập mô tả căn hộ",
+            "address": "Địa Chỉ",
+            "addressPlaceholder": "Nhập địa chỉ đầy đủ",
+            "maxOccupancy": "Số Người Tối Đa",
+            "maxInfants": "Số Trẻ Em Tối Đa",
+            "price": "Giá mỗi đêm",
+            "allowPets": "Cho phép thú cưng",
+            "maxPets": "Số lượng thú cưng tối đa",
+            "uploadPhotos": "Tải lên ảnh",
+            "photoGuidelines": "Bạn có thể tải lên đến 10 ảnh",
+            "selectedPhotos": "Ảnh đã chọn"
+        },
+        "infor": {
+            "host": "Chủ Hộ",
+            "details": "Chi Tiết Căn Hộ",
+            "title": "Tên Căn Hộ",
+            "price": "Giá mỗi đêm",
+            "status": "Trạng Thái",
+            "inspectionStatus": "Trạng Thái Kiểm Định",
+            "actions": "Hành Động",
+            "createdAt": "Ngày Tạo",
+            "bookingStatus": "Trạng Thái Đặt Phòng",
+            "address": "Địa Chỉ",
+            "description": "Mô Tả",
+            "browsePhotos": "Chọn Ảnh",
+            "uploadPhotos": "Tải Lên Ảnh",
+            "yes": "Có",
+            "no": "Không"
+        },
+        "room": {
+            "apartment": "Căn hộ",
+            "createTitle": "Tạo Phòng Mới",
+            "updateTitle": "Cập Nhật Phòng",
+            "info": "Thông tin phòng",
+            "title": "Tên phòng",
+            "titlePlaceholder": "Nhập tên phòng",
+            "description": "Mô Tả Phòng",
+            "descriptionPlaceholder": "Nhập mô tả phòng",
+            "type": "Loại phòng",
+            "bed": "Loại giường",
+            "privateBathroom": "Phòng tắm riêng",
+            "size": "Diện tích",
+            "create": "Tạo phòng",
+            "update": "Cập nhật phòng"
+        },
+        "amenity": {
+            "title": "Tiện nghi",
+            "addForm": {
+                "title": "Thêm tiện nghi",
+                "description": "Chọn tiện nghi để thêm vào căn hộ",
+                "available": "Tiện nghi có sẵn",
+                "selected": "Tiện nghi đã chọn",
+                "addButton": "Thêm tiện nghi",
+                "cancel": "Hủy"
+            }
+        }
+    },
+    "package": {
+        "form": {
+            "title": "Tạo Gói Dịch Vụ",
+            "name": "Tên gói dịch vụ",
+            "namePlaceholder": "Nhập tên gói dịch vụ",
+            "description": "Mô tả",
+            "descriptionPlaceholder": "Nhập mô tả gói dịch vụ",
+            "price": "Giá",
+            "currency": "Đơn vị tiền tệ",
+            "active": "Kích hoạt",
+            "maxBookings": "Số lượng đặt tối đa",
+            "yes": "Có",
+            "no": "Không",
+            "createdAt": "Ngày Tạo"
+        },
+        "button": {
+            "add": "Thêm gói dịch vụ",
+            "cancel": "Hủy",
+            "create": "Tạo gói dịch vụ"
+        },
+        "infor": {
+            "title": "Danh sách gói dịch vụ",
+            "name": "Tên gói dịch vụ",
+            "noPackages": "Không có gói dịch vụ nào",
+            "items": "Mục"
+        }
+    },
+    "priceChange": {
+        "title": "Thay Đổi Giá",
+        "manualForm": {
+            "title": "Thay đổi thủ công",
+            "startDate": "Ngày bắt đầu",
+            "endDate": "Ngày kết thúc",
+            "newPrice": "Giá mới / đêm",
+            "priceType": "Loại giá"
+        },
+        "bulkForm": {
+            "title": "Thay đổi hàng loạt",
+            "fromDate": "Từ ngày",
+            "toDate": "đến ngày",
+            "newPrice": "Giá mới / đêm",
+            "daysOfWeek": "Ngày trong tuần",
+            "percentageChange": "Tỷ lệ thay đổi",
+            "priceType": "Loại giá",
+            "dateRangeError": "Khoảng thời gian phải ít nhất 7 ngày",
+            "selectDateError": "Chọn ít nhất một ngày trong tuần"
+        },
+        "button": {
+            "update": "Cập nhật giá",
+            "cancel": "Hủy"
+        }
+    },
+    "priceChangeHistory": {
+        "title": "Lịch Sử Thay Đổi Giá",
+        "oldPrice": "Giá Cũ",
+        "newPrice": "Giá Mới",
+        "noChanges": "Không tìm thấy thay đổi giá nào"
+    },
+    "availability": {
+        "form": {
+            "title": "Thêm ngày không có sẵn",
+            "dateRange": "Khoảng thời gian",
+            "reason": "Lý do",
+            "startDate": "Ngày bắt đầu",
+            "endDate": "Ngày kết thúc",
+            "reasonPlaceholder": "Bảo trì, Đặt trước, v.v.",
+            "addRange": "Thêm Khoảng Thời Gian Khác",
+            "cancel": "Hủy",
+            "save": "Lưu"
+        }
+    },
+    "approve": {
+        "title": "Nộp căn hộ để duyệt",
+        "note": "Ghi chú",
+        "placeholderNote": "Vui lòng cung cấp bất kỳ ghi chú hoặc bình luận nào cho người duyệt",
+        "submit": "Nộp"
+    },
+    "button": {
+        "addRoom": "Thêm phòng",
+        "addAmenity": "Thêm tiện nghi",
+        "addAvailability": "Thêm ngày không có sẵn",
+        "addPackageItems": "Thêm mục vào gói dịch vụ"
+    },
+    "booking": {
+        "apartment": "Căn hộ",
+        "tenant": "Người thuê",
+        "status": "Trạng thái",
+        "bookAt": "Ngày đặt",
+        "price": "Tổng giá",
+        "actions": "Hành động",
+        "dialog": {
+            "title": "Chi tiết đặt phòng",
+            "checkIn": "Ngày nhận phòng",
+            "checkOut": "Ngày trả phòng",
+            "nights": "Đêm",
+            "adults": "Người lớn",
+            "children": "Trẻ em",
+            "infants": "Trẻ sơ sinh",
+            "pets": "Thú cưng",
+            "actualStay": "Thời gian thực tế",
+            "package": "Gói dịch vụ",
+            "deposit": "Tiền đặt cọc",
+            "depositStatus": "Trạng thái đặt cọc",
+            "balanceDueDate": "Ngày hết hạn thanh toán còn lại",
+            "createdAt": "Ngày tạo",
+            "total": "Tổng cộng",
+            "paid": "Đã thanh toán",
+            "unpaid": "Chưa thanh toán",
+            "submit": "Tạo Báo Cáo Tạm Trú"
+        },
+        "form": {
+            "checkIn": "Check-in",
+            "checkOut": "Check-out",
+            "checkInDate": "Ngày Check-in",
+            "checkOutDate": "Ngày Check-out",
+            "notes": "Ghi chú",
+            "cancel": "Hủy",
+            "notesPlaceholder": "Thêm ghi chú"
+        }
+    },
+    "occupant": {
+        "title": "Danh sách người tạm trú",
+        "occupant": "Khách",
+        "form": {
+            "title": "Thêm người tạm trú",
+            "fullName": "Họ và tên",
+            "passport": "Số hộ chiếu",
+            "nationalID": "Số CMND/CCCD",
+            "nationality": "Quốc tịch",
+            "DOB": "Ngày sinh",
+            "gender": "Giới tính",
+            "email": "Email",
+            "phone": "Số điện thoại",
+            "imgae": "Ảnh chụp hộ chiếu hoặc CMND/CCCD",
+            "cancel": "Hủy",
+            "submit": "Thêm người tạm trú",
+            "title1": "Thông tin cá nhân",
+            "title2": "Thông tin nhận dạng",
+            "title3": "Ảnh minh họa",
+            "title4": "Tài liệu nhận dạng",
+            "uploadImage": "Tải lên ảnh"
+        }
+    },
+    "payment": {
+        "title": "Lịch Sử Thanh Toán",
+        "description": "Xem và quản lý lịch sử thanh toán của bạn",
+        "type": "Loại thanh toán",
+        "method": "Phương thức thanh toán",
+        "status": "Trạng thái",
+        "paidAt": "Ngày thanh toán",
+        "amount": "Số tiền",
+        "refundBooking": "Hoàn tiền đặt phòng",
+        "fullBooking": "Thanh toán toàn bộ đặt phòng",
+        "depositBooking": "Thanh toán đặt cọc đặt phòng"
+    }
+}
