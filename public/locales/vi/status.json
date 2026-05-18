@@ -57,6 +57,18 @@
         "low": "Mùa thấp điểm",
         "special": "Sự kiện đặc biệt",
         "manual": "Điều chỉnh thủ công",
-        "other": "Khác"
+        "other": "Khác",
+        "normal": "Bình thường",
+        "weekend": "Cuối tuần",
+        "holiday": "Ngày lễ"
+    },
+    "week": {
+        "monday": "Thứ Hai",
+        "tuesday": "Thứ Ba",
+        "wednesday": "Thứ Tư",
+        "thursday": "Thứ Năm",
+        "friday": "Thứ Sáu",
+        "saturday": "Thứ Bảy",
+        "sunday": "Chủ Nhật"
     }
 }

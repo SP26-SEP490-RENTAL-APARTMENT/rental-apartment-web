@@ -56,7 +56,7 @@ function InspectionAction({
             </div>
 
             {/* Dates */}
-            <div className="grid grid-cols-2 gap-4">
+            {/* <div className="grid grid-cols-2 gap-4">
               <div>
                 <p className="text-muted-foreground">Scheduled</p>
                 <p className="font-medium">{inspections.scheduledDate}</p>
@@ -66,7 +66,7 @@ function InspectionAction({
                 <p className="text-muted-foreground">Completed</p>
                 <p className="font-medium">{inspections.completedDate}</p>
               </div>
-            </div>
+            </div> */}
 
             {/* Photos */}
             <div>

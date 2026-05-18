@@ -11,6 +11,16 @@ import { ReviewDialog } from "./ReviewDialog";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useGetPaymentMode, useGetStatus } from "@/lib/utils";
+import {
+  CalendarDays,
+  Clock3,
+  CreditCard,
+  Moon,
+  User,
+  Users,
+  Wallet,
+} from "lucide-react";
+import IncidentDialog from "./IncidentDialog";
 
 export interface Props {
   open: boolean;
@@ -34,6 +44,7 @@ const formatDateTime = (date?: string | null) => {
 function BookingViewDialog({ open, onClose, booking }: Props) {
   const { t } = useTranslation("user");
   const [showReviewDialog, setShowReviewDialog] = useState(false);
+  const [reportDialog, setReportDialog] = useState(false);
 
   const handleReviewClick = () => {
     setShowReviewDialog(true);
@@ -50,104 +61,145 @@ function BookingViewDialog({ open, onClose, booking }: Props) {
 
           <div className="space-y-6 overflow-y-auto max-h-[calc(90vh-80px)] pr-2">
             {/* Status + ID */}
-            <div className="flex items-center justify-between">
-              <Badge variant="default" className="capitalize">
-                {useGetStatus(booking.status)}
-              </Badge>
-            </div>
-
-            {/* Tenant */}
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <p className="text-sm text-muted-foreground">
-                  {t("booking.name")}
-                </p>
-                <p className="font-medium">{booking.tenantFullName}</p>
+            <div className="space-y-4">
+              {/* Status */}
+              <div className="flex items-center justify-between rounded-xl border bg-slate-50 px-4 py-3">
+                <span className="text-sm text-muted-foreground">
+                  {t("booking.status")}
+                </span>
+                <Badge className="capitalize px-3 py-1">
+                  {useGetStatus(booking.status)}
+                </Badge>
               </div>
 
-              <div>
-                <p className="text-sm text-muted-foreground">
-                  {t("booking.guests")}
-                </p>
-                <div className="flex flex-col">
-                  <p>
-                    {booking.noOfAdults} {t("booking.adults")}
-                  </p>
-                  {booking.noOfInfants > 0 && (
-                    <p>
-                      {booking.noOfInfants} {t("booking.infants")}
+              {/* Main Info */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Guest */}
+                <div className="rounded-xl border p-4 space-y-3">
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <User className="w-4 h-4 text-blue-500" />
+                    {t("booking.guestInfo")}
+                  </div>
+
+                  <div>
+                    <p className="text-sm text-muted-foreground">
+                      {t("booking.name")}
                     </p>
-                  )}
-                  {booking.noOfPets > 0 && (
-                    <p>
-                      {booking.noOfPets} {t("booking.pets")}
+                    <p className="font-semibold">{booking.tenantFullName}</p>
+                  </div>
+
+                  <div>
+                    <p className="text-sm text-muted-foreground flex items-center gap-1">
+                      <Users className="w-4 h-4" />
+                      {t("booking.guests")}
                     </p>
-                  )}
+                    <div className="text-sm space-y-1 mt-1">
+                      <p>
+                        {booking.noOfAdults} {t("booking.adults")}
+                      </p>
+                      {booking.noOfChildren > 0 && (
+                        <p>
+                          {booking.noOfChildren} {t("booking.children")}
+                        </p>
+                      )}
+                      {booking.noOfInfants > 0 && (
+                        <p>
+                          {booking.noOfInfants} {t("booking.infants")}
+                        </p>
+                      )}
+                      {booking.noOfPets > 0 && (
+                        <p>
+                          {booking.noOfPets} {t("booking.pets")}
+                        </p>
+                      )}
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
 
-            {/* Dates */}
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <p className="text-sm text-muted-foreground">
-                  {t("booking.checkIn")}
-                </p>
-                <p className="font-medium">{formatDate(booking.checkInDate)}</p>
-              </div>
+                {/* Stay Info */}
+                <div className="rounded-xl border p-4 space-y-3">
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <CalendarDays className="w-4 h-4 text-green-500" />
+                    {t("booking.stayInfo")}
+                  </div>
 
-              <div>
-                <p className="text-sm text-muted-foreground">
-                  {t("booking.checkOut")}
-                </p>
-                <p className="font-medium">
-                  {formatDate(booking.checkOutDate)}
-                </p>
-              </div>
-            </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <p className="text-sm text-muted-foreground">
+                        {t("booking.checkIn")}
+                      </p>
+                      <p className="font-medium">
+                        {formatDate(booking.checkInDate)}
+                      </p>
+                    </div>
 
-            {/* Stay info */}
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <p className="text-sm text-muted-foreground">
-                  {t("booking.nights")}
-                </p>
-                <p className="font-medium">
-                  {booking.nights} {t("booking.nightsUnit")}
-                </p>
-              </div>
+                    <div>
+                      <p className="text-sm text-muted-foreground">
+                        {t("booking.checkOut")}
+                      </p>
+                      <p className="font-medium">
+                        {formatDate(booking.checkOutDate)}
+                      </p>
+                    </div>
+                  </div>
 
-              <div>
-                <p className="text-sm text-muted-foreground">
-                  {t("booking.paymentMode")}
-                </p>
-                <p className="font-medium">
-                  {useGetPaymentMode(booking.paymentMode)}
-                </p>
+                  <div className="flex items-center justify-between pt-2 border-t">
+                    <div className="flex items-center gap-2">
+                      <Moon className="w-4 h-4 text-indigo-500" />
+                      <span className="text-sm text-muted-foreground">
+                        {t("booking.nights")}
+                      </span>
+                    </div>
+                    <span className="font-medium">
+                      {booking.nights} {t("booking.nightsUnit")}
+                    </span>
+                  </div>
+
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <CreditCard className="w-4 h-4 text-orange-500" />
+                      <span className="text-sm text-muted-foreground">
+                        {t("booking.paymentMode")}
+                      </span>
+                    </div>
+                    <span className="font-medium">
+                      {useGetPaymentMode(booking.paymentMode)}
+                    </span>
+                  </div>
+                </div>
               </div>
             </div>
 
             {/* Actual Stay */}
             {(booking.actualCheckIn || booking.actualCheckOut) && (
-              <div className="border rounded-lg p-4 space-y-3">
-                <p className="font-semibold">{t('booking.actualStay')}</p>
+              <div className="rounded-xl border p-4 space-y-4">
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <Clock3 className="w-4 h-4 text-purple-500" />
+                  <p className="font-semibold text-foreground">
+                    {t("booking.actualStay")}
+                  </p>
+                </div>
 
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <p className="text-sm text-muted-foreground">
-                      {t('booking.actualCheckIn')}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="rounded-lg bg-slate-50 p-3">
+                    <p className="text-sm text-muted-foreground mb-1">
+                      {t("booking.actualCheckIn")}
                     </p>
                     <p className="font-medium">
-                      {formatDateTime(booking.actualCheckIn)}
+                      {booking.actualCheckIn
+                        ? formatDateTime(booking.actualCheckIn)
+                        : "--"}
                     </p>
                   </div>
 
-                  <div>
-                    <p className="text-sm text-muted-foreground">
-                      {t('booking.actualCheckOut')}
+                  <div className="rounded-lg bg-slate-50 p-3">
+                    <p className="text-sm text-muted-foreground mb-1">
+                      {t("booking.actualCheckOut")}
                     </p>
-                    <p className="font-medium">
-                      {formatDateTime(booking.actualCheckOut)}
+                    <p className="font-medium text-center">
+                      {booking.actualCheckOut
+                        ? formatDateTime(booking.actualCheckOut)
+                        : "--"}
                     </p>
                   </div>
                 </div>
@@ -155,51 +207,76 @@ function BookingViewDialog({ open, onClose, booking }: Props) {
             )}
 
             {/* Payment */}
-            <div className="border rounded-lg p-4 space-y-3">
-              <p className="font-semibold">{t("booking.paymentSection")}</p>
-
-              <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">
-                  {t("booking.packagePrice")}
-                </span>
-                <span>{formatCurrency(booking.packagePrice)}</span>
+            <div className="rounded-xl border p-4 space-y-4">
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <Wallet className="w-4 h-4 text-emerald-500" />
+                <p className="font-semibold text-foreground">
+                  {t("booking.paymentSection")}
+                </p>
               </div>
 
-              {booking.paymentMode !== "full" && (
-                <div className="flex justify-between text-sm">
+              <div className="space-y-3">
+                <div className="flex justify-between items-center text-sm">
                   <span className="text-muted-foreground">
-                    {t("booking.partialPayment")}
+                    {t("booking.packagePrice")}
                   </span>
-                  <span>{formatCurrency(booking.depositAmount)}</span>
+                  <span className="font-medium">
+                    {formatCurrency(booking.packagePrice)}
+                  </span>
                 </div>
-              )}
 
-              <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">
-                  {t("booking.totalPrice")}
-                </span>
-                <span className="font-semibold">
-                  {formatCurrency(booking.totalPrice)}
-                </span>
+                {booking.paymentMode !== "full" && (
+                  <div className="flex justify-between items-center text-sm">
+                    <span className="text-muted-foreground">
+                      {t("booking.partialPayment")}
+                    </span>
+                    <span className="font-medium text-orange-600">
+                      {formatCurrency(booking.depositAmount)}
+                    </span>
+                  </div>
+                )}
+
+                <div className="border-t pt-3 flex justify-between items-center">
+                  <span className="font-medium">{t("booking.totalPrice")}</span>
+                  <span className="text-lg font-bold text-green-600">
+                    {formatCurrency(booking.totalPrice)}
+                  </span>
+                </div>
               </div>
             </div>
 
-            {/* {booking.actualCheckOut && ()} */}
-            <div className="flex justify-end">
-              <Button
-                onClick={handleReviewClick}
-                className="text-gray-500 cursor-pointer"
-                variant="link"
-              >
-                {t("booking.rateService")}
-              </Button>
-            </div>
+            {!booking.actualCheckIn && (
+              <div className="flex justify-end">
+                <Button onClick={() => setReportDialog(true)}>
+                  Report Incident
+                </Button>
+              </div>
+            )}
+
+            {booking.actualCheckOut && (
+              <div className="flex justify-end">
+                <Button
+                  onClick={handleReviewClick}
+                  className="text-gray-500 cursor-pointer"
+                  variant="link"
+                >
+                  {t("booking.rateService")}
+                </Button>
+              </div>
+            )}
           </div>
         </DialogContent>
       </Dialog>
+
       <ReviewDialog
         open={showReviewDialog}
         onClose={() => setShowReviewDialog(false)}
+        bookingId={booking.bookingId}
+      />
+
+      <IncidentDialog
+        open={reportDialog}
+        onClose={() => setReportDialog(false)}
         bookingId={booking.bookingId}
       />
     </>

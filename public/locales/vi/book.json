@@ -37,6 +37,7 @@
         "location": "Vị trí"
     },
     "booking": {
+        "done": "Hoàn thành",
         "bookNow": "Đặt ngay",
         "checkIn": "Check-in",
         "checkOut": "Check-out",

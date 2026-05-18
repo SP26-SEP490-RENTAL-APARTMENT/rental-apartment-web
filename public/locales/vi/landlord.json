@@ -157,6 +157,8 @@
         "addPackageItems": "Thêm mục vào gói dịch vụ"
     },
     "booking": {
+        "title": "Quản Lý Đặt Phòng",
+        "description": "Quản lý các đặt phòng và đặt chỗ của căn hộ",
         "apartment": "Căn hộ",
         "tenant": "Người thuê",
         "status": "Trạng thái",

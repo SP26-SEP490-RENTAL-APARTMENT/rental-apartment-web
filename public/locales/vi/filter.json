@@ -26,6 +26,7 @@
         "totalPrice": "Tổng giá",
         "paidAt": "Ngày thanh toán",
         "amount": "Số tiền",
-        "status": "Trạng thái"
+        "status": "Trạng thái",
+        "priority": "Độ ưu tiên"
     }
 }

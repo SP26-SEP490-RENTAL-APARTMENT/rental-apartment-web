@@ -3,7 +3,6 @@ import ApartmentCard from "../../components/ui/apartmentCard/ApartmentCard";
 import type { Apartment } from "@/types/apartment";
 import { apartmentApi } from "@/services/publicApi/apartmentApi";
 import ApartmentCardSkeleton from "@/components/ui/apartmentCard/ApartmentCardSkeleton";
-import HomeFilter from "./components/HomeFilter";
 import type { Collection } from "@/types/collection";
 import { collectionsApi } from "@/services/privateApi/tenantApi";
 import AddWishlistDialog from "./components/AddWishlistDialog";
@@ -12,21 +11,21 @@ import PaginationComponent from "@/components/ui/paginationComponent/PaginationC
 import { Home } from "lucide-react";
 import HeroSection from "./components/HeroSection";
 import { useTranslation } from "react-i18next";
+import HomeFilterV2 from "./components/HomeFilterV2";
 
 function HomePage() {
-  const {t} = useTranslation("common");
+  const { t } = useTranslation("common");
+  const { t: userT } = useTranslation("user");
   const [apartments, setApartments] = useState<Apartment[]>([]);
   const [collections, setCollections] = useState<Collection[]>([]);
   const [selectedApartmentId, setSelectedApartmentId] = useState("");
   const [page, setPage] = useState(1);
   const [pageSize] = useState(12);
   const [total, setTotal] = useState(0);
-  const [search, setSearch] = useState("");
-  const [sortBy, setSortBy] = useState<keyof Apartment>("basePricePerNight");
-  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
   const [loading, setLoading] = useState(false);
   const [collectionDialogOpen, setCollectionDialogOpen] = useState(false);
   const [addWishlistLoading, setAddWishlistLoading] = useState(false);
+  const [filters, setFilters] = useState<Record<string, any>>({});
 
   useEffect(() => {
     const fetchApartments = async () => {
@@ -35,9 +34,9 @@ function HomePage() {
         const response = await apartmentApi.getApartments({
           page,
           pageSize,
-          search,
-          sortBy,
-          sortOrder,
+          sortBy: "createdAt",
+          sortOrder: "desc",
+          ...filters,
         });
         setApartments(response.data.items);
         setTotal(response.data.totalCount);
@@ -49,7 +48,7 @@ function HomePage() {
     };
 
     fetchApartments();
-  }, [page, search, sortBy, sortOrder, pageSize]);
+  }, [page, pageSize, filters]);
 
   const fetchCollections = async () => {
     try {
@@ -102,16 +101,22 @@ function HomePage() {
       <HeroSection />
       {/* Search & Filter Section */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8 relative z-10 mb-12">
-        <div className="bg-white rounded-xl shadow-lg p-6 sm:p-8">
-          <HomeFilter
+        
+          {/* <HomeFilter
             search={search}
             sortBy={sortBy}
             sortOrder={sortOrder}
             onSearchChange={setSearch}
             onSortByChange={setSortBy}
             onSortOrderChange={setSortOrder}
+          /> */}
+          <HomeFilterV2
+            onApply={(values) => {
+              setPage(1);
+              setFilters(values);
+            }}
           />
-        </div>
+        
       </div>
 
       {/* Results Section */}
@@ -152,9 +157,11 @@ function HomePage() {
           ) : (
             <div className="col-span-full text-center py-12">
               <Home className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-              <p className="text-gray-500 text-lg">No apartments found</p>
+              <p className="text-gray-500 text-lg">
+                {userT("home.noApartments")}
+              </p>
               <p className="text-gray-400 text-sm">
-                Try adjusting your search criteria
+                {userT("home.subNoApartments")}
               </p>
             </div>
           )}

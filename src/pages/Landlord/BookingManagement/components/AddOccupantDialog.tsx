@@ -77,9 +77,9 @@ function AddOccupantDialog({ open, onClose, onSubmit }: Props) {
     if (fileInput) fileInput.value = "";
   };
 
-  const handleFormSubmit = (data: OccupantFormData) => {
+  const handleFormSubmit = async (data: OccupantFormData) => {
     try {
-      onSubmit(data);
+      await onSubmit(data);
     } catch (error) {
       console.log(error);
     }
@@ -339,6 +339,7 @@ function AddOccupantDialog({ open, onClose, onSubmit }: Props) {
               variant="outline"
               onClick={handleClose}
               className="px-6"
+              disabled={isSubmitting}
             >
               {t("occupant.form.cancel")}
             </Button>
@@ -347,7 +348,7 @@ function AddOccupantDialog({ open, onClose, onSubmit }: Props) {
               disabled={isSubmitting}
               className="px-6 bg-blue-600 hover:bg-blue-700 text-white"
             >
-              {isSubmitting ? "Submitting..." : t("occupant.form.submit")}
+              {t("occupant.form.submit")}
             </Button>
           </DialogFooter>
         </form>

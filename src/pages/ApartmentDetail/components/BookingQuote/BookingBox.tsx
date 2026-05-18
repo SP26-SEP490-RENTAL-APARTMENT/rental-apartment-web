@@ -20,7 +20,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import type { DateRange } from "react-day-picker";
-import { format } from "date-fns";
+import { format, set } from "date-fns";
 import BookingSummary from "./BookingSummary";
 import {
   Popover,
@@ -29,6 +29,15 @@ import {
 } from "@/components/ui/popover";
 import PriceDay from "./PriceDay";
 import { useTranslation } from "react-i18next";
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/components/ui/drawer";
 
 export interface Props {
   apartmentId: string;
@@ -49,6 +58,8 @@ function BookingBox({ apartmentId, onSubmit, apartment }: Props) {
   const [packages, setPackages] = useState<Package[]>([]);
   const [loadingPackages, setLoadingPackages] = useState(false);
   const [range, setRange] = useState<DateRange | undefined>();
+  const [checkInTime, setCheckInTime] = useState("14:00");
+  const [checkOutTime, setCheckOutTime] = useState("12:00");
 
   // Fetch packages on component mount
   useEffect(() => {
@@ -87,6 +98,17 @@ function BookingBox({ apartmentId, onSubmit, apartment }: Props) {
     today.setHours(0, 0, 0, 0);
 
     return date < today;
+  };
+
+  const mergeDateTime = (date: Date, time: string) => {
+    const [hours, minutes] = time.split(":").map(Number);
+
+    return set(date, {
+      hours,
+      minutes,
+      seconds: 0,
+      milliseconds: 0,
+    });
   };
 
   const disableCheckIn = (date: Date) => {
@@ -156,7 +178,7 @@ function BookingBox({ apartmentId, onSubmit, apartment }: Props) {
             {t("booking.checkIn")} & {t("booking.checkOut")}
           </Label>
 
-          <Popover>
+          {/* <Popover>
             <PopoverTrigger asChild>
               <Button
                 variant="outline"
@@ -178,7 +200,7 @@ function BookingBox({ apartmentId, onSubmit, apartment }: Props) {
             </PopoverTrigger>
 
             <PopoverContent
-              align="start"
+              align="end"
               className="w-auto p-4 bg-white border rounded-xl shadow-xl z-50"
             >
               <Calendar
@@ -188,8 +210,13 @@ function BookingBox({ apartmentId, onSubmit, apartment }: Props) {
                 onSelect={(value) => {
                   setRange(value);
 
-                  if (value?.from) setCheckIn(value.from);
-                  if (value?.to) setCheckOut(value.to);
+                  if (value?.from) {
+                    setCheckIn(mergeDateTime(value.from, checkInTime));
+                  }
+
+                  if (value?.to) {
+                    setCheckOut(mergeDateTime(value.to, checkOutTime));
+                  }
                 }}
                 disabled={disableCheckIn}
                 components={{
@@ -200,8 +227,140 @@ function BookingBox({ apartmentId, onSubmit, apartment }: Props) {
                   ),
                 }}
               />
+              <div className="mt-4 grid grid-cols-2 gap-4">
+                <div>
+                  <label className="text-sm font-medium">Check in time</label>
+                  <input
+                    type="time"
+                    value={checkInTime}
+                    onChange={(e) => {
+                      const time = e.target.value;
+                      setCheckInTime(time);
+
+                      if (range?.from) {
+                        setCheckIn(mergeDateTime(range.from, time));
+                      }
+                    }}
+                    className="w-full mt-1 border rounded-md px-3 py-2"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-sm font-medium">Check out time</label>
+                  <input
+                    type="time"
+                    value={checkOutTime}
+                    onChange={(e) => {
+                      const time = e.target.value;
+                      setCheckOutTime(time);
+
+                      if (range?.to) {
+                        setCheckOut(mergeDateTime(range.to, time));
+                      }
+                    }}
+                    className="w-full mt-1 border rounded-md px-3 py-2"
+                  />
+                </div>
+              </div>
             </PopoverContent>
-          </Popover>
+          </Popover> */}
+          <Drawer>
+            <DrawerTrigger asChild>
+              <Button
+                variant="outline"
+                className="w-full justify-start border-gray-300"
+              >
+                {range?.from ? (
+                  range.to ? (
+                    <>
+                      {format(range.from, "dd/MM/yyyy")} -{" "}
+                      {format(range.to, "dd/MM/yyyy")}
+                    </>
+                  ) : (
+                    format(range.from, "dd/MM/yyyy")
+                  )
+                ) : (
+                  t("booking.selectDate")
+                )}
+              </Button>
+            </DrawerTrigger>
+
+            <DrawerContent className="max-h-[90vh]">
+              <DrawerHeader>
+                <DrawerTitle>{t("booking.selectDate")}</DrawerTitle>
+              </DrawerHeader>
+
+              <div className="px-4 pb-6 overflow-y-auto">
+                <Calendar
+                  mode="range"
+                  numberOfMonths={2} // mobile nên để 1 tháng
+                  selected={range}
+                  onSelect={(value) => {
+                    setRange(value);
+
+                    if (value?.from) {
+                      setCheckIn(mergeDateTime(value.from, checkInTime));
+                    }
+
+                    if (value?.to) {
+                      setCheckOut(mergeDateTime(value.to, checkOutTime));
+                    }
+                  }}
+                  disabled={disableCheckIn}
+                  className="mx-auto"
+                  components={{
+                    DayButton: ({ day, ...props }) => (
+                      <button {...props} className="h-12 w-12">
+                        <PriceDay date={day.date} apartment={apartment} />
+                      </button>
+                    ),
+                  }}
+                />
+
+                <div className="mt-6 grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-sm font-medium">Check in</label>
+                    <input
+                      type="time"
+                      value={checkInTime}
+                      onChange={(e) => {
+                        const time = e.target.value;
+                        setCheckInTime(time);
+
+                        if (range?.from) {
+                          setCheckIn(mergeDateTime(range.from, time));
+                        }
+                      }}
+                      className="w-full mt-1 border rounded-md px-3 py-2"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="text-sm font-medium">Check out</label>
+                    <input
+                      type="time"
+                      value={checkOutTime}
+                      onChange={(e) => {
+                        const time = e.target.value;
+                        setCheckOutTime(time);
+
+                        if (range?.to) {
+                          setCheckOut(mergeDateTime(range.to, time));
+                        }
+                      }}
+                      className="w-full mt-1 border rounded-md px-3 py-2"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <DrawerFooter>
+                <DrawerClose asChild>
+                  <Button>{t("booking.done")}</Button>
+                </DrawerClose>
+              </DrawerFooter>
+            </DrawerContent>
+          </Drawer>
         </div>
 
         {/* Guests */}
@@ -292,7 +451,8 @@ function BookingBox({ apartmentId, onSubmit, apartment }: Props) {
                 htmlFor="pets"
                 className="text-xs text-gray-700 mb-1 block"
               >
-                {t("booking.pets").charAt(0).toUpperCase() + t("booking.pets").slice(1)}
+                {t("booking.pets").charAt(0).toUpperCase() +
+                  t("booking.pets").slice(1)}
               </Label>
               <Input
                 id="pets"

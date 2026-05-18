@@ -63,12 +63,14 @@
         "uploadedAt": "Tải lên vào"
     },
     "booking": {
+        "guestInfo": "Thông tin khách hàng",
+        "stayInfo": "Thông tin lưu trú",
         "label": "Lịch sử đặt phòng",
         "description": "Quản lý và xem tất cả các đơn đặt phòng của bạn",
         "booking": "Đơn đặt phòng",
         "bookedOn": "Đặt vào",
-        "fullPayment": "Thanh toán đầy đủ",
-        "partialPayment": "Thanh toán một phần",
+        "fullPayment": "Đầy đủ",
+        "partialPayment": "Đặt cọc",
         "paid": "Đã thanh toán",
         "pending": "Chưa thanh toán",
         "nights": "Số đêm",
@@ -88,31 +90,69 @@
         "packagePrice": "Giá gói",
         "paymentSection": "Thông tin thanh toán",
         "adults": "người lớn",
-        "infants": "trẻ em",
+        "infants": "em bé",
+        "children": "trẻ em",
         "pets": "thú cưng",
         "actualStay": "Thời gian thực tế",
         "actualCheckIn": "Nhận phòng thực tế",
         "actualCheckOut": "Trả phòng thực tế",
-        "rateService": "Đánh giá dịch vụ của chúng tôi"
+        "rateService": "Đánh giá dịch vụ của chúng tôi",
+        "noBooking": "Không tìm thấy đơn đặt phòng",
+        "subNoBooking": "Bạn chưa thực hiện bất kỳ đơn đặt phòng nào. Bắt đầu khám phá các căn hộ của chúng tôi và đặt chỗ ở của bạn ngay hôm nay!",
+        "browseApartments": "Xem các căn hộ"
     },
     "collection": {
-        "label": "Bô sưu tập",
-        "collectionUnit": "bộ sưu tập"
+        "label": "Bộ sưu tập",
+        "collectionUnit": "bộ sưu tập",
+        "form": {
+            "editTitle": "Chỉnh Sửa Bộ Sưu Tập",
+            "title": "Tạo Bộ Sưu Tập Mới",
+            "subTitle": "Sắp xếp các căn hộ yêu thích của bạn thành các bộ sưu tập",
+            "name": "Tên Bộ Sưu Tập",
+            "description": "Mô Tả",
+            "namePlaceholder": "Bộ Sưu Tập Mùa Hè",
+            "descriptionPlaceholder": "Một bộ sưu tập các căn hộ cho chuyến du lịch mùa hè của tôi",
+            "create": "Tạo",
+            "cancel": "Hủy",
+            "update": "Cập nhật",
+            "toastOk": "Tạo bộ sưu tập thành công!",
+            "toastUpdate": "Cập nhật bộ sưu tập thành công!"
+        }
     },
     "CCCD": {
         "uploadFrontFace": "Tải lên mặt trước của CCCD/CMND"
     },
     "support": {
         "label": "Yêu cầu hỗ trợ",
-        "description": "Submit and manage your support requests",
-        "newRequest": "New Support Request",
-        "subject": "Subject",
-        "message": "Message",
-        "submit": "Submit Request",
-        "status": "Status",
-        "open": "Open",
-        "inProgress": "In Progress",
-        "closed": "Closed",
-        "noRequests": "No support requests found"
+        "description": "Gửi và quản lý các yêu cầu hỗ trợ của bạn",
+        "newRequest": "Yêu cầu hỗ trợ mới",
+        "subject": "Chủ đề",
+        "message": "Tin nhắn",
+        "submit": "Gửi yêu cầu",
+        "status": "Trạng thái",
+        "open": "Mở",
+        "inProgress": "Đang xử lý",
+        "closed": "Đã đóng",
+        "noRequests": "Không tìm thấy yêu cầu hỗ trợ"
+    },
+    "review": {
+        "title": "Đánh giá của bạn",
+        "rating": "Đánh giá",
+        "comment": "Bình luận",
+        "placeholder": "Viết đánh giá của bạn ở đây...",
+        "submit": "Gửi đánh giá",
+        "cancel": "Hủy",
+        "character": "ký tự",
+        "success": "Cảm ơn bạn đã đánh giá! Chúng tôi rất trân trọng phản hồi của bạn.",
+        "failure": "Đã xảy ra lỗi khi gửi đánh giá. Vui lòng thử lại sau."
+    },
+    "wishlist": {
+        "noWishlist": "Bộ sưu tập trống",
+        "subNoWishlist": "Bắt đầu thêm các căn hộ vào danh sách yêu thích của bạn để theo dõi những nơi bạn yêu thích.",
+        "browseApartments": "Duyệt Các Căn Hộ"
+    },
+    "home": {
+        "noApartments": "Không tìm thấy căn hộ",
+        "subNoApartments": "Hãy điều chỉnh tiêu chí tìm kiếm của bạn hoặc khám phá các căn hộ nổi bật của chúng tôi."
     }
 }

@@ -33,7 +33,7 @@ function ApartmentDetailDialog({ apartment, onAddPhotos }: Props) {
       case "pending_review":
         return (
           <Badge className="bg-gray-500 text-white">
-            {statusT("apartment.pending_review")}
+            {statusT("apartment.pending")}
           </Badge>
         );
       default:

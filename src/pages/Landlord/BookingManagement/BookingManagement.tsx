@@ -28,6 +28,7 @@ import { useTranslation } from "react-i18next";
 
 function BookingManagement() {
   const { t } = useTranslation("common");
+  const { t: tLandlord } = useTranslation("landlord");
   const [bookings, setBookings] = useState<BookingHistory[]>([]);
   const [apartment, setApartment] = useState<Apartment | null>(null);
   const [occupantList, setOccupantList] = useState<Occupant[]>([]);
@@ -164,10 +165,10 @@ function BookingManagement() {
             </div>
             <div>
               <h1 className="text-3xl font-bold text-gray-900">
-                Booking Management
+                {tLandlord("booking.title")}
               </h1>
               <p className="text-gray-600 mt-1">
-                Manage guest bookings and check-ins
+                {tLandlord("booking.description")}
               </p>
             </div>
           </div>

@@ -110,11 +110,14 @@ export const PaymentPurposeList = () => {
   ];
 };
 
-export const supportTicketSortByList = [
-  { label: "Created At", value: "createdAt" },
-  { label: "Priority", value: "priority" },
-  { label: "Status", value: "status" },
-];
+export const SupportTicketSortByList = () => {
+  const { t } = useTranslation("filter");
+  return [
+    { label: t("option.createdAt"), value: "createdAt" },
+    { label: t("option.priority"), value: "priority" },
+    { label: t("option.status"), value: "status" },
+  ];
+};
 
 export const supportStatusList = [
   { value: "open", label: "Open" },
@@ -144,3 +147,8 @@ export const supportCategoryOptions = [
   { value: "property_quality", label: "Property Quality" },
   { value: "other", label: "Other" },
 ];
+
+export const occupySortByList = [
+  { label: "Created At", value: "createdAt" },
+  { label: "Total Price", value: "totalPrice" },
+]

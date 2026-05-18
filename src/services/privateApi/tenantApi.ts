@@ -100,3 +100,10 @@ export const tenantPaymentApi = {
   getPaymentHistory: (params: ParamsProp) =>
     apiConfig.privateApi.get("/tenant/payments/history", { params }),
 };
+
+export const occupiedIncident = {
+  reportIncident: (bookingId: string, data: FormData) =>
+    apiConfig.privateApi.post(`/Booking/${bookingId}/occupied-incident`, data),
+  getMyIncidents: (params: ParamsProp) =>
+    apiConfig.privateApi.get("/tenant/incidents/my", { params }),
+};

@@ -18,18 +18,20 @@ interface Props {
   onClose: () => void;
   apartmentId: string;
 }
-
-const priceTypeList = [
-  { label: "Normal", value: "base" },
-  { label: "Weekend", value: "weekend" },
-  { label: "Holiday", value: "holiday" },
-  { label: "Peak season", value: "peak_season" },
-  { label: "Low season", value: "low_season" },
-  { label: "Special event", value: "special_event" },
-  { label: "Manual override", value: "manual_override" },
-];
 function ManualForm({ onClose, apartmentId }: Props) {
   const { t } = useTranslation("landlord");
+  const { t: tStatus } = useTranslation("status");
+
+  const priceTypeList = [
+    { label: tStatus("priceReason.normal"), value: "base" },
+    { label: tStatus("priceReason.weekend"), value: "weekend" },
+    { label: tStatus("priceReason.holiday"), value: "holiday" },
+    { label: tStatus("priceReason.peak"), value: "peak_season" },
+    { label: tStatus("priceReason.low"), value: "low_season" },
+    { label: tStatus("priceReason.special"), value: "special_event" },
+    { label: tStatus("priceReason.manual"), value: "manual_override" },
+  ];
+
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({
     startDate: "",

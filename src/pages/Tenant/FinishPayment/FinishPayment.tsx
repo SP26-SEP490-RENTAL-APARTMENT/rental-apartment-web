@@ -88,7 +88,7 @@ function FinishPayment() {
                     {t("finish.duration")}
                   </p>
                   <p className="text-lg font-medium text-gray-900">
-                    {bookingData.nights} {t("booking.night")}
+                    {bookingData.nights} {t("booking.nights")}
                   </p>
                 </div>
                 <div>

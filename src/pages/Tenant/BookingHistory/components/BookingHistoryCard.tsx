@@ -37,7 +37,9 @@ export default function BookingHistoryCard({ data, onClick }: Props) {
   const { t } = useTranslation("user");
 
   const getPaymentModeLabel = (mode: "full" | "partial") => {
-    return mode === "full" ? t("booking.fullPayment") : t("booking.partialPayment");
+    return mode === "full"
+      ? t("booking.fullPayment")
+      : t("booking.partialPayment");
   };
 
   return (
@@ -54,7 +56,8 @@ export default function BookingHistoryCard({ data, onClick }: Props) {
                 <Home className="h-4 w-4 text-blue-600" />
               </div>
               <p className="font-semibold text-gray-900 text-lg">
-                {t("booking.booking")} #{data.bookingId.slice(0, 8).toUpperCase()}
+                {t("booking.booking")} #
+                {data.bookingId.slice(0, 8).toUpperCase()}
               </p>
             </div>
             <p className="text-xs text-gray-500">
@@ -73,7 +76,9 @@ export default function BookingHistoryCard({ data, onClick }: Props) {
               </Badge>
             </div>
             <div className="text-right">
-              <p className="text-sm text-gray-600 mb-1">{t("booking.totalPrice")}</p>
+              <p className="text-sm text-gray-600 mb-1">
+                {t("booking.totalPrice")}
+              </p>
               <p className="text-2xl font-bold text-blue-600">
                 {formatCurrency(data.totalPrice)}
               </p>
@@ -88,7 +93,9 @@ export default function BookingHistoryCard({ data, onClick }: Props) {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
           {/* Check-in */}
           <div>
-            <p className="text-xs text-gray-500 font-medium mb-1">{t("booking.checkIn")}</p>
+            <p className="text-xs text-gray-500 font-medium mb-1">
+              {t("booking.checkIn")}
+            </p>
             <p className="font-semibold text-gray-900">
               {formatDate(data.checkInDate)}
             </p>
@@ -96,7 +103,9 @@ export default function BookingHistoryCard({ data, onClick }: Props) {
 
           {/* Check-out */}
           <div>
-            <p className="text-xs text-gray-500 font-medium mb-1">{t("booking.checkOut")}</p>
+            <p className="text-xs text-gray-500 font-medium mb-1">
+              {t("booking.checkOut")}
+            </p>
             <p className="font-semibold text-gray-900">
               {formatDate(data.checkOutDate)}
             </p>
@@ -104,7 +113,9 @@ export default function BookingHistoryCard({ data, onClick }: Props) {
 
           {/* Nights */}
           <div>
-            <p className="text-xs text-gray-500 font-medium mb-1">{t("booking.nights")}</p>
+            <p className="text-xs text-gray-500 font-medium mb-1">
+              {t("booking.nights")}
+            </p>
             <p className="font-semibold text-gray-900">
               {data.nights} {t("booking.nightsUnit")}
             </p>
@@ -112,9 +123,12 @@ export default function BookingHistoryCard({ data, onClick }: Props) {
 
           {/* Guests */}
           <div>
-            <p className="text-xs text-gray-500 font-medium mb-1">{t("booking.guests")}</p>
+            <p className="text-xs text-gray-500 font-medium mb-1">
+              {t("booking.guests")}
+            </p>
             <p className="font-semibold text-gray-900">
-              {data.noOfAdults} {t("booking.guestsUnit")}
+              {data.noOfAdults + data.noOfChildren}{" "}
+              {t("booking.guestsUnit")}
             </p>
           </div>
         </div>
@@ -149,4 +163,3 @@ export default function BookingHistoryCard({ data, onClick }: Props) {
     </Card>
   );
 }
-

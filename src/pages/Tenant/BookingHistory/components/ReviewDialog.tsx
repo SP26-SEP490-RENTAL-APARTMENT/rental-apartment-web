@@ -9,6 +9,7 @@ import { reviewApi } from "@/services/privateApi/tenantApi";
 import { useState } from "react";
 import { Star } from "lucide-react";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 
 export interface ReviewDialogProps {
   open: boolean;
@@ -17,6 +18,7 @@ export interface ReviewDialogProps {
 }
 
 export function ReviewDialog({ open, onClose, bookingId }: ReviewDialogProps) {
+  const { t } = useTranslation("user");
   const [rating, setRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
   const [comment, setComment] = useState("");
@@ -40,11 +42,11 @@ export function ReviewDialog({ open, onClose, bookingId }: ReviewDialogProps) {
         rating,
         comment: comment.trim(),
       });
-      toast.success("Review submitted successfully!");
+      toast.success(t("review.success"));
       handleClose();
     } catch (error) {
       console.error("Error submitting review:", error);
-      toast.error("Failed to submit review. Please try again.");
+      toast.error(t("review.failure"));
     } finally {
       setIsLoading(false);
     }
@@ -62,7 +64,7 @@ export function ReviewDialog({ open, onClose, bookingId }: ReviewDialogProps) {
       <DialogContent className="max-w-md">
         <DialogHeader>
           <DialogTitle className="text-xl font-semibold">
-            Review Your Stay
+            {t("review.title")}
           </DialogTitle>
         </DialogHeader>
 
@@ -70,7 +72,7 @@ export function ReviewDialog({ open, onClose, bookingId }: ReviewDialogProps) {
           {/* Rating */}
           <div>
             <label className="text-sm font-medium text-muted-foreground mb-2 block">
-              Rating
+              {t("review.rating")}
             </label>
             <div className="flex gap-2">
               {[1, 2, 3, 4, 5].map((star) => (
@@ -94,11 +96,6 @@ export function ReviewDialog({ open, onClose, bookingId }: ReviewDialogProps) {
                 </button>
               ))}
             </div>
-            {rating > 0 && (
-              <p className="text-sm text-muted-foreground mt-1">
-                Rating: {rating} out of 5 stars
-              </p>
-            )}
           </div>
 
           {/* Comment */}
@@ -107,18 +104,18 @@ export function ReviewDialog({ open, onClose, bookingId }: ReviewDialogProps) {
               htmlFor="comment"
               className="text-sm font-medium text-muted-foreground mb-2 block"
             >
-              Your Comment
+              {t("review.comment")}
             </label>
             <textarea
               id="comment"
               value={comment}
               onChange={(e) => setComment(e.target.value)}
-              placeholder="Share your experience..."
+              placeholder={t("review.placeholder")}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 min-h-25 resize-none"
               disabled={isLoading}
             />
             <p className="text-xs text-muted-foreground mt-1">
-              {comment.length}/500 characters
+              {comment.length}/500 {t("review.character")}
             </p>
           </div>
 
@@ -129,14 +126,14 @@ export function ReviewDialog({ open, onClose, bookingId }: ReviewDialogProps) {
               variant="outline"
               disabled={isLoading}
             >
-              Cancel
+              {t("review.cancel")}
             </Button>
             <Button
               onClick={handleSubmit}
               disabled={isLoading}
               className="bg-blue-600 hover:bg-blue-700"
             >
-              {isLoading ? "Submitting..." : "Submit Review"}
+              {t("review.submit")}
             </Button>
           </div>
         </div>

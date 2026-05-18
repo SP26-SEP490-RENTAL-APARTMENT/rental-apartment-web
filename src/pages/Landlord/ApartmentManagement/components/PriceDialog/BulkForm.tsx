@@ -6,16 +6,6 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
-const daysOfWeekList = [
-  { label: "Monday", value: "Monday" },
-  { label: "Tuesday", value: "Tuesday" },
-  { label: "Wednesday", value: "Wednesday" },
-  { label: "Thursday", value: "Thursday" },
-  { label: "Friday", value: "Friday" },
-  { label: "Saturday", value: "Saturday" },
-  { label: "Sunday", value: "Sunday" },
-];
-
 interface Props {
   onClose: () => void;
   apartmentId: string;
@@ -23,6 +13,7 @@ interface Props {
 
 function BulkForm({ onClose, apartmentId }: Props) {
   const { t } = useTranslation("landlord");
+  const { t: tStatus } = useTranslation("status");
   const [loading, setLoading] = useState(false);
   const [dateError, setDateError] = useState("");
   const [form, setForm] = useState({
@@ -31,6 +22,16 @@ function BulkForm({ onClose, apartmentId }: Props) {
     daysOfWeek: [] as string[],
     fixedPricePerNight: 0,
   });
+
+  const daysOfWeekList = [
+    { label: tStatus("week.monday"), value: "Monday" },
+    { label: tStatus("week.tuesday"), value: "Tuesday" },
+    { label: tStatus("week.wednesday"), value: "Wednesday" },
+    { label: tStatus("week.thursday"), value: "Thursday" },
+    { label: tStatus("week.friday"), value: "Friday" },
+    { label: tStatus("week.saturday"), value: "Saturday" },
+    { label: tStatus("week.sunday"), value: "Sunday" },
+  ];
 
   const validateDateRange = (from: string, to: string) => {
     if (!from || !to) return true;

@@ -21,13 +21,15 @@ import { authApi } from "@/services/publicApi/authApi";
 import { ROUTES } from "@/constants/routes";
 import { toast } from "sonner";
 import Logo from "@/components/ui/logo/Logo";
+import { useLanguageStore } from "@/store/languageStore";
 
 function Header() {
   const navigate = useNavigate();
-  const { t, i18n } = useTranslation("common");
+  const { t } = useTranslation("common");
   const isAuthenticated = useAuthStore.getState().isAuthenticated;
   const { logout, user, login } = useAuthStore();
-  const language = i18n.language;
+  const language = useLanguageStore((s) => s.currentLanguage);
+  const setPreferredLanguage = useLanguageStore((s) => s.setPreferredLanguage);
 
   const handleLogout = () => {
     logout();
@@ -82,21 +84,19 @@ function Header() {
                   {language === "en" ? "EN" : "VI"}
                 </Button>
               </DropdownMenuTrigger>
+
               <DropdownMenuContent align="end">
                 <DropdownMenuRadioGroup
                   value={language}
-                  onValueChange={(lang) => i18next.changeLanguage(lang)}
+                  onValueChange={(lang) =>
+                    setPreferredLanguage(lang as "en" | "vi")
+                  }
                 >
-                  <DropdownMenuRadioItem
-                    onClick={() => i18next.changeLanguage("en")}
-                    value="en"
-                  >
+                  <DropdownMenuRadioItem value="en">
                     English
                   </DropdownMenuRadioItem>
-                  <DropdownMenuRadioItem
-                    onClick={() => i18next.changeLanguage("vi")}
-                    value="vi"
-                  >
+
+                  <DropdownMenuRadioItem value="vi">
                     Tiếng Việt
                   </DropdownMenuRadioItem>
                 </DropdownMenuRadioGroup>

@@ -22,10 +22,10 @@ import { Button } from "@/components/ui/button";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { useTranslation } from "react-i18next";
+import { format } from "date-fns";
 
 function BookingConfirm() {
   const { t } = useTranslation("book");
-  const { i18n } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
   const [error, setError] = useState<string | null>(null);
@@ -52,6 +52,7 @@ function BookingConfirm() {
       packageId: quoteData?.packageId || null,
       paymentMode: "partial" as const,
       paymentProvider: "stripe" as const,
+      devicePlatform: "web" as const,
     },
   });
 
@@ -75,8 +76,6 @@ function BookingConfirm() {
   if (!quoteData) {
     return null;
   }
-
-  const getViDate = () => (i18n.language === "vi" ? "vi-VN" : "en-US");
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -145,15 +144,8 @@ function BookingConfirm() {
                       {t("confirm.detail.checkIn")}
                     </p>
                     <p className="text-lg font-medium text-gray-900">
-                      {new Date(quoteData.checkInDateTime).toLocaleDateString(
-                        getViDate(),
-                        {
-                          weekday: "short",
-                          year: "numeric",
-                          month: "short",
-                          day: "numeric",
-                        },
-                      )}
+                      
+                      {format(new Date(quoteData.checkInDateTime), "dd/MM/yyyy HH:mm")}
                     </p>
                   </div>
                   <div>
@@ -161,15 +153,8 @@ function BookingConfirm() {
                       {t("confirm.detail.checkOut")}
                     </p>
                     <p className="text-lg font-medium text-gray-900">
-                      {new Date(quoteData.checkOutDateTime).toLocaleDateString(
-                        getViDate(),
-                        {
-                          weekday: "short",
-                          year: "numeric",
-                          month: "short",
-                          day: "numeric",
-                        },
-                      )}
+                      
+                      {format(new Date(quoteData.checkOutDateTime), "dd/MM/yyyy HH:mm")}
                     </p>
                   </div>
                   <Separator className="my-3" />
@@ -187,9 +172,7 @@ function BookingConfirm() {
                         {t("confirm.detail.guests")}
                       </p>
                       <p className="text-lg font-medium text-gray-900">
-                        {quoteData.noOfAdults +
-                          quoteData.noOfInfants +
-                          quoteData.noOfChildren}
+                        {quoteData.noOfAdults + quoteData.noOfChildren}
                       </p>
                     </div>
                   </div>

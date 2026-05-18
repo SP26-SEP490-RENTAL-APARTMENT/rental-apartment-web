@@ -6,7 +6,7 @@ function RoomInfo({ room }: { room: Room }) {
   const { t } = useTranslation("book");
 
   return (
-    <div className="bg-white rounded-2xl shadow-sm border p-6 space-y-6">
+    <div>
       {/* Title */}
       <div className="pb-4 border-b">
         <h2 className="text-xl font-semibold text-gray-900">

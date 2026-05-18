@@ -22,6 +22,11 @@ i18n
       formatSeparator: ",",
     },
 
+    detection: {
+      order: [], // <- tắt detect localStorage/browser
+      caches: [], // <- không lưu i18nextLng nữa
+    },
+
     returnObjects: true,
   });
 

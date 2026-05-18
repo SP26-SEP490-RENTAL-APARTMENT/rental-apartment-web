@@ -47,6 +47,7 @@ export const bookingConfirmSchema = z.object({
   packageId: z.string().nullable(),
   paymentMode: z.enum(["partial", "full"]),
   paymentProvider: z.enum(["stripe", "momo"]),
+  devicePlatform: z.enum(["web"]),
 });
 
 export type BookingQuoteFormData = z.infer<typeof bookingQuoteSchema>;

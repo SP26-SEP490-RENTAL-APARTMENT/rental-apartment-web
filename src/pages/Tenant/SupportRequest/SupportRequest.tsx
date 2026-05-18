@@ -19,8 +19,9 @@ import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import type { Filter } from "@/components/ui/managementFilter/ManagementFilter";
 import ManagementFilter from "@/components/ui/managementFilter/ManagementFilter";
-import { supportTicketSortByList } from "@/constants/sortByList";
+
 import { Card, CardContent } from "@/components/ui/card";
+import { SupportTicketSortByList } from "@/constants/sortByList";
 
 function SupportRequest() {
   const { t } = useTranslation("support");
@@ -143,7 +144,7 @@ function SupportRequest() {
               <ManagementFilter
                 filter={filters}
                 setFilter={setFilters}
-                sortByList={supportTicketSortByList}
+                sortByList={SupportTicketSortByList()}
               />
             </CardContent>
           </Card>
@@ -153,14 +154,14 @@ function SupportRequest() {
             <div className="flex flex-col items-center justify-center py-12 bg-white rounded-lg border border-gray-200">
               <AlertCircle className="h-12 w-12 text-gray-400 mb-4" />
               <h3 className="text-lg font-semibold text-gray-900 mb-1">
-                {t("noTickets")}
+                {t("support.noTickets")}
               </h3>
               <p className="text-gray-600 text-sm mb-6">
-                {t("noTicketsDescription")}
+                {t("support.noTicketsDescription")}
               </p>
               <Button onClick={handleCreateTicket}>
                 <Plus className="h-4 w-4 mr-2" />
-                {t("createFirstTicket")}
+                {t("support.createFirstTicket")}
               </Button>
             </div>
           )}

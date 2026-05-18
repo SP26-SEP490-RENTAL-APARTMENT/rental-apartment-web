@@ -37,6 +37,7 @@
         "location": "Location"
     },
     "booking": {
+        "done": "Done",
         "bookNow": "Book Now",
         "checkIn": "Check-in",
         "checkOut": "Check-out",

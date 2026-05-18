@@ -105,17 +105,14 @@ function BookingHistories() {
                 </div>
               </div>
               <h2 className="text-2xl font-bold text-gray-900 mb-2">
-                No bookings yet
+                {t("booking.noBooking")}
               </h2>
-              <p className="text-gray-600 mb-6">
-                You haven't made any bookings yet. Start exploring apartments to
-                find your perfect stay!
-              </p>
+              <p className="text-gray-600 mb-6">{t("booking.subNoBooking")}</p>
               <a
                 href="/"
                 className="inline-block px-6 py-2 bg-linear-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold rounded-lg transition-all duration-200"
               >
-                Browse Apartments
+                {t("booking.browseApartments")}
               </a>
             </CardContent>
           </Card>

@@ -21,7 +21,7 @@ import {
   type AssignInspectionFormData,
 } from "@/schemas/assignInspection";
 import { userManagementApi } from "@/services/privateApi/adminApi";
-import type { User } from "@/types/user";
+import type { UserProfile } from "@/types/user";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
@@ -38,7 +38,7 @@ function AssignInspectionForm({
   apartmentId,
   onSubmit,
 }: Props) {
-  const [staffList, setStaffList] = useState<User[]>([]);
+  const [staffList, setStaffList] = useState<UserProfile[]>([]);
 
   const fetchStaffList = async () => {
     try {

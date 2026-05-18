@@ -57,6 +57,18 @@
         "low": "Low Season",
         "special": "Special Event",
         "manual": "Manual Adjustment",
-        "other": "Other"
+        "other": "Other",
+        "normal": "Normal",
+        "weekend": "Weekend",
+        "holiday": "Holiday"
+    },
+    "week": {
+        "monday": "Monday",
+        "tuesday": "Tuesday",
+        "wednesday": "Wednesday",
+        "thursday": "Thursday",
+        "friday": "Friday",
+        "saturday": "Saturday",
+        "sunday": "Sunday"
     }
 }

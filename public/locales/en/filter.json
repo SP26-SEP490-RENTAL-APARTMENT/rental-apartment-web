@@ -26,6 +26,7 @@
         "totalPrice": "Total price",
         "paidAt": "Paid at",
         "amount": "Amount",
-        "status": "Status"
+        "status": "Status",
+        "priority": "Priority"
     }
 }

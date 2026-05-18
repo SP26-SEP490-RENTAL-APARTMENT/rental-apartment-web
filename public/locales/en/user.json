@@ -63,12 +63,14 @@
         "uploadedAt": "Uploaded at"
     },
     "booking": {
+        "guestInfo": "Guest Information",
+        "stayInfo": "Stay Information",
         "label": "Booking History",
         "description": "Manage and view all your bookings",
         "booking": "Booking",
         "bookedOn": "Booked on",
-        "fullPayment": "Full Payment",
-        "partialPayment": "Partial Payment",
+        "fullPayment": "Full",
+        "partialPayment": "Partial",
         "paid": "Paid",
         "pending": "Pending",
         "nights": "Nights",
@@ -87,17 +89,35 @@
         "paymentMode": "Payment Mode",
         "packagePrice": "Package Price",
         "paymentSection": "Payment Information",
-        "adults": "Adults",
-        "infants": "Infants",
+        "adults": "adults",
+        "infants": "infants",
+        "children": "children",
         "pets": "Pets",
         "actualStay": "Actual Stay",
         "actualCheckIn": "Actual Check-in",
         "actualCheckOut": "Actual Check-out",
-        "rateService": "Rate our service"
+        "rateService": "Rate our service",
+        "noBooking": "No booking found",
+        "subNoBooking": "You haven't made any bookings yet. Start exploring our apartments and book your stay today!",
+        "browseApartments": "Browse Apartments"
     },
     "collection": {
         "label": "My Collections",
-        "collectionUnit": "collections"
+        "collectionUnit": "collections",
+        "form": {
+            "editTitle": "Edit Collection",
+            "title": "Create New Collection",
+            "subTitle": "Organize your favorite apartments into collections",
+            "name": "Collection Name",
+            "description": "Description",
+            "namePlaceholder": "Summer Collection",
+            "descriptionPlaceholder": "A collection of apartments for my summer vacation",
+            "create": "Create",
+            "cancel": "Cancel",
+            "update": "Update",
+            "toastOk": "Create collection successfully!",
+            "toastUpdate": "Update collection successfully!"
+        }
     },
     "CCCD": {
         "uploadFrontFace": "Upload front face of your CCCD"
@@ -114,5 +134,25 @@
         "inProgress": "In Progress",
         "closed": "Closed",
         "noRequests": "No support requests found"
+    },
+    "review": {
+        "title": "Your Review",
+        "rating": "Rating",
+        "comment": "Comment",
+        "placeholder": "Write your review here...",
+        "submit": "Submit Review",
+        "cancel": "Cancel",
+        "character": "characters",
+        "success": "Thank you for your review! We greatly value your feedback.",
+        "failure": "An error occurred while submitting your review. Please try again later."
+    },
+    "wishlist": {
+        "noWishlist": "The collection is empty",
+        "subNoWishlist": "Start adding apartments to your wishlist to keep track of your favorite stays.",
+        "browseApartments": "Browse Apartments"
+    },
+    "home": {
+        "noApartments": "No apartments found",
+        "subNoApartments": "Try adjusting your search criteria or explore our featured apartments."
     }
 }

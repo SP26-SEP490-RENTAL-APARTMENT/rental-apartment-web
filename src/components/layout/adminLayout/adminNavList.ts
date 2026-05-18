@@ -10,6 +10,7 @@ import {
   Hotel,
   Search,
   Ticket,
+  MessageSquareWarning,
 } from "lucide-react";
 
 export const useAadminNavList = () => {
@@ -90,6 +91,11 @@ export const useAadminNavList = () => {
       title: "Support",
       url: "/admin/support",
       icon: Ticket,
+    },
+    {
+      title: "Occupied Incidents",
+      url: "/admin/occupied-management",
+      icon: MessageSquareWarning,
     },
   ];
 };

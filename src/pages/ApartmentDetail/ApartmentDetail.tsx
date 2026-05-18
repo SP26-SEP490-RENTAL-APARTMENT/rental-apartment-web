@@ -138,9 +138,9 @@ function ApartmentDetail() {
 
             {/* Apartment Info */}
             {apartment && (
-              <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
+              
                 <ApartmentInfo apartment={apartment} />
-              </div>
+              
             )}
 
             {/* Room Details */}

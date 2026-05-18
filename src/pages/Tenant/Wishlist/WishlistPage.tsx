@@ -7,8 +7,10 @@ import type { Wishlist } from "@/types/wishlist";
 import { Card, CardContent } from "@/components/ui/card";
 import { Heart, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useTranslation } from "react-i18next";
 
 function WishlistPage() {
+  const { t } = useTranslation("user");
   const { collectionId } = useParams();
   const navigate = useNavigate();
   const [wishlists, setWishlists] = useState<Wishlist[]>([]);
@@ -101,17 +103,16 @@ function WishlistPage() {
                 </div>
               </div>
               <h2 className="text-2xl font-bold text-gray-900 mb-2">
-                This collection is empty
+                {t("wishlist.noWishlist")}
               </h2>
               <p className="text-gray-600 mb-6">
-                Start adding apartments to your wishlist to keep track of your
-                favorite stays.
+                {t("wishlist.subNoWishlist")}
               </p>
               <a
                 href="/"
                 className="inline-block px-6 py-2 bg-linear-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold rounded-lg transition-all duration-200"
               >
-                Browse Apartments
+                {t("wishlist.browseApartments")}
               </a>
             </CardContent>
           </Card>

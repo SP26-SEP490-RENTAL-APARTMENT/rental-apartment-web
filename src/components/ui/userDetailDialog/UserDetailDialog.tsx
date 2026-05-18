@@ -1,44 +1,80 @@
-import type { User } from "@/types/user";
-import { useTranslation } from "react-i18next";
+import type { UserProfile } from "@/types/user";
+import { Badge } from "@/components/ui/badge";
 
-function UserDetailDialog({ user }: { user: User }) {
-  const { t: translate } = useTranslation("user");
+function UserDetailDialog({ user }: { user: UserProfile }) {
+
   return (
     <div className="space-y-6">
-      {/* User basic */}
+      {/* Header */}
       <div className="flex items-center gap-4 pb-4 border-b">
-        <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center text-lg font-semibold">
-          {user?.fullName?.charAt(0)}
+        <div className="w-14 h-14 rounded-full bg-primary/10 text-primary flex items-center justify-center text-xl font-bold">
+          {user.fullName?.charAt(0)}
         </div>
+
         <div>
-          <p className="font-semibold text-gray-900">{user?.fullName}</p>
-          <p className="text-sm text-gray-500">{user?.email}</p>
+          <p className="font-semibold text-lg">{user.fullName}</p>
+          <p className="text-sm text-muted-foreground">{user.email}</p>
         </div>
       </div>
 
-      {/* Info */}
+      {/* Body */}
       <div className="grid grid-cols-2 gap-x-6 gap-y-4 text-sm">
-        <div className="text-gray-500">{translate("userId")}</div>
-        <div className="font-medium text-gray-900 break-all">
-          {user?.userId}
+        <div className="text-muted-foreground">
+          UserId
+        </div>
+        <div className="font-medium break-all">
+          {user.userId}
         </div>
 
-        <div className="text-gray-500">{translate("phone")}</div>
-        <div className="font-medium text-gray-900">{user?.phone || "-"}</div>
+        <div className="text-muted-foreground">
+          Phone
+        </div>
+        <div className="font-medium">
+          {user.phone || "-"}
+        </div>
 
-        <div className="text-gray-500">{translate("role")}</div>
-        <div className="font-medium text-gray-900 capitalize">{user?.role}</div>
-
-        <div className="text-gray-500">{translate("verified")}</div>
+        <div className="text-muted-foreground">
+          Role
+        </div>
         <div>
-          {user?.identityVerified ? (
-            <span className="px-2 py-1 text-xs rounded-full bg-green-100 text-green-600">
-              Yes
-            </span>
+          <Badge variant="secondary" className="capitalize">
+            {user.role}
+          </Badge>
+        </div>
+
+        <div className="text-muted-foreground">
+          Gender
+        </div>
+        <div className="capitalize">
+          {user.sex}
+        </div>
+
+        <div className="text-muted-foreground">
+          Birthday
+        </div>
+        <div>
+          {user.birthday || "-"}
+        </div>
+
+        <div className="text-muted-foreground">
+          Nationality
+        </div>
+        <div>
+          {user.nationality}
+        </div>
+
+        <div className="text-muted-foreground">
+          Verified
+        </div>
+        <div>
+          {user.identityVerified ? (
+            <Badge className="bg-green-500 hover:bg-green-500">
+              Verified
+            </Badge>
           ) : (
-            <span className="px-2 py-1 text-xs rounded-full bg-red-100 text-red-500">
-              No
-            </span>
+            <Badge variant="destructive">
+              Not verified
+            </Badge>
           )}
         </div>
       </div>

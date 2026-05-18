@@ -1,5 +1,8 @@
 {
     "payment": {
+        "noPayment": "Không tìm thấy lịch sử thanh toán",
+        "subNoPayment": "Bạn chưa thực hiện bất kỳ khoản thanh toán nào. Bắt đầu khám phá các căn hộ của chúng tôi và đặt chỗ ở của bạn ngay hôm nay!",
+        "browseApartments": "Xem Các Căn Hộ",
         "title": "Lịch sử Thanh toán",
         "description": "Xem lịch sử thanh toán và chi tiết giao dịch của bạn.",
         "card": {

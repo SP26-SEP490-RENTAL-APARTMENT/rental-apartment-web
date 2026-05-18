@@ -156,6 +156,8 @@
         "addPackageItems": "Add Items to Package"
     },
     "booking": {
+        "title": "Booking Management",
+        "description": "Manage your apartment bookings and reservations",
         "apartment": "Apartment",
         "tenant": "Tenant",
         "status": "Status",
@@ -170,12 +172,14 @@
             "adults": "Adults",
             "children": "Children",
             "infants": "Infants",
+            "pets": "Pets",
             "actualStay": "Actual Stay",
             "package": "Package",
             "deposit": "Deposit",
             "depositStatus": "Deposit Status",
             "balanceDueDate": "Balance Due Date",
             "createdAt": "Created At",
+            "total": "Total",
             "paid": "Paid",
             "unpaid": "Unpaid",
             "submit": "Create Resident Report"

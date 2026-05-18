@@ -1,5 +1,8 @@
 {
     "payment": {
+        "noPayment": "No payment history found",
+        "subNoPayment": "You haven't made any payments yet. Start exploring our apartments and book your stay today!",
+        "browseApartments": "Browse Apartments",
         "title": "Payment History",
         "description": "View your payment history and transaction details.",
         "card": {

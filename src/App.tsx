@@ -45,12 +45,27 @@ import PaymentHistories from "./pages/Landlord/PaymentHistory/PaymentHistories";
 import Payment from "./pages/Tenant/PaymentHistory/Payment";
 import AllApartment from "./pages/Admin/AllApartments/AllApartment";
 import SupportManagement from "./pages/Admin/AdminSupport/SupportManagement";
+import { useAuthStore } from "./store/authStore";
+import { useLanguageStore } from "./store/languageStore";
+import { useSyncLanguage } from "./hooks/useSyncLanguage";
+import { useEffect } from "react";
+import OccupiedManagement from "./pages/Admin/OccupiedManagement/OccupiedManagement";
 
 /**
  * App Component - Simplified routing setup
  * All routes defined inline here for clarity
  */
 export default function App() {
+  const { user } = useAuthStore();
+
+  const syncLanguageByRole =
+    useLanguageStore((s) => s.syncLanguageByRole);
+
+  useSyncLanguage();
+
+  useEffect(() => {
+    syncLanguageByRole(user?.role);
+  }, [user?.role]);
   return (
     <BrowserRouter>
       <Routes>
@@ -150,6 +165,14 @@ export default function App() {
             element={
               <ProtectedRoute requiredRoles={["admin"]}>
                 <ApproveListings />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path={ROUTES.ADMIN_OCCUPIED_MANAGEMENT}
+            element={
+              <ProtectedRoute requiredRoles={["admin"]}>
+                <OccupiedManagement />
               </ProtectedRoute>
             }
           />

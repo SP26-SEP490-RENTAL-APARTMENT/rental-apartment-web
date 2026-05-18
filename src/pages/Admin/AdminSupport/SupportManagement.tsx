@@ -11,7 +11,7 @@ import {
   supportCategoryOptions,
   supportPriorityOptions,
   supportStatusList,
-  supportTicketSortByList,
+  SupportTicketSortByList,
 } from "@/constants/sortByList";
 import { Button } from "@/components/ui/button";
 import SupportFilter from "./components/SupportFilter";
@@ -24,7 +24,7 @@ function SupportManagement() {
   const [loading, setLoading] = useState(false);
   const [filters, setFilters] = useState<Filter>({
     sortBy: "createdAt",
-    sortOrder: "asc",
+    sortOrder: "desc",
     search: "",
   });
   const [addFilters, setAddFilters] = useState({
@@ -111,7 +111,7 @@ function SupportManagement() {
             <ManagementFilter
               filter={filters}
               setFilter={setFilters}
-              sortByList={supportTicketSortByList}
+              sortByList={SupportTicketSortByList()}
             />
             <SupportFilter
               addFilters={addFilters}

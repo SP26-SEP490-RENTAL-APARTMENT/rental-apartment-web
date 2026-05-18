@@ -8,7 +8,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useTranslation } from "react-i18next";
 
 function Payment() {
-  const {t} = useTranslation("paymentHistory");
+  const { t } = useTranslation("paymentHistory");
   const [payments, setPayments] = useState<PaymentHistory[]>([]);
   const [page, setPage] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
@@ -50,9 +50,7 @@ function Payment() {
               {t("payment.title")}
             </h1>
           </div>
-          <p className="text-gray-600">
-            {t("payment.description")}
-          </p>
+          <p className="text-gray-600">{t("payment.description")}</p>
         </div>
 
         {payments.length > 0 ? (
@@ -88,17 +86,16 @@ function Payment() {
                 </div>
               </div>
               <h2 className="text-2xl font-bold text-gray-900 mb-2">
-                No payments yet
+                {t("payment.noPayment")}
               </h2>
               <p className="text-gray-600 mb-6">
-                You haven't made any payments yet. Start exploring apartments to
-                find your perfect stay!
+                {t("payment.subNoPayment")}
               </p>
               <a
                 href="/"
                 className="inline-block px-6 py-2 bg-linear-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold rounded-lg transition-all duration-200"
               >
-                Browse Apartments
+                {t("payment.browseApartments")}
               </a>
             </CardContent>
           </Card>
