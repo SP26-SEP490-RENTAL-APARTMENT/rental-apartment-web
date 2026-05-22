@@ -10,6 +10,7 @@ import { useState, useRef } from "react";
 import { occupiedIncident } from "@/services/privateApi/tenantApi";
 import { toast } from "sonner";
 import { Loader2, Trash2, Upload } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 interface Props {
   open: boolean;
@@ -18,6 +19,7 @@ interface Props {
 }
 
 function IncidentDialog({ open, onClose, bookingId }: Props) {
+  const { t } = useTranslation("user");
   const [details, setDetails] = useState("");
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [previews, setPreviews] = useState<string[]>([]);
@@ -75,10 +77,10 @@ function IncidentDialog({ open, onClose, bookingId }: Props) {
       });
 
       await occupiedIncident.reportIncident(bookingId, formData);
-      toast.success("Incident reported successfully");
+      toast.success(t("incident.success"));
       handleClose();
     } catch (error: any) {
-      toast.error(error.response?.data?.message || "Failed to report incident");
+      toast.error(error.response?.data?.message || t("incident.failure"));
     } finally {
       setLoading(false);
     }
@@ -95,15 +97,15 @@ function IncidentDialog({ open, onClose, bookingId }: Props) {
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent className="max-w-2xl">
         <DialogHeader>
-          <DialogTitle>Report Incident</DialogTitle>
+          <DialogTitle>{t("incident.title")}</DialogTitle>
         </DialogHeader>
 
         <div className="space-y-4">
           {/* Details Textarea */}
           <div className="space-y-2">
-            <label className="text-sm font-medium">Details *</label>
+            <label className="text-sm font-medium">{t("incident.details")} *</label>
             <Textarea
-              placeholder="Describe the incident in detail..."
+              placeholder={t("incident.detailsPlaceholder")}
               value={details}
               onChange={(e) => setDetails(e.target.value)}
               rows={4}
@@ -113,8 +115,8 @@ function IncidentDialog({ open, onClose, bookingId }: Props) {
 
           {/* File Upload */}
           <div className="space-y-2">
-            <label className="text-sm font-medium">Evidence Photos *</label>
-            <div className="border-2 border-dashed border-gray-300 rounded-lg p-4">
+            <label className="text-sm font-medium">{t("incident.evidence")} *</label>
+            <div className="border-2 border-dashed border-gray-300 rounded-lg cursor-pointer">
               <input
                 ref={fileInputRef}
                 type="file"
@@ -132,9 +134,8 @@ function IncidentDialog({ open, onClose, bookingId }: Props) {
               >
                 <Upload className="w-6 h-6 text-gray-400" />
                 <span className="text-sm font-medium">
-                  Click to upload photos
+                  {t("incident.upload")}
                 </span>
-                <span className="text-xs text-gray-500">or drag and drop</span>
               </button>
             </div>
           </div>
@@ -143,7 +144,7 @@ function IncidentDialog({ open, onClose, bookingId }: Props) {
           {previews.length > 0 && (
             <div className="space-y-2">
               <label className="text-sm font-medium">
-                Photos ({previews.length})
+                {t("incident.photos")} ({previews.length})
               </label>
               <div className="grid grid-cols-3 gap-3">
                 {previews.map((preview, index) => (
@@ -173,7 +174,7 @@ function IncidentDialog({ open, onClose, bookingId }: Props) {
           {/* Action Buttons */}
           <div className="flex gap-2 justify-end pt-4">
             <Button variant="outline" onClick={handleClose} disabled={loading}>
-              Cancel
+              {t("incident.cancel")}
             </Button>
             <Button
               onClick={handleSubmit}
@@ -183,7 +184,7 @@ function IncidentDialog({ open, onClose, bookingId }: Props) {
               className="gap-2"
             >
               {loading && <Loader2 className="w-4 h-4 animate-spin" />}
-              Submit Report
+              {t("incident.submit")}
             </Button>
           </div>
         </div>

@@ -108,5 +108,13 @@
         "paymentInfo": "Thông tin thanh toán",
         "bookingHistory": "Xem Lịch sử Đặt phòng",
         "home": "Quay lại Trang Chủ"
+    },
+    "cancel": {
+        "title": "Hủy đặt phòng",
+        "subtitle": "Bạn đã hủy đặt phòng",
+        "description": "Hành động này không thể hoàn tác.",
+        "cancelBooking": "Hủy đặt phòng",
+        "keepBooking": "Giữ đặt phòng",
+        "backHome": "Quay lại Trang Chủ"
     }
 }

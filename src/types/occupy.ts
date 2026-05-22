@@ -17,4 +17,6 @@ export interface Occupy {
     disputeCreatedAt: string | null
     supportTicketCount: number
     createdAt: string
+    images: string[]
+    checkTimeImages: string[]
 }

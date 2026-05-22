@@ -11,6 +11,7 @@ import {
   Search,
   Ticket,
   MessageSquareWarning,
+  CirclePercent,
 } from "lucide-react";
 
 export const useAadminNavList = () => {
@@ -96,6 +97,11 @@ export const useAadminNavList = () => {
       title: "Occupied Incidents",
       url: "/admin/occupied-management",
       icon: MessageSquareWarning,
+    },
+    {
+      title: "Pricing Templates",
+      url: "/admin/pricing-templates",
+      icon: CirclePercent,
     },
   ];
 };

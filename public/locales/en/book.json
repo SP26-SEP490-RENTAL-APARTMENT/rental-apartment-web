@@ -108,5 +108,13 @@
         "paymentInfo": "Payment Information",
         "bookingHistory": "View Booking History",
         "home": "Back to Home"
+    },
+    "cancel": {
+        "title": "Cancel Booking",
+        "subtitle": "You have canceled your booking",
+        "description": "This action cannot be undone.",
+        "cancelBooking": "Cancel Booking",
+        "keepBooking": "Keep Booking",
+        "backHome": "Back to Home"
     }
 }

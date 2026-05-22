@@ -151,4 +151,13 @@ export const supportCategoryOptions = [
 export const occupySortByList = [
   { label: "Created At", value: "createdAt" },
   { label: "Total Price", value: "totalPrice" },
-]
+];
+
+export const PayoutSortByList = () => {
+  const { t } = useTranslation("filter");
+  return [
+    { label: t("option.date"), value: "createdAt" },
+    { label: t("option.amount"), value: "amount" },
+    { label: t("option.status"), value: "status" },
+  ];
+};

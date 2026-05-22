@@ -27,6 +27,7 @@
         "paidAt": "Ngày thanh toán",
         "amount": "Số tiền",
         "status": "Trạng thái",
-        "priority": "Độ ưu tiên"
+        "priority": "Độ ưu tiên",
+        "date": "Ngày"
     }
 }

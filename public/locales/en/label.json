@@ -4,6 +4,7 @@
         "bookings": "Bookings",
         "rooms": "Rooms",
         "payments": "Payment History",
-        "subscriptions": "Subscriptions"
+        "subscriptions": "Subscriptions",
+        "wallet": "Wallet"
     }
 }

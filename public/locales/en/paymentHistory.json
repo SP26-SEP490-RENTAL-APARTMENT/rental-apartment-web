@@ -10,7 +10,8 @@
             "deposit": "Deposit Payment",
             "fullBooking": "Full Booking Payment",
             "depositBooking": "Deposit Booking Payment",
-            "other": "Other"
+            "other": "Other",
+            "refund": "Refund"
         }
     }
 }

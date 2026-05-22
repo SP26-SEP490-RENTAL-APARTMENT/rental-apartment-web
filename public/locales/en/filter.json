@@ -27,6 +27,7 @@
         "paidAt": "Paid at",
         "amount": "Amount",
         "status": "Status",
-        "priority": "Priority"
+        "priority": "Priority",
+        "date": "Date"
     }
 }

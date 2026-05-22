@@ -8,6 +8,10 @@ import BookingViewDialog from "./components/BookingViewDialog";
 import { Card, CardContent } from "@/components/ui/card";
 import { Calendar, AlertCircle } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import ManagementFilter, {
+  type Filter,
+} from "@/components/ui/managementFilter/ManagementFilter";
+import { BookingSortByList } from "@/constants/sortByList";
 
 function BookingHistories() {
   const { t } = useTranslation("user");
@@ -19,6 +23,11 @@ function BookingHistories() {
     null,
   );
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [filters, setFilters] = useState<Filter>({
+    search: "",
+    sortBy: "createdAt",
+    sortOrder: "desc",
+  });
 
   const fetchBookingHistory = useCallback(async () => {
     setLoading(true);
@@ -26,9 +35,9 @@ function BookingHistories() {
       const response = await bookingApi.getBookingHistory({
         page,
         pageSize: 10,
-        sortBy: "createdAt",
-        sortOrder: "desc",
-        search: "",
+        sortBy: filters.sortBy,
+        sortOrder: filters.sortOrder,
+        search: filters.search,
       });
       setBookingHistory(response.data.items);
       setTotalCount(response.data.totalCount);
@@ -37,7 +46,7 @@ function BookingHistories() {
     } finally {
       setLoading(false);
     }
-  }, [page]);
+  }, [page, filters]);
 
   useEffect(() => {
     fetchBookingHistory();
@@ -66,57 +75,70 @@ function BookingHistories() {
           <p className="text-gray-600">{t("booking.description")}</p>
         </div>
 
-        {bookingHistory.length > 0 ? (
-          <>
-            {/* Bookings Grid */}
-            <div className="space-y-4 mb-10">
-              {loading
-                ? Array.from({ length: 6 }).map((_, i) => (
-                    <BookingHistorySkeleton key={i} />
-                  ))
-                : bookingHistory &&
-                  bookingHistory.map((item) => (
-                    <BookingHistoryCard
-                      key={item.bookingId}
-                      data={item}
-                      onClick={handleCardClick}
-                    />
-                  ))}
-            </div>
-
-            {/* Pagination */}
-            {totalPage > 1 && (
-              <div className="flex justify-center">
-                <PaginationComponent
-                  page={page}
-                  totalPages={totalPage}
-                  onPageChange={setPage}
-                />
-              </div>
-            )}
-          </>
-        ) : (
-          /* Empty State */
-          <Card className="border-0 shadow-sm bg-white">
-            <CardContent className="py-16 text-center">
-              <div className="flex justify-center mb-4">
-                <div className="p-4 bg-blue-50 rounded-full">
-                  <AlertCircle className="h-8 w-8 text-blue-600" />
-                </div>
-              </div>
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">
-                {t("booking.noBooking")}
-              </h2>
-              <p className="text-gray-600 mb-6">{t("booking.subNoBooking")}</p>
-              <a
-                href="/"
-                className="inline-block px-6 py-2 bg-linear-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold rounded-lg transition-all duration-200"
-              >
-                {t("booking.browseApartments")}
-              </a>
+        <div className="space-y-6">
+          <Card>
+            <CardContent>
+              <ManagementFilter
+                filter={filters}
+                setFilter={setFilters}
+                sortByList={BookingSortByList()}
+              />
             </CardContent>
           </Card>
-        )}
+          {bookingHistory.length > 0 ? (
+            <>
+              {/* Bookings Grid */}
+              <div className="space-y-4 mb-10">
+                {loading
+                  ? Array.from({ length: 6 }).map((_, i) => (
+                      <BookingHistorySkeleton key={i} />
+                    ))
+                  : bookingHistory &&
+                    bookingHistory.map((item) => (
+                      <BookingHistoryCard
+                        key={item.bookingId}
+                        data={item}
+                        onClick={handleCardClick}
+                      />
+                    ))}
+              </div>
+
+              {/* Pagination */}
+              {totalPage > 1 && (
+                <div className="flex justify-center">
+                  <PaginationComponent
+                    page={page}
+                    totalPages={totalPage}
+                    onPageChange={setPage}
+                  />
+                </div>
+              )}
+            </>
+          ) : (
+            /* Empty State */
+            <Card className="border-0 shadow-sm bg-white">
+              <CardContent className="py-16 text-center">
+                <div className="flex justify-center mb-4">
+                  <div className="p-4 bg-blue-50 rounded-full">
+                    <AlertCircle className="h-8 w-8 text-blue-600" />
+                  </div>
+                </div>
+                <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                  {t("booking.noBooking")}
+                </h2>
+                <p className="text-gray-600 mb-6">
+                  {t("booking.subNoBooking")}
+                </p>
+                <a
+                  href="/"
+                  className="inline-block px-6 py-2 bg-linear-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold rounded-lg transition-all duration-200"
+                >
+                  {t("booking.browseApartments")}
+                </a>
+              </CardContent>
+            </Card>
+          )}
+        </div>
       </div>
 
       {bookingDetail && (

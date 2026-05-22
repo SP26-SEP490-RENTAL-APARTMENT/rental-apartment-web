@@ -228,5 +228,37 @@
         "refundBooking": "Refund",
         "fullBooking": "Full Booking Payment",
         "depositBooking": "Deposit Booking Payment"
+    },
+    "payout": {
+        "title": "My Wallet",
+        "subtitle": "View your wallet balance and payout history",
+        "amount": "Amount",
+        "status": "Status",
+        "message": "Message",
+        "date": "Withdrawal Date",
+        "resetFilters": "Reset Filters",
+        "total": "Total",
+        "success": "Success",
+        "failed": "Failed",
+        "totalBalance": "Total Balance",
+        "availableBalance": "Available Balance",
+        "pendingBalance": "Pending Balance",
+        "withdraw": "Withdraw",
+        "updatedAt": "Updated At",
+        "form": {
+            "title": "Withdraw Form",
+            "selectBank": "Select Bank",
+            "accountNumber": "Account number",
+            "amount": "Amount to Withdraw",
+            "message": "Message (optional)",
+            "cancel": "Cancel",
+            "submit": "Withdraw",
+            "messagePlaceholder": "Enter a message for the withdrawal (optional)",
+            "bank": "Bank"
+        },
+        "toast": {
+            "success": "Withdrawal request submitted successfully",
+            "error": "Failed to submit withdrawal request"
+        }
     }
 }

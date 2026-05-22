@@ -22,6 +22,8 @@ const getStatusColor = (status: string) => {
       return "bg-emerald-100 text-emerald-700 border-0";
     case "cancelled":
       return "bg-red-100 text-red-700 border-0";
+    case "completed":
+      return "bg-green-100 text-green-700 border-0";
     default:
       return "bg-gray-100 text-gray-700 border-0";
   }
@@ -127,8 +129,7 @@ export default function BookingHistoryCard({ data, onClick }: Props) {
               {t("booking.guests")}
             </p>
             <p className="font-semibold text-gray-900">
-              {data.noOfAdults + data.noOfChildren}{" "}
-              {t("booking.guestsUnit")}
+              {data.noOfAdults + data.noOfChildren} {t("booking.guestsUnit")}
             </p>
           </div>
         </div>

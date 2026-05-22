@@ -20,6 +20,8 @@ import {
   Package,
   Coins,
   BadgePlus,
+  FileCog,
+  FileSliders,
 } from "lucide-react";
 import { useState } from "react";
 import useAmenity from "@/hooks/useAmenity";
@@ -51,6 +53,8 @@ interface Props {
   onAddPhotos: (apartmentId: string, files: File[]) => Promise<void>;
   onChangePrice: (apartmentId: string) => void;
   onViewPriceChange: (apartmentId: string) => void;
+  onApplyPricingTemplate: (apartmentId: string) => void;
+  onViewAvailablePolicies: (apartmentId: string) => void;
 }
 function ApartmentAction({
   apartment,
@@ -65,6 +69,8 @@ function ApartmentAction({
   onAddPhotos,
   onChangePrice,
   onViewPriceChange,
+  onApplyPricingTemplate,
+  onViewAvailablePolicies
 }: Props) {
   const { t } = useTranslation("landlord");
   const { i18n } = useTranslation();
@@ -189,6 +195,34 @@ function ApartmentAction({
               <Button
                 size="sm"
                 onClick={() => onViewPriceChange(apartment.apartmentId)}
+              >
+                <Eye />
+              </Button>
+            </div>
+          </TooltipContent>
+        </Tooltip>
+
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              size="sm"
+              className="bg-gray-400 text-black hover:bg-gray-500"
+            >
+              <FileCog />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <div>
+              <Button
+                size="sm"
+                variant="secondary"
+                onClick={() => onApplyPricingTemplate(apartment.apartmentId)}
+              >
+                <FileSliders />
+              </Button>
+              <Button
+                size="sm"
+                onClick={() => onViewAvailablePolicies(apartment.apartmentId)}
               >
                 <Eye />
               </Button>

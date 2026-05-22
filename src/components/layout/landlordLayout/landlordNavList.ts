@@ -5,6 +5,7 @@ import {
   Hotel,
   Layers,
   CreditCard,
+  Wallet,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
@@ -40,6 +41,11 @@ export const useLandlordNavList = () => {
       title: t("landlord.subscriptions"),
       url: "/landlord/my-subscriptions",
       icon: Layers,
+    },
+    {
+      title: t("landlord.wallet"),
+      url: "/landlord/my-wallet",
+      icon: Wallet,
     },
   ];
 };

@@ -33,7 +33,7 @@ import Identity from "./pages/Tenant/Identity/Identity";
 import WishlistPage from "./pages/Tenant/Wishlist/WishlistPage";
 import ApproveListings from "./pages/Admin/ApproveListings/ApproveListings";
 import BookingHistories from "./pages/Tenant/BookingHistory/BookingHistories";
-import FinishPayment from "./pages/Tenant/FinishPayment/FinishPayment";
+import FinishPayment from "./pages/Tenant/ResultScreen/FinishPayment/FinishPayment";
 import BookingManagement from "./pages/Landlord/BookingManagement/BookingManagement";
 import Inspections from "./pages/Admin/Inspection/Inspection";
 import MySubscription from "./pages/Landlord/MySubscription/MySubscription";
@@ -50,6 +50,9 @@ import { useLanguageStore } from "./store/languageStore";
 import { useSyncLanguage } from "./hooks/useSyncLanguage";
 import { useEffect } from "react";
 import OccupiedManagement from "./pages/Admin/OccupiedManagement/OccupiedManagement";
+import MyWallet from "./pages/Landlord/Wallet/MyWallet";
+import PricingTemplates from "./pages/Admin/PricingTemplate/PricingTemplates";
+import CancelPayment from "./pages/Tenant/ResultScreen/CancelPayment/CancelPayment";
 
 /**
  * App Component - Simplified routing setup
@@ -192,6 +195,14 @@ export default function App() {
               </ProtectedRoute>
             }
           />
+          <Route
+            path={ROUTES.ADMIN_PRICING_TEMPLATES}
+            element={
+              <ProtectedRoute requiredRoles={["admin"]}>
+                <PricingTemplates />
+              </ProtectedRoute>
+            }
+          />
         </Route>
 
         {/* ========== Landlord Routes ========== */}
@@ -241,6 +252,14 @@ export default function App() {
             element={
               <ProtectedRoute requiredRoles={["landlord", "tenant"]}>
                 <MySubscription />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path={ROUTES.LANDLORD_MY_WALLET}
+            element={
+              <ProtectedRoute requiredRoles={["landlord", "tenant"]}>
+                <MyWallet />
               </ProtectedRoute>
             }
           />
@@ -310,6 +329,14 @@ export default function App() {
           element={
             <ProtectedRoute requiredRoles={["tenant", "landlord"]}>
               <FinishPayment />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path={ROUTES.TENANT_CANCEL_PAYMENT}
+          element={
+            <ProtectedRoute requiredRoles={["tenant", "landlord"]}>
+              <CancelPayment />
             </ProtectedRoute>
           }
         />

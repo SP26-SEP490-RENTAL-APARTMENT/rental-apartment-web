@@ -16,6 +16,8 @@ export const ApartmentColumns = (
   onAddPhotos: (apartmentId: string, files: File[]) => Promise<void>,
   onChangePrice: (apartmentId: string) => void,
   onViewPriceChange: (apartmentId: string) => void,
+  onApplyPricingTemplate: (apartmentId: string) => void,
+  onViewAvailablePolicies: (apartmentId: string) => void,
 ): ColumnDef<Apartment>[] => {
   const { t } = useTranslation("landlord");
   const { t: statusT } = useTranslation("status");
@@ -98,6 +100,8 @@ export const ApartmentColumns = (
             onAddPhotos={onAddPhotos}
             onChangePrice={onChangePrice}
             onViewPriceChange={onViewPriceChange}
+            onApplyPricingTemplate={onApplyPricingTemplate}
+            onViewAvailablePolicies={onViewAvailablePolicies}
           />
         );
       },

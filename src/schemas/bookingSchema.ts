@@ -41,12 +41,12 @@ export const bookingConfirmSchema = z.object({
   noOfChildren: z
     .number()
     .int()
-    .positive("Number of adults must be at least 1"),
+    .min(0, "Number of children cannot be negative"),
   noOfInfants: z.number().int().min(0, "Number of infants cannot be negative"),
   noOfPets: z.number().int().min(0, "Number of pets cannot be negative"),
   packageId: z.string().nullable(),
   paymentMode: z.enum(["partial", "full"]),
-  paymentProvider: z.enum(["stripe", "momo"]),
+  paymentProvider: z.enum(["stripe", "momo", "payos"]),
   devicePlatform: z.enum(["web"]),
 });
 

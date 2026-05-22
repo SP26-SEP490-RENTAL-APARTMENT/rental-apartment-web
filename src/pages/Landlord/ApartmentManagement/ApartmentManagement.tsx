@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import {
   apartmentManagementApi,
   priceChangeApi,
+  pricingPolicyApi,
   roomManagementApi,
 } from "@/services/privateApi/landlordApi";
 import type { Apartment } from "@/types/apartment";
@@ -43,11 +44,15 @@ import GeneralDialog from "./components/PriceDialog/GeneralDialog";
 import type { PriceChange } from "@/types/priceChange";
 import PriceChangeDialog from "./components/PriceDialog/PriceChangeDialog";
 import { useTranslation } from "react-i18next";
+import type { AvailablePolicy, PricingTemplate } from "@/types/pricingTemplate";
+import PricingPolicyForm from "./components/PricingPolicy/PricingPolicyForm";
+import ViewAvailablePolicy from "./components/PricingPolicy/ViewAvailablePolicy";
 
 function ApartmentManagement() {
   const { t } = useTranslation("landlord");
   const { t: commonT } = useTranslation("common");
   const [note, setNote] = useState<string>("");
+  const [templates, setTemplates] = useState<PricingTemplate[]>([]);
   const [packages, setPackages] = useState<Package[]>([]);
   const [apartmentList, setApartmentList] = useState<Apartment[]>([]);
   const [priceChanges, setPriceChanges] = useState<PriceChange[]>([]);
@@ -71,6 +76,8 @@ function ApartmentManagement() {
   const [selectedApartment, setSelectedApartment] = useState<Apartment | null>(
     null,
   );
+  const [availablePolicies, setAvailablePolicies] =
+    useState<AvailablePolicy | null>(null);
   const [selectedApartmentForPackage, setSelectedApartmentForPackage] =
     useState<Apartment | null>(null);
   const [selectedApartmentId, setSelectedApartmentId] = useState<string>("");
@@ -83,6 +90,8 @@ function ApartmentManagement() {
     sendApproveForm: false,
     priceChangeForm: false,
     priceChangeDialog: false,
+    pricingPolicyForm: false,
+    pricingPolicyDialog: false,
   });
 
   const fetchApartmentList = useCallback(async () => {
@@ -105,6 +114,16 @@ function ApartmentManagement() {
       setLoading(false);
     }
   }, [page, filters, status]);
+
+  const fetchPricingTemplates = useCallback(async () => {
+    try {
+      const response = await pricingPolicyApi.getAllPricingPolicy();
+      setTemplates(response.data);
+    } catch (error: unknown) {
+      console.log(error);
+      toast.error("Failed to fetch pricing templates");
+    }
+  }, []);
 
   const handleCreateApartment = async (
     data: CreateApartmentFormData | UpdateApartmentFormData,
@@ -306,9 +325,21 @@ function ApartmentManagement() {
     }
   };
 
+  const handleGetAvailablePolicies = async (apartmentId: string) => {
+    try {
+      const response =
+        await pricingPolicyApi.viewAvailablePolicies(apartmentId);
+      setAvailablePolicies(response.data);
+      setIsOpen((prev) => ({ ...prev, pricingPolicyDialog: true }));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     fetchApartmentList();
-  }, [fetchApartmentList]);
+    fetchPricingTemplates();
+  }, [fetchApartmentList, fetchPricingTemplates]);
 
   const handlePageChange = (newPage: number) => {
     setPage(newPage);
@@ -368,6 +399,11 @@ function ApartmentManagement() {
   const triggerViewPriceChange = (apartmentId: string) => {
     handleGetPriceChange(apartmentId);
     setIsOpen((prev) => ({ ...prev, priceChangeDialog: true }));
+  };
+
+  const triggerApplyPricingTemplate = (apartmentId: string) => {
+    setSelectedApartmentId(apartmentId);
+    setIsOpen((prev) => ({ ...prev, pricingPolicyForm: true }));
   };
 
   const handleResetFilters = () => {
@@ -448,6 +484,8 @@ function ApartmentManagement() {
                 handleAddPhotos,
                 triggerChangePrice,
                 triggerViewPriceChange,
+                triggerApplyPricingTemplate,
+                handleGetAvailablePolicies,
               )}
               data={apartmentList}
               limit={10}
@@ -548,6 +586,23 @@ function ApartmentManagement() {
           setIsOpen((prev) => ({ ...prev, priceChangeDialog: false }))
         }
         priceChanges={priceChanges}
+      />
+
+      <PricingPolicyForm
+        onClose={() =>
+          setIsOpen((prev) => ({ ...prev, pricingPolicyForm: false }))
+        }
+        open={isOpen.pricingPolicyForm}
+        templateList={templates}
+        apartmentId={selectedApartmentId}
+      />
+
+      <ViewAvailablePolicy
+        onClose={() =>
+          setIsOpen((prev) => ({ ...prev, pricingPolicyDialog: false }))
+        }
+        open={isOpen.pricingPolicyDialog}
+        template={availablePolicies}
       />
     </div>
   );

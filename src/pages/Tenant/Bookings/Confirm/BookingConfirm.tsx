@@ -51,7 +51,7 @@ function BookingConfirm() {
       noOfPets: quoteData?.noOfPets || 0,
       packageId: quoteData?.packageId || null,
       paymentMode: "partial" as const,
-      paymentProvider: "stripe" as const,
+      paymentProvider: "payos" as const,
       devicePlatform: "web" as const,
     },
   });
@@ -359,6 +359,22 @@ function BookingConfirm() {
                       onValueChange={field.onChange}
                       className="space-y-3"
                     >
+                      <Label
+                        htmlFor="payos"
+                        className={`flex items-center gap-3 rounded-lg border-2 p-4 cursor-pointer transition-all ${
+                          field.value === "payos"
+                            ? "border-blue-500 bg-blue-50"
+                            : "border-gray-200 hover:border-blue-400"
+                        }`}
+                      >
+                        <RadioGroupItem value="payos" id="payos" />
+                        <div className="flex-1">
+                          <span className="font-medium text-gray-900">
+                            PayOS
+                          </span>
+                          
+                        </div>
+                      </Label>
                       {/* Stripe */}
                       <Label
                         htmlFor="stripe"
@@ -380,7 +396,7 @@ function BookingConfirm() {
                       </Label>
 
                       {/* Momo */}
-                      <Label
+                      {/* <Label
                         htmlFor="momo"
                         className={`flex items-center gap-3 rounded-lg border-2 p-4 cursor-pointer transition-all ${
                           field.value === "momo"
@@ -397,7 +413,7 @@ function BookingConfirm() {
                             ({t("confirm.momoWallet")})
                           </span>
                         </div>
-                      </Label>
+                      </Label> */}
                     </RadioGroup>
                   )}
                 />

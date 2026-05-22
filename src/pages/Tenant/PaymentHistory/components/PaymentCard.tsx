@@ -1,7 +1,14 @@
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import type { PaymentHistory } from "@/types/paymentHistory";
-import { CheckCircle, Clock, CreditCard, Wallet, XCircle } from "lucide-react";
+import {
+  CheckCircle,
+  Clock,
+  CreditCard,
+  Wallet,
+  Wallet2,
+  XCircle,
+} from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 const getStatus = (status: PaymentHistory["status"]) => {
@@ -47,6 +54,12 @@ const getMethodIcon = (method: string) => {
         label: "MoMo",
       };
 
+    case "landlord_wallet_penalty":
+      return {
+        icon: <Wallet2 className="w-5 h-5 text-pink-500" />,
+        label: "Landlord Wallet (Penalty)",
+      };
+
     default:
       return {
         icon: <Wallet className="w-5 h-5 text-gray-400" />,
@@ -63,10 +76,14 @@ function PaymentCard({ payment }: { payment: PaymentHistory }) {
   const getPurpose = (purpose: string) => {
     switch (purpose) {
       case "booking_full_payment":
-        return <Badge className="bg-blue-500">{t("payment.card.fullBooking")}</Badge>;
+        return (
+          <Badge className="bg-blue-500">{t("payment.card.fullBooking")}</Badge>
+        );
       case "booking_deposit":
         return (
-          <Badge className="bg-red-500">{t("payment.card.depositBooking")}</Badge>
+          <Badge className="bg-red-500">
+            {t("payment.card.depositBooking")}
+          </Badge>
         );
       default:
         return <Badge variant="outline">{t("payment.card.other")}</Badge>;
@@ -76,10 +93,16 @@ function PaymentCard({ payment }: { payment: PaymentHistory }) {
   const getMode = (mode: string) => {
     switch (mode) {
       case "upfront":
-        return <Badge className="bg-blue-500">{t("payment.card.upfront")}</Badge>;
+        return (
+          <Badge className="bg-blue-500">{t("payment.card.upfront")}</Badge>
+        );
       case "deposit":
         return (
           <Badge className="bg-red-500">{t("payment.card.deposit")}</Badge>
+        );
+      case "refund":
+        return (
+          <Badge className="bg-black">{t("payment.card.refund")}</Badge>
         );
       default:
         return <Badge variant="outline">{t("payment.card.other")}</Badge>;
@@ -104,7 +127,7 @@ function PaymentCard({ payment }: { payment: PaymentHistory }) {
               </p>
             </div>
           </div>
-          <Badge 
+          <Badge
             className={`flex items-center gap-1.5 font-medium px-3 py-1.5 rounded-full ${status.className}`}
           >
             {status.icon}

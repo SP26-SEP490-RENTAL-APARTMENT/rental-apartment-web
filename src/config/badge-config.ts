@@ -89,3 +89,14 @@ export const BED_TYPE_CONFIG = {
     label: "room.bedType.shared",
   },
 };
+
+export const PAYOUT_STATUS_CONFIG = {
+  success: {
+    className: "bg-green-100 text-green-700",
+    label: "payout.success",
+  },
+  failed: {
+    className: "bg-red-100 text-red-700",
+    label: "payout.failed",
+  },
+};

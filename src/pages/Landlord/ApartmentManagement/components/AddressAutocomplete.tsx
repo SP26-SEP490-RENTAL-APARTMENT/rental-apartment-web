@@ -120,7 +120,7 @@ export default function AddressAutocomplete({ onSelect, value }: Props) {
           setShowResults(false);
         }}
         placeholder={t("apartment.addApartment.addressPlaceholder")}
-        className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+        className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent"
       />
 
       {/* Loading indicator */}

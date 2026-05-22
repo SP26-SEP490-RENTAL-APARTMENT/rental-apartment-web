@@ -97,7 +97,11 @@ function RoomForm({ isOpen, mode, onClose, onSubmit, room, apartment }: Props) {
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-106.25">
         <DialogHeader>
-          <DialogTitle>{isCreate ? t("apartment.room.createTitle") : t("apartment.room.updateTitle")}</DialogTitle>
+          <DialogTitle>
+            {isCreate
+              ? t("apartment.room.createTitle")
+              : t("apartment.room.updateTitle")}
+          </DialogTitle>
         </DialogHeader>
         <form className="space-y-4" onSubmit={handleSubmit(handleFormSubmit)}>
           <div className="grid gap-4 py-4">
@@ -136,86 +140,88 @@ function RoomForm({ isOpen, mode, onClose, onSubmit, room, apartment }: Props) {
                 </p>
               )}
             </div>
-            <div className="grid gap-2">
-              <Label htmlFor="roomType">{t("apartment.room.type")}</Label>
-              <Controller
-                name="roomType"
-                control={control}
-                render={({ field }) => (
-                  <Select
-                    value={field.value || ""}
-                    onValueChange={field.onChange}
-                  >
-                    <SelectTrigger id="roomType">
-                      <SelectValue placeholder="Select a type" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="private_single">
-                        {statusT("room.roomType.pSingle")}
-                      </SelectItem>
-                      <SelectItem value="private_double">
-                        {statusT("room.roomType.pDouble")}
-                      </SelectItem>
-                      <SelectItem value="shared_bed">
-                        {statusT("room.roomType.sBed")}
-                      </SelectItem>
-                      <SelectItem value="studio">
-                        {statusT("room.roomType.studio")}
-                      </SelectItem>
-                      <SelectItem value="other">
-                        {statusT("room.roomType.other")}
-                      </SelectItem>
-                    </SelectContent>
-                  </Select>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="grid gap-2">
+                <Label htmlFor="roomType">{t("apartment.room.type")}</Label>
+                <Controller
+                  name="roomType"
+                  control={control}
+                  render={({ field }) => (
+                    <Select
+                      value={field.value || ""}
+                      onValueChange={field.onChange}
+                    >
+                      <SelectTrigger id="roomType">
+                        <SelectValue placeholder="Select a type" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="private_single">
+                          {statusT("room.roomType.pSingle")}
+                        </SelectItem>
+                        <SelectItem value="private_double">
+                          {statusT("room.roomType.pDouble")}
+                        </SelectItem>
+                        <SelectItem value="shared_bed">
+                          {statusT("room.roomType.sBed")}
+                        </SelectItem>
+                        <SelectItem value="studio">
+                          {statusT("room.roomType.studio")}
+                        </SelectItem>
+                        <SelectItem value="other">
+                          {statusT("room.roomType.other")}
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
+                {errors.roomType && (
+                  <p className="text-sm text-destructive">
+                    {errors.roomType.message}
+                  </p>
                 )}
-              />
-              {errors.roomType && (
-                <p className="text-sm text-destructive">
-                  {errors.roomType.message}
-                </p>
-              )}
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="bedType">{t("apartment.room.bed")}</Label>
-              <Controller
-                name="bedType"
-                control={control}
-                render={({ field }) => (
-                  <Select
-                    value={field.value || ""}
-                    onValueChange={field.onChange}
-                  >
-                    <SelectTrigger id="bedType">
-                      <SelectValue placeholder="Select a type" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="single">
-                        {statusT("room.bedType.single")}
-                      </SelectItem>
-                      <SelectItem value="double">
-                        {statusT("room.bedType.double")}
-                      </SelectItem>
-                      <SelectItem value="queen">
-                        {statusT("room.bedType.queen")}
-                      </SelectItem>
-                      <SelectItem value="king">
-                        {statusT("room.bedType.king")}
-                      </SelectItem>
-                      <SelectItem value="bunk">
-                        {statusT("room.bedType.bunk")}
-                      </SelectItem>
-                      <SelectItem value="shared">
-                        {statusT("room.bedType.shared")}
-                      </SelectItem>
-                    </SelectContent>
-                  </Select>
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="bedType">{t("apartment.room.bed")}</Label>
+                <Controller
+                  name="bedType"
+                  control={control}
+                  render={({ field }) => (
+                    <Select
+                      value={field.value || ""}
+                      onValueChange={field.onChange}
+                    >
+                      <SelectTrigger id="bedType">
+                        <SelectValue placeholder="Select a type" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="single">
+                          {statusT("room.bedType.single")}
+                        </SelectItem>
+                        <SelectItem value="double">
+                          {statusT("room.bedType.double")}
+                        </SelectItem>
+                        <SelectItem value="queen">
+                          {statusT("room.bedType.queen")}
+                        </SelectItem>
+                        <SelectItem value="king">
+                          {statusT("room.bedType.king")}
+                        </SelectItem>
+                        <SelectItem value="bunk">
+                          {statusT("room.bedType.bunk")}
+                        </SelectItem>
+                        <SelectItem value="shared">
+                          {statusT("room.bedType.shared")}
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
+                {errors.bedType && (
+                  <p className="text-sm text-destructive">
+                    {errors.bedType.message}
+                  </p>
                 )}
-              />
-              {errors.bedType && (
-                <p className="text-sm text-destructive">
-                  {errors.bedType.message}
-                </p>
-              )}
+              </div>
             </div>
             <div className="grid gap-2">
               <Label>{t("apartment.room.size")}</Label>
@@ -261,7 +267,9 @@ function RoomForm({ isOpen, mode, onClose, onSubmit, room, apartment }: Props) {
               {t("apartment.button.cancel")}
             </Button>
             <Button type="submit" disabled={isSubmitting}>
-              {isCreate ? t("apartment.room.create") : t("apartment.room.update")}
+              {isCreate
+                ? t("apartment.room.create")
+                : t("apartment.room.update")}
             </Button>
           </DialogFooter>
         </form>

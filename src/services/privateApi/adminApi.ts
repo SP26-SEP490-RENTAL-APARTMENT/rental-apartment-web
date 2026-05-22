@@ -3,6 +3,10 @@ import type { CreateAmenityFormData } from "@/schemas/amenitySchema";
 import type { AssignInspectionFormData } from "@/schemas/assignInspection";
 import type { CatalogFormData } from "@/schemas/catalogSchema";
 import type { DocumentApproveFormData } from "@/schemas/documentApproveSchema";
+import type {
+  CreateTemplateFormData,
+  UpdateTemplateFormData,
+} from "@/schemas/pricingTemplateSchema";
 import type { Amenity } from "@/types/amenity";
 import type { ApiResponse } from "@/types/api";
 import type { NearbyAttraction } from "@/types/nearbyAttraction";
@@ -36,9 +40,9 @@ export const userManagementApi = {
     phone: string;
     identityVerified: boolean;
     sex: string;
-    birthday: string
-    nationality: string
-    nationalIdCardNumber: string
+    birthday: string;
+    nationality: string;
+    nationalIdCardNumber: string;
   }): Promise<ApiResponse<null>> => apiConfig.privateApi.post("/User", data),
   updateUser: (
     userId: string,
@@ -204,4 +208,22 @@ export const supportManagementApi = {
 export const adminOccupyApi = {
   getAllOccupies: (params: ParamsProp) =>
     apiConfig.privateApi.get("/admin/bookings/reported", { params }),
+};
+
+export const pricingTemplateManagementApi = {
+  getAllTemplates: () => apiConfig.privateApi.get("/admin/pricing/templates"),
+  createTemplate: (data: CreateTemplateFormData) =>
+    apiConfig.privateApi.post("/admin/pricing/templates", data),
+  updateTemplate: (templateId: string, data: UpdateTemplateFormData) =>
+    apiConfig.privateApi.put(`/admin/pricing/templates/${templateId}`, data),
+  switchTemplateStatus: (templateId: string, active: boolean) =>
+    apiConfig.privateApi.patch(
+      `/admin/pricing/templates/${templateId}/status`,
+      null,
+      {
+        params: {
+          active,
+        },
+      },
+    ),
 };

@@ -78,6 +78,7 @@
         "guests": "Guests",
         "guestsUnit": "guest(s)",
         "apartmentName": "Apartment Name",
+        "completed": "Completed",
         "checkIn": "Check-in",
         "checkOut": "Check-out",
         "status": "Status",
@@ -85,6 +86,7 @@
         "cancelBooking": "Cancel Booking",
         "noBookings": "No bookings found",
         "details": "Booking Details",
+        "cancelled": "Cancelled",
         "name": "Name",
         "paymentMode": "Payment Mode",
         "packagePrice": "Package Price",
@@ -154,5 +156,17 @@
     "home": {
         "noApartments": "No apartments found",
         "subNoApartments": "Try adjusting your search criteria or explore our featured apartments."
+    },
+    "incident": {
+        "title": "Report an Incident",
+        "details": "Incident Details",
+        "detailsPlaceholder": "Describe the incident in detail...",
+        "evidence": "Upload Evidence",
+        "upload": "Click to upload photos",
+        "photos": "Photos",
+        "submit": "Submit Report",
+        "cancel": "Cancel",
+        "success": "Incident reported successfully! Our team will review your report and get back to you shortly.",
+        "failure": "An error occurred while submitting your incident report. Please try again later."
     }
 }

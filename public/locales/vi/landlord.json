@@ -229,5 +229,37 @@
         "refundBooking": "Hoàn tiền đặt phòng",
         "fullBooking": "Thanh toán toàn bộ đặt phòng",
         "depositBooking": "Thanh toán đặt cọc đặt phòng"
+    },
+    "payout": {
+        "title": "Ví của tôi",
+        "subtitle": "Xem số dư ví và lịch sử rút tiền",
+        "amount": "Số tiền",
+        "status": "Trạng thái",
+        "message": "Thông báo",
+        "date": "Ngày rút tiền",
+        "resetFilters": "Đặt lại",
+        "total": "Tổng cộng",
+        "success": "Thành công",
+        "failed": "Thất bại",
+        "totalBalance": "Tổng số dư",
+        "availableBalance": "Số dư khả dụng",
+        "pendingBalance": "Số dư đang chờ",
+        "withdraw": "Rút tiền",
+        "updatedAt": "Cập nhật lúc",
+        "form": {
+            "title": "Form Rút Tiền",
+            "selectBank": "Chọn Ngân Hàng",
+            "accountNumber": "Số Tài Khoản",
+            "amount": "Số Tiền Rút",
+            "message": "Thông báo (tùy chọn)",
+            "cancel": "Hủy",
+            "submit": "Rút Tiền",
+            "messagePlaceholder": "Nhập thông báo cho việc rút tiền (tùy chọn)",
+            "bank": "Ngân Hàng"
+        },
+        "toast": {
+            "success": "Yêu cầu rút tiền đã được gửi thành công",
+            "error": "Không thể gửi yêu cầu rút tiền"
+        }
     }
 }

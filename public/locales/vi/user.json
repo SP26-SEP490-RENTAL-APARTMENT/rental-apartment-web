@@ -76,6 +76,8 @@
         "nights": "Số đêm",
         "nightsUnit": "đêm",
         "guests": "Số khách",
+        "cancelled": "Đã hủy",
+        "completed": "Đã hoàn thành",
         "guestsUnit": "người",
         "apartmentName": "Tên căn hộ",
         "checkIn": "Nhận phòng",
@@ -154,5 +156,17 @@
     "home": {
         "noApartments": "Không tìm thấy căn hộ",
         "subNoApartments": "Hãy điều chỉnh tiêu chí tìm kiếm của bạn hoặc khám phá các căn hộ nổi bật của chúng tôi."
+    },
+    "incident": {
+        "title": "Báo cáo Sự cố",
+        "details": "Chi tiết Sự cố",
+        "detailsPlaceholder": "Mô tả sự cố một cách chi tiết...",
+        "evidence": "Tải lên Chứng cứ",
+        "upload": "Nhấp để tải lên ảnh",
+        "photos": "Ảnh",
+        "submit": "Gửi Báo cáo",
+        "cancel": "Hủy",
+        "success": "Sự cố đã được báo cáo thành công! Đội ngũ của chúng tôi sẽ xem xét báo cáo của bạn và phản hồi trong thời gian sớm nhất.",
+        "failure": "Đã xảy ra lỗi khi gửi báo cáo sự cố. Vui lòng thử lại sau."
     }
 }

@@ -245,7 +245,7 @@ function BookingViewDialog({ open, onClose, booking }: Props) {
               </div>
             </div>
 
-            {!booking.actualCheckIn && (
+            {!booking.actualCheckIn && booking.status === "paid" && (
               <div className="flex justify-end">
                 <Button onClick={() => setReportDialog(true)}>
                   Report Incident

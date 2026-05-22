@@ -10,7 +10,8 @@
             "deposit": "Thanh toán đặt cọc",
             "fullBooking": "Thanh toán toàn bộ đặt phòng",
             "depositBooking": "Thanh toán đặt cọc đặt phòng",
-            "other": "Khác"
+            "other": "Khác",
+            "refund": "Hoàn tiền"
         }
     }
 }
