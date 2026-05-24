@@ -13,6 +13,7 @@ import SubsciptionPlan from "./pages/Admin/SubsciptionPlan/SubsciptionPlan";
 
 import LandlordDashboard from "./pages/Landlord/LandlordDasboard/LandlordDashboard";
 import ApartmentManagement from "./pages/Landlord/ApartmentManagement/ApartmentManagement";
+import BookingSummaryPage from "./pages/Landlord/Reports/BookingSummaryPage";
 
 import Profile from "./pages/Tenant/Profile/Profile";
 
@@ -260,6 +261,14 @@ export default function App() {
             element={
               <ProtectedRoute requiredRoles={["landlord", "tenant"]}>
                 <MyWallet />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path={ROUTES.LANDLORD_REPORTS_BOOKING_SUMMARY}
+            element={
+              <ProtectedRoute requiredRoles={["landlord", "tenant"]}>
+                <BookingSummaryPage />
               </ProtectedRoute>
             }
           />
