@@ -1,8 +1,66 @@
+export interface ReportDimensionRequestDto {
+  field: string;
+  alias?: string;
+}
+
+export interface ReportMetricRequestDto {
+  field: string;
+  aggregation?: string;
+  alias?: string;
+}
+
+export interface ReportFilterRequestDto {
+  target?: string; // 'dimension' | 'metric'
+  field: string;
+  operator?: string;
+  value?: string;
+  values?: string[];
+}
+
+export interface ReportRunRequestDto {
+  from?: string; // ISO
+  to?: string; // ISO
+  searchTerm?: string;
+  dimensions?: ReportDimensionRequestDto[];
+  metrics?: ReportMetricRequestDto[];
+  filters?: ReportFilterRequestDto[];
+  page?: number;
+  pageSize?: number;
+}
+
+export interface ReportResultRowDto {
+  dimensions: Record<string, any>;
+  metrics: Record<string, number>;
+}
+
+export interface ReportResultPageDto {
+  reportId: string;
+  name: string;
+  rows: ReportResultRowDto[];
+  totalMetrics: Record<string, number>;
+  totalCount?: number;
+  page?: number;
+  pageSize?: number;
+}
+
+export interface ReportSchemaDto {
+  dimensions: string[];
+  metricFields: string[];
+  aggregations: string[];
+  operators: string[];
+}
 export interface ReportSchema {
   dimensions: string[];
   metricFields: string[];
   aggregations: string[];
   operators: string[];
+}
+
+export interface ReportQueryConfigResponse {
+  DimensionsJson?: string | null;
+  MetricsJson?: string | null;
+  FiltersJson?: string | null;
+  TimeRangeJson?: string | null;
 }
 
 export interface ReportDimensionRequest {

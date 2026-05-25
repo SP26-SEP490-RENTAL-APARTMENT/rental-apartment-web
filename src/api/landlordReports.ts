@@ -7,6 +7,7 @@ import type {
   ReportRunRequest,
   ReportSchema,
   ReportDefinitionResponse,
+  ReportQueryConfigResponse,
 } from "../types/reports";
 
 const BASE = "/landlord/reports";
@@ -37,6 +38,12 @@ export async function getSchema(reportId: string): Promise<ReportSchema> {
   return unwrapApiResponse(response.data);
 }
 
+export async function getConfig(reportId: string): Promise<ReportQueryConfigResponse> {
+  const url = `${BASE}/${reportId}/config`;
+  const response = await apiConfig.privateApi.get<ReportQueryConfigResponse | ApiResponse<ReportQueryConfigResponse>>(url);
+  return unwrapApiResponse(response.data);
+}
+
 export async function runReport(reportId: string, request: ReportRunRequest): Promise<ReportResult> {
   const url = `${BASE}/${reportId}/run`;
   const response = await apiConfig.privateApi.post<ReportResult | ApiResponse<ReportResult>>(url, request);
@@ -58,6 +65,7 @@ export async function exportReport(reportId: string, request: ReportExportReques
 export default {
   getCatalog,
   getSchema,
+  getConfig,
   runReport,
   compareReport,
   exportReport,

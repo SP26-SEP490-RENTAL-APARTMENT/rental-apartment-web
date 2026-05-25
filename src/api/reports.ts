@@ -47,6 +47,11 @@ export async function getSchema(reportId: string): Promise<ReportSchema> {
   return await fetchJson<ReportSchema>(url);
 }
 
+export async function getConfig(reportId: string): Promise<{ DimensionsJson?: string | null; MetricsJson?: string | null; FiltersJson?: string | null; TimeRangeJson?: string | null }> {
+  const url = `${BASE}/${reportId}/config`;
+  return await fetchJson<any>(url);
+}
+
 export async function runReport(reportId: string, request: ReportRunRequest): Promise<ReportResult> {
   const url = `${BASE}/${reportId}/run`;
   return await fetchJson<ReportResult>(url, {
