@@ -18,6 +18,7 @@ const BookingSummaryBlueprint = createReportBlueprint({
   pageSize: 50,
   allowedDimensions: ['date', 'status', 'apartment_name', 'city', 'guest_nationality'],
   allowedMetrics: ['booking_count', 'confirmed_booking_count', 'cancelled_booking_count', 'total_revenue', 'avg_booking_value', 'occupancy_percent'],
+  enableApartmentFilter: true,
 });
 
 export default BookingSummaryBlueprint;

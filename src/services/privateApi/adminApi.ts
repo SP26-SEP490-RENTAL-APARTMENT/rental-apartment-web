@@ -16,6 +16,12 @@ import type { ParamsProp } from "@/types/params";
 import type { SubscriptionPlan } from "@/types/subscriptionPlan";
 import type { UserProfile } from "@/types/user";
 
+type CreateReportRequest = CatalogFormData & {
+  DimensionsJson?: string;
+  MetricsJson?: string;
+  TimeRangeJson?: string;
+};
+
 export interface responseData<T> {
   data: dataProp<T>;
 
@@ -194,7 +200,7 @@ export const inspectionApi = {
 export const reportApi = {
   getCatalog: (params: ParamsProp) =>
     apiConfig.privateApi.get("/reports/catalog", { params }),
-  createReport: (data: CatalogFormData) =>
+  createReport: (data: CreateReportRequest) =>
     apiConfig.privateApi.post("/reports", data),
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   runReport: (reportId: string, data: any) =>

@@ -6,12 +6,15 @@ import type {
   ReportResultPageDto,
 } from '../types/reports';
 import { getSchema, runReport, exportReport } from '../api/landlordReports';
+import { apartmentManagementApi } from '@/services/privateApi/landlordApi';
+import type { Apartment } from '@/types/apartment';
 
 export interface ReportShellProps {
   reportId: string;
   defaultRequest?: Partial<ReportRunRequestDto>;
   allowedDimensions?: string[];
   allowedMetrics?: string[];
+  enableApartmentFilter?: boolean;
   onRunResult?: (payload: {
     request: ReportRunRequestDto;
     result: ReportResultPageDto | null;
@@ -21,7 +24,7 @@ export interface ReportShellProps {
 
 type RangePreset = 'last_30_days' | 'this_day' | 'last_day' | 'this_week' | 'last_week' | 'this_month' | 'last_month' | 'this_year' | 'last_year';
 
-export const ReportShell: React.FC<ReportShellProps> = ({ reportId, defaultRequest, allowedDimensions: propsAllowedDimensions, allowedMetrics: propsAllowedMetrics, onRunResult, tablePortalId }) => {
+export const ReportShell: React.FC<ReportShellProps> = ({ reportId, defaultRequest, allowedDimensions: propsAllowedDimensions, allowedMetrics: propsAllowedMetrics, enableApartmentFilter = false, onRunResult, tablePortalId }) => {
   const [schema, setSchema] = useState<ReportSchemaDto | null>(null);
   const [request, setRequest] = useState<ReportRunRequestDto>({
     from: undefined,
@@ -37,6 +40,8 @@ export const ReportShell: React.FC<ReportShellProps> = ({ reportId, defaultReque
   const [loading, setLoading] = useState(false);
   const [rangePreset, setRangePreset] = useState<RangePreset>('last_30_days');
   const [tablePortalTarget, setTablePortalTarget] = useState<HTMLElement | null>(null);
+  const [apartmentOptions, setApartmentOptions] = useState<Array<Pick<Apartment, 'apartmentId' | 'title'>>>([]);
+  const [selectedApartmentId, setSelectedApartmentId] = useState<string>('');
 
   // filter control state
   const [selectedStatuses, setSelectedStatuses] = useState<string[]>([
@@ -52,6 +57,50 @@ export const ReportShell: React.FC<ReportShellProps> = ({ reportId, defaultReque
     getSchema(reportId).then(s => mounted && setSchema(s)).catch(() => {});
     return () => { mounted = false; };
   }, [reportId]);
+
+  useEffect(() => {
+    if (!enableApartmentFilter) {
+      setApartmentOptions([]);
+      setSelectedApartmentId('');
+      return;
+    }
+
+    let mounted = true;
+
+    async function loadApartments() {
+      try {
+        const res = await apartmentManagementApi.getApartments({
+          page: 1,
+          pageSize: 1000,
+          search: '',
+          sortBy: 'createdAt',
+          sortOrder: 'desc',
+          status: '',
+        });
+
+        if (!mounted) {
+          return;
+        }
+
+        const items = (res.data.items ?? []).map((a) => ({
+          apartmentId: a.apartmentId,
+          title: a.title,
+        }));
+
+        setApartmentOptions(items);
+      } catch {
+        if (mounted) {
+          setApartmentOptions([]);
+        }
+      }
+    }
+
+    void loadApartments();
+
+    return () => {
+      mounted = false;
+    };
+  }, [enableApartmentFilter]);
 
   function startOfDay(date: Date) {
     return new Date(date.getFullYear(), date.getMonth(), date.getDate());
@@ -269,6 +318,9 @@ export const ReportShell: React.FC<ReportShellProps> = ({ reportId, defaultReque
     if (selectedStatuses.length > 0) {
       filters.push({ target: 'dimension', field: 'status', operator: 'in', values: selectedStatuses });
     }
+    if (enableApartmentFilter && selectedApartmentId) {
+      filters.push({ target: 'dimension', field: 'apartment_id', operator: 'eq', value: selectedApartmentId });
+    }
 
     // ensure time dimension is present and first
     const timeField = timeFieldForPreset(rangePreset);
@@ -340,7 +392,7 @@ export const ReportShell: React.FC<ReportShellProps> = ({ reportId, defaultReque
     }, 300);
     return () => clearTimeout(id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [request.from, request.to, request.page, request.pageSize, request.metrics, rangePreset, selectedStatuses, request.searchTerm]);
+  }, [request.from, request.to, request.page, request.pageSize, request.metrics, rangePreset, selectedStatuses, selectedApartmentId, request.searchTerm]);
 
   const statusOptions = ['Pending', 'Confirmed', 'Completed', 'Cancelled'];
 
@@ -526,6 +578,24 @@ export const ReportShell: React.FC<ReportShellProps> = ({ reportId, defaultReque
             })}
           </div>
         </div>
+
+        {enableApartmentFilter && (
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-slate-600">Apartment</label>
+            <select
+              value={selectedApartmentId}
+              onChange={e => setSelectedApartmentId(e.target.value)}
+              className="w-full rounded-lg border border-slate-300 py-2 px-3 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500"
+            >
+              <option value="">All apartments</option>
+              {apartmentOptions.map((apartment) => (
+                <option key={apartment.apartmentId} value={apartment.apartmentId}>
+                  {apartment.title || apartment.apartmentId}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <div className="space-y-2">

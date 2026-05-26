@@ -95,9 +95,66 @@ function AdminDashboard() {
     }
   };
 
+  const CREATE_REPORT_CONFIG_MAP: Record<
+    string,
+    { dimensions?: unknown; metrics?: unknown; timeRange?: unknown }
+  > = {
+    General: {
+      dimensions: GENERAL.dimensions,
+      metrics: GENERAL.metrics,
+      timeRange: {},
+    },
+    Revenue: {
+      dimensions: REVENUE.dimensions,
+      metrics: REVENUE.metrics,
+      timeRange: {},
+    },
+    Booking: {
+      dimensions: BOOKING.dimensions,
+      metrics: BOOKING.metrics,
+      timeRange: {},
+    },
+    "Booking Status": {
+      dimensions: BOOKING_STATUS.dimensions,
+      metrics: BOOKING_STATUS.metrics,
+      timeRange: {},
+    },
+  };
+
+  const normalizeJsonInput = (value?: string) => {
+    const trimmed = value?.trim();
+    return trimmed && trimmed.length > 0 ? trimmed : undefined;
+  };
+
   const handleCreateReport = async (data: CatalogFormData) => {
     try {
-      await reportApi.createReport(data);
+      const {
+        dimensionsJson,
+        metricsJson,
+        timeRangeJson,
+        ...reportDefinition
+      } = data;
+
+      const defaultConfig = CREATE_REPORT_CONFIG_MAP[data.name] || {};
+
+      await reportApi.createReport({
+        ...reportDefinition,
+        DimensionsJson:
+          normalizeJsonInput(dimensionsJson) ||
+          (defaultConfig.dimensions
+            ? JSON.stringify(defaultConfig.dimensions)
+            : undefined),
+        MetricsJson:
+          normalizeJsonInput(metricsJson) ||
+          (defaultConfig.metrics
+            ? JSON.stringify(defaultConfig.metrics)
+            : undefined),
+        TimeRangeJson:
+          normalizeJsonInput(timeRangeJson) ||
+          (defaultConfig.timeRange
+            ? JSON.stringify(defaultConfig.timeRange)
+            : undefined),
+      });
       fetchCatalogs();
       toast.success("Report created successfully");
     } catch (error) {

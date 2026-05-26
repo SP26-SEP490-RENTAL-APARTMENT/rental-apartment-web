@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import {
   Select,
@@ -185,6 +186,51 @@ function CatalogForm({ isOpen, onClose, onSubmit }: Props) {
               {errors.isActive && (
                 <p className="text-sm text-destructive">
                   {errors.isActive.message}
+                </p>
+              )}
+            </div>
+
+            <div className="grid gap-2">
+              <Label htmlFor="dimensionsJson">Dimensions JSON (optional)</Label>
+              <Textarea
+                id="dimensionsJson"
+                placeholder='[{"field":"date","alias":"date"}]'
+                className="min-h-24"
+                {...register("dimensionsJson")}
+              />
+              {errors.dimensionsJson && (
+                <p className="text-sm text-destructive">
+                  {errors.dimensionsJson.message}
+                </p>
+              )}
+            </div>
+
+            <div className="grid gap-2">
+              <Label htmlFor="metricsJson">Metrics JSON (optional)</Label>
+              <Textarea
+                id="metricsJson"
+                placeholder='[{"field":"total_revenue","aggregation":"sum","alias":"revenue"}]'
+                className="min-h-24"
+                {...register("metricsJson")}
+              />
+              {errors.metricsJson && (
+                <p className="text-sm text-destructive">
+                  {errors.metricsJson.message}
+                </p>
+              )}
+            </div>
+
+            <div className="grid gap-2">
+              <Label htmlFor="timeRangeJson">Time range JSON (optional)</Label>
+              <Textarea
+                id="timeRangeJson"
+                placeholder='{"from":"2026-01-01","to":"2026-12-31"}'
+                className="min-h-20"
+                {...register("timeRangeJson")}
+              />
+              {errors.timeRangeJson && (
+                <p className="text-sm text-destructive">
+                  {errors.timeRangeJson.message}
                 </p>
               )}
             </div>

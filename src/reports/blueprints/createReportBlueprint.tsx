@@ -20,6 +20,7 @@ export interface ReportBlueprintOptions {
   pageSize?: number;
   allowedDimensions?: string[];
   allowedMetrics?: string[];
+  enableApartmentFilter?: boolean;
 }
 
 export function createReportBlueprint(options: ReportBlueprintOptions) {
@@ -46,6 +47,7 @@ export function createReportBlueprint(options: ReportBlueprintOptions) {
           defaultRequest={mergedRequest}
           allowedDimensions={options.allowedDimensions}
           allowedMetrics={options.allowedMetrics}
+          enableApartmentFilter={options.enableApartmentFilter}
           onRunResult={onRunResult}
           tablePortalId={tablePortalId}
         />
