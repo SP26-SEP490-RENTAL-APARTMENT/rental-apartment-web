@@ -1,108 +1,110 @@
+import { apiConfig } from "@/config/apiConfig";
 import type {
-    ApiResponse,
-    ReportComparisonResult,
-    ReportExportRequest,
-    ReportResult,
-    ReportRunRequest,
-    ReportSchema,
-    ReportDefinitionResponse,
-    AdminAnalyticsSnapshot,
+  AdminAnalyticsSnapshot,
+  ApiResponse,
+  ReportComparisonResult,
+  ReportDefinitionResponse,
+  ReportExportRequest,
+  ReportQueryConfigResponse,
+  ReportResult,
+  ReportRunRequest,
+  ReportSchema,
 } from "../types/reports";
 
-const BASE = "/api/reports";
+const BASE = "/reports";
 
-async function fetchJson<T>(input: RequestInfo, init?: RequestInit): Promise<T> {
-  const res = await fetch(input, init);
-  const contentType = res.headers.get("content-type") || "";
-  if (!res.ok) {
-    const text = await res.text();
-    throw new Error(`HTTP ${res.status}: ${text}`);
-  }
-
-  if (contentType.includes("application/json")) {
-    const parsed = await res.json();
-    // unwrap ApiResponse if present
-    if (parsed && typeof parsed === "object" && "success" in parsed) {
-      const api = parsed as ApiResponse<any>;
-      if (!api.success) throw new Error(api.message || "API error");
-      return api.data as T;
+function unwrapApiResponse<T>(payload: T | ApiResponse<T>): T {
+  if (payload && typeof payload === "object" && "success" in (payload as any)) {
+    const api = payload as ApiResponse<T>;
+    if (!api.success) {
+      throw new Error(api.message || "API error");
     }
 
-    return parsed as T;
+    return api.data as T;
   }
 
-  // fallback: return raw text
-  const text = await res.text();
-  return (text as unknown) as T;
+  return payload as T;
 }
 
-export async function getCatalog(page = 1, pageSize = 20): Promise<{ items: ReportDefinitionResponse[]; totalCount: number }> {
+export async function getCatalog(
+  page = 1,
+  pageSize = 20,
+): Promise<{ items: ReportDefinitionResponse[]; totalCount: number }> {
   const url = `${BASE}/catalog?page=${page}&pageSize=${pageSize}`;
-  const data = await fetchJson<{ Items: ReportDefinitionResponse[]; TotalCount: number }>(url);
+  const response = await apiConfig.privateApi.get<
+    | { Items: ReportDefinitionResponse[]; TotalCount: number }
+    | ApiResponse<{ Items: ReportDefinitionResponse[]; TotalCount: number }>
+  >(url);
+
+  const data = unwrapApiResponse(response.data);
   return { items: data.Items, totalCount: data.TotalCount };
 }
 
 export async function getSchema(reportId: string): Promise<ReportSchema> {
   const url = `${BASE}/${reportId}/schema`;
-  return await fetchJson<ReportSchema>(url);
+  const response = await apiConfig.privateApi.get<ReportSchema | ApiResponse<ReportSchema>>(url);
+  return unwrapApiResponse(response.data);
 }
 
-export async function getConfig(reportId: string): Promise<{ DimensionsJson?: string | null; MetricsJson?: string | null; FiltersJson?: string | null; TimeRangeJson?: string | null }> {
+export async function getDefaultSchema(): Promise<ReportSchema> {
+  const url = `${BASE}/schema/default`;
+  const response = await apiConfig.privateApi.get<ReportSchema | ApiResponse<ReportSchema>>(url);
+  return unwrapApiResponse(response.data);
+}
+
+export async function getConfig(reportId: string): Promise<ReportQueryConfigResponse> {
   const url = `${BASE}/${reportId}/config`;
-  return await fetchJson<any>(url);
+  const response = await apiConfig.privateApi.get<
+    ReportQueryConfigResponse | ApiResponse<ReportQueryConfigResponse>
+  >(url);
+  return unwrapApiResponse(response.data);
 }
 
-export async function runReport(reportId: string, request: ReportRunRequest): Promise<ReportResult> {
+export async function runReport(
+  reportId: string,
+  request: ReportRunRequest,
+): Promise<ReportResult> {
   const url = `${BASE}/${reportId}/run`;
-  return await fetchJson<ReportResult>(url, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(request),
-  });
+  const response = await apiConfig.privateApi.post<ReportResult | ApiResponse<ReportResult>>(url, request);
+  return unwrapApiResponse(response.data);
 }
 
-export async function compareReport(reportId: string, request: any): Promise<ReportComparisonResult> {
+export async function compareReport(
+  reportId: string,
+  request: any,
+): Promise<ReportComparisonResult> {
   const url = `${BASE}/${reportId}/compare`;
-  return await fetchJson<ReportComparisonResult>(url, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(request),
-  });
+  const response = await apiConfig.privateApi.post<
+    ReportComparisonResult | ApiResponse<ReportComparisonResult>
+  >(url, request);
+  return unwrapApiResponse(response.data);
 }
 
-export async function exportReport(reportId: string, request: ReportExportRequest): Promise<Blob | { content: Uint8Array; contentType: string; fileName: string }> {
+export async function exportReport(
+  reportId: string,
+  request: ReportExportRequest,
+): Promise<Blob> {
   const url = `${BASE}/${reportId}/export`;
-
-  if (request.stream) {
-    const res = await fetch(url, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(request),
-    });
-
-    if (!res.ok) throw new Error(`Export failed: ${res.status}`);
-    const blob = await res.blob();
-    return blob;
-  }
-
-  const data = await fetchJson<any>(url, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(request),
+  const response = await apiConfig.privateApi.post(url, request, {
+    responseType: "blob",
   });
 
-  // when not streaming, backend may return File result or ApiResponse-wrapped content
-  return data;
+  return response.data as Blob;
 }
 
 export async function getSnapshot(): Promise<AdminAnalyticsSnapshot> {
   const url = `${BASE}/streaming/snapshot`;
-  return await fetchJson<AdminAnalyticsSnapshot>(url);
+  const response = await apiConfig.privateApi.get<
+    AdminAnalyticsSnapshot | ApiResponse<AdminAnalyticsSnapshot>
+  >(url);
+  return unwrapApiResponse(response.data);
 }
 
 export default {
   getCatalog,
   getSchema,
+  getDefaultSchema,
+  getConfig,
   runReport,
   compareReport,
   exportReport,

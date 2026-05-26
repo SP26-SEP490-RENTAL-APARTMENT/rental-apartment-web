@@ -1,22 +1,15 @@
 import z from "zod";
 
-const isValidJson = (value: string) => {
-  try {
-    JSON.parse(value);
-    return true;
-  } catch {
-    return false;
-  }
-};
+export const catalogDimensionSchema = z.object({
+  field: z.string().min(1, "Dimension field is required"),
+  alias: z.string().optional(),
+});
 
-const optionalJsonField = (label: string) =>
-  z
-    .string()
-    .optional()
-    .refine(
-      (value) => !value || value.trim().length === 0 || isValidJson(value),
-      `${label} must be valid JSON`,
-    );
+export const catalogMetricSchema = z.object({
+  field: z.string().min(1, "Metric field is required"),
+  aggregation: z.string().min(1, "Aggregation is required"),
+  alias: z.string().optional(),
+});
 
 export const catalogSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -24,9 +17,8 @@ export const catalogSchema = z.object({
   type: z.string().min(1, "Type is required"),
   description: z.string().min(1, "Description is required"),
   isActive: z.boolean(),
-  dimensionsJson: optionalJsonField("Dimensions JSON"),
-  metricsJson: optionalJsonField("Metrics JSON"),
-  timeRangeJson: optionalJsonField("Time range JSON"),
+  dimensions: z.array(catalogDimensionSchema),
+  metrics: z.array(catalogMetricSchema).min(1, "Add at least one metric"),
 });
 
 export type CatalogFormData = z.infer<typeof catalogSchema>;

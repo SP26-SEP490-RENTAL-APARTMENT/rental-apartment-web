@@ -1,7 +1,6 @@
 import { apiConfig } from "@/config/apiConfig";
 import type { CreateAmenityFormData } from "@/schemas/amenitySchema";
 import type { AssignInspectionFormData } from "@/schemas/assignInspection";
-import type { CatalogFormData } from "@/schemas/catalogSchema";
 import type { DocumentApproveFormData } from "@/schemas/documentApproveSchema";
 import type {
   CreateTemplateFormData,
@@ -16,7 +15,12 @@ import type { ParamsProp } from "@/types/params";
 import type { SubscriptionPlan } from "@/types/subscriptionPlan";
 import type { UserProfile } from "@/types/user";
 
-type CreateReportRequest = CatalogFormData & {
+type CreateReportRequest = {
+  name: string;
+  category: string;
+  type: string;
+  description: string;
+  isActive: boolean;
   DimensionsJson?: string;
   MetricsJson?: string;
   TimeRangeJson?: string;
