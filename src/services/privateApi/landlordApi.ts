@@ -9,6 +9,13 @@ import type { ApiResponse } from "@/types/api";
 import type { PaginationResponse } from "@/types/paginationResponse";
 import type { ParamsProp } from "@/types/params";
 
+export interface LandlordDashboardSummary {
+  generatedAt: string;
+  totalProperties: number;
+  totalBookings: number;
+  totalRevenue: number;
+}
+
 export const apartmentManagementApi = {
   getApartments: (
     params: ParamsProp,
@@ -119,6 +126,11 @@ export const mySubscriptionApi = {
 export const paymentHistoryApi = {
   getPaymentHistory: (params: ParamsProp) =>
     apiConfig.privateApi.get("/landlord/payments/history", { params }),
+};
+
+export const landlordDashboardApi = {
+  getSummary: () =>
+    apiConfig.privateApi.get<ApiResponse<LandlordDashboardSummary>>("/landlord/dashboard/summary"),
 };
 
 export const priceChangeApi = {

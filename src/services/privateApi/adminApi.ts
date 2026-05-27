@@ -1,7 +1,6 @@
 import { apiConfig } from "@/config/apiConfig";
 import type { CreateAmenityFormData } from "@/schemas/amenitySchema";
 import type { AssignInspectionFormData } from "@/schemas/assignInspection";
-import type { CatalogFormData } from "@/schemas/catalogSchema";
 import type { DocumentApproveFormData } from "@/schemas/documentApproveSchema";
 import type {
   CreateTemplateFormData,
@@ -16,6 +15,17 @@ import type { ParamsProp } from "@/types/params";
 import type { SubscriptionPlan } from "@/types/subscriptionPlan";
 import type { UserProfile } from "@/types/user";
 
+type CreateReportRequest = {
+  name: string;
+  category: string;
+  type: string;
+  description: string;
+  isActive: boolean;
+  DimensionsJson?: string;
+  MetricsJson?: string;
+  TimeRangeJson?: string;
+};
+
 export interface responseData<T> {
   data: dataProp<T>;
 
@@ -25,6 +35,26 @@ export interface responseData<T> {
 export interface dataProp<T> {
   items: T[];
   totalCount: number;
+}
+
+export interface ReportExportRequest {
+  fileName?: string;
+  format?: "csv" | "xlsx" | "excel";
+  stream?: boolean;
+  includeComparison?: boolean;
+  pageSize?: number;
+  runRequest?: Record<string, unknown>;
+  comparisonRequest?: Record<string, unknown>;
+}
+
+export interface PagedReportResponse<T = unknown> {
+  reportId: string;
+  name: string;
+  rows: T[];
+  totalMetrics: Record<string, number>;
+  totalCount: number;
+  page: number;
+  pageSize: number;
 }
 
 export const userManagementApi = {
@@ -174,11 +204,18 @@ export const inspectionApi = {
 export const reportApi = {
   getCatalog: (params: ParamsProp) =>
     apiConfig.privateApi.get("/reports/catalog", { params }),
-  createReport: (data: CatalogFormData) =>
+  createReport: (data: CreateReportRequest) =>
     apiConfig.privateApi.post("/reports", data),
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   runReport: (reportId: string, data: any) =>
-    apiConfig.privateApi.post(`/reports/${reportId}/run`, data),
+    apiConfig.privateApi.post<ApiResponse<PagedReportResponse>>(
+      `/reports/${reportId}/run`,
+      data,
+    ),
+  exportReport: (reportId: string, data: ReportExportRequest) =>
+    apiConfig.privateApi.post(`/reports/${reportId}/export`, data, {
+      responseType: "blob",
+    }),
 };
 
 export const adminApartmentApi = {

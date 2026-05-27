@@ -6,6 +6,7 @@ import {
   Layers,
   CreditCard,
   Wallet,
+  BarChart3,
   BanknoteX,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
@@ -42,6 +43,16 @@ export const useLandlordNavList = () => {
       title: t("landlord.subscriptions"),
       url: "/landlord/my-subscriptions",
       icon: Layers,
+    },
+    {
+      title: "Reports",
+      url: "/landlord/reports",
+      icon: BarChart3,
+    },
+    {
+      title: t("landlord.reports.booking_summary") || "Booking Summary",
+      url: "/landlord/reports/booking-summary",
+      icon: CalendarCheck,
     },
     {
       title: t("landlord.wallet"),

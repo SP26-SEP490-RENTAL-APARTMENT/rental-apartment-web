@@ -136,7 +136,7 @@ function HomePage() {
             Array.from({ length: 12 }).map((_, i) => (
               <ApartmentCardSkeleton key={i} />
             ))
-          ) : apartments.length > 0 ? (
+          ) : apartments?.length > 0 ? (
             apartments.map((a) => (
               <ApartmentCard
                 key={a.apartmentId}
