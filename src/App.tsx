@@ -288,6 +288,10 @@ export default function App() {
             element={
               <ProtectedRoute requiredRoles={["landlord", "tenant"]}>
                 <ReportsWorkspace />
+              </ProtectedRoute>
+            }
+          />
+          <Route
             path={ROUTES.LANDLORD_FEE_MANAGEMENT}
             element={
               <ProtectedRoute requiredRoles={["landlord", "tenant"]}>
