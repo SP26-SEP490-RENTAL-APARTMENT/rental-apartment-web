@@ -18,5 +18,6 @@ export interface Occupy {
     supportTicketCount: number
     createdAt: string
     images: string[]
-    checkTimeImages: string[]
+    checkTimeImages: string[],
+    ticketId: string,
 }

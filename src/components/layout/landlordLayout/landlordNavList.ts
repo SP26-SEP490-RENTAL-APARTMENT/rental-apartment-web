@@ -6,11 +6,12 @@ import {
   Layers,
   CreditCard,
   Wallet,
+  BanknoteX,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 export const useLandlordNavList = () => {
-  const {t} = useTranslation("label");
+  const { t } = useTranslation("label");
   return [
     // {
     //   title: "Dashboard",
@@ -46,6 +47,11 @@ export const useLandlordNavList = () => {
       title: t("landlord.wallet"),
       url: "/landlord/my-wallet",
       icon: Wallet,
+    },
+    {
+      title: t("landlord.feeManagement"),
+      url: "/landlord/fee-management",
+      icon: BanknoteX,
     },
   ];
 };

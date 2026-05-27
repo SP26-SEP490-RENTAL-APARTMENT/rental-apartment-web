@@ -12,6 +12,7 @@ import {
   Ticket,
   MessageSquareWarning,
   CirclePercent,
+  BadgeAlert,
 } from "lucide-react";
 
 export const useAadminNavList = () => {
@@ -102,6 +103,11 @@ export const useAadminNavList = () => {
       title: "Pricing Templates",
       url: "/admin/pricing-templates",
       icon: CirclePercent,
+    },
+    {
+      title: "Disputes Checktime",
+      url: "/admin/disputes-checktime",
+      icon: BadgeAlert,
     },
   ];
 };

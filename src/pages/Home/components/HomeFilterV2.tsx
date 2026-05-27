@@ -1,6 +1,11 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { format } from "date-fns";
-import { CalendarIcon, Users, Baby, RotateCcw, PawPrint } from "lucide-react";
+import {
+  CalendarIcon,
+  RotateCcw,
+  PawPrint,
+  User,
+} from "lucide-react";
 import type { DateRange } from "react-day-picker";
 
 import { Button } from "@/components/ui/button";
@@ -13,6 +18,7 @@ import {
   PopoverTrigger,
   PopoverContent,
 } from "@/components/ui/popover";
+import { useTranslation } from "react-i18next";
 
 interface FilterValues {
   checkInDate?: string;
@@ -27,19 +33,27 @@ interface Props {
 }
 
 function HomeFilterV2({ onApply }: Props) {
+  const { t } = useTranslation("filter");
   const [date, setDate] = useState<DateRange | undefined>();
-
   const [filter, setFilter] = useState<FilterValues>({
     maxOccupants: 1,
     maxInfants: 0,
     isPetAllowed: false,
   });
+  const filterRef = useRef<HTMLDivElement>(null);
+  const [filterWidth, setFilterWidth] = useState(0);
+
+  useEffect(() => {
+    if (filterRef.current) {
+      setFilterWidth(filterRef.current.offsetWidth);
+    }
+  }, []);
 
   const handleApply = () => {
     onApply({
       ...filter,
-      checkInDate: date?.from?.toISOString(),
-      checkOutDate: date?.to?.toISOString(),
+      checkInDate: date?.from?.toLocaleDateString(),
+      checkOutDate: date?.to?.toLocaleDateString(),
     });
   };
 
@@ -56,61 +70,71 @@ function HomeFilterV2({ onApply }: Props) {
   };
 
   return (
-    <div className="w-full bg-gradient-to-br from-white via-slate-50 to-white rounded-3xl p-8 shadow-lg border border-slate-100 hover:shadow-xl transition-shadow duration-300">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 items-end">
-        {/* Date Picker */}
-        <div className="space-y-3 lg:col-span-1">
-          <label className="flex items-center gap-2.5 text-xs font-bold uppercase tracking-wide text-slate-600 mb-1">
-            <div className="w-5 h-5 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center">
-              <CalendarIcon className="w-3 h-3 text-white" />
+    <div
+      ref={filterRef}
+      className="flex items-center bg-white border shadow-xl rounded-full px-3 py-2 w-fit gap-2"
+    >
+      {/* Date */}
+      <Popover>
+        <PopoverTrigger asChild>
+          <button className="px-5 py-3 rounded-full hover:bg-slate-100 transition text-left min-w-60">
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <CalendarIcon size={16} className="text-blue-500" />
+              <span>Check-in & Check-out</span>
             </div>
-            Check-in & Check-out
-          </label>
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button
-                variant="outline"
-                className="w-full h-12 justify-start text-left font-medium bg-white/80 backdrop-blur-sm hover:bg-white border-slate-200 border-2 hover:border-blue-300 transition-all duration-200 text-slate-700 shadow-sm"
-              >
-                <CalendarIcon className="mr-3 h-5 w-5 text-blue-500" />
-                <span className="text-sm">
-                  {date?.from ? (
-                    <>
-                      {format(date.from, "dd/MM")} -{" "}
-                      {date?.to ? format(date.to, "dd/MM") : "Chọn checkout"}
-                    </>
-                  ) : (
-                    "Chọn ngày"
-                  )}
-                </span>
-              </Button>
-            </PopoverTrigger>
 
-            <PopoverContent className="w-auto p-0 border-slate-200 shadow-xl rounded-2xl">
-              <Calendar
-                mode="range"
-                numberOfMonths={2}
-                selected={date}
-                onSelect={setDate}
-              />
-            </PopoverContent>
-          </Popover>
-        </div>
+            <p className="font-semibold text-sm mt-1">
+              {date?.from ? (
+                <>
+                  {format(date.from, "dd/MM")} -{" "}
+                  {date?.to ? format(date.to, "dd/MM") : t("selectDate")}
+                </>
+              ) : (
+                t("selectDate")
+              )}
+            </p>
+          </button>
+        </PopoverTrigger>
 
-        {/* Guests Slider */}
-        <div className="space-y-3 lg:col-span-1">
-          <label className="flex items-center gap-2.5 text-xs font-bold uppercase tracking-wide text-slate-600 mb-1">
-            <div className="w-5 h-5 rounded-lg bg-gradient-to-br from-emerald-500 to-emerald-600 flex items-center justify-center">
-              <Users className="w-3 h-3 text-white" />
+        <PopoverContent
+          style={{ width: filterWidth }}
+          className="p-0 rounded-2xl shadow-xl"
+          align="start"
+        >
+          <Calendar
+            mode="range"
+            numberOfMonths={2}
+            selected={date}
+            onSelect={setDate}
+            className="w-full"
+            classNames={{
+              months: "flex w-full",
+              month: "flex-1 w-full",
+              table: "w-full",
+            }}
+          />
+        </PopoverContent>
+      </Popover>
+
+      <div className="h-10 w-px bg-slate-200" />
+
+      {/* Guests */}
+      <Popover>
+        <PopoverTrigger asChild>
+          <button className="px-5 py-3 rounded-full hover:bg-slate-100 transition min-w-37.5 text-left">
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <User size={16} className="text-blue-500" />
+              <span>{t("maxOccupants")}</span>
             </div>
-            Khách
-          </label>
-          <div className="bg-white/80 backdrop-blur-sm p-4 rounded-2xl border-2 border-slate-200 hover:border-emerald-300 transition-colors duration-200 space-y-3 shadow-sm">
-            <div className="flex items-baseline gap-2">
-              <span className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-emerald-500">
-                {filter.maxOccupants}
-              </span>
-              <span className="text-sm text-slate-500 font-medium">người</span>
+            <div className="font-semibold">{filter.maxOccupants} {t("person")}</div>
+          </button>
+        </PopoverTrigger>
+
+        <PopoverContent className="w-72 rounded-2xl p-5 space-y-4">
+          <div>
+            <div className="flex justify-between mb-2">
+              <span>{t("adult")} + {t("children")}</span>
+              <span>{filter.maxOccupants}</span>
             </div>
             <Slider
               min={1}
@@ -123,25 +147,13 @@ function HomeFilterV2({ onApply }: Props) {
                   maxOccupants: v[0],
                 })
               }
-              className="cursor-pointer"
             />
           </div>
-        </div>
 
-        {/* Infants Slider */}
-        <div className="space-y-3 lg:col-span-1">
-          <label className="flex items-center gap-2.5 text-xs font-bold uppercase tracking-wide text-slate-600 mb-1">
-            <div className="w-5 h-5 rounded-lg bg-gradient-to-br from-pink-500 to-pink-600 flex items-center justify-center">
-              <Baby className="w-3 h-3 text-white" />
-            </div>
-            Em bé
-          </label>
-          <div className="bg-white/80 backdrop-blur-sm p-4 rounded-2xl border-2 border-slate-200 hover:border-pink-300 transition-colors duration-200 space-y-3 shadow-sm">
-            <div className="flex items-baseline gap-2">
-              <span className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-600 to-pink-500">
-                {filter.maxInfants}
-              </span>
-              <span className="text-sm text-slate-500 font-medium">em</span>
+          <div>
+            <div className="flex justify-between mb-2">
+              <span>{t("infant")}</span>
+              <span>{filter.maxInfants}</span>
             </div>
             <Slider
               min={0}
@@ -154,56 +166,53 @@ function HomeFilterV2({ onApply }: Props) {
                   maxInfants: v[0],
                 })
               }
-              className="cursor-pointer"
             />
           </div>
+        </PopoverContent>
+      </Popover>
+
+      <div className="h-10 w-px bg-slate-200" />
+
+      {/* Pet */}
+      <div className="px-5 py-3 flex items-center gap-3 rounded-full hover:bg-slate-100 transition">
+        <PawPrint size={18} className="text-blue-500" />
+        <div>
+          <p className="text-sm text-muted-foreground">{t("pet")}</p>
+          <p className="text-sm font-medium">
+            {filter.isPetAllowed ? t("allowed") : t("notAllowed")}
+          </p>
         </div>
 
-        {/* Pet Toggle */}
-        <div className="space-y-3 lg:col-span-1">
-          <label className="flex items-center gap-2.5 text-xs font-bold uppercase tracking-wide text-slate-600 mb-1">
-            <div className="w-5 h-5 rounded-lg bg-gradient-to-br from-amber-500 to-amber-600 flex items-center justify-center">
-              <PawPrint className="w-3 h-3 text-white" />
-            </div>
-            Thú cưng
-          </label>
-          <div className="bg-white/80 backdrop-blur-sm p-4 rounded-2xl border-2 border-slate-200 hover:border-amber-300 transition-colors duration-200 flex items-center justify-center h-12 shadow-sm">
-            <div className="flex items-center gap-3">
-              <Switch
-                checked={filter.isPetAllowed}
-                onCheckedChange={(v) =>
-                  setFilter({
-                    ...filter,
-                    isPetAllowed: v,
-                  })
-                }
-                className="data-[state=checked]:bg-amber-500"
-              />
-              <span className="text-sm font-medium text-slate-600">
-                {filter.isPetAllowed ? "Chấp nhận" : "Không"}
-              </span>
-            </div>
-          </div>
-        </div>
+        <Switch
+          checked={filter.isPetAllowed}
+          onCheckedChange={(checked) =>
+            setFilter({
+              ...filter,
+              isPetAllowed: checked,
+            })
+          }
+        />
+      </div>
 
-        {/* Action Buttons */}
-        <div className="flex gap-3 lg:col-span-1">
-          <Button
-            variant="outline"
-            className="flex-1 h-12 border-2 border-slate-300 text-slate-700 hover:bg-slate-100 hover:border-slate-400 font-semibold transition-all duration-200 rounded-xl shadow-sm"
-            onClick={handleReset}
-          >
-            <RotateCcw className="w-4 h-4 mr-2" />
-            Reset
-          </Button>
+      <div className="h-10 w-px bg-slate-200" />
 
-          <Button
-            className="flex-1 h-12 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-200 rounded-xl active:scale-95"
-            onClick={handleApply}
-          >
-            Tìm kiếm
-          </Button>
-        </div>
+      {/* Actions */}
+      <div className="flex items-center gap-2 pl-2">
+        <Button
+          variant="ghost"
+          size="icon"
+          className="rounded-full"
+          onClick={handleReset}
+        >
+          <RotateCcw size={18} />
+        </Button>
+
+        <Button
+          onClick={handleApply}
+          className="rounded-full px-6 h-12 text-base"
+        >
+          {t("search")}
+        </Button>
       </div>
     </div>
   );

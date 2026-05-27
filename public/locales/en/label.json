@@ -5,6 +5,7 @@
         "rooms": "Rooms",
         "payments": "Payment History",
         "subscriptions": "Subscriptions",
-        "wallet": "Wallet"
+        "wallet": "Wallet",
+        "feeManagement": "Fee Management"
     }
 }

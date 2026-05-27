@@ -73,8 +73,8 @@
         "partialPayment": "Partial",
         "paid": "Paid",
         "pending": "Pending",
-        "nights": "Nights",
-        "nightsUnit": "nights",
+        "nights": "Night(s)",
+        "nightsUnit": "night(s)",
         "guests": "Guests",
         "guestsUnit": "guest(s)",
         "apartmentName": "Apartment Name",
@@ -94,14 +94,19 @@
         "adults": "adults",
         "infants": "infants",
         "children": "children",
-        "pets": "Pets",
+        "pets": "pets",
         "actualStay": "Actual Stay",
         "actualCheckIn": "Actual Check-in",
         "actualCheckOut": "Actual Check-out",
         "rateService": "Rate our service",
         "noBooking": "No booking found",
         "subNoBooking": "You haven't made any bookings yet. Start exploring our apartments and book your stay today!",
-        "browseApartments": "Browse Apartments"
+        "browseApartments": "Browse Apartments",
+        "confirmed": "Confirmed",
+        "depositLabel": "Deposit",
+        "remainingLabel": "Remaining",
+        "viewDetails": "View Details",
+        "checkTime": "Check Time"
     },
     "collection": {
         "label": "My Collections",
@@ -167,6 +172,7 @@
         "submit": "Submit Report",
         "cancel": "Cancel",
         "success": "Incident reported successfully! Our team will review your report and get back to you shortly.",
-        "failure": "An error occurred while submitting your incident report. Please try again later."
+        "failure": "An error occurred while submitting your incident report. Please try again later.",
+        "payBalance": "Pay Balance"
     }
 }

@@ -48,6 +48,8 @@ export const indentityApi = {
     apiConfig.privateApi.post("/identity/documents", data),
   uploadCCCD: (data: FormData) =>
     apiConfig.privateApi.post("/id-recognition/upload", data),
+  addBankAcc: (data: { bankAccountNumber: string; bankBin: string }) =>
+    apiConfig.privateApi.put("/User/me/bank-profile", data),
 };
 
 export const packageApi = {
@@ -64,6 +66,34 @@ export const bookingApi = {
     apiConfig.privateApi.post("/Booking", data),
   getBookingHistory: (params: ParamsProp) =>
     apiConfig.privateApi.get("/tenant/bookings/history", { params }),
+  payBalance: (
+    bookingId: string,
+    paymentProvider: string,
+    devicePlatform: string,
+  ) =>
+    apiConfig.privateApi.post(`/Booking/${bookingId}/pay-balance`, null, {
+      params: {
+        paymentProvider,
+        devicePlatform,
+      },
+    }),
+  getRefund: (
+    bookingId: string,
+    data: {
+      reason: string;
+      notes: string;
+      payOsReceiverName: string;
+      payOsBankCode: string;
+      payOsAccountNumber: string;
+    },
+  ) => apiConfig.privateApi.post(`/Booking/${bookingId}/refund`, data),
+  getChecktime: (bookingId: string) =>
+    apiConfig.privateApi.get(`/Booking/${bookingId}/check-time`),
+  respondToCheckTime: (
+    bookingId: string,
+    data: { action: string; disputeReason: string; notes: string },
+  ) =>
+    apiConfig.privateApi.post(`/Booking/${bookingId}/check-time/respond`, data),
 };
 
 export const reviewApi = {

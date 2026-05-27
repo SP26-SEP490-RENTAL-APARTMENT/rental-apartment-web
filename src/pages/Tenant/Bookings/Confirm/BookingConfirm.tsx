@@ -102,7 +102,7 @@ function BookingConfirm() {
       </div>
 
       {/* Content */}
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <Card className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 my-10">
         {/* Error Alert */}
         {error && (
           <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-start gap-3">
@@ -130,7 +130,7 @@ function BookingConfirm() {
           {/* Booking Details Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Booking Info Card */}
-            <Card className="border-0 shadow-sm">
+            <Card className="border-b-blue-500 border-b-5">
               <CardHeader className="border-b border-gray-100">
                 <CardTitle className="flex items-center gap-2">
                   <Calendar className="h-5 w-5 text-blue-600" />
@@ -144,8 +144,10 @@ function BookingConfirm() {
                       {t("confirm.detail.checkIn")}
                     </p>
                     <p className="text-lg font-medium text-gray-900">
-                      
-                      {format(new Date(quoteData.checkInDateTime), "dd/MM/yyyy HH:mm")}
+                      {format(
+                        new Date(quoteData.checkInDateTime),
+                        "dd/MM/yyyy HH:mm",
+                      )}
                     </p>
                   </div>
                   <div>
@@ -153,8 +155,10 @@ function BookingConfirm() {
                       {t("confirm.detail.checkOut")}
                     </p>
                     <p className="text-lg font-medium text-gray-900">
-                      
-                      {format(new Date(quoteData.checkOutDateTime), "dd/MM/yyyy HH:mm")}
+                      {format(
+                        new Date(quoteData.checkOutDateTime),
+                        "dd/MM/yyyy HH:mm",
+                      )}
                     </p>
                   </div>
                   <Separator className="my-3" />
@@ -181,7 +185,7 @@ function BookingConfirm() {
             </Card>
 
             {/* Price Details Card */}
-            <Card className="border-0 shadow-sm">
+            <Card className="border-b-green-500 border-b-5">
               <CardHeader className="border-b border-gray-100">
                 <CardTitle className="flex items-center gap-2">
                   <DollarSign className="h-5 w-5 text-green-600" />
@@ -230,7 +234,7 @@ function BookingConfirm() {
           </div>
 
           {/* Payment Plan Selection */}
-          <Card className="border-0 shadow-sm">
+          <Card className="border-b-blue-500 border-b-5">
             <CardHeader className="border-b border-gray-100">
               <CardTitle className="flex items-center gap-2">
                 <Users className="h-5 w-5 text-blue-600" />
@@ -276,7 +280,7 @@ function BookingConfirm() {
           </Card>
 
           {/* Payment Method Selection */}
-          <Card className="border-0 shadow-sm">
+          <Card className="border-b-blue-500 border-b-5">
             <CardHeader className="border-b border-gray-100">
               <CardTitle className="flex items-center gap-2">
                 <CreditCard className="h-5 w-5 text-purple-600" />
@@ -372,7 +376,6 @@ function BookingConfirm() {
                           <span className="font-medium text-gray-900">
                             PayOS
                           </span>
-                          
                         </div>
                       </Label>
                       {/* Stripe */}
@@ -486,7 +489,7 @@ function BookingConfirm() {
             </Button>
           </div>
         </form>
-      </div>
+      </Card>
     </div>
   );
 }

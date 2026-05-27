@@ -1,4 +1,5 @@
 {
+    "selectStatus": "Select Status",
     "all": "All",
     "apartment": {
         "draft": "Draft",
@@ -50,7 +51,10 @@
         "success": "Success",
         "failed": "Failed",
         "refunded": "Refunded",
-        "pending": "Pending"
+        "pending": "Pending",
+        "balance": "Balance",
+        "upfront": "Upfront Payment",
+        "refund": "Refund"
     },
     "priceReason": {
         "peak": "Peak Season",

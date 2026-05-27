@@ -5,6 +5,7 @@
         "rooms": "Phòng",
         "payments": "Lịch sử thanh toán",
         "subscriptions": "Đăng ký",
-        "wallet": "Ví"
+        "wallet": "Ví",
+        "feeManagement": "Quản lý phí"
     }
 }

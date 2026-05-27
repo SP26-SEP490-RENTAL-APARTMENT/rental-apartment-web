@@ -79,8 +79,10 @@ function ApproveListings() {
       toast.success("Assign successfully");
       fetchApproveListings();
       setInspectionForm(false);
-    } catch (error) {
-      toast.error("Fail");
+    } catch (error: any) {
+      toast.error(
+        error.response?.data?.message || "Failed to assign inspection",
+      );
     }
   };
 

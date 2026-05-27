@@ -1,9 +1,12 @@
+import { BED_TYPE_CONFIG, ROOM_TYPE_CONFIG } from "@/config/badge-config";
 import type { Room } from "@/types/apartment";
+import { renderBadge } from "@/utils/renderBadge";
 import { Bath, Bed, CircleCheck, CircleX, Home, Ruler } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 function RoomInfo({ room }: { room: Room }) {
   const { t } = useTranslation("book");
+  const { t: statusT } = useTranslation("status");
 
   return (
     <div>
@@ -47,7 +50,7 @@ function RoomInfo({ room }: { room: Room }) {
             <span className="text-sm">{t("room.bedType")}</span>
           </div>
           <p className="font-semibold text-gray-900 capitalize">
-            {room.bedType}
+            {renderBadge(room.bedType, BED_TYPE_CONFIG, statusT)}
           </p>
         </div>
 
@@ -58,7 +61,7 @@ function RoomInfo({ room }: { room: Room }) {
             <span className="text-sm">{t("room.roomType")}</span>
           </div>
           <p className="font-semibold text-gray-900 capitalize">
-            {room.roomType.replace("_", " ")}
+            {renderBadge(room.roomType, ROOM_TYPE_CONFIG, statusT)}
           </p>
         </div>
 

@@ -21,6 +21,7 @@ import {
   Wallet,
 } from "lucide-react";
 import IncidentDialog from "./IncidentDialog";
+import { bookingApi } from "@/services/privateApi/tenantApi";
 
 export interface Props {
   open: boolean;
@@ -48,6 +49,19 @@ function BookingViewDialog({ open, onClose, booking }: Props) {
 
   const handleReviewClick = () => {
     setShowReviewDialog(true);
+  };
+
+  const handlePayBalance = async () => {
+    try {
+      const response = await bookingApi.payBalance(
+        booking.bookingId,
+        "payos",
+        "web",
+      );
+      window.location.href = response.data.url;
+    } catch (error) {
+      console.error("Error occurred while processing payment:", error);
+    }
   };
   return (
     <>
@@ -245,13 +259,20 @@ function BookingViewDialog({ open, onClose, booking }: Props) {
               </div>
             </div>
 
-            {!booking.actualCheckIn && booking.status === "paid" && (
-              <div className="flex justify-end">
-                <Button onClick={() => setReportDialog(true)}>
-                  Report Incident
-                </Button>
-              </div>
-            )}
+            {!booking.actualCheckIn &&
+              (booking.status === "paid" || booking.status === "confirmed") && (
+                <div className="flex justify-end gap-2">
+                  <Button onClick={() => setReportDialog(true)}>
+                    {t("incident.title")}
+                  </Button>
+                  {booking.status === "confirmed" &&
+                    booking.paymentMode === "partial" && (
+                      <Button variant="outline" onClick={handlePayBalance}>
+                        {t("incident.payBalance")}
+                      </Button>
+                    )}
+                </div>
+              )}
 
             {booking.actualCheckOut && (
               <div className="flex justify-end">

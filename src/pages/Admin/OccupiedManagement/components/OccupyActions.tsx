@@ -13,6 +13,7 @@ import {
   Building2,
   Calendar,
   Eye,
+  ShieldX,
   User,
   Wallet,
 } from "lucide-react";
@@ -20,13 +21,14 @@ import { useState } from "react";
 
 interface Props {
   occupy: Occupy;
+  onOpenPenaltyDialog: (occupy: Occupy) => void;
 }
-function OccupyActions({ occupy }: Props) {
+function OccupyActions({ occupy, onOpenPenaltyDialog }: Props) {
   const [selectedImage, setSelectedImage] = useState<string>(
     occupy.images?.[0] || "",
   );
   return (
-    <div>
+    <div className="flex gap-2">
       <Dialog>
         <DialogTrigger asChild>
           <Button size="sm" variant="outline">
@@ -38,7 +40,7 @@ function OccupyActions({ occupy }: Props) {
           <DialogHeader>
             <DialogTitle className="text-xl font-bold flex items-center gap-2">
               <AlertCircle className="w-5 h-5 text-orange-500" />
-              Occupy Report
+              Occupied Report
             </DialogTitle>
           </DialogHeader>
 
@@ -196,6 +198,14 @@ function OccupyActions({ occupy }: Props) {
           </div>
         </DialogContent>
       </Dialog>
+
+      <Button
+        variant="destructive"
+        size="sm"
+        onClick={() => onOpenPenaltyDialog(occupy)}
+      >
+        <ShieldX />
+      </Button>
     </div>
   );
 }
