@@ -2,12 +2,14 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import type { BookingHistory } from "@/types/bookingHistory";
 import { useTranslation } from "react-i18next";
-import { ChevronRight, CheckCircle2, Clock, Home } from "lucide-react";
+import { ChevronRight, Home } from "lucide-react";
 import { useGetStatus } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 
 export interface Props {
   data: BookingHistory;
   onClick?: (booking: BookingHistory) => void;
+  onCheckTime?: (bookingId: string) => void;
 }
 
 const formatDate = (date: string) => new Date(date).toLocaleDateString("vi-VN");
@@ -22,6 +24,8 @@ const getStatusColor = (status: string) => {
       return "bg-emerald-100 text-emerald-700 border-0";
     case "cancelled":
       return "bg-red-100 text-red-700 border-0";
+    case "completed":
+      return "bg-green-100 text-green-700 border-0";
     default:
       return "bg-gray-100 text-gray-700 border-0";
   }
@@ -33,18 +37,23 @@ const getPaymentModeColor = (mode: "full" | "partial") => {
     : "bg-blue-100 text-blue-700 border-0";
 };
 
-export default function BookingHistoryCard({ data, onClick }: Props) {
+export default function BookingHistoryCard({
+  data,
+  onClick,
+  onCheckTime,
+}: Props) {
   const { t } = useTranslation("user");
 
   const getPaymentModeLabel = (mode: "full" | "partial") => {
-    return mode === "full" ? t("booking.fullPayment") : t("booking.partialPayment");
+    return mode === "full"
+      ? t("booking.fullPayment")
+      : t("booking.partialPayment");
   };
 
+  const remainingAmount = data.totalPrice - (data.depositAmount || 0);
+
   return (
-    <Card
-      className="w-full hover:shadow-lg border-0 transition-all duration-300 cursor-pointer group bg-white overflow-hidden"
-      onClick={() => onClick?.(data)}
-    >
+    <Card className="w-full hover:shadow-lg border-0 transition-all duration-300 group bg-white overflow-hidden">
       <CardContent className="p-6">
         {/* Header Row */}
         <div className="flex items-start justify-between mb-4">
@@ -54,7 +63,8 @@ export default function BookingHistoryCard({ data, onClick }: Props) {
                 <Home className="h-4 w-4 text-blue-600" />
               </div>
               <p className="font-semibold text-gray-900 text-lg">
-                {t("booking.booking")} #{data.bookingId.slice(0, 8).toUpperCase()}
+                {t("booking.booking")} #
+                {data.bookingId.slice(0, 8).toUpperCase()}
               </p>
             </div>
             <p className="text-xs text-gray-500">
@@ -73,7 +83,9 @@ export default function BookingHistoryCard({ data, onClick }: Props) {
               </Badge>
             </div>
             <div className="text-right">
-              <p className="text-sm text-gray-600 mb-1">{t("booking.totalPrice")}</p>
+              <p className="text-sm text-gray-600 mb-1">
+                {t("booking.totalPrice")}
+              </p>
               <p className="text-2xl font-bold text-blue-600">
                 {formatCurrency(data.totalPrice)}
               </p>
@@ -88,7 +100,9 @@ export default function BookingHistoryCard({ data, onClick }: Props) {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
           {/* Check-in */}
           <div>
-            <p className="text-xs text-gray-500 font-medium mb-1">{t("booking.checkIn")}</p>
+            <p className="text-xs text-gray-500 font-medium mb-1">
+              {t("booking.checkIn")}
+            </p>
             <p className="font-semibold text-gray-900">
               {formatDate(data.checkInDate)}
             </p>
@@ -96,7 +110,9 @@ export default function BookingHistoryCard({ data, onClick }: Props) {
 
           {/* Check-out */}
           <div>
-            <p className="text-xs text-gray-500 font-medium mb-1">{t("booking.checkOut")}</p>
+            <p className="text-xs text-gray-500 font-medium mb-1">
+              {t("booking.checkOut")}
+            </p>
             <p className="font-semibold text-gray-900">
               {formatDate(data.checkOutDate)}
             </p>
@@ -104,7 +120,9 @@ export default function BookingHistoryCard({ data, onClick }: Props) {
 
           {/* Nights */}
           <div>
-            <p className="text-xs text-gray-500 font-medium mb-1">{t("booking.nights")}</p>
+            <p className="text-xs text-gray-500 font-medium mb-1">
+              {t("booking.nights")}
+            </p>
             <p className="font-semibold text-gray-900">
               {data.nights} {t("booking.nightsUnit")}
             </p>
@@ -112,9 +130,11 @@ export default function BookingHistoryCard({ data, onClick }: Props) {
 
           {/* Guests */}
           <div>
-            <p className="text-xs text-gray-500 font-medium mb-1">{t("booking.guests")}</p>
+            <p className="text-xs text-gray-500 font-medium mb-1">
+              {t("booking.guests")}
+            </p>
             <p className="font-semibold text-gray-900">
-              {data.noOfAdults} {t("booking.guestsUnit")}
+              {data.noOfAdults + data.noOfChildren} {t("booking.guestsUnit")}
             </p>
           </div>
         </div>
@@ -122,7 +142,7 @@ export default function BookingHistoryCard({ data, onClick }: Props) {
         {/* Footer Row - Payment Status */}
         <div className="flex items-center justify-between pt-3 border-t border-gray-100">
           <div className="flex items-center gap-2">
-            {data.depositPaid ? (
+            {/* {data.depositPaid ? (
               <>
                 <CheckCircle2 className="h-4 w-4 text-green-600" />
                 <span className="text-sm font-medium text-green-600">
@@ -136,17 +156,30 @@ export default function BookingHistoryCard({ data, onClick }: Props) {
                   {t("booking.pending")}
                 </span>
               </>
-            )}
-            {data.paymentMode === "partial" && (
+            )} */}
+            {data.paymentMode === "partial" && data.status === "confirmed" && (
               <span className="text-xs text-gray-500 ml-2">
-                ({t("depositLabel")} {formatCurrency(data.depositAmount)})
+                ({t("booking.depositLabel")}{" "}
+                {formatCurrency(data.depositAmount)} |{" "}
+                {t("booking.remainingLabel")}: {formatCurrency(remainingAmount)}
+                )
               </span>
             )}
           </div>
-          <ChevronRight className="h-4 w-4 text-gray-400 group-hover:text-blue-600 transition-colors" />
+          <div className="flex gap-2">
+            {data.status === "completed" && (
+              <Button onClick={() => onCheckTime?.(data.bookingId)}>
+                {t("booking.checkTime")}
+              </Button>
+            )}
+
+            <Button variant="outline" onClick={() => onClick?.(data)}>
+              {t("booking.viewDetails")}
+              <ChevronRight className="h-4 w-4 text-gray-400 group-hover:text-blue-600 transition-colors" />
+            </Button>
+          </div>
         </div>
       </CardContent>
     </Card>
   );
 }
-

@@ -41,7 +41,7 @@ function AmenitiesInfo({ amenities }: { amenities: Amenity[] }) {
   const lang = i18n.language;
 
   return (
-    <div className="bg-white rounded-2xl shadow-sm border p-6 space-y-6">
+    <div>
 
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
         {amenities.map((item) => {

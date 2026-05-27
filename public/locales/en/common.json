@@ -27,7 +27,12 @@
         "newTicket": "New Ticket",
         "create": "Create",
         "creating": "Creating...",
-        "close": "Close"
+        "close": "Close",
+        "submitResponse": "Submit Response",
+        "browse": "Browse",
+        "page": "Page",
+        "of": "of",
+        "resetFilters": "Reset Filters"
     },
     "description": {
         "apartment": "Find your perfect stay with our wide selection of apartments. Whether you're looking for a cozy studio or a spacious family home, we have options to suit every need and budget.",
@@ -77,5 +82,10 @@
         "selectFile": "Click to select or drag image",
         "supportedFormats": "Supported formats JPG, PNG (Max 10MB)",
         "uploading": "Uploading..."
+    },
+    "delete": {
+        "title": "Confirm Deletion",
+        "description": "This action will permanently remove the {{item}} from the system.",
+        "message": "Are you sure you want to delete this {{item}}?"
     }
 }

@@ -1,5 +1,5 @@
 import type { ColumnDef } from "@tanstack/react-table";
-import type { User } from "@/types/user";
+import type { UserProfile } from "@/types/user";
 import UserAction from "./UserAction";
 import { Badge } from "@/components/ui/badge";
 
@@ -20,8 +20,8 @@ const getRoleBadge = (role: string) => {
 
 export const userColumns = (
   onDelete: (userId: string) => void,
-  onEdit: (user: User) => void,
-): ColumnDef<User>[] => [
+  onEdit: (user: UserProfile) => void,
+): ColumnDef<UserProfile>[] => [
   {
     accessorKey: "fullName",
     header: "Name",

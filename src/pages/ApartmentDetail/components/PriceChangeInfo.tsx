@@ -1,5 +1,6 @@
 import { Badge } from "@/components/ui/badge";
 import type { PriceChange } from "@/types/apartment";
+import { useTranslation } from "react-i18next";
 
 function formatPrice(price: number) {
   return price.toLocaleString("vi-VN") + "₫";
@@ -28,28 +29,31 @@ const reasonVariant = (reason: PriceChange["reason"]) => {
   }
 };
 
-// label đẹp hơn
-const reasonLabel = (reason: PriceChange["reason"]) => {
-  switch (reason) {
-    case "peak season":
-      return "Peak";
-    case "low season":
-      return "Low";
-    case "special event":
-      return "Event";
-    case "manual override":
-      return "Manual";
-    default:
-      return reason;
-  }
-};
-
 export default function PriceChangeInfo({
   priceChange,
 }: {
   priceChange: PriceChange;
 }) {
+  const { t } = useTranslation("status");
+  const { t: tBook } = useTranslation("book");
   const { newPricePerNight, reason, startDate, endDate } = priceChange;
+
+  const reasonLabel = (reason: PriceChange["reason"]) => {
+    switch (reason) {
+      case "peak season":
+        return t("priceReason.peak");
+      case "low season":
+        return t("priceReason.low");
+      case "special event":
+        return t("priceReason.special");
+      case "manual override":
+        return t("priceReason.manual");
+      case "other":
+        return t("priceReason.other");
+      default:
+        return reason;
+    }
+  };
 
   return (
     <div className="flex items-center gap-5 text-sm px-3 py-2">
@@ -61,7 +65,9 @@ export default function PriceChangeInfo({
       </span>
 
       {/* middle */}
-      <span className="font-medium">{formatPrice(newPricePerNight)}/night</span>
+      <span className="font-medium">
+        {formatPrice(newPricePerNight)}/{tBook("apartment.night")}
+      </span>
 
       {/* right */}
       <Badge variant={reasonVariant(reason)}>{reasonLabel(reason)}</Badge>

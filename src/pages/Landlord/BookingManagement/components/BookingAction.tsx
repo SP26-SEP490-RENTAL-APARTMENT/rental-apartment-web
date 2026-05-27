@@ -27,6 +27,12 @@ import {
 } from "@/components/ui/tooltip";
 import { bookingManagementApi } from "@/services/privateApi/landlordApi";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
+import { renderBadge } from "@/utils/renderBadge";
+import {
+  BOOKING_STATUS_CONFIG,
+  PAYMENT_MODE_CONFIG,
+} from "@/config/badge-config";
 
 const formatDate = (date: Date) => {
   const year = date.getFullYear();
@@ -41,14 +47,8 @@ const generateReportNumber = () => {
 
 export interface Props {
   bookings: BookingHistory;
-  onCheckIn: (
-    bookingId: string,
-    data: { actualCheckIn: Date; note: string },
-  ) => Promise<void>;
-  onCheckOut: (
-    bookingId: string,
-    data: { actualCheckOut: Date; note: string },
-  ) => Promise<void>;
+  onCheckIn: (bookingId: string, data: FormData) => void;
+  onCheckOut: (bookingId: string, data: FormData) => void;
   onGetOccupantList: (bookingId: string) => Promise<void>;
   onAddOccupant: (bookingId: string) => void;
 }
@@ -59,6 +59,8 @@ function BookingAction({
   onGetOccupantList,
   onAddOccupant,
 }: Props) {
+  const { t } = useTranslation("landlord");
+  const { t: statusT } = useTranslation("status");
   const [checkInDialogOpen, setCheckInDialogOpen] = useState(false);
   const [checkOutDialogOpen, setCheckOutDialogOpen] = useState(false);
 
@@ -95,49 +97,68 @@ function BookingAction({
       window.URL.revokeObjectURL(url);
 
       toast.success("PDF file downloaded successfully");
-    } catch (error) {
-      toast.error("Failed to download PDF file");
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || "Failed to download PDF file");
     }
   };
 
   const handleGetDOC = async (id: string) => {
-    try {
-      const response = await bookingManagementApi.getDOCFile(id);
+  try {
+    const response = await bookingManagementApi.getDOCFile(id);
 
-      // dùng luôn type từ BE
-      const blob = new Blob([response.data], {
-        type: response.headers["content-type"],
-      });
+    const contentType = response.headers["content-type"];
+    const contentDisposition = response.headers["content-disposition"];
 
-      const url = window.URL.createObjectURL(blob);
+    const blob = new Blob([response.data], {
+      type: contentType,
+    });
 
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = `residence-report-${id}.docx`; // ❗ fix cứng docx
+    let extension = "docx"; // default
 
-      document.body.appendChild(link);
-      link.click();
+    // ưu tiên lấy từ content-disposition nếu BE có filename
+    const fileNameMatch =
+      contentDisposition?.match(/filename="?(.+?)"?$/);
 
-      link.remove();
-      window.URL.revokeObjectURL(url);
-
-      toast.success("File downloaded successfully");
-    } catch (error) {
-      toast.error("Failed to download file");
+    if (fileNameMatch) {
+      extension = fileNameMatch[1].split(".").pop() || "docx";
+    } else {
+      // fallback theo content-type
+      if (contentType?.includes("application/zip")) {
+        extension = "zip";
+      } else if (contentType?.includes("application/msword")) {
+        extension = "doc";
+      } else if (
+        contentType?.includes(
+          "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        )
+      ) {
+        extension = "docx";
+      }
     }
-  };
 
-  const handleCheckInSubmit = async (data: {
-    actualCheckIn: Date;
-    note: string;
-  }) => {
+    const url = window.URL.createObjectURL(blob);
+
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `residence-report-${id}.${extension}`;
+
+    document.body.appendChild(link);
+    link.click();
+
+    link.remove();
+    window.URL.revokeObjectURL(url);
+
+    toast.success("File downloaded successfully");
+  } catch (error: any) {
+    toast.error(error.response?.data?.message || "Failed to download file");
+  }
+};
+
+  const handleCheckInSubmit = async (data: FormData) => {
     await onCheckIn(bookings.bookingId, data);
   };
 
-  const handleCheckOutSubmit = async (data: {
-    actualCheckOut: Date;
-    note: string;
-  }) => {
+  const handleCheckOutSubmit = async (data: FormData) => {
     await onCheckOut(bookings.bookingId, data);
   };
   return (
@@ -152,31 +173,35 @@ function BookingAction({
         <DialogContent className="max-w-xl">
           <DialogHeader>
             <DialogTitle className="text-xl font-semibold">
-              Booking Detail
+              {t("booking.dialog.title")}
             </DialogTitle>
           </DialogHeader>
 
           <div className="space-y-4 text-sm">
             {/* Status + Payment */}
             <div className="flex justify-between items-center">
-              <span className="px-3 py-1 rounded-full bg-green-100 text-green-700 font-medium capitalize">
-                {bookings.status}
+              <span>
+                {renderBadge(bookings.status, BOOKING_STATUS_CONFIG, statusT)}
               </span>
-              <span className="text-gray-600 capitalize">
-                {bookings.paymentMode} payment
+              <span>
+                {renderBadge(
+                  bookings.paymentMode,
+                  PAYMENT_MODE_CONFIG,
+                  statusT,
+                )}
               </span>
             </div>
 
             {/* Dates */}
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <p className="text-gray-500">Check-in</p>
+                <p className="text-gray-500">{t("booking.dialog.checkIn")}</p>
                 <p className="font-medium">
                   {new Date(bookings.checkInDate).toLocaleDateString()}
                 </p>
               </div>
               <div>
-                <p className="text-gray-500">Check-out</p>
+                <p className="text-gray-500">{t("booking.dialog.checkOut")}</p>
                 <p className="font-medium">
                   {new Date(bookings.checkOutDate).toLocaleDateString()}
                 </p>
@@ -184,64 +209,116 @@ function BookingAction({
             </div>
 
             {/* Nights + Guests */}
-            <div className="grid grid-cols-3 gap-4">
-              <div>
-                <p className="text-gray-500">Nights</p>
+            <div className="grid grid-cols-5 gap-4">
+              <div className="bg-amber-200 rounded-sm p-2">
+                <p className="text-gray-500">{t("booking.dialog.nights")}</p>
                 <p className="font-medium">{bookings.nights}</p>
               </div>
-              <div>
-                <p className="text-gray-500">Adults</p>
+              <div className="bg-blue-200 rounded-sm p-2">
+                <p className="text-gray-500">{t("booking.dialog.adults")}</p>
                 <p className="font-medium">{bookings.noOfAdults}</p>
               </div>
-              <div>
-                <p className="text-gray-500">Pets</p>
+              <div className="bg-red-200 rounded-sm p-2">
+                <p className="text-gray-500">{t("booking.dialog.infants")}</p>
+                <p className="font-medium">{bookings.noOfInfants}</p>
+              </div>
+              <div className="bg-green-200 rounded-sm p-2">
+                <p className="text-gray-500">{t("booking.dialog.children")}</p>
+                <p className="font-medium">{bookings.noOfChildren}</p>
+              </div>
+              <div className="bg-gray-200 rounded-sm p-2">
+                <p className="text-gray-500">{t("booking.dialog.pets")}</p>
                 <p className="font-medium">{bookings.noOfPets}</p>
               </div>
             </div>
 
+            {(bookings.actualCheckIn || bookings.actualCheckOut) && (
+              <div className="border-t pt-4 space-y-2">
+                <div className="text-gray-600 font-medium mb-3">
+                  {t("booking.dialog.actualStay")}
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  {bookings.actualCheckIn && (
+                    <div>
+                      <p className="text-gray-500 text-sm">
+                        {t("booking.dialog.checkIn")}
+                      </p>
+                      <p className="font-medium bg-muted rounded-sm p-2">
+                        {new Date(bookings.actualCheckIn).toLocaleString(
+                          "vi-VN",
+                        )}
+                      </p>
+                    </div>
+                  )}
+                  {bookings.actualCheckOut && (
+                    <div>
+                      <p className="text-gray-500 text-sm">
+                        {t("booking.dialog.checkOut")}
+                      </p>
+                      <p className="font-medium bg-muted rounded-sm p-2">
+                        {new Date(bookings.actualCheckOut).toLocaleString(
+                          "vi-VN",
+                        )}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
             {/* Divider */}
             <div className="border-t pt-4 space-y-2">
               <div className="flex justify-between">
-                <span className="text-gray-600">Package</span>
+                <span className="text-gray-600">
+                  {t("booking.dialog.package")}
+                </span>
                 <span>{bookings.packagePrice.toLocaleString()}₫</span>
               </div>
 
-              <div className="flex justify-between">
-                <span className="text-gray-600">Deposit</span>
-                <span>{bookings.depositAmount.toLocaleString()}₫</span>
-              </div>
+              {bookings.paymentMode !== "full" && (
+                <div className="flex justify-between">
+                  <span className="text-gray-600">
+                    {t("booking.dialog.deposit")}
+                  </span>
+                  <span>{bookings.depositAmount.toLocaleString()}₫</span>
+                </div>
+              )}
 
               <div className="flex justify-between font-medium">
-                <span>Total</span>
+                <span>{t("booking.dialog.total")}</span>
                 <span>{bookings.totalPrice.toLocaleString()}₫</span>
               </div>
             </div>
 
             {/* Payment info */}
-            <div className="border-t pt-4 space-y-2">
-              <div className="flex justify-between">
-                <span className="text-gray-600">Paid</span>
-                <span>{bookings.upfrontPaymentAmount.toLocaleString()}₫</span>
-              </div>
+            {bookings.paymentMode !== "full" && (
+              <div className="border-t pt-4 space-y-2">
+                <div className="flex justify-between">
+                  <span className="text-gray-600">
+                    {t("booking.dialog.depositStatus")}
+                  </span>
+                  <span className="capitalize">
+                    {bookings.depositPaid
+                      ? t("booking.dialog.paid")
+                      : t("booking.dialog.unpaid")}
+                  </span>
+                </div>
 
-              <div className="flex justify-between">
-                <span className="text-gray-600">Deposit Status</span>
-                <span className="capitalize">
-                  {bookings.depositPaid ? "Paid" : "Unpaid"}
-                </span>
+                <div className="flex justify-between">
+                  <span className="text-gray-600">
+                    {t("booking.dialog.balanceDueDate")}
+                  </span>
+                  <span>
+                    {new Date(bookings.balanceDueDate).toLocaleDateString()}
+                  </span>
+                </div>
               </div>
-
-              <div className="flex justify-between">
-                <span className="text-gray-600">Balance Due</span>
-                <span>
-                  {new Date(bookings.balanceDueDate).toLocaleDateString()}
-                </span>
-              </div>
-            </div>
+            )}
 
             {/* Created */}
             <div className="text-xs text-gray-400 pt-2">
-              Created at: {new Date(bookings.createdAt).toLocaleString()}
+              {t("booking.dialog.createdAt")}:{" "}
+              {new Date(bookings.createdAt).toLocaleString()}
             </div>
 
             <div className="flex justify-end">
@@ -255,7 +332,7 @@ function BookingAction({
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p>Submit residence report</p>
+                  <p>{t("booking.dialog.submit")}</p>
                 </TooltipContent>
               </Tooltip>
             </div>
@@ -263,15 +340,16 @@ function BookingAction({
         </DialogContent>
       </Dialog>
 
-      {!bookings.actualCheckIn && (
-        <Button
-          size="sm"
-          variant="secondary"
-          onClick={() => setCheckInDialogOpen(true)}
-        >
-          <CheckCheck />
-        </Button>
-      )}
+      {!bookings.actualCheckIn &&
+        (bookings.status === "paid" || bookings.status === "confirmed") && (
+          <Button
+            size="sm"
+            variant="secondary"
+            onClick={() => setCheckInDialogOpen(true)}
+          >
+            <CheckCheck />
+          </Button>
+        )}
       {bookings.actualCheckIn && !bookings.actualCheckOut && (
         <Button
           size="sm"
@@ -304,7 +382,7 @@ function BookingAction({
         </TooltipContent>
       </Tooltip>
 
-      {bookings.actualCheckIn && (
+      {bookings.actualCheckIn && bookings.status !== "completed" && (
         <Tooltip>
           <TooltipTrigger asChild>
             <Button size="sm" className="bg-amber-500">

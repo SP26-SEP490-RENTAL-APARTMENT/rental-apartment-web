@@ -1,14 +1,15 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import type { Role } from "./languageStore";
 
 interface User {
   id: string;
   fullName: string;
   email: string;
-  role: string;
-  roles: string[]
-  nationality: string
-  subscriptionPlanId: string | null
+  role: Role;
+  roles: string[];
+  nationality: string;
+  subscriptionPlanId: string | null;
 }
 
 interface AuthStore {
@@ -18,7 +19,7 @@ interface AuthStore {
   isAuthenticated: boolean;
   login: (user: User, accessToken: string, refreshToken: string) => void;
   logout: () => void;
-  setToken: (accessToken: string) => void
+  setToken: (accessToken: string) => void;
 }
 
 export const useAuthStore = create<AuthStore>()(

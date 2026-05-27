@@ -32,14 +32,16 @@ function ListingAction({ listings, onAppvrove, onAssign }: Props) {
         </DialogContent>
       </Dialog>
 
-      <Button
-        onClick={() => onAppvrove(listings.apartmentId)}
-        size="sm"
-        variant="outline"
-        className="bg-yellow-500"
-      >
-        <CircleCheckBig />
-      </Button>
+      {listings.inspectionStatus === "passed" && (
+        <Button
+          onClick={() => onAppvrove(listings.apartmentId)}
+          size="sm"
+          variant="outline"
+          className="bg-yellow-500"
+        >
+          <CircleCheckBig />
+        </Button>
+      )}
 
       {!listings.inspectionStatus && (
         <Button

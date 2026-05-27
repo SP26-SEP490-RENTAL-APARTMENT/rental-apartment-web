@@ -19,11 +19,17 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import ApartmentDetailDialog from "@/components/ui/apartmentDetailDialog/ApartmentDetailDialog";
-import ManagementFilter, { type Filter } from "@/components/ui/managementFilter/ManagementFilter";
-import { bookingSortByList } from "@/constants/sortByList";
+import ManagementFilter, {
+  type Filter,
+} from "@/components/ui/managementFilter/ManagementFilter";
+import { BookingSortByList, BookingStatusList } from "@/constants/sortByList";
 import { Button } from "@/components/ui/button";
+import { useTranslation } from "react-i18next";
+import BookingFilter from "./components/BookingFilter";
 
 function BookingManagement() {
+  const { t } = useTranslation("common");
+  const { t: tLandlord } = useTranslation("landlord");
   const [bookings, setBookings] = useState<BookingHistory[]>([]);
   const [apartment, setApartment] = useState<Apartment | null>(null);
   const [occupantList, setOccupantList] = useState<Occupant[]>([]);
@@ -35,6 +41,7 @@ function BookingManagement() {
     sortBy: "createdAt",
     sortOrder: "desc",
   });
+  const [status, setStatus] = useState("");
   const [open, setOpen] = useState({ viewOccupant: false, addOccupant: false });
   const [selectedBookingId, setSelectedBookingId] = useState<string | null>(
     null,
@@ -49,6 +56,7 @@ function BookingManagement() {
         search: filters.search,
         sortBy: filters.sortBy,
         sortOrder: filters.sortOrder,
+        status: status === "all" ? "" : status,
       });
       setBookings(response.data.items);
       setTotalCount(response.data.totalCount);
@@ -57,7 +65,7 @@ function BookingManagement() {
     } finally {
       setLoading(false);
     }
-  }, [page, filters]);
+  }, [page, filters, status]);
 
   const fetchOccupantList = async (bookingId: string) => {
     try {
@@ -84,9 +92,9 @@ function BookingManagement() {
       await bookingManagementApi.addOccupant(selectedBookingId!, formData);
       setOpen({ ...open, addOccupant: false });
       toast.success("Occupant added successfully");
-    } catch (error) {
+    } catch (error: any) {
       console.log(error);
-      toast.error("Failed to add occupant");
+      toast.error(error.response?.data?.message || "Failed to add occupant");
     }
   };
 
@@ -119,12 +127,10 @@ function BookingManagement() {
       sortBy: "createdAt",
       sortOrder: "desc",
     });
+    setStatus("");
   };
 
-  const handleCheckIn = async (
-    bookingId: string,
-    data: { actualCheckIn: Date; note: string },
-  ) => {
+  const handleCheckIn = async (bookingId: string, data: FormData) => {
     try {
       await bookingManagementApi.checkIn(bookingId, data);
       // Refresh bookings list after successful check-in
@@ -135,10 +141,7 @@ function BookingManagement() {
     }
   };
 
-  const handleCheckOut = async (
-    bookingId: string,
-    data: { actualCheckOut: Date; note: string },
-  ) => {
+  const handleCheckOut = async (bookingId: string, data: FormData) => {
     try {
       await bookingManagementApi.checkOut(bookingId, data);
       // Refresh bookings list after successful check-out
@@ -160,26 +163,27 @@ function BookingManagement() {
             </div>
             <div>
               <h1 className="text-3xl font-bold text-gray-900">
-                Booking Management
+                {tLandlord("booking.title")}
               </h1>
               <p className="text-gray-600 mt-1">
-                Manage guest bookings and check-ins
+                {tLandlord("booking.description")}
               </p>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
         <Card className="border-0 shadow-sm">
           <CardContent className="flex gap-3 items-center">
             <ManagementFilter
               filter={filters}
               setFilter={setFilters}
-              sortByList={bookingSortByList}
+              sortByList={BookingSortByList()}
             />
+            <BookingFilter setStatus={setStatus} status={status} statusList={BookingStatusList()} />
             <Button variant="outline" onClick={handleResetFilters}>
-              Reset Filters
+              {t("button.resetFilters")}
             </Button>
           </CardContent>
         </Card>
@@ -196,7 +200,7 @@ function BookingManagement() {
                 handleCheckOut,
                 fetchOccupantList,
                 triggerAddOccupant,
-                fetchApartmentDetails
+                fetchApartmentDetails,
               )}
               data={bookings}
               limit={10}

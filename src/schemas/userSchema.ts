@@ -7,6 +7,10 @@ export const createUserSchema = z.object({
   fullName: z.string().min(2, "Full name must be at least 2 characters"),
   phone: z.string().regex(/^[0-9]{10,15}$/, "Invalid phone number"),
   identityVerified: z.boolean(),
+  sex: z.string(),
+  birthday: z.string(),
+  nationality: z.string(),
+  nationalIdCardNumber: z.string(),
 });
 
 export const updateUserSchema = z.object({
@@ -15,6 +19,10 @@ export const updateUserSchema = z.object({
   fullName: z.string().min(2, "Full name must be at least 2 characters"),
   phone: z.string().regex(/^[0-9]{10,15}$/, "Invalid phone number"),
   identityVerified: z.boolean(),
+  sex: z.string(),
+  birthday: z.string(),
+  nationality: z.string(),
+  nationalIdCardNumber: z.string(),
 });
 
 export type CreateUserFormData = z.infer<typeof createUserSchema>;

@@ -11,7 +11,9 @@
         "noTickets": "Không tìm thấy yêu cầu nào",
         "noTicketsDescription": "Bạn chưa có yêu cầu hỗ trợ nào.",
         "viewDetails": "Xem Chi tiết",
-        "resolutionNotes": "Ghi chú Giải pháp",
+        "resolutionNotes": "Giải pháp",
+        "attachments": "Tệp đính kèm",
+        "uploadImage": "Tải lên Hình ảnh",
         "categories": {
             "booking_issue": "Vấn đề Đặt phòng",
             "payment_problem": "Vấn đề Thanh toán",
@@ -70,7 +72,20 @@
             "updatedAt": "Lần cập nhật cuối",
             "resolutionNotes": "Ghi chú Giải pháp",
             "noResolutionNotes": "Không có ghi chú giải pháp",
-            "resolvedAt": "Ngày giải quyết"
+            "resolvedAt": "Ngày giải quyết",
+            "solutionResponse": "Phản hồi"
+        },
+        "response": {
+            "title": "Gửi Phản hồi của bạn",
+            "description": "Chấp nhận hoặc từ chối yêu cầu giải pháp của khách hàng. Chi tiết bổ sung có thể được cung cấp nếu từ chối.",
+            "decision": "Quyết định Giải pháp",
+            "accept": "Chấp nhận Giải pháp",
+            "acceptDescription": "Đánh dấu ticket là đã giải quyết",
+            "reject": "Từ chối Giải pháp",
+            "rejectDescription": "Yêu cầu phản hồi bổ sung từ khách hàng",
+            "rejectDetail": "Chi tiết Từ chối",
+            "rejectDetailDescription": "Cung cấp chi tiết bổ sung cho việc từ chối giải pháp",
+            "reasonPlaceholder": "Giải thích thông tin bổ sung bạn cần từ khách hàng để giải quyết vấn đề"
         }
     }
 }

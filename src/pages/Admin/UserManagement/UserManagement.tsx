@@ -5,7 +5,7 @@ import { userColumns } from "./components/userColumns";
 import UserForm from "./components/UserForm";
 import UserFilter from "./components/UserFilter";
 import { userManagementApi } from "@/services/privateApi/adminApi";
-import type { User } from "@/types/user";
+import type { UserProfile } from "@/types/user";
 import { toast } from "sonner";
 import { Plus, Users } from "lucide-react";
 import { useTranslation } from "react-i18next";
@@ -21,7 +21,7 @@ import ManagementFilter from "@/components/ui/managementFilter/ManagementFilter"
 function UserManagement() {
   const { t: userTranslation } = useTranslation("user");
 
-  const [data, setData] = useState<User[]>([]);
+  const [data, setData] = useState<UserProfile[]>([]);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
@@ -32,7 +32,7 @@ function UserManagement() {
   });
   const [role, setRole] = useState<string>("all");
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [selectedUser, setSelectedUser] = useState<UserProfile | null>(null);
   const [formMode, setFormMode] = useState<"create" | "update">("create");
 
   const fetchUsers = async () => {
@@ -94,7 +94,7 @@ function UserManagement() {
     }
   };
 
-  const handleEditUser = (user: User) => {
+  const handleEditUser = (user: UserProfile) => {
     setSelectedUser(user);
     setFormMode("update");
     setIsFormOpen(true);

@@ -2,11 +2,19 @@ import { apiConfig } from "@/config/apiConfig";
 import type { UpdateApartmentFormData } from "@/schemas/apartmentSchema";
 import type { AvailableDateFormData } from "@/schemas/availableDateSchema";
 import type { ListingApproveFormData } from "@/schemas/listingApproveSchema";
+import type { PricingPolicyFormData } from "@/schemas/pricingPolicy";
 import type { UpdateRoomFormData } from "@/schemas/roomSchema";
 import type { Apartment, Room } from "@/types/apartment";
 import type { ApiResponse } from "@/types/api";
 import type { PaginationResponse } from "@/types/paginationResponse";
 import type { ParamsProp } from "@/types/params";
+
+export interface LandlordDashboardSummary {
+  generatedAt: string;
+  totalProperties: number;
+  totalBookings: number;
+  totalRevenue: number;
+}
 
 export const apartmentManagementApi = {
   getApartments: (
@@ -75,9 +83,9 @@ export const roomManagementApi = {
 export const bookingManagementApi = {
   getBookings: (params: ParamsProp) =>
     apiConfig.privateApi.get("/landlord/bookings/history", { params }),
-  checkIn: (bookingId: string, data: { actualCheckIn: Date; note: string }) =>
+  checkIn: (bookingId: string, data: FormData) =>
     apiConfig.privateApi.post(`/Booking/${bookingId}/check-in`, data),
-  checkOut: (bookingId: string, data: { actualCheckOut: Date; note: string }) =>
+  checkOut: (bookingId: string, data: FormData) =>
     apiConfig.privateApi.post(`/Booking/${bookingId}/check-out`, data),
   submitResidenceReport: (
     bookingId: string,
@@ -120,9 +128,16 @@ export const paymentHistoryApi = {
     apiConfig.privateApi.get("/landlord/payments/history", { params }),
 };
 
+export const landlordDashboardApi = {
+  getSummary: () =>
+    apiConfig.privateApi.get<ApiResponse<LandlordDashboardSummary>>("/landlord/dashboard/summary"),
+};
+
 export const priceChangeApi = {
   getPriceChanges: (apartmentId: string) =>
-    apiConfig.privateApi.get(`/landlord/apartments/${apartmentId}/pricing/price-changes`),
+    apiConfig.privateApi.get(
+      `/landlord/apartments/${apartmentId}/pricing/price-changes`,
+    ),
   manualPriceChange: (
     apartmentId: string,
     data: {
@@ -149,4 +164,35 @@ export const priceChangeApi = {
       `/landlord/apartments/${apartmentId}/pricing/manual/bulk-weekdays`,
       data,
     ),
+};
+
+export const myWalletApi = {
+  getMyWallet: () => apiConfig.privateApi.get("/landlord/wallet"),
+  getPayoutHistory: (params: ParamsProp) =>
+    apiConfig.privateApi.get("/landlord/payouts", { params }),
+  withdraw: (data: {
+    amount: number;
+    channel: string;
+    toBin: string;
+    toAccountNumber: string;
+    orderInfo: string;
+  }) => apiConfig.privateApi.post("/landlord/payouts", data),
+};
+
+export const pricingPolicyApi = {
+  getAllPricingPolicy: () =>
+    apiConfig.privateApi.get("/landlord/pricing/templates"),
+  applyPolicy: (apartmentId: string, data: PricingPolicyFormData) =>
+    apiConfig.privateApi.post(
+      `/landlord/apartments/${apartmentId}/pricing/policies`,
+      data,
+    ),
+  viewAvailablePolicies: (apartmentId: string) =>
+    apiConfig.privateApi.get(
+      `/landlord/apartments/${apartmentId}/pricing/policies/templates/available`,
+    ),
+};
+
+export const feeManagementApi = {
+  getAllFees: () => apiConfig.privateApi.get("/landlord/penalties"),
 };
