@@ -60,6 +60,12 @@ const getMethodIcon = (method: string) => {
         label: "Landlord Wallet (Penalty)",
       };
 
+    case "payos":
+      return {
+        icon: <Wallet className="w-5 h-5 text-purple-500" />,
+        label: "PayOS",
+      };
+
     default:
       return {
         icon: <Wallet className="w-5 h-5 text-gray-400" />,
@@ -85,6 +91,12 @@ function PaymentCard({ payment }: { payment: PaymentHistory }) {
             {t("payment.card.depositBooking")}
           </Badge>
         );
+      case "booking_balance":
+        return (
+          <Badge className="bg-green-500">
+            {t("payment.card.balanceBooking")}
+          </Badge>
+        );
       default:
         return <Badge variant="outline">{t("payment.card.other")}</Badge>;
     }
@@ -103,6 +115,10 @@ function PaymentCard({ payment }: { payment: PaymentHistory }) {
       case "refund":
         return (
           <Badge className="bg-black">{t("payment.card.refund")}</Badge>
+        );
+      case "balance":
+        return (
+          <Badge className="bg-green-500">{t("payment.card.balance")}</Badge>
         );
       default:
         return <Badge variant="outline">{t("payment.card.other")}</Badge>;

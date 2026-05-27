@@ -74,7 +74,7 @@ function InspectionForm({ open, onClose, onSubmit }: Props) {
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Fill the form</DialogTitle>
+          <DialogTitle>Inspection Form</DialogTitle>
         </DialogHeader>
 
         <div className="p-4 space-y-4">

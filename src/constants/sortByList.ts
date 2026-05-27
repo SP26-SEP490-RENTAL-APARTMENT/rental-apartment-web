@@ -100,6 +100,7 @@ export const PaymentStatusList = () => {
 export const paymentMethodList = [
   { label: "Momo", value: "momo_wallet" },
   { label: "Stripe", value: "stripe" },
+  { label: "PayOS", value: "payos" },
 ];
 
 export const PaymentPurposeList = () => {
@@ -107,6 +108,9 @@ export const PaymentPurposeList = () => {
   return [
     { label: t("payment.full"), value: "booking_full_payment" },
     { label: t("payment.deposit"), value: "booking_deposit" },
+    { label: t("payment.balance"), value: "booking_balance" },
+    { label: t("payment.refund"), value: "booking_refund" },
+    { label: t("payment.upfront"), value: "booking_upfront" },
   ];
 };
 
@@ -159,5 +163,19 @@ export const PayoutSortByList = () => {
     { label: t("option.date"), value: "createdAt" },
     { label: t("option.amount"), value: "amount" },
     { label: t("option.status"), value: "status" },
+  ];
+};
+
+export const BookingStatusList = () => {
+  const { t } = useTranslation("status");
+  return [
+    { label: t("booking.pending"), value: "pending" },
+    { label: t("booking.confirmed"), value: "confirmed" },
+    { label: t("booking.cancelled"), value: "cancelled" },
+    { label: t("booking.completed"), value: "completed" },
+    { label: t("booking.disputed"), value: "disputed" },
+    { label: t("booking.negotiating"), value: "negotiating" },
+    { label: t("booking.paid"), value: "paid" },
+    { label: t("booking.unknown"), value: "unknown" },
   ];
 };

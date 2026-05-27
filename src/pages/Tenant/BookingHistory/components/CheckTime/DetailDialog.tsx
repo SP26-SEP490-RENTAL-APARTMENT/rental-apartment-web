@@ -1,0 +1,172 @@
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import Summary from "./Summary";
+import TimeLine from "./TimeLine";
+import FeeBreakDown from "./FeeBreakDown";
+import Claim from "./Claim";
+import Photos from "./Photos";
+import { useTranslation } from "react-i18next";
+import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Textarea } from "@/components/ui/textarea";
+import { bookingApi } from "@/services/privateApi/tenantApi";
+import { toast } from "sonner";
+
+function DetailDialog({
+  open,
+  onClose,
+  data,
+ 
+}: {
+  open: boolean;
+  onClose: () => void;
+  data: any;
+  
+}) {
+  const { t } = useTranslation("paymentHistory");
+  const [form, setForm] = useState({
+    action: "confirm",
+    disputeReason: "",
+    notes: "",
+  });
+  const [isResponse, setIsResponse] = useState(false);
+
+  const handleRespondCheckTime = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      await bookingApi.respondToCheckTime(data.bookingId, form);
+      toast.success("Response submitted successfully");
+      setIsResponse(false);
+      // refetchCheckTime(data.bookingId);
+    } catch (error) {
+      toast.error("Failed to submit response");
+      console.error("Error occurred while responding to check time:", error);
+    }
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={onClose}>
+      <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle>{t("checkTime.title")}</DialogTitle>
+        </DialogHeader>
+
+        <Tabs defaultValue="overview">
+          <TabsList>
+            <TabsTrigger value="overview">
+              {t("checkTime.overview")}
+            </TabsTrigger>
+            <TabsTrigger value="photos">{t("checkTime.photos")}</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="overview" className="space-y-4">
+            <Summary data={data} />
+            <TimeLine data={data} />
+            <FeeBreakDown data={data} />
+            <Claim data={data} />
+          </TabsContent>
+
+          <TabsContent value="photos">
+            <Photos data={data} />
+          </TabsContent>
+        </Tabs>
+
+        {!isResponse && (
+          <div className="flex justify-end pt-4">
+            <Button onClick={() => setIsResponse(true)} variant="default">
+              {t("checkTime.respondButton") || "Respond to Check Time"}
+            </Button>
+          </div>
+        )}
+
+        {isResponse && (
+          <form
+            onSubmit={handleRespondCheckTime}
+            className="border rounded-lg p-6 bg-slate-50 space-y-6"
+          >
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold">Your Response</h3>
+              <div className="bg-white border rounded-md p-4">
+                <RadioGroup
+                  value={form.action}
+                  onValueChange={(value) => setForm({ ...form, action: value })}
+                >
+                  <div className="flex items-center space-x-2 mb-3">
+                    <RadioGroupItem value="confirm" id="confirmed" />
+                    <Label
+                      htmlFor="confirmed"
+                      className="font-medium cursor-pointer"
+                    >
+                      Confirm
+                    </Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="dispute" id="dispute" />
+                    <Label
+                      htmlFor="dispute"
+                      className="font-medium cursor-pointer"
+                    >
+                      Dispute
+                    </Label>
+                  </div>
+                </RadioGroup>
+              </div>
+            </div>
+
+            {form.action === "dispute" && (
+              <div className="space-y-2">
+                <Label htmlFor="dispute-reason" className="font-semibold">
+                  Reason for Dispute
+                </Label>
+                <Textarea
+                  id="dispute-reason"
+                  placeholder="Please provide detailed information about why you are disputing this check time..."
+                  value={form.disputeReason}
+                  onChange={(e) =>
+                    setForm({ ...form, disputeReason: e.target.value })
+                  }
+                  className="min-h-32"
+                />
+              </div>
+            )}
+
+            <div className="space-y-2">
+              <Label htmlFor="notes" className="font-semibold">
+                Additional Notes
+              </Label>
+              <Textarea
+                id="notes"
+                placeholder="Any additional notes or information..."
+                value={form.notes}
+                onChange={(e) => setForm({ ...form, notes: e.target.value })}
+                className="min-h-24"
+              />
+            </div>
+
+            <div className="flex justify-end gap-3 pt-4 border-t">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setIsResponse(false)}
+              >
+                Cancel
+              </Button>
+              <Button type="submit" variant="default">
+                Submit Response
+              </Button>
+            </div>
+          </form>
+        )}
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+export default DetailDialog;

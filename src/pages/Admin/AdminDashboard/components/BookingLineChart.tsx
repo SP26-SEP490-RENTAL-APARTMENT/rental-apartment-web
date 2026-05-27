@@ -108,10 +108,10 @@ export default function BookingLineChart({ data }: Props) {
                         const item = props.payload;
                         return [
                           <div key="tooltip" className="space-y-1">
-                            <p className="font-semibold">{item.date}</p>
+                            <p className="font-semibold">{item?.date}</p>
                             <p className="text-sm">{value} bookings</p>
                             <p className="text-sm text-green-600">
-                              {Number(item.revenue).toLocaleString("vi-VN")} đ
+                              {Number(item?.revenue).toLocaleString("vi-VN")} đ
                             </p>
                           </div>,
                         ];

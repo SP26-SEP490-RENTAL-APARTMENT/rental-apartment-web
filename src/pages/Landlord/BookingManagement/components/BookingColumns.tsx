@@ -8,12 +8,12 @@ import { useTranslation } from "react-i18next";
 export const BookingColumns = (
   onCheckIn: (
     bookingId: string,
-    data: { actualCheckIn: Date; note: string },
-  ) => Promise<void>,
+    data: FormData,
+  ) => void,
   onCheckOut: (
     bookingId: string,
-    data: { actualCheckOut: Date; note: string },
-  ) => Promise<void>,
+    data: FormData,
+  ) => void,
   onGetOccupantList: (bookingId: string) => Promise<void>,
   onAddOccupant: (bookingId: string) => void,
   getApartmentDetail: (apartmentId: string) => void,
@@ -22,32 +22,60 @@ export const BookingColumns = (
   const { t: statusT } = useTranslation("status");
 
   const getStatusBadge = (status?: string | null) => {
-  switch (status) {
-    case "pending":
-      return <Badge className="bg-yellow-500 text-white">{statusT("booking.pending")}</Badge>;
+    switch (status) {
+      case "pending":
+        return (
+          <Badge className="bg-yellow-500 text-white">
+            {statusT("booking.pending")}
+          </Badge>
+        );
 
-    case "negotiating":
-      return <Badge className="bg-orange-500 text-white">{statusT("booking.negotiating")}</Badge>;
+      case "negotiating":
+        return (
+          <Badge className="bg-orange-500 text-white">
+            {statusT("booking.negotiating")}
+          </Badge>
+        );
 
-    case "confirmed":
-      return <Badge className="bg-blue-500 text-white">{statusT("booking.confirmed")}</Badge>;
+      case "confirmed":
+        return (
+          <Badge className="bg-blue-500 text-white">
+            {statusT("booking.confirmed")}
+          </Badge>
+        );
 
-    case "paid":
-      return <Badge className="bg-emerald-500 text-white">{statusT("booking.paid")}</Badge>;
+      case "paid":
+        return (
+          <Badge className="bg-emerald-500 text-white">
+            {statusT("booking.paid")}
+          </Badge>
+        );
 
-    case "completed":
-      return <Badge className="bg-green-600 text-white">{statusT("booking.completed")}</Badge>;
+      case "completed":
+        return (
+          <Badge className="bg-green-600 text-white">
+            {statusT("booking.completed")}
+          </Badge>
+        );
 
-    case "cancelled":
-      return <Badge className="bg-gray-500 text-white">{statusT("booking.cancelled")}</Badge>;
+      case "cancelled":
+        return (
+          <Badge className="bg-gray-500 text-white">
+            {statusT("booking.cancelled")}
+          </Badge>
+        );
 
-    case "disputed":
-      return <Badge className="bg-red-500 text-white">{statusT("booking.disputed")}</Badge>;
+      case "disputed":
+        return (
+          <Badge className="bg-red-500 text-white">
+            {statusT("booking.disputed")}
+          </Badge>
+        );
 
-    default:
-      return <Badge variant="secondary">{statusT("booking.unknown")}</Badge>;
-  }
-};
+      default:
+        return <Badge variant="secondary">{statusT("booking.unknown")}</Badge>;
+    }
+  };
   return [
     {
       accessorKey: "apartmentId",

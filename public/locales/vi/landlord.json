@@ -192,14 +192,17 @@
             "checkOutDate": "Ngày Check-out",
             "notes": "Ghi chú",
             "cancel": "Hủy",
-            "notesPlaceholder": "Thêm ghi chú"
+            "notesPlaceholder": "Thêm ghi chú",
+            "evidence": "Tải lên Chứng cứ Hình ảnh",
+            "uploadImage": "Tải lên Hình ảnh",
+            "selectedPhotos": "Hình ảnh Đã Chọn"
         }
     },
     "occupant": {
         "title": "Danh sách người tạm trú",
         "occupant": "Khách",
         "form": {
-            "title": "Thêm người tạm trú",
+            "title": "Thêm người đi cùng",
             "fullName": "Họ và tên",
             "passport": "Số hộ chiếu",
             "nationalID": "Số CMND/CCCD",
@@ -219,6 +222,7 @@
         }
     },
     "payment": {
+        "purpose": "Mục đích",
         "title": "Lịch Sử Thanh Toán",
         "description": "Xem và quản lý lịch sử thanh toán của bạn",
         "type": "Loại thanh toán",
@@ -228,7 +232,14 @@
         "amount": "Số tiền",
         "refundBooking": "Hoàn tiền đặt phòng",
         "fullBooking": "Thanh toán toàn bộ đặt phòng",
-        "depositBooking": "Thanh toán đặt cọc đặt phòng"
+        "depositBooking": "Thanh toán đặt cọc đặt phòng",
+        "balanceBooking": "Thanh toán số dư đặt phòng",
+        "balance": "Số dư đặt phòng",
+        "refund": "Hoàn tiền đặt phòng",
+        "upfront": "Thanh toán đặt phòng",
+        "deposit": "Thanh toán đặt cọc",
+        "other": "Khác",
+        "penalty": "Phí phạt"
     },
     "payout": {
         "title": "Ví của tôi",
@@ -261,5 +272,23 @@
             "success": "Yêu cầu rút tiền đã được gửi thành công",
             "error": "Không thể gửi yêu cầu rút tiền"
         }
+    },
+    "fee": {
+        "title": "Quản lý phí",
+        "description": "Xem và quản lý các khoản phí và phạt chưa thanh toán",
+        "outstandingFees": "Phí chưa thanh toán",
+        "walletPenalties": "Phạt trong ví",
+        "totalOverdue": "Tổng cộng quá hạn",
+        "totalDisputed": "Tổng cộng tranh chấp",
+        "feeType": "Loại phí",
+        "amount": "Số tiền",
+        "bookingId": "ID Đặt phòng",
+        "dueDate": "Ngày Đến Hạn",
+        "status": "Trạng thái",
+        "actions": "Hành động",
+        "payNow": "Thanh Toán Ngay",
+        "dispute": "Tranh Chấp",
+        "overdue": "quá hạn",
+        "disputed": "tranh chấp"
     }
 }

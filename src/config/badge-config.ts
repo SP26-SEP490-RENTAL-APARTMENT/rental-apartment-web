@@ -100,3 +100,22 @@ export const PAYOUT_STATUS_CONFIG = {
     label: "payout.failed",
   },
 };
+
+export const PAYMENT_TYPE_CONFIG = {
+  upfront: {
+    className: "bg-blue-100 text-blue-700",
+    label: "payment.upfront",
+  },
+  deposit: {
+    className: "bg-green-100 text-green-700",
+    label: "payment.deposit",
+  },
+  refund: {
+    className: "bg-red-100 text-red-700",
+    label: "payment.refund",
+  },
+  balance: {
+    className: "bg-purple-100 text-purple-700",
+    label: "payment.balance",
+  },
+};

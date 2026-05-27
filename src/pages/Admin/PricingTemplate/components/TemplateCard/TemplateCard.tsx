@@ -100,7 +100,7 @@ function TemplateCard({
               <span>Updated</span>
             </div>
             <p className="text-sm font-semibold text-gray-900 dark:text-gray-50">
-              {template.updatedAt}
+              {template.updatedAt?.slice(0, 10)}{" "}
             </p>
           </div>
 

@@ -100,23 +100,13 @@ function HomePage() {
     <div className="min-h-screen bg-gray-50 pb-16">
       <HeroSection />
       {/* Search & Filter Section */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8 relative z-10 mb-12">
-        
-          {/* <HomeFilter
-            search={search}
-            sortBy={sortBy}
-            sortOrder={sortOrder}
-            onSearchChange={setSearch}
-            onSortByChange={setSortBy}
-            onSortOrderChange={setSortOrder}
-          /> */}
-          <HomeFilterV2
-            onApply={(values) => {
-              setPage(1);
-              setFilters(values);
-            }}
-          />
-        
+      <div className="max-w-7xl mx-auto -mt-8 relative z-10 mb-12 flex items-center justify-center">
+        <HomeFilterV2
+          onApply={(values) => {
+            setPage(1);
+            setFilters(values);
+          }}
+        />
       </div>
 
       {/* Results Section */}

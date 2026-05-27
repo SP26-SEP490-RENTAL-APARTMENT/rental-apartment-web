@@ -103,12 +103,12 @@ function RevenueLineChart({ data }: { data: any }) {
                         const item = props.payload;
                         return [
                           <div key="tooltip" className="space-y-1">
-                            <p className="font-semibold">{item.date}</p>
+                            <p className="font-semibold">{item?.date}</p>
                             <p className="text-sm text-green-600">
-                              {Number(item.revenue).toLocaleString("en-US")} VND
+                              {Number(item?.revenue).toLocaleString("en-US")} VND
                             </p>
                             <p className="text-sm text-blue-600">
-                              {item.bookings} bookings
+                              {item?.bookings} bookings
                             </p>
                           </div>,
                         ];

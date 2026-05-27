@@ -1,4 +1,5 @@
 {
+    "selectStatus": "Chọn trạng thái",
     "all": "Tất cả",
     "apartment": {
         "draft": "Nháp",
@@ -50,7 +51,10 @@
         "success": "Thành công",
         "failed": "Thất bại",
         "refunded": "Đã hoàn tiền",
-        "pending": "Chờ xử lý"
+        "pending": "Chờ xử lý",
+        "balance": "Số dư",
+        "upfront": "Thanh toán trước",
+        "refund": "Hoàn tiền"
     },
     "priceReason": {
         "peak": "Mùa cao điểm",

@@ -6,6 +6,7 @@ import OccupyActions from "./OccupyActions";
 export const OccupyColumns = (
   onViewApartment: (id: string) => void,
   onViewUser: (id: string) => void,
+  onOpenPenaltyDialog: (occupy: Occupy) => void,
 ): ColumnDef<Occupy>[] => [
   {
     accessorKey: "tenantFullName",
@@ -70,7 +71,12 @@ export const OccupyColumns = (
     header: "Actions",
     cell: ({ row }) => {
       const occupy = row.original;
-      return <OccupyActions occupy={occupy} />;
+      return (
+        <OccupyActions
+          occupy={occupy}
+          onOpenPenaltyDialog={onOpenPenaltyDialog}
+        />
+      );
     },
   },
 ];

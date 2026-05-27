@@ -47,14 +47,8 @@ const generateReportNumber = () => {
 
 export interface Props {
   bookings: BookingHistory;
-  onCheckIn: (
-    bookingId: string,
-    data: { actualCheckIn: Date; note: string },
-  ) => Promise<void>;
-  onCheckOut: (
-    bookingId: string,
-    data: { actualCheckOut: Date; note: string },
-  ) => Promise<void>;
+  onCheckIn: (bookingId: string, data: FormData) => void;
+  onCheckOut: (bookingId: string, data: FormData) => void;
   onGetOccupantList: (bookingId: string) => Promise<void>;
   onAddOccupant: (bookingId: string) => void;
 }
@@ -103,49 +97,68 @@ function BookingAction({
       window.URL.revokeObjectURL(url);
 
       toast.success("PDF file downloaded successfully");
-    } catch (error) {
-      toast.error("Failed to download PDF file");
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || "Failed to download PDF file");
     }
   };
 
   const handleGetDOC = async (id: string) => {
-    try {
-      const response = await bookingManagementApi.getDOCFile(id);
+  try {
+    const response = await bookingManagementApi.getDOCFile(id);
 
-      // dùng luôn type từ BE
-      const blob = new Blob([response.data], {
-        type: response.headers["content-type"],
-      });
+    const contentType = response.headers["content-type"];
+    const contentDisposition = response.headers["content-disposition"];
 
-      const url = window.URL.createObjectURL(blob);
+    const blob = new Blob([response.data], {
+      type: contentType,
+    });
 
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = `residence-report-${id}.docx`; // ❗ fix cứng docx
+    let extension = "docx"; // default
 
-      document.body.appendChild(link);
-      link.click();
+    // ưu tiên lấy từ content-disposition nếu BE có filename
+    const fileNameMatch =
+      contentDisposition?.match(/filename="?(.+?)"?$/);
 
-      link.remove();
-      window.URL.revokeObjectURL(url);
-
-      toast.success("File downloaded successfully");
-    } catch (error) {
-      toast.error("Failed to download file");
+    if (fileNameMatch) {
+      extension = fileNameMatch[1].split(".").pop() || "docx";
+    } else {
+      // fallback theo content-type
+      if (contentType?.includes("application/zip")) {
+        extension = "zip";
+      } else if (contentType?.includes("application/msword")) {
+        extension = "doc";
+      } else if (
+        contentType?.includes(
+          "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        )
+      ) {
+        extension = "docx";
+      }
     }
-  };
 
-  const handleCheckInSubmit = async (data: {
-    actualCheckIn: Date;
-    note: string;
-  }) => {
+    const url = window.URL.createObjectURL(blob);
+
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `residence-report-${id}.${extension}`;
+
+    document.body.appendChild(link);
+    link.click();
+
+    link.remove();
+    window.URL.revokeObjectURL(url);
+
+    toast.success("File downloaded successfully");
+  } catch (error: any) {
+    toast.error(error.response?.data?.message || "Failed to download file");
+  }
+};
+
+  const handleCheckInSubmit = async (data: FormData) => {
     await onCheckIn(bookings.bookingId, data);
   };
 
-  const handleCheckOutSubmit = async (data: {
-    actualCheckOut: Date;
-    note: string;
-  }) => {
+  const handleCheckOutSubmit = async (data: FormData) => {
     await onCheckOut(bookings.bookingId, data);
   };
   return (
@@ -230,8 +243,10 @@ function BookingAction({
                       <p className="text-gray-500 text-sm">
                         {t("booking.dialog.checkIn")}
                       </p>
-                      <p className="font-medium">
-                        {new Date(bookings.actualCheckIn).toLocaleDateString()}
+                      <p className="font-medium bg-muted rounded-sm p-2">
+                        {new Date(bookings.actualCheckIn).toLocaleString(
+                          "vi-VN",
+                        )}
                       </p>
                     </div>
                   )}
@@ -240,8 +255,10 @@ function BookingAction({
                       <p className="text-gray-500 text-sm">
                         {t("booking.dialog.checkOut")}
                       </p>
-                      <p className="font-medium">
-                        {new Date(bookings.actualCheckOut).toLocaleDateString()}
+                      <p className="font-medium bg-muted rounded-sm p-2">
+                        {new Date(bookings.actualCheckOut).toLocaleString(
+                          "vi-VN",
+                        )}
                       </p>
                     </div>
                   )}
@@ -323,15 +340,16 @@ function BookingAction({
         </DialogContent>
       </Dialog>
 
-      {!bookings.actualCheckIn && (
-        <Button
-          size="sm"
-          variant="secondary"
-          onClick={() => setCheckInDialogOpen(true)}
-        >
-          <CheckCheck />
-        </Button>
-      )}
+      {!bookings.actualCheckIn &&
+        (bookings.status === "paid" || bookings.status === "confirmed") && (
+          <Button
+            size="sm"
+            variant="secondary"
+            onClick={() => setCheckInDialogOpen(true)}
+          >
+            <CheckCheck />
+          </Button>
+        )}
       {bookings.actualCheckIn && !bookings.actualCheckOut && (
         <Button
           size="sm"
@@ -364,7 +382,7 @@ function BookingAction({
         </TooltipContent>
       </Tooltip>
 
-      {bookings.actualCheckIn && (
+      {bookings.actualCheckIn && bookings.status !== "completed" && (
         <Tooltip>
           <TooltipTrigger asChild>
             <Button size="sm" className="bg-amber-500">
