@@ -28,7 +28,7 @@ function CollectionForm({
   collection = null,
   onSuccess,
 }: CollectionFormProps) {
-  const { t } = useTranslation("common");
+  const { t: tUser } = useTranslation("user");
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
@@ -74,7 +74,10 @@ function CollectionForm({
             description: formData.description.trim(),
           },
         );
-        toast.success("Collection updated successfully");
+        toast.success(
+          tUser("collection.form.toastUpdate") ||
+            "Collection updated successfully",
+        );
       } else {
         // Create collection
         await collectionsApi.createCollection({
@@ -82,8 +85,7 @@ function CollectionForm({
           description: formData.description.trim(),
         });
         toast.success(
-          t("toast.createCollectionSuccess") ||
-            "Collection created successfully",
+          tUser("collection.form.toastOk") || "Collection created successfully",
         );
       }
       onOpenChange(false);
@@ -104,22 +106,26 @@ function CollectionForm({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-125">
         <DialogHeader>
-          <DialogTitle>{isEditing ? "Edit" : "Create"} Collection</DialogTitle>
+          <DialogTitle>
+            {isEditing
+              ? tUser("collection.form.editTitle")
+              : tUser("collection.form.title")}
+          </DialogTitle>
           <DialogDescription>
             {isEditing
-              ? "Update your collection details"
-              : "Create a new collection to organize your favorites"}
+              ? tUser("collection.form.subTitle")
+              : tUser("collection.form.subTitle")}
           </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-2">
+          <div className="space-y-3">
             <label htmlFor="name" className="text-sm font-medium text-gray-700">
-              Collection Name
+              {tUser("collection.form.name")}
             </label>
             <Input
               id="name"
-              placeholder="My Collection"
+              placeholder={tUser("collection.form.namePlaceholder")}
               value={formData.name}
               onChange={(e) =>
                 setFormData({ ...formData, name: e.target.value })
@@ -131,16 +137,16 @@ function CollectionForm({
             <p className="text-xs text-gray-500">{formData.name.length}/100</p>
           </div>
 
-          <div className="space-y-2">
+          <div className="space-y-3">
             <label
               htmlFor="description"
               className="text-sm font-medium text-gray-700"
             >
-              Description
+              {tUser("collection.form.description")}
             </label>
             <Textarea
               id="description"
-              placeholder="Describe your collection..."
+              placeholder={tUser("collection.form.descriptionPlaceholder")}
               value={formData.description}
               onChange={(e) =>
                 setFormData({ ...formData, description: e.target.value })
@@ -162,7 +168,7 @@ function CollectionForm({
               onClick={() => onOpenChange(false)}
               disabled={isLoading}
             >
-              Cancel
+              {tUser("collection.form.cancel")}
             </Button>
             <Button
               type="submit"
@@ -170,7 +176,9 @@ function CollectionForm({
               className="bg-purple-600 hover:bg-purple-700"
             >
               {isLoading && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
-              {isEditing ? "Update" : "Create"}
+              {isEditing
+                ? tUser("collection.form.update")
+                : tUser("collection.form.create")}
             </Button>
           </div>
         </form>

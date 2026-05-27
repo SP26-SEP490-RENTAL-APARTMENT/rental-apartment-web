@@ -10,7 +10,7 @@ i18n
   .init({
     fallbackLng: "en",
 
-    ns: ["common"],
+    ns: ["common", "landlord", "book"],
     defaultNS: "common",
 
     backend: {
@@ -19,7 +19,15 @@ i18n
 
     interpolation: {
       escapeValue: false,
+      formatSeparator: ",",
     },
+
+    detection: {
+      order: [], // <- tắt detect localStorage/browser
+      caches: [], // <- không lưu i18nextLng nữa
+    },
+
+    returnObjects: true,
   });
 
 export default i18n;

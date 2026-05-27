@@ -8,18 +8,15 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Eye, Trash2, UserRoundPen } from "lucide-react";
-import type { User } from "@/types/user";
-import { useTranslation } from "react-i18next";
+import type { UserProfile } from "@/types/user";
 import UserDetailDialog from "@/components/ui/userDetailDialog/UserDetailDialog";
 
 interface Props {
-  user: User;
+  user: UserProfile;
   onDelete: (userId: string) => void;
-  onEdit: (user: User) => void;
+  onEdit: (user: UserProfile) => void;
 }
 function UserAction({ user, onDelete, onEdit }: Props) {
-  const { t: translate } = useTranslation("user");
-
   const handleDelete = () => {
     onDelete(user.userId);
   };
@@ -38,18 +35,17 @@ function UserAction({ user, onDelete, onEdit }: Props) {
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>{translate("userDetails")}</DialogTitle>
-            <DialogDescription>
-              {translate("userDetailsDescription")}
-            </DialogDescription>
+            <DialogTitle>User Details</DialogTitle>
           </DialogHeader>
           <UserDetailDialog user={user} />
         </DialogContent>
       </Dialog>
 
-      <Button size="sm" variant="outline" onClick={handleEdit}>
-        <UserRoundPen />
-      </Button>
+      {user.role === "staff" && (
+        <Button size="sm" variant="outline" onClick={handleEdit}>
+          <UserRoundPen />
+        </Button>
+      )}
 
       <Dialog>
         <DialogTrigger asChild>

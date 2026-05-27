@@ -365,7 +365,7 @@ export function CreateTicketDialog({
 
           {/* Files */}
           <div className="space-y-2">
-            <Label htmlFor="files">Upload Images</Label>
+            <Label htmlFor="files">{t("support.uploadImage")}</Label>
             <div className="flex items-center gap-2">
               <input
                 ref={fileInputRef}
@@ -385,12 +385,9 @@ export function CreateTicketDialog({
                 className="w-full"
               >
                 <Upload className="h-4 w-4 mr-2" />
-                Browse
+                {commonT("button.browse")}
               </Button>
             </div>
-            <p className="text-xs text-gray-500">
-              Support JPEG, PNG, GIF, WebP
-            </p>
 
             {/* File Preview */}
             {selectedFiles.length > 0 && (

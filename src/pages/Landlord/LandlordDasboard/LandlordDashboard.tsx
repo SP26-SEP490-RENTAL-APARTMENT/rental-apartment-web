@@ -7,14 +7,77 @@ import {
 import DashboardCard from "../../../components/ui/dashboardCard/DashboardCard";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
+import { ROUTES } from "@/constants/routes";
+import { landlordDashboardApi } from "@/services/privateApi/landlordApi";
+import { useCallback, useEffect, useState } from "react";
 
-const data = [
-  { title: "Total Properties", value: 10, Icon: HomeIcon },
-  { title: "Total Bookings", value: 25, Icon: CalendarIcon },
-  { title: "Total Revenue", value: "$5,000", Icon: DollarSignIcon },
-];
+type DashboardSummary = {
+  generatedAt: string;
+  totalProperties: number;
+  totalBookings: number;
+  totalRevenue: number;
+};
 
 function LandlordDashboard() {
+  const navigate = useNavigate();
+  const [summary, setSummary] = useState<DashboardSummary | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  const fetchSummary = useCallback(async () => {
+    try {
+      const response = await landlordDashboardApi.getSummary();
+      setSummary(response.data.data);
+    } catch (error) {
+      console.log(error);
+      setSummary(null);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchSummary();
+
+    const intervalId = window.setInterval(() => {
+      fetchSummary();
+    }, 15000);
+
+    const handleVisibilityChange = () => {
+      if (!document.hidden) {
+        fetchSummary();
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    return () => {
+      window.clearInterval(intervalId);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, [fetchSummary]);
+
+  const formatCurrency = (value: number) =>
+    `${value.toLocaleString("vi-VN")} đ`;
+
+  const cards = [
+    {
+      title: "Total Properties",
+      value: loading ? "Loading..." : summary?.totalProperties ?? 0,
+      Icon: HomeIcon,
+    },
+    {
+      title: "Total Bookings",
+      value: loading ? "Loading..." : summary?.totalBookings ?? 0,
+      Icon: CalendarIcon,
+    },
+    {
+      title: "Total Revenue",
+      value: loading ? "Loading..." : formatCurrency(summary?.totalRevenue ?? 0),
+      Icon: DollarSignIcon,
+    },
+  ];
+
   return (
     <div className="min-h-screen bg-gray-50 space-y-8">
       {/* Header */}
@@ -28,7 +91,11 @@ function LandlordDashboard() {
               </p>
             </div>
             <div className="flex gap-3">
-              <Button variant="outline" className="border-gray-300">
+              <Button
+                variant="outline"
+                className="border-gray-300"
+                onClick={() => navigate(ROUTES.LANDLORD_REPORTS_BOOKING_SUMMARY)}
+              >
                 View Reports
               </Button>
               <Button className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold">
@@ -43,7 +110,7 @@ function LandlordDashboard() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Metrics Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-          {data.map((item, index) => (
+          {cards.map((item, index) => (
             <DashboardCard
               key={index}
               title={item.title}
@@ -52,6 +119,12 @@ function LandlordDashboard() {
             />
           ))}
         </div>
+
+        {summary?.generatedAt && (
+          <p className="mb-8 text-sm text-gray-500">
+            Last updated: {new Date(summary.generatedAt).toLocaleString()}
+          </p>
+        )}
 
         {/* Quick Actions */}
         <Card className="border-0 shadow-sm mb-8">

@@ -11,8 +11,8 @@ import ManagementFilter, {
   type Filter,
 } from "@/components/ui/managementFilter/ManagementFilter";
 import {
-  apartmentSortByList,
-  apartmentStatusList,
+  ApartmentSortByList,
+  ApartmentStatusList,
 } from "@/constants/sortByList";
 import ApartmentFilter from "@/pages/Landlord/ApartmentManagement/components/ApartmentFilter";
 
@@ -99,12 +99,12 @@ function AllApartment() {
             <ManagementFilter
               filter={filters}
               setFilter={setFilters}
-              sortByList={apartmentSortByList}
+              sortByList={ApartmentSortByList()}
             />
             <ApartmentFilter
               setStatus={setStatus}
               status={status}
-              statusList={apartmentStatusList}
+              statusList={ApartmentStatusList()}
             />
             <Button variant="outline" onClick={handleResetFilters}>
               Reset Filters

@@ -10,6 +10,9 @@ import {
   Hotel,
   Search,
   Ticket,
+  MessageSquareWarning,
+  CirclePercent,
+  BadgeAlert,
 } from "lucide-react";
 
 export const useAadminNavList = () => {
@@ -90,6 +93,21 @@ export const useAadminNavList = () => {
       title: "Support",
       url: "/admin/support",
       icon: Ticket,
+    },
+    {
+      title: "Occupied Incidents",
+      url: "/admin/occupied-management",
+      icon: MessageSquareWarning,
+    },
+    {
+      title: "Pricing Templates",
+      url: "/admin/pricing-templates",
+      icon: CirclePercent,
+    },
+    {
+      title: "Disputes Checktime",
+      url: "/admin/disputes-checktime",
+      icon: BadgeAlert,
     },
   ];
 };

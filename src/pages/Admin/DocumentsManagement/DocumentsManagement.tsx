@@ -3,7 +3,7 @@ import { documentsManagement, userManagementApi } from "@/services/privateApi/ad
 import type { Document } from "@/types/document";
 import { useCallback, useEffect, useState } from "react";
 import { DocumentColumns } from "./components/DocumentColumns";
-import type { User } from "@/types/user";
+import type { UserProfile } from "@/types/user";
 import { toast } from "sonner";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import UserDetailDialog from "@/components/ui/userDetailDialog/UserDetailDialog";
@@ -13,7 +13,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { FileCheck } from "lucide-react";
 
 function DocumentsManagement() {
-  const [user, setUser] = useState<User>();
+  const [user, setUser] = useState<UserProfile | null>(null);
   const [documents, setDocuments] = useState<Document[]>([]);
   const [page, setPage] = useState<number>(1);
   const [totalCount, setTotalCount] = useState<number>(0);

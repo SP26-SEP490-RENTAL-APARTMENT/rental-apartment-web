@@ -1,7 +1,10 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import DataTable from "@/components/ui/dataTable/DataTable";
 import type { Filter } from "@/components/ui/managementFilter/ManagementFilter";
-import { supportManagementApi } from "@/services/privateApi/adminApi";
+import {
+  supportManagementApi,
+  userManagementApi,
+} from "@/services/privateApi/adminApi";
 import type { SupportTicket } from "@/types/supportTicket";
 import { Ticket } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
@@ -11,20 +14,29 @@ import {
   supportCategoryOptions,
   supportPriorityOptions,
   supportStatusList,
-  supportTicketSortByList,
+  SupportTicketSortByList,
 } from "@/constants/sortByList";
 import { Button } from "@/components/ui/button";
 import SupportFilter from "./components/SupportFilter";
 import ResolveForm from "./components/ResolveForm";
+import type { UserProfile } from "@/types/user";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import UserDetailDialog from "@/components/ui/userDetailDialog/UserDetailDialog";
 
 function SupportManagement() {
+  const [user, setUser] = useState<UserProfile | null>(null);
   const [supports, setSupports] = useState<SupportTicket[]>([]);
   const [totalCount, setTotalCount] = useState(0);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [filters, setFilters] = useState<Filter>({
     sortBy: "createdAt",
-    sortOrder: "asc",
+    sortOrder: "desc",
     search: "",
   });
   const [addFilters, setAddFilters] = useState({
@@ -33,6 +45,7 @@ function SupportManagement() {
     category: "",
   });
   const [resolveDialog, setResolveDialog] = useState(false);
+  const [userDialogOpen, setUserDialogOpen] = useState(false);
   const [selectedSupportId, setSelectedSupportId] = useState("");
 
   const fetchSupports = useCallback(async () => {
@@ -56,6 +69,16 @@ function SupportManagement() {
       setLoading(false);
     }
   }, [page, filters, addFilters]);
+
+  const handleGetUser = async (id: string) => {
+    try {
+      const res = await userManagementApi.getUserDetail(id);
+      setUser(res.data);
+      setUserDialogOpen(true);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
     fetchSupports();
@@ -111,7 +134,7 @@ function SupportManagement() {
             <ManagementFilter
               filter={filters}
               setFilter={setFilters}
-              sortByList={supportTicketSortByList}
+              sortByList={SupportTicketSortByList()}
             />
             <SupportFilter
               addFilters={addFilters}
@@ -133,7 +156,7 @@ function SupportManagement() {
           </CardHeader>
           <CardContent className="pt-6">
             <DataTable
-              columns={SupportColumns(triggerResolveDialog)}
+              columns={SupportColumns(triggerResolveDialog, handleGetUser)}
               data={supports}
               limit={10}
               loading={loading}
@@ -151,6 +174,21 @@ function SupportManagement() {
         refetch={fetchSupports}
         supportId={selectedSupportId}
       />
+
+      <Dialog
+        open={userDialogOpen}
+        onOpenChange={() => {
+          setUserDialogOpen(false);
+          setUser(null);
+        }}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{user?.fullName || "User"}</DialogTitle>
+          </DialogHeader>
+          {user && <UserDetailDialog user={user} />}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

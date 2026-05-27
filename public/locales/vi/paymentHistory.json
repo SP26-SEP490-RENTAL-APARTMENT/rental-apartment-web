@@ -1,0 +1,54 @@
+{
+    "payment": {
+        "noPayment": "Không tìm thấy lịch sử thanh toán",
+        "subNoPayment": "Bạn chưa thực hiện bất kỳ khoản thanh toán nào. Bắt đầu khám phá các căn hộ của chúng tôi và đặt chỗ ở của bạn ngay hôm nay!",
+        "browseApartments": "Xem Các Căn Hộ",
+        "title": "Lịch sử Thanh toán",
+        "description": "Xem lịch sử thanh toán và chi tiết giao dịch của bạn.",
+        "card": {
+            "upfront": "Thanh toán trước",
+            "deposit": "Thanh toán đặt cọc",
+            "fullBooking": "Thanh toán toàn bộ đặt phòng",
+            "depositBooking": "Thanh toán đặt cọc đặt phòng",
+            "other": "Khác",
+            "refund": "Hoàn tiền",
+            "balance": "Số dư",
+            "balanceBooking": "Số dư đặt phòng"
+        }
+    },
+    "checkTime": {
+        "respondButton": "Phản hồi",
+        "checkInPhoto": "Ảnh nhận phòng",
+        "checkOutPhoto": "Ảnh trả phòng",
+        "title": "Chi tiết thời gian",
+        "overview": "Tổng quan",
+        "photos": "Ảnh",
+        "summary": {
+            "title": "Tóm tắt thời gian",
+            "subTitle": "Đặt phòng"
+        },
+        "timeLine": {
+            "checkIn": "Nhận phòng",
+            "checkOut": "Trả phòng",
+            "scheduled": "Đã lên lịch",
+            "actual": "Thực tế",
+            "early": "Sớm",
+            "late": "Chậm",
+            "min": "phút"
+        },
+        "fee": {
+            "title": "Bảng Phí",
+            "earlyCheckIn": "Phí nhận phòng sớm",
+            "lateCheckOut": "Phí trả phòng trễ",
+            "total": "Tổng Phí"
+        },
+        "claim": {
+            "title": "Thông tin khiếu nại",
+            "status": "Trạng thái",
+            "open": "Mở",
+            "expire": "Hết hạn",
+            "tenantResponse": "Phản hồi của Người thuê",
+            "response": "Phản hồi"
+        }
+    }
+}

@@ -24,6 +24,8 @@ export const useGetStatus = (status: string) => {
       return t("booking.confirmed");
     case "cancelled":
       return t("booking.cancelled");
+    case "completed":
+      return t("booking.completed");
     default:
       return status;
   }

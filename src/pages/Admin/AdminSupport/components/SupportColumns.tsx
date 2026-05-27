@@ -138,6 +138,7 @@ const getStatusBadge = (status: string) => {
 
 export const SupportColumns = (
   onResolve: (supportId: string) => void,
+  onViewUser: (userId: string) => void
 ): ColumnDef<SupportTicket>[] => [
   {
     accessorKey: "userId",
@@ -148,6 +149,7 @@ export const SupportColumns = (
         <Button
           variant="secondary"
           className="max-w-20 truncate cursor-pointer"
+          onClick={() => onViewUser(userId)}
         >
           {userId}
         </Button>

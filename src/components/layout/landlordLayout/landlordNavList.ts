@@ -5,37 +5,64 @@ import {
   Hotel,
   Layers,
   CreditCard,
+  Wallet,
+  BarChart3,
+  BanknoteX,
 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
-export const landlordNavList = [
-  // {
-  //   title: "Dashboard",
-  //   url: "/landlord/dashboard",
-  //   icon: LayoutDashboard,
-  // },
-  {
-    title: "Apartments",
-    url: "/landlord/apartments",
-    icon: Hotel,
-  },
-  {
-    title: "Rooms",
-    url: "/landlord/rooms",
-    icon: Home,
-  },
-  {
-    title: "Bookings",
-    url: "/landlord/booking-management",
-    icon: CalendarCheck,
-  },
-  {
-    title: "Payments History",
-    url: "/landlord/payments-history",
-    icon: CreditCard,
-  },
-  {
-    title: "My subscriptions",
-    url: "/landlord/my-subscriptions",
-    icon: Layers,
-  },
-];
+export const useLandlordNavList = () => {
+  const { t } = useTranslation("label");
+  return [
+    // {
+    //   title: "Dashboard",
+    //   url: "/landlord/dashboard",
+    //   icon: LayoutDashboard,
+    // },
+    {
+      title: t("landlord.apartments"),
+      url: "/landlord/apartments",
+      icon: Hotel,
+    },
+    {
+      title: t("landlord.rooms"),
+      url: "/landlord/rooms",
+      icon: Home,
+    },
+    {
+      title: t("landlord.bookings"),
+      url: "/landlord/booking-management",
+      icon: CalendarCheck,
+    },
+    {
+      title: t("landlord.payments"),
+      url: "/landlord/payments-history",
+      icon: CreditCard,
+    },
+    {
+      title: t("landlord.subscriptions"),
+      url: "/landlord/my-subscriptions",
+      icon: Layers,
+    },
+    {
+      title: "Reports",
+      url: "/landlord/reports",
+      icon: BarChart3,
+    },
+    {
+      title: t("landlord.reports.booking_summary") || "Booking Summary",
+      url: "/landlord/reports/booking-summary",
+      icon: CalendarCheck,
+    },
+    {
+      title: t("landlord.wallet"),
+      url: "/landlord/my-wallet",
+      icon: Wallet,
+    },
+    {
+      title: t("landlord.feeManagement"),
+      url: "/landlord/fee-management",
+      icon: BanknoteX,
+    },
+  ];
+};

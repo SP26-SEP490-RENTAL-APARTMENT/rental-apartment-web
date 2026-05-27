@@ -1,8 +1,11 @@
 import { apiConfig } from "@/config/apiConfig";
 import type { CreateAmenityFormData } from "@/schemas/amenitySchema";
 import type { AssignInspectionFormData } from "@/schemas/assignInspection";
-import type { CatalogFormData } from "@/schemas/catalogSchema";
 import type { DocumentApproveFormData } from "@/schemas/documentApproveSchema";
+import type {
+  CreateTemplateFormData,
+  UpdateTemplateFormData,
+} from "@/schemas/pricingTemplateSchema";
 import type { Amenity } from "@/types/amenity";
 import type { ApiResponse } from "@/types/api";
 import type { NearbyAttraction } from "@/types/nearbyAttraction";
@@ -10,7 +13,18 @@ import type { Package, PackageItem } from "@/types/package";
 import type { PaginationResponse } from "@/types/paginationResponse";
 import type { ParamsProp } from "@/types/params";
 import type { SubscriptionPlan } from "@/types/subscriptionPlan";
-import type { User } from "@/types/user";
+import type { UserProfile } from "@/types/user";
+
+type CreateReportRequest = {
+  name: string;
+  category: string;
+  type: string;
+  description: string;
+  isActive: boolean;
+  DimensionsJson?: string;
+  MetricsJson?: string;
+  TimeRangeJson?: string;
+};
 
 export interface responseData<T> {
   data: dataProp<T>;
@@ -23,10 +37,30 @@ export interface dataProp<T> {
   totalCount: number;
 }
 
+export interface ReportExportRequest {
+  fileName?: string;
+  format?: "csv" | "xlsx" | "excel";
+  stream?: boolean;
+  includeComparison?: boolean;
+  pageSize?: number;
+  runRequest?: Record<string, unknown>;
+  comparisonRequest?: Record<string, unknown>;
+}
+
+export interface PagedReportResponse<T = unknown> {
+  reportId: string;
+  name: string;
+  rows: T[];
+  totalMetrics: Record<string, number>;
+  totalCount: number;
+  page: number;
+  pageSize: number;
+}
+
 export const userManagementApi = {
   getAllUsers: (
     params: ParamsProp,
-  ): Promise<ApiResponse<PaginationResponse<User>>> =>
+  ): Promise<ApiResponse<PaginationResponse<UserProfile>>> =>
     apiConfig.privateApi.get("/User", { params }),
   createUser: (data: {
     email: string;
@@ -35,15 +69,19 @@ export const userManagementApi = {
     fullName: string;
     phone: string;
     identityVerified: boolean;
+    sex: string;
+    birthday: string;
+    nationality: string;
+    nationalIdCardNumber: string;
   }): Promise<ApiResponse<null>> => apiConfig.privateApi.post("/User", data),
   updateUser: (
     userId: string,
-    data: Partial<User>,
+    data: Partial<UserProfile>,
   ): Promise<ApiResponse<null>> =>
     apiConfig.privateApi.put(`/User/${userId}`, data),
   deleteUser: (userId: string): Promise<ApiResponse<null>> =>
     apiConfig.privateApi.delete(`/User/${userId}`),
-  getUserDetail: (userId: string): Promise<ApiResponse<User>> =>
+  getUserDetail: (userId: string): Promise<ApiResponse<UserProfile>> =>
     apiConfig.privateApi.get(`/User/${userId}`),
 };
 
@@ -166,11 +204,18 @@ export const inspectionApi = {
 export const reportApi = {
   getCatalog: (params: ParamsProp) =>
     apiConfig.privateApi.get("/reports/catalog", { params }),
-  createReport: (data: CatalogFormData) =>
+  createReport: (data: CreateReportRequest) =>
     apiConfig.privateApi.post("/reports", data),
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   runReport: (reportId: string, data: any) =>
-    apiConfig.privateApi.post(`/reports/${reportId}/run`, data),
+    apiConfig.privateApi.post<ApiResponse<PagedReportResponse>>(
+      `/reports/${reportId}/run`,
+      data,
+    ),
+  exportReport: (reportId: string, data: ReportExportRequest) =>
+    apiConfig.privateApi.post(`/reports/${reportId}/export`, data, {
+      responseType: "blob",
+    }),
 };
 
 export const adminApartmentApi = {
@@ -196,3 +241,39 @@ export const supportManagementApi = {
       },
     ),
 };
+
+export const adminOccupyApi = {
+  getAllOccupies: (params: ParamsProp) =>
+    apiConfig.privateApi.get("/admin/bookings/reported", { params }),
+  confirmPenalty: (
+    bookingId: string,
+    data: { ticketId: string; note: string },
+  ) =>
+    apiConfig.privateApi.post(
+      `/Booking/${bookingId}/occupied-incident/confirm-penalty`,
+      data,
+    ),
+};
+
+export const pricingTemplateManagementApi = {
+  getAllTemplates: () => apiConfig.privateApi.get("/admin/pricing/templates"),
+  createTemplate: (data: CreateTemplateFormData) =>
+    apiConfig.privateApi.post("/admin/pricing/templates", data),
+  updateTemplate: (templateId: string, data: UpdateTemplateFormData) =>
+    apiConfig.privateApi.put(`/admin/pricing/templates/${templateId}`, data),
+  switchTemplateStatus: (templateId: string, active: boolean) =>
+    apiConfig.privateApi.patch(
+      `/admin/pricing/templates/${templateId}/status`,
+      null,
+      {
+        params: {
+          active,
+        },
+      },
+    ),
+};
+
+export const disputeManagementApi = {
+  getAllDisputes: (params: ParamsProp) =>
+    apiConfig.privateApi.get("/admin/bookings/disputes", { params }),
+}

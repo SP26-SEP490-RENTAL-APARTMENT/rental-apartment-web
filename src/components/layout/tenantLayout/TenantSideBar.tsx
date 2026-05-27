@@ -7,10 +7,10 @@ import { useAuthStore } from "@/store/authStore";
 import Logo from "@/components/ui/logo/Logo";
 
 function TenantSideBar() {
+  const { t } = useTranslation("common");
   const { logout } = useAuthStore();
   const tenantNavList = useTenantNavList();
   const { t: account } = useTranslation("account");
-  const { t: auth } = useTranslation("auth");
 
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
@@ -27,9 +27,7 @@ function TenantSideBar() {
     >
       {/* Header */}
       <div className="flex items-center justify-between p-4 border-b border-gray-200">
-        {sidebarOpen && (
-          <Logo />
-        )}
+        {sidebarOpen && <Logo />}
         <button
           onClick={() => setSidebarOpen(!sidebarOpen)}
           className="p-2 hover:bg-gray-100 rounded-lg transition"
@@ -73,7 +71,7 @@ function TenantSideBar() {
           className="w-full flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-red-50 hover:text-red-700 rounded-lg transition"
         >
           <LogOut className="h-5 w-5 shrink-0" />
-          {sidebarOpen && <span>{auth("logout")}</span>}
+          {sidebarOpen && <span>{t("button.logout")}</span>}
         </button>
       </div>
     </div>

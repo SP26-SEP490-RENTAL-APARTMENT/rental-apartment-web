@@ -13,6 +13,8 @@ import SubsciptionPlan from "./pages/Admin/SubsciptionPlan/SubsciptionPlan";
 
 import LandlordDashboard from "./pages/Landlord/LandlordDasboard/LandlordDashboard";
 import ApartmentManagement from "./pages/Landlord/ApartmentManagement/ApartmentManagement";
+import LandlordReportsPage from "./pages/Landlord/Reports/BookingSummaryPage";
+import ReportsWorkspace from "./pages/Landlord/Reports/ReportsWorkspace";
 
 import Profile from "./pages/Tenant/Profile/Profile";
 
@@ -33,7 +35,7 @@ import Identity from "./pages/Tenant/Identity/Identity";
 import WishlistPage from "./pages/Tenant/Wishlist/WishlistPage";
 import ApproveListings from "./pages/Admin/ApproveListings/ApproveListings";
 import BookingHistories from "./pages/Tenant/BookingHistory/BookingHistories";
-import FinishPayment from "./pages/Tenant/FinishPayment/FinishPayment";
+import FinishPayment from "./pages/Tenant/ResultScreen/FinishPayment/FinishPayment";
 import BookingManagement from "./pages/Landlord/BookingManagement/BookingManagement";
 import Inspections from "./pages/Admin/Inspection/Inspection";
 import MySubscription from "./pages/Landlord/MySubscription/MySubscription";
@@ -41,22 +43,36 @@ import RequestResetPW from "./pages/Auth/RequestResetPW/RequestResetPW";
 import ResetPWPage from "./pages/Auth/ResetPWPage/ResetPWPage";
 import HomePage from "./pages/Home/Home";
 import SupportRequest from "./pages/Tenant/SupportRequest/SupportRequest";
-import { useEffect } from "react";
-import i18next from "i18next";
 import PaymentHistories from "./pages/Landlord/PaymentHistory/PaymentHistories";
 import Payment from "./pages/Tenant/PaymentHistory/Payment";
 import AllApartment from "./pages/Admin/AllApartments/AllApartment";
 import SupportManagement from "./pages/Admin/AdminSupport/SupportManagement";
+import { useAuthStore } from "./store/authStore";
+import { useLanguageStore } from "./store/languageStore";
+import { useSyncLanguage } from "./hooks/useSyncLanguage";
+import { useEffect } from "react";
+import OccupiedManagement from "./pages/Admin/OccupiedManagement/OccupiedManagement";
+import MyWallet from "./pages/Landlord/Wallet/MyWallet";
+import PricingTemplates from "./pages/Admin/PricingTemplate/PricingTemplates";
+import CancelPayment from "./pages/Tenant/ResultScreen/CancelPayment/CancelPayment";
+import FeeManagement from "./pages/Landlord/FeeManagement/FeeManagement";
+import DisputeManagement from "./pages/Admin/DisputeChecktime/DisputeManagement";
 
 /**
  * App Component - Simplified routing setup
  * All routes defined inline here for clarity
  */
 export default function App() {
+  const { user } = useAuthStore();
+
+  const syncLanguageByRole =
+    useLanguageStore((s) => s.syncLanguageByRole);
+
+  useSyncLanguage();
+
   useEffect(() => {
-    localStorage.removeItem("i18nextLng");
-    i18next.changeLanguage("en");
-  }, []);
+    syncLanguageByRole(user?.role);
+  }, [user?.role]);
   return (
     <BrowserRouter>
       <Routes>
@@ -160,6 +176,14 @@ export default function App() {
             }
           />
           <Route
+            path={ROUTES.ADMIN_OCCUPIED_MANAGEMENT}
+            element={
+              <ProtectedRoute requiredRoles={["admin"]}>
+                <OccupiedManagement />
+              </ProtectedRoute>
+            }
+          />
+          <Route
             path={ROUTES.ADMIN_INSPECTION}
             element={
               <ProtectedRoute requiredRoles={["admin", "staff"]}>
@@ -172,6 +196,22 @@ export default function App() {
             element={
               <ProtectedRoute requiredRoles={["admin", "staff"]}>
                 <SupportManagement />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path={ROUTES.ADMIN_PRICING_TEMPLATES}
+            element={
+              <ProtectedRoute requiredRoles={["admin"]}>
+                <PricingTemplates />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path={ROUTES.ADMIN_DISPUTES_CHECKTIME}
+            element={
+              <ProtectedRoute requiredRoles={["admin"]}>
+                <DisputeManagement />
               </ProtectedRoute>
             }
           />
@@ -224,6 +264,38 @@ export default function App() {
             element={
               <ProtectedRoute requiredRoles={["landlord", "tenant"]}>
                 <MySubscription />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path={ROUTES.LANDLORD_MY_WALLET}
+            element={
+              <ProtectedRoute requiredRoles={["landlord", "tenant"]}>
+                <MyWallet />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path={ROUTES.LANDLORD_REPORTS}
+            element={
+              <ProtectedRoute requiredRoles={["landlord", "tenant"]}>
+                <LandlordReportsPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path={ROUTES.LANDLORD_REPORTS_BOOKING_SUMMARY}
+            element={
+              <ProtectedRoute requiredRoles={["landlord", "tenant"]}>
+                <ReportsWorkspace />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path={ROUTES.LANDLORD_FEE_MANAGEMENT}
+            element={
+              <ProtectedRoute requiredRoles={["landlord", "tenant"]}>
+                <FeeManagement />
               </ProtectedRoute>
             }
           />
@@ -293,6 +365,14 @@ export default function App() {
           element={
             <ProtectedRoute requiredRoles={["tenant", "landlord"]}>
               <FinishPayment />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path={ROUTES.TENANT_CANCEL_PAYMENT}
+          element={
+            <ProtectedRoute requiredRoles={["tenant", "landlord"]}>
+              <CancelPayment />
             </ProtectedRoute>
           }
         />
