@@ -94,6 +94,14 @@ export const bookingApi = {
     data: { action: string; disputeReason: string; notes: string },
   ) =>
     apiConfig.privateApi.post(`/Booking/${bookingId}/check-time/respond`, data),
+  payOutstandingFee: (
+    bookingId: string,
+    data: { paymentMethod: string; devicePlatform: string },
+  ) =>
+    apiConfig.privateApi.post(
+      `/Booking/${bookingId}/check-time/claim/pay`,
+      data,
+    ),
 };
 
 export const reviewApi = {
@@ -136,4 +144,9 @@ export const occupiedIncident = {
     apiConfig.privateApi.post(`/Booking/${bookingId}/occupied-incident`, data),
   getMyIncidents: (params: ParamsProp) =>
     apiConfig.privateApi.get("/tenant/incidents/my", { params }),
+};
+
+export const outstandingFee = {
+  getMyFee: (userId: string) =>
+    apiConfig.privateApi.get(`/Booking/outstanding-fees/${userId}`),
 };

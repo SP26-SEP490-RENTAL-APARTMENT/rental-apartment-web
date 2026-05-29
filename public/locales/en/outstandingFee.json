@@ -1,0 +1,34 @@
+{
+    "fee": {
+        "title": "Outstanding Fees",
+        "description": "View and manage your outstanding fees and dispute resolutions.",
+        "noFees": "No outstanding fees",
+        "subNoFees": "You don't have any outstanding fees. Keep up the good work!",
+        "browseApartments": "Browse Apartments",
+        "summary": {
+            "totalFees": "Total Fees",
+            "outstandingCount": "Outstanding",
+            "overdue": "Overdue",
+            "disputed": "Disputed"
+        },
+        "status": {
+            "due": "Due",
+            "payment_submitted_pending_veri": "Pending Verification",
+            "settled": "Settled",
+            "disputed": "Disputed",
+            "overdue": "Overdue"
+        },
+        "details": {
+            "apartment": "Apartment",
+            "bookingDate": "Booking Date",
+            "checkIn": "Check In",
+            "checkOut": "Check Out",
+            "dueDate": "Due Date",
+            "amount": "Amount",
+            "payNow": "Pay Now",
+            "viewDetails": "View Details",
+            "disputeReason": "Dispute Reason",
+            "disputeStatus": "Dispute Status"
+        }
+    }
+}

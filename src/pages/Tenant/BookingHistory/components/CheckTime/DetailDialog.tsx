@@ -23,12 +23,10 @@ function DetailDialog({
   open,
   onClose,
   data,
- 
 }: {
   open: boolean;
   onClose: () => void;
   data: any;
-  
 }) {
   const { t } = useTranslation("paymentHistory");
   const [form, setForm] = useState({
@@ -44,12 +42,32 @@ function DetailDialog({
       await bookingApi.respondToCheckTime(data.bookingId, form);
       toast.success("Response submitted successfully");
       setIsResponse(false);
+      onClose();
       // refetchCheckTime(data.bookingId);
-    } catch (error) {
-      toast.error("Failed to submit response");
+    } catch (error: any) {
+      toast.error(error.response?.data.message || "Unknown error occurred");
       console.error("Error occurred while responding to check time:", error);
     }
   };
+
+  const handlePayOutstandingFee = async () => {
+    try {
+      await bookingApi.payOutstandingFee(data?.bookingId, {
+        paymentMethod: "payos",
+        devicePlatform: "web",
+      });
+      toast.success("Payment successful");
+      onClose();
+      // refetchCheckTime(data.bookingId);
+    } catch (error: any) {
+      toast.error(error.response?.data.message || "Unknown error occurred");
+    }
+  };
+
+  const isExpired =
+    data?.claimExpiresAt && new Date() > new Date(data.claimExpiresAt);
+
+  const canPay = data?.tenantResponseStatus === "confirmed" || isExpired;
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
@@ -78,13 +96,22 @@ function DetailDialog({
           </TabsContent>
         </Tabs>
 
-        {!isResponse && (
-          <div className="flex justify-end pt-4">
+        <div className="flex justify-end pt-4 gap-2">
+          {canPay && (
+            <Button
+              onClick={handlePayOutstandingFee}
+              className="bg-blue-500 hover:bg-blue-600"
+            >
+              Pay Outstanding Fee
+            </Button>
+          )}
+
+          {(!isResponse && data?.tenantResponseStatus !== "confirmed") || !isExpired && (
             <Button onClick={() => setIsResponse(true)} variant="default">
               {t("checkTime.respondButton") || "Respond to Check Time"}
             </Button>
-          </div>
-        )}
+          )}
+        </div>
 
         {isResponse && (
           <form

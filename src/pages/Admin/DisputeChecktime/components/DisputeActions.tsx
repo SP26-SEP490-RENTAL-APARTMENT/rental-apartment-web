@@ -58,7 +58,10 @@ function DisputeActions({ data }: Props) {
 
                 <InfoRow label="Nights" value={`${data.nights} night`} />
 
-                <InfoRow label="Total Price" value={`${data.totalPrice.toLocaleString()} đ`} />
+                <InfoRow
+                  label="Total Price"
+                  value={`${data.totalPrice.toLocaleString()} đ`}
+                />
               </div>
 
               {/* PEOPLE */}

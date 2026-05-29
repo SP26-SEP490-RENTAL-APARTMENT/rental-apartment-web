@@ -92,7 +92,7 @@ function SupportManagement() {
     setPage(1);
     setFilters({
       sortBy: "createdAt",
-      sortOrder: "asc",
+      sortOrder: "desc",
       search: "",
     });
     setAddFilters({

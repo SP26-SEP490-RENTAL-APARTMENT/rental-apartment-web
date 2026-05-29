@@ -8,12 +8,13 @@ interface Props {
   occupantList: Occupant[];
   open: boolean;
   onClose: () => void;
+  bookingId: string;
 }
-function ViewOccupantDialog({ occupantList, open, onClose }: Props) {
+function ViewOccupantDialog({ occupantList, open, onClose, bookingId }: Props) {
   const { t } = useTranslation("landlord");
   return (
     <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
-      <DialogContent className="w-[96vw] max-w-425 h-[92vh] p-0 rounded-3xl overflow-hidden flex flex-col">
+      <DialogContent className="sm:max-w-3xl h-[92vh] p-0 rounded-3xl overflow-hidden flex flex-col">
         {/* Header */}
         <div className="shrink-0 sticky top-0 z-20 bg-white border-b px-8 py-6">
           <div className="flex items-center gap-4">
@@ -46,7 +47,12 @@ function ViewOccupantDialog({ occupantList, open, onClose }: Props) {
           ) : (
             <div className="space-y-6 pb-4">
               {occupantList.map((occ) => (
-                <OccupantCard key={occ.order} occupant={occ} />
+                <OccupantCard
+                  key={occ.order}
+                  occupant={occ}
+                  bookingId={bookingId}
+                  onClose={onClose}
+                />
               ))}
             </div>
           )}

@@ -57,6 +57,8 @@ import PricingTemplates from "./pages/Admin/PricingTemplate/PricingTemplates";
 import CancelPayment from "./pages/Tenant/ResultScreen/CancelPayment/CancelPayment";
 import FeeManagement from "./pages/Landlord/FeeManagement/FeeManagement";
 import DisputeManagement from "./pages/Admin/DisputeChecktime/DisputeManagement";
+import SmartPricingHistory from "./pages/Landlord/SmartPricingHistory/SmartPricingHistory";
+import OutstandingFees from "./pages/Tenant/OutstandingFee/OutstandingFees";
 
 /**
  * App Component - Simplified routing setup
@@ -288,10 +290,22 @@ export default function App() {
             element={
               <ProtectedRoute requiredRoles={["landlord", "tenant"]}>
                 <ReportsWorkspace />
+              </ProtectedRoute>
+            }
+          />
+          <Route
             path={ROUTES.LANDLORD_FEE_MANAGEMENT}
             element={
               <ProtectedRoute requiredRoles={["landlord", "tenant"]}>
                 <FeeManagement />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path={ROUTES.LANDLORD_SMART_PRICING_HISTORY}
+            element={
+              <ProtectedRoute requiredRoles={["landlord", "tenant"]}>
+                <SmartPricingHistory />
               </ProtectedRoute>
             }
           />
@@ -355,6 +369,14 @@ export default function App() {
               </ProtectedRoute>
             }
           />
+          <Route
+          path={ROUTES.TENANT_OUTSTANDING_FEES}
+          element={
+            <ProtectedRoute requiredRoles={["tenant", "landlord"]}>
+              <OutstandingFees />
+            </ProtectedRoute>
+          }
+        />
         </Route>
         <Route
           path={ROUTES.TENANT_FINISH_PAYMENT}
