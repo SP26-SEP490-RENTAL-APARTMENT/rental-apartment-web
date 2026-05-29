@@ -100,7 +100,7 @@ function PackageForm({
       <DialogContent className="sm:max-w-106.25">
         <DialogHeader>
           <DialogTitle>
-            {isCreate ? t("package.form.title") : "Edit Package"}
+            {isCreate ? "Create Package" : "Edit Package"}
           </DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">

@@ -27,6 +27,7 @@ function CCCDUploadDialog({
   const { t: commonT } = useTranslation("common");
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [preview, setPreview] = useState<string>("");
   const [error, setError] = useState<string>("");
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -54,6 +55,13 @@ function CCCDUploadDialog({
 
     setError("");
     setSelectedFile(file);
+
+    // Create preview URL
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setPreview(reader.result as string);
+    };
+    reader.readAsDataURL(file);
   };
 
   const handleUpload = async () => {
@@ -65,6 +73,7 @@ function CCCDUploadDialog({
     try {
       await onUpload(selectedFile);
       setSelectedFile(null);
+      setPreview("");
       setError("");
       onClose();
     } catch (err: any) {
@@ -74,6 +83,7 @@ function CCCDUploadDialog({
 
   const handleClose = () => {
     setSelectedFile(null);
+    setPreview("");
     setError("");
     onClose();
   };
@@ -117,6 +127,17 @@ function CCCDUploadDialog({
               </div>
             </button>
           </div>
+
+          {/* Image Preview */}
+          {preview && (
+            <div className="relative w-full rounded-lg overflow-hidden border border-gray-200">
+              <img
+                src={preview}
+                alt="Preview"
+                className="w-full h-auto max-h-96 object-contain bg-gray-50"
+              />
+            </div>
+          )}
 
           {/* Error Message */}
           {error && (

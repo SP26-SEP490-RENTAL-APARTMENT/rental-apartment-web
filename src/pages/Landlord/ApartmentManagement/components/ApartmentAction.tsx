@@ -17,11 +17,11 @@ import {
   Send,
   Pen,
   MoreVertical,
-  Package,
   Coins,
   BadgePlus,
   FileCog,
   FileSliders,
+  DoorOpen,
 } from "lucide-react";
 import { useState } from "react";
 import useAmenity from "@/hooks/useAmenity";
@@ -36,6 +36,7 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useTranslation } from "react-i18next";
@@ -70,7 +71,7 @@ function ApartmentAction({
   onChangePrice,
   onViewPriceChange,
   onApplyPricingTemplate,
-  onViewAvailablePolicies
+  onViewAvailablePolicies,
 }: Props) {
   const { t } = useTranslation("landlord");
   const { i18n } = useTranslation();
@@ -163,13 +164,13 @@ function ApartmentAction({
               <Button
                 size="sm"
                 className="bg-gray-200 text-black hover:bg-gray-300"
-                onClick={() => onAddPackage(apartment)}
+                onClick={() => onCreateRoom(apartment)}
               >
-                <Package />
+                <DoorOpen />
               </Button>
             </TooltipTrigger>
             <TooltipContent>
-              <p>{t("package.button.add")}</p>
+              <p>Add room</p>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
@@ -206,7 +207,7 @@ function ApartmentAction({
           <TooltipTrigger asChild>
             <Button
               size="sm"
-              className="bg-gray-400 text-black hover:bg-gray-500"
+              className="bg-gray-300 text-black hover:bg-gray-400"
             >
               <FileCog />
             </Button>
@@ -274,14 +275,15 @@ function ApartmentAction({
           </DropdownMenuTrigger>
 
           <DropdownMenuContent>
-            <DropdownMenuItem onClick={() => onCreateRoom(apartment)}>
-              {t("button.addRoom")}
+            <DropdownMenuItem onClick={() => onAddPackage(apartment)}>
+              Create Package
             </DropdownMenuItem>
             <DropdownMenuItem
               onClick={() => onViewPackage(apartment.apartmentId)}
             >
               {t("button.addPackageItems")}
             </DropdownMenuItem>
+            <DropdownMenuSeparator />
             <DropdownMenuItem onClick={() => setDialogOpen(true)}>
               {t("button.addAmenity")}
             </DropdownMenuItem>

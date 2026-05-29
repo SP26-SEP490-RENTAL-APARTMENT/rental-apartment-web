@@ -1,15 +1,17 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { feeManagementApi } from "@/services/privateApi/landlordApi";
 import type { OutstandingFee } from "@/types/outstandingFee";
 import { AlertCircle, Calendar, Clock, MapPin, User } from "lucide-react";
+import { toast } from "sonner";
 
 interface Props {
   fee: OutstandingFee;
-  onPay?: (bookingId: string) => void;
+  refetch: () => void;
 }
 
-export default function OutstandingFeeCard({ fee, onPay }: Props) {
+export default function OutstandingFeeCard({ fee, refetch }: Props) {
   const formatCurrency = (value: number) =>
     new Intl.NumberFormat("vi-VN", {
       style: "currency",
@@ -45,13 +47,31 @@ export default function OutstandingFeeCard({ fee, onPay }: Props) {
     }
   };
 
+  const handleConfirmPayment = async () => {
+    try {
+      const paymentDate = new Date(Date.now() - 5000).toISOString();
+
+      await feeManagementApi.confirmFeePayment(fee.bookingId, {
+        paymentDate,
+        notes: "Confirmed by landlord",
+      });
+
+      refetch();
+      toast.success("Payment confirmed successfully!");
+    } catch (error: any) {
+      toast.error(
+        error?.response?.data?.message || "Failed to confirm payment",
+      );
+      console.error("Error confirming payment:", error);
+    }
+  };
+
   return (
     <Card className="rounded-2xl shadow-sm hover:shadow-md transition py-0">
       <CardContent className="p-5 space-y-4">
         {/* Header */}
         <div className="flex items-start justify-between">
           <div>
-            
             <p className="text-sm text-muted-foreground">
               Booking: {fee.bookingId.slice(0, 8)}...
             </p>
@@ -123,14 +143,10 @@ export default function OutstandingFeeCard({ fee, onPay }: Props) {
         )}
 
         {/* action */}
-        {fee.feeSettlementStatus === "due" && (
-          <Button
-            className="w-full rounded-xl"
-            onClick={() => onPay?.(fee.bookingId)}
-          >
-            Pay now
-          </Button>
-        )}
+
+        <Button className="w-full rounded-xl" onClick={handleConfirmPayment}>
+          Confirm
+        </Button>
       </CardContent>
     </Card>
   );

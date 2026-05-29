@@ -5,9 +5,6 @@ import { useCallback, useEffect, useState } from "react";
 import { BookingColumns } from "./components/BookingColumns";
 import type { Occupant } from "@/types/occupant";
 import ViewOccupantDialog from "./components/ViewOccupantDialog";
-import AddOccupantDialog from "./components/AddOccupantDialog";
-import type { OccupantFormData } from "@/schemas/occupantSchema";
-import { toast } from "sonner";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Calendar } from "lucide-react";
 import type { Apartment } from "@/types/apartment";
@@ -26,6 +23,7 @@ import { BookingSortByList, BookingStatusList } from "@/constants/sortByList";
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "react-i18next";
 import BookingFilter from "./components/BookingFilter";
+import AddOccupantCCCD from "./components/AddOccupantCCCD";
 
 function BookingManagement() {
   const { t } = useTranslation("common");
@@ -70,6 +68,7 @@ function BookingManagement() {
   const fetchOccupantList = async (bookingId: string) => {
     try {
       const response = await bookingManagementApi.getOccupantList(bookingId);
+      setSelectedBookingId(bookingId);
       setOpen({ ...open, viewOccupant: true });
       setOccupantList(response.data.data);
     } catch (error) {
@@ -77,26 +76,26 @@ function BookingManagement() {
     }
   };
 
-  const handleAddOccupant = async (data: OccupantFormData) => {
-    try {
-      const formData = new FormData();
-      formData.append("FullName", data.fullName);
-      formData.append("PassportId", data.passportId);
-      formData.append("NationalIdCardNumber", data.nationalIdCardNumber);
-      formData.append("DateOfBirth", data.dateOfBirth);
-      formData.append("Email", data.email);
-      formData.append("Phone", data.phone);
-      formData.append("Nationality", data.nationality);
-      formData.append("ProofPhoto", data.proofPhoto);
-      formData.append("Sex", data.sex);
-      await bookingManagementApi.addOccupant(selectedBookingId!, formData);
-      setOpen({ ...open, addOccupant: false });
-      toast.success("Occupant added successfully");
-    } catch (error: any) {
-      console.log(error);
-      toast.error(error.response?.data?.message || "Failed to add occupant");
-    }
-  };
+  // const handleAddOccupant = async (data: OccupantFormData) => {
+  //   try {
+  //     const formData = new FormData();
+  //     formData.append("FullName", data.fullName);
+  //     formData.append("PassportId", data.passportId);
+  //     formData.append("NationalIdCardNumber", data.nationalIdCardNumber);
+  //     formData.append("DateOfBirth", data.dateOfBirth);
+  //     formData.append("Email", data.email);
+  //     formData.append("Phone", data.phone);
+  //     formData.append("Nationality", data.nationality);
+  //     formData.append("ProofPhoto", data.proofPhoto);
+  //     formData.append("Sex", data.sex);
+  //     await bookingManagementApi.addOccupant(selectedBookingId!, formData);
+  //     setOpen({ ...open, addOccupant: false });
+  //     toast.success("Occupant added successfully");
+  //   } catch (error: any) {
+  //     console.log(error);
+  //     toast.error(error.response?.data?.message || "Failed to add occupant");
+  //   }
+  // };
 
   const fetchApartmentDetails = async (id: string) => {
     try {
@@ -181,7 +180,11 @@ function BookingManagement() {
               setFilter={setFilters}
               sortByList={BookingSortByList()}
             />
-            <BookingFilter setStatus={setStatus} status={status} statusList={BookingStatusList()} />
+            <BookingFilter
+              setStatus={setStatus}
+              status={status}
+              statusList={BookingStatusList()}
+            />
             <Button variant="outline" onClick={handleResetFilters}>
               {t("button.resetFilters")}
             </Button>
@@ -215,16 +218,24 @@ function BookingManagement() {
 
       {/* Dialogs */}
       <ViewOccupantDialog
+        bookingId={selectedBookingId!}
         occupantList={occupantList}
         onClose={() => setOpen({ ...open, viewOccupant: false })}
         open={open.viewOccupant}
       />
 
-      <AddOccupantDialog
+      {/* <AddOccupantDialog
         onClose={() => setOpen({ ...open, addOccupant: false })}
         open={open.addOccupant}
         onSubmit={handleAddOccupant}
+      /> */}
+
+      <AddOccupantCCCD
+        onClose={() => setOpen({ ...open, addOccupant: false })}
+        open={open.addOccupant}
+        bookingId={selectedBookingId!}
       />
+
       <Dialog open={!!apartment} onOpenChange={() => setApartment(null)}>
         <DialogContent>
           <DialogHeader>
