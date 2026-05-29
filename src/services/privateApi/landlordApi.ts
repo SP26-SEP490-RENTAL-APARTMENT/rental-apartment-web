@@ -109,6 +109,16 @@ export const bookingManagementApi = {
     apiConfig.privateApi.get(`/Booking/${bookingId}/occupants`),
   addOccupant: (bookingId: string, data: FormData) =>
     apiConfig.privateApi.post(`/Booking/${bookingId}/occupants`, data),
+  addOccupantCCCD: (bookingId: string, data: FormData) =>
+    apiConfig.privateApi.post(
+      `/Booking/${bookingId}/occupants/ocr-upload`,
+      data,
+    ),
+  editOccupant: (bookingId: string, occupantOrder: number, data: FormData) =>
+    apiConfig.privateApi.put(
+      `/Booking/${bookingId}/occupants/${occupantOrder}`,
+      data,
+    ),
 };
 
 export const mySubscriptionApi = {
@@ -130,7 +140,9 @@ export const paymentHistoryApi = {
 
 export const landlordDashboardApi = {
   getSummary: () =>
-    apiConfig.privateApi.get<ApiResponse<LandlordDashboardSummary>>("/landlord/dashboard/summary"),
+    apiConfig.privateApi.get<ApiResponse<LandlordDashboardSummary>>(
+      "/landlord/dashboard/summary",
+    ),
 };
 
 export const priceChangeApi = {
@@ -164,6 +176,18 @@ export const priceChangeApi = {
       `/landlord/apartments/${apartmentId}/pricing/manual/bulk-weekdays`,
       data,
     ),
+  useSmartPricing: (data: {
+    apartmentId: string;
+    startDate: string;
+    endDate: string;
+  }) => apiConfig.privateApi.post(`/smart-pricing/suggest`, data),
+  acceptSmartPricing: (
+    priceChangeId: string,
+    data: { overridePrice: number },
+  ) =>
+    apiConfig.privateApi.post(`/smart-pricing/${priceChangeId}/accept`, data),
+  getSmartPricingHistory: (params: ParamsProp) =>
+    apiConfig.privateApi.get("/smart-pricing/landlord/suggestions", { params }),
 };
 
 export const myWalletApi = {
@@ -195,4 +219,12 @@ export const pricingPolicyApi = {
 
 export const feeManagementApi = {
   getAllFees: () => apiConfig.privateApi.get("/landlord/penalties"),
+  confirmFeePayment: (
+    bookingId: string,
+    data: { paymentDate: string; notes: string },
+  ) =>
+    apiConfig.privateApi.post(
+      `/Booking/${bookingId}/check-time/payment-confirmation`,
+      data,
+    ),
 };

@@ -199,7 +199,7 @@ function BookingConfirm() {
                       {t("confirm.price.nightlyRate")}
                     </span>
                     <span className="font-medium text-gray-900">
-                      {quoteData.basePricePerNight.toLocaleString("vi-VN")} đ
+                      {quoteData.resolvedPricePerNight.toLocaleString("vi-VN")} đ
                     </span>
                   </div>
                   <div className="flex justify-between items-center text-sm">

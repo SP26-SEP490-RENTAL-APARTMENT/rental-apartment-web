@@ -9,4 +9,5 @@ export interface PaymentHistory {
   status: string;
   transactionId: string;
   paidAt: string;
+  signedAmountDisplay: string
 }

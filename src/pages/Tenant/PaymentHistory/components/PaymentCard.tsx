@@ -155,7 +155,7 @@ function PaymentCard({ payment }: { payment: PaymentHistory }) {
         <div className="mb-4 pb-4 border-b border-slate-100">
           <div className="flex items-baseline gap-2 mb-3">
             <span className="text-3xl font-bold text-slate-900">
-              {payment.amount.toLocaleString("vi-VN")}
+              {payment.signedAmountDisplay}
             </span>
             <span className="text-lg font-semibold text-slate-600">đ</span>
           </div>

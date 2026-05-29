@@ -39,7 +39,7 @@ function TimeLine({ data }: { data: any }) {
           {formatDateTime(data.actualCheckOut)}
         </p>
         <p className="text-orange-500">
-          {data.lateCheckOutFee > 0 && (
+          {late > 0 && (
             <>
               {t("checkTime.timeLine.late")} {late}{" "}
               {t("checkTime.timeLine.min")} (

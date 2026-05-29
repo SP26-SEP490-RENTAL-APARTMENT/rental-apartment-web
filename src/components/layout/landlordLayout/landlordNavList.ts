@@ -8,6 +8,7 @@ import {
   Wallet,
   BarChart3,
   BanknoteX,
+  BadgePercent,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
@@ -50,7 +51,7 @@ export const useLandlordNavList = () => {
       icon: BarChart3,
     },
     {
-      title: t("landlord.reports.booking_summary") || "Booking Summary",
+      title: "Booking Summary",
       url: "/landlord/reports/booking-summary",
       icon: CalendarCheck,
     },
@@ -63,6 +64,11 @@ export const useLandlordNavList = () => {
       title: t("landlord.feeManagement"),
       url: "/landlord/fee-management",
       icon: BanknoteX,
+    },
+    {
+      title: 'Smart Pricing History',
+      url: "/landlord/smart-pricing",
+      icon: BadgePercent,
     },
   ];
 };

@@ -1,5 +1,5 @@
 import { useAuthStore } from "@/store/authStore";
-import { Album, BookUser, CreditCard, History, Wrench } from "lucide-react";
+import { Album, BookUser, ClockAlert, CreditCard, History, Wrench } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 export const useTenantNavList = () => {
@@ -41,6 +41,11 @@ export const useTenantNavList = () => {
             title: t("collection.label"),
             url: "/tenant/collections",
             icon: Album,
+          },
+          {
+            title: 'Outstanding Fees',
+            url: "/tenant/outstanding-fees",
+            icon: ClockAlert,
           },
         ]
       : []),

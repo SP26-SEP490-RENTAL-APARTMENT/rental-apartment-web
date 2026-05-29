@@ -119,9 +119,9 @@ export const PaymentColumns = (): ColumnDef<PaymentHistory>[] => {
       },
     },
     {
-      accessorKey: "amount",
+      accessorKey: "signedAmountDisplay",
       header: t("payment.amount"),
-      cell: ({ row }) => `${row.original.amount.toLocaleString()} đ`,
+      
     },
   ];
 };

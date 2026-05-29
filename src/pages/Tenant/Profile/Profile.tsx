@@ -146,9 +146,9 @@ function Profile() {
                   {t("profile.gender")}
                 </p>
                 <p className="text-sm font-medium text-gray-900">
-                  {profile?.sex === "male" ? (
+                  {profile?.sex === "NAM" ? (
                     t("profile.male")
-                  ) : profile?.sex === "female" ? (
+                  ) : profile?.sex === "NỮ" ? (
                     t("profile.female")
                   ) : (
                     <span className="text-gray-400">Not updated</span>
