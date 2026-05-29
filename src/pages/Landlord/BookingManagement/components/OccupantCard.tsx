@@ -1,5 +1,16 @@
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { bookingManagementApi } from "@/services/privateApi/landlordApi";
 import type { Occupant } from "@/types/occupant";
 import {
   User,
@@ -10,14 +21,65 @@ import {
   IdCard,
   Expand,
   Check,
+  Pen,
 } from "lucide-react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { toast } from "sonner";
 
 interface Props {
   occupant: Occupant;
+  bookingId: string;
+  onClose?: () => void;
 }
-function OccupantCard({ occupant }: Props) {
+function OccupantCard({ occupant, bookingId, onClose }: Props) {
   const { t } = useTranslation("landlord");
+  const [isEdit, setIsEdit] = useState(false);
+  const [form, setForm] = useState({
+    fullName: occupant.fullName,
+    dateOfBirth: occupant.dateOfBirth,
+    sex: occupant.sex,
+    nationality: occupant.nationality,
+    phone: occupant.phone,
+    email: occupant.email,
+    passportId: occupant.passportId,
+    nationalIdCardNumber: occupant.nationalIdCardNumber,
+  });
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+  ) => {
+    const { name, value } = e.target;
+    setForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleUpdateOccupant = async () => {
+    try {
+      const formData = new FormData();
+      formData.append("fullName", form.fullName);
+      formData.append("dateOfBirth", form.dateOfBirth);
+      formData.append("sex", form.sex);
+      formData.append("nationality", form.nationality);
+      formData.append("phone", form.phone);
+      formData.append("email", form.email);
+      formData.append("passportId", form.passportId);
+      formData.append("nationalIdCardNumber", form.nationalIdCardNumber);
+
+      await bookingManagementApi.editOccupant(
+        bookingId,
+        occupant.order,
+        formData,
+      );
+      toast.success("Occupant information updated successfully");
+      setIsEdit(false);
+      onClose?.();
+    } catch (error) {
+      toast.error("Failed to update occupant information");
+    }
+  };
   const infoItems = [
     {
       icon: <Calendar className="w-5 h-5" />,
@@ -27,7 +89,7 @@ function OccupantCard({ occupant }: Props) {
     {
       icon: <User className="w-5 h-5" />,
       label: t("occupant.form.gender"),
-      value: occupant.sex === "male" ? "Male" : "Female",
+      value: occupant.sex === "NAM" ? "Male" : "Female",
     },
     {
       icon: <Globe className="w-5 h-5" />,
@@ -61,10 +123,10 @@ function OccupantCard({ occupant }: Props) {
     <Card className="rounded-2xl border py-0 border-slate-200 shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden bg-white">
       <CardContent className="p-0">
         {/* Header with name and badge */}
-        <div className="bg-linear-to-r from-slate-50 to-blue-50 border-b border-slate-200 px-8 py-6">
+        <div className="bg-linear-to-r from-slate-50 to-blue-50 border-b border-slate-200 px-8 py-6 flex items-center justify-between">
           <div className="flex justify-between items-start gap-4">
             <div className="flex gap-4 items-start flex-1">
-              <div className="w-16 h-16 rounded-full bg-linear-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white font-bold text-2xl flex-shrink-0 shadow-md">
+              <div className="w-16 h-16 rounded-full bg-linear-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white font-bold text-2xl shrink-0 shadow-md">
                 {occupant.fullName.charAt(0).toUpperCase()}
               </div>
 
@@ -88,6 +150,11 @@ function OccupantCard({ occupant }: Props) {
               </div>
             </div>
           </div>
+          <div>
+            <Button variant="default" size="sm" onClick={() => setIsEdit(true)}>
+              <Pen className="w-4 h-4" /> Edit
+            </Button>
+          </div>
         </div>
 
         {/* Main content */}
@@ -99,22 +166,113 @@ function OccupantCard({ occupant }: Props) {
                 {t("occupant.form.title1")}
               </h4>
               <div className="grid sm:grid-cols-2 gap-4">
-                {infoItems.slice(0, 5).map((item) => (
-                  <div
-                    key={item.label}
-                    className={`rounded-xl bg-white border border-slate-200 p-4 hover:border-blue-300 hover:bg-blue-50 transition duration-200 ${
-                      item.full ? "sm:col-span-2" : ""
-                    }`}
-                  >
-                    <div className="flex items-center gap-2.5 text-slate-600 text-xs font-semibold mb-2.5 uppercase tracking-wider">
-                      <span className="text-blue-600">{item.icon}</span>
-                      {item.label}
+                {isEdit ? (
+                  <>
+                    <div className="sm:col-span-2">
+                      <Label className="text-xs font-semibold text-slate-600 uppercase tracking-wider block mb-2">
+                        <Calendar className="w-4 h-4 inline mr-2" />
+                        {t("occupant.form.DOB")}
+                      </Label>
+                      <Input
+                        type="date"
+                        name="dateOfBirth"
+                        value={form.dateOfBirth}
+                        onChange={handleChange}
+                      />
                     </div>
-                    <p className="text-slate-900 font-semibold text-base break-all">
-                      {item.value}
-                    </p>
-                  </div>
-                ))}
+                    <div>
+                      <Label className="text-xs font-semibold text-slate-600 uppercase tracking-wider block mb-2">
+                        <User className="w-4 h-4 inline mr-2" />
+                        {t("occupant.form.gender")}
+                      </Label>
+                      <Select
+                        value={form.sex}
+                        onValueChange={(value) =>
+                          setForm((prev) => ({
+                            ...prev,
+                            sex: value,
+                          }))
+                        }
+                      >
+                        <SelectTrigger className="w-full h-11 rounded-lg border-slate-300">
+                          <SelectValue placeholder="Select gender" />
+                        </SelectTrigger>
+
+                        <SelectContent>
+                          <SelectItem value="NAM">Male</SelectItem>
+                          <SelectItem value="NỮ">Female</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div>
+                      <Label className="text-xs font-semibold text-slate-600 uppercase tracking-wider block mb-2">
+                        <Globe className="w-4 h-4 inline mr-2" />
+                        {t("occupant.form.nationality")}
+                      </Label>
+                      <Select
+                        value={form.nationality}
+                        onValueChange={(value) =>
+                          setForm((prev) => ({
+                            ...prev,
+                            nationality: value,
+                          }))
+                        }
+                      >
+                        <SelectTrigger className="w-full h-11 rounded-lg border-slate-300">
+                          <SelectValue placeholder="Select nationality" />
+                        </SelectTrigger>
+
+                        <SelectContent>
+                          <SelectItem value="VN">Vietnam</SelectItem>
+                          <SelectItem value="OTHER">Other</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div>
+                      <Label className="text-xs font-semibold text-slate-600 uppercase tracking-wider block mb-2">
+                        <Phone className="w-4 h-4 inline mr-2" />
+                        {t("occupant.form.phone")}
+                      </Label>
+                      <Input
+                        type="tel"
+                        name="phone"
+                        value={form.phone}
+                        onChange={handleChange}
+                      />
+                    </div>
+                    <div className="sm:col-span-2">
+                      <Label className="text-xs font-semibold text-slate-600 uppercase tracking-wider block mb-2">
+                        <Mail className="w-4 h-4 inline mr-2" />
+                        {t("occupant.form.email")}
+                      </Label>
+                      <Input
+                        type="email"
+                        name="email"
+                        value={form.email}
+                        onChange={handleChange}
+                      />
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    {infoItems.slice(0, 5).map((item) => (
+                      <div
+                        key={item.label}
+                        className={`rounded-xl bg-white border border-slate-200 p-4 hover:border-blue-300 hover:bg-blue-50 transition duration-200 ${
+                          item.full ? "sm:col-span-2" : ""
+                        }`}
+                      >
+                        <div className="flex items-center gap-2.5 text-slate-600 text-xs font-semibold mb-2.5 uppercase tracking-wider">
+                          <span className="text-blue-600">{item.icon}</span>
+                          {item.label}
+                        </div>
+                        <p className="text-slate-900 font-semibold text-base break-all">
+                          {item.value}
+                        </p>
+                      </div>
+                    ))}
+                  </>
+                )}
               </div>
             </div>
 
@@ -123,22 +281,64 @@ function OccupantCard({ occupant }: Props) {
                 {t("occupant.form.title2")}
               </h4>
               <div className="grid sm:grid-cols-2 gap-4">
-                {infoItems.slice(5).map((item) => (
-                  <div
-                    key={item.label}
-                    className="rounded-xl bg-white border border-slate-200 p-4 hover:border-blue-300 hover:bg-blue-50 transition duration-200"
-                  >
-                    <div className="flex items-center gap-2.5 text-slate-600 text-xs font-semibold mb-2.5 uppercase tracking-wider">
-                      <span className="text-blue-600">{item.icon}</span>
-                      {item.label}
+                {isEdit ? (
+                  <>
+                    <div>
+                      <Label className="text-xs font-semibold text-slate-600 uppercase tracking-wider block mb-2">
+                        <IdCard className="w-4 h-4 inline mr-2" />
+                        {t("occupant.form.passport")}
+                      </Label>
+                      <Input
+                        type="text"
+                        name="passportId"
+                        value={form.passportId}
+                        onChange={handleChange}
+                        placeholder="Optional"
+                      />
                     </div>
-                    <p className="text-slate-900 font-semibold text-base break-all">
-                      {item.value}
-                    </p>
-                  </div>
-                ))}
+                    <div>
+                      <Label className="text-xs font-semibold text-slate-600 uppercase tracking-wider block mb-2">
+                        <IdCard className="w-4 h-4 inline mr-2" />
+                        {t("occupant.form.nationalID")}
+                      </Label>
+                      <Input
+                        type="text"
+                        name="nationalIdCardNumber"
+                        value={form.nationalIdCardNumber}
+                        onChange={handleChange}
+                        placeholder="Optional"
+                      />
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    {infoItems.slice(5).map((item) => (
+                      <div
+                        key={item.label}
+                        className="rounded-xl bg-white border border-slate-200 p-4 hover:border-blue-300 hover:bg-blue-50 transition duration-200"
+                      >
+                        <div className="flex items-center gap-2.5 text-slate-600 text-xs font-semibold mb-2.5 uppercase tracking-wider">
+                          <span className="text-blue-600">{item.icon}</span>
+                          {item.label}
+                        </div>
+                        <p className="text-slate-900 font-semibold text-base break-all">
+                          {item.value}
+                        </p>
+                      </div>
+                    ))}
+                  </>
+                )}
               </div>
             </div>
+
+            {isEdit && (
+              <div className="flex justify-end gap-2">
+                <Button variant="outline" onClick={() => setIsEdit(false)}>
+                  Cancel
+                </Button>
+                <Button onClick={handleUpdateOccupant}>Save</Button>
+              </div>
+            )}
           </div>
 
           {/* RIGHT - Document Image */}

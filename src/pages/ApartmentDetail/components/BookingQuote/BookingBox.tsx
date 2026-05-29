@@ -146,6 +146,7 @@ function BookingBox({ apartmentId, onSubmit, apartment }: Props) {
           totalPrice: bookingDetails.totalPrice,
           suggestedDeposit: bookingDetails.suggestedDeposit,
           remainingBalance: bookingDetails.remainingBalance,
+          resolvedPricePerNight: bookingDetails.resolvedPricePerNight,
         },
       });
     } catch (error: any) {

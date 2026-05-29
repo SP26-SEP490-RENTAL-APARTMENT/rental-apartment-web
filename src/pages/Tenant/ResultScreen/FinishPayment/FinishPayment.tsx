@@ -16,7 +16,7 @@ function FinishPayment() {
     navigate(path);
   };
 
-  if (bookingData === null) {
+  if (!bookingData) {
     navigate("/");
     return null;
   }
@@ -28,7 +28,7 @@ function FinishPayment() {
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4 py-8">
-      <Card className="w-full max-w-2xl rounded-xl shadow-sm border-0">
+      <Card className="w-full max-w-2xl rounded-xl shadow-sm border-0 py-0">
         <CardHeader className="bg-linear-to-r from-green-600 to-green-700 text-white rounded-t-xl">
           <div className="text-center py-6">
             <div className="flex justify-center mb-4">

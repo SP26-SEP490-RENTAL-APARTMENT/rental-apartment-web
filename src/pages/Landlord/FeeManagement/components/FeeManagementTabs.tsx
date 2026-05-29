@@ -9,11 +9,13 @@ import { useTranslation } from "react-i18next";
 interface Props {
   outstandingFees: OutstandingFee[];
   walletPenalties: WalletPenalty[];
+  refetch: () => void;
 }
 
 export default function FeeManagementTabs({
   outstandingFees,
   walletPenalties,
+  refetch
 }: Props) {
   const {t} = useTranslation("landlord");
   return (
@@ -49,7 +51,7 @@ export default function FeeManagementTabs({
         {outstandingFees.length > 0 ? (
           <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
             {outstandingFees.map((item) => (
-              <OutstandingFeeCard key={item.bookingId} fee={item} />
+              <OutstandingFeeCard key={item.bookingId} fee={item} refetch={refetch} />
             ))}
           </div>
         ) : (

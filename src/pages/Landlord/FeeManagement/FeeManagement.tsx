@@ -102,6 +102,7 @@ function FeeManagement() {
         <FeeManagementTabs
           outstandingFees={outstandingFees}
           walletPenalties={walletPenalties}
+          refetch={fetchAllFees}
         />
       </div>
     </div>

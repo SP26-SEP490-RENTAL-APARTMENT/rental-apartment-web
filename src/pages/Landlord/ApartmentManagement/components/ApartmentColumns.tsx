@@ -3,6 +3,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 import ApartmentAction from "./ApartmentAction";
 import { Badge } from "@/components/ui/badge";
 import { useTranslation } from "react-i18next";
+import { Bolt } from "lucide-react";
 
 export const ApartmentColumns = (
   onDelete: (id: string) => void,
@@ -18,6 +19,7 @@ export const ApartmentColumns = (
   onViewPriceChange: (apartmentId: string) => void,
   onApplyPricingTemplate: (apartmentId: string) => void,
   onViewAvailablePolicies: (apartmentId: string) => void,
+  onTriggerSmartPricing: (apartmentId: string) => void,
 ): ColumnDef<Apartment>[] => {
   const { t } = useTranslation("landlord");
   const { t: statusT } = useTranslation("status");
@@ -44,15 +46,35 @@ export const ApartmentColumns = (
   const getInspectionStatusBadge = (inspectionStatus?: string) => {
     switch (inspectionStatus) {
       case "scheduled":
-        return <Badge className="bg-blue-500 text-white">{statusT("inspection.scheduled")}</Badge>;
+        return (
+          <Badge className="bg-blue-500 text-white">
+            {statusT("inspection.scheduled")}
+          </Badge>
+        );
       case "in_progress":
-        return <Badge className="bg-green-500 text-white">{statusT("inspection.in_progress")}</Badge>;
+        return (
+          <Badge className="bg-green-500 text-white">
+            {statusT("inspection.in_progress")}
+          </Badge>
+        );
       case "pending":
-        return <Badge className="bg-yellow-500 text-white">{statusT("inspection.pending")}</Badge>;
+        return (
+          <Badge className="bg-yellow-500 text-white">
+            {statusT("inspection.pending")}
+          </Badge>
+        );
       case "passed":
-        return <Badge className="bg-gray-500 text-white">{statusT("inspection.passed")}</Badge>;
+        return (
+          <Badge className="bg-gray-500 text-white">
+            {statusT("inspection.passed")}
+          </Badge>
+        );
       default:
-        return <Badge variant="secondary">{statusT("inspection.not_scheduled")}</Badge>;
+        return (
+          <Badge variant="secondary">
+            {statusT("inspection.not_scheduled")}
+          </Badge>
+        );
     }
   };
   return [
@@ -63,7 +85,18 @@ export const ApartmentColumns = (
     {
       accessorKey: "basePricePerNight",
       header: t("apartment.infor.price"),
-      cell: ({ row }) => `${row.original.basePricePerNight.toLocaleString()} đ`,
+      cell: ({ row }) => (
+        <div
+          onClick={() => onTriggerSmartPricing(row.original.apartmentId)}
+          className="group flex items-center gap-1 hover:text-blue-400 transition duration-300 cursor-pointer"
+        >
+          {row.original.basePricePerNight.toLocaleString()} đ
+          <Bolt
+            size={16}
+            className="transition-transform duration-300 group-hover:rotate-90"
+          />
+        </div>
+      ),
     },
     {
       accessorKey: "status",

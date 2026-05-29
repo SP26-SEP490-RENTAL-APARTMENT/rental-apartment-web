@@ -1,0 +1,34 @@
+{
+    "fee": {
+        "title": "Phí Chưa Thanh Toán",
+        "description": "Xem và quản lý các phí chưa thanh toán và giải quyết tranh chấp của bạn.",
+        "noFees": "Không có phí chưa thanh toán",
+        "subNoFees": "Bạn không có phí chưa thanh toán nào. Tiếp tục duy trì tốt!",
+        "browseApartments": "Xem Căn Hộ",
+        "summary": {
+            "totalFees": "Tổng Phí",
+            "outstandingCount": "Chưa Thanh Toán",
+            "overdue": "Quá Hạn",
+            "disputed": "Tranh Chấp"
+        },
+        "status": {
+            "due": "Đến Hạn",
+            "payment_submitted_pending_veri": "Đang Xác Minh",
+            "settled": "Đã Giải Quyết",
+            "disputed": "Tranh Chấp",
+            "overdue": "Quá Hạn"
+        },
+        "details": {
+            "apartment": "Căn Hộ",
+            "bookingDate": "Ngày Đặt",
+            "checkIn": "Nhận Phòng",
+            "checkOut": "Trả Phòng",
+            "dueDate": "Ngày Đến Hạn",
+            "amount": "Số Tiền",
+            "payNow": "Thanh Toán Ngay",
+            "viewDetails": "Xem Chi Tiết",
+            "disputeReason": "Lý Do Tranh Chấp",
+            "disputeStatus": "Trạng Thái Tranh Chấp"
+        }
+    }
+}

@@ -47,6 +47,7 @@ import { useTranslation } from "react-i18next";
 import type { AvailablePolicy, PricingTemplate } from "@/types/pricingTemplate";
 import PricingPolicyForm from "./components/PricingPolicy/PricingPolicyForm";
 import ViewAvailablePolicy from "./components/PricingPolicy/ViewAvailablePolicy";
+import SmartPriceDialog from "./components/SmartPricing/SmartPriceDialog";
 
 function ApartmentManagement() {
   const { t } = useTranslation("landlord");
@@ -92,6 +93,7 @@ function ApartmentManagement() {
     priceChangeDialog: false,
     pricingPolicyForm: false,
     pricingPolicyDialog: false,
+    smartPricingDialog: false,
   });
 
   const fetchApartmentList = useCallback(async () => {
@@ -406,6 +408,11 @@ function ApartmentManagement() {
     setIsOpen((prev) => ({ ...prev, pricingPolicyForm: true }));
   };
 
+  const triggerSmartPricing = (apartmentId: string) => {
+    setSelectedApartmentId(apartmentId);
+    setIsOpen((prev) => ({ ...prev, smartPricingDialog: true }));
+  };
+
   const handleResetFilters = () => {
     setPage(1);
     setFilters({
@@ -486,6 +493,7 @@ function ApartmentManagement() {
                 triggerViewPriceChange,
                 triggerApplyPricingTemplate,
                 handleGetAvailablePolicies,
+                triggerSmartPricing,
               )}
               data={apartmentList}
               limit={10}
@@ -603,6 +611,14 @@ function ApartmentManagement() {
         }
         open={isOpen.pricingPolicyDialog}
         template={availablePolicies}
+      />
+
+      <SmartPriceDialog
+        onClose={() =>
+          setIsOpen((prev) => ({ ...prev, smartPricingDialog: false }))
+        }
+        open={isOpen.smartPricingDialog}
+        apartmentId={selectedApartmentId}
       />
     </div>
   );
