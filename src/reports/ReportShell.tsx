@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import type {
+  ReportDimensionRequestDto,
+  ReportMetricRequestDto,
   ReportSchemaDto,
   ReportRunRequestDto,
   ReportResultPageDto,
@@ -23,6 +25,18 @@ export interface ReportShellProps {
 }
 
 type RangePreset = 'last_30_days' | 'this_day' | 'last_day' | 'this_week' | 'last_week' | 'this_month' | 'last_month' | 'this_year' | 'last_year';
+
+function normalizeDimensions(dimensions?: ReportDimensionRequestDto[]) {
+  return (dimensions ?? []).filter((dimension): dimension is ReportDimensionRequestDto => {
+    return typeof dimension?.field === 'string' && dimension.field.trim().length > 0;
+  });
+}
+
+function normalizeMetrics(metrics?: ReportMetricRequestDto[]) {
+  return (metrics ?? []).filter((metric): metric is ReportMetricRequestDto => {
+    return typeof metric?.field === 'string' && metric.field.trim().length > 0;
+  });
+}
 
 export const ReportShell: React.FC<ReportShellProps> = ({ reportId, defaultRequest, allowedDimensions: propsAllowedDimensions, allowedMetrics: propsAllowedMetrics, enableApartmentFilter = false, onRunResult, tablePortalId }) => {
   const [schema, setSchema] = useState<ReportSchemaDto | null>(null);
@@ -57,6 +71,19 @@ export const ReportShell: React.FC<ReportShellProps> = ({ reportId, defaultReque
     getSchema(reportId).then(s => mounted && setSchema(s)).catch(() => {});
     return () => { mounted = false; };
   }, [reportId]);
+
+  useEffect(() => {
+    setRequest({
+      from: defaultRequest?.from,
+      to: defaultRequest?.to,
+      searchTerm: defaultRequest?.searchTerm,
+      dimensions: normalizeDimensions(defaultRequest?.dimensions),
+      metrics: normalizeMetrics(defaultRequest?.metrics),
+      filters: defaultRequest?.filters,
+      page: defaultRequest?.page ?? 1,
+      pageSize: defaultRequest?.pageSize ?? 100,
+    });
+  }, [defaultRequest, reportId]);
 
   useEffect(() => {
     if (!enableApartmentFilter) {
@@ -324,7 +351,7 @@ export const ReportShell: React.FC<ReportShellProps> = ({ reportId, defaultReque
 
     // ensure time dimension is present and first
     const timeField = timeFieldForPreset(rangePreset);
-    const dims = (request.dimensions ?? []).filter(d => !['date','week','month','quarter','year'].includes(d.field));
+    const dims = normalizeDimensions(request.dimensions).filter(d => !['date','week','month','quarter','year'].includes(d.field));
     if (timeField) dims.unshift({ field: timeField, alias: timeField });
 
     // ensure any filter target dimensions are included in dimensions list
@@ -336,9 +363,12 @@ export const ReportShell: React.FC<ReportShellProps> = ({ reportId, defaultReque
       if (!exists) dims.push({ field: f.field, alias: f.field });
     });
 
+    const metrics = normalizeMetrics(request.metrics);
+
     const runRequest: ReportRunRequestDto = {
       ...request,
       dimensions: dims,
+      metrics,
       filters: filters.length > 0 ? filters : undefined,
     };
 

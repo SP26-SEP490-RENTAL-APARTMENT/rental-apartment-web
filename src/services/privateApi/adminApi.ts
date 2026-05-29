@@ -206,6 +206,10 @@ export const reportApi = {
     apiConfig.privateApi.get("/reports/catalog", { params }),
   createReport: (data: CreateReportRequest) =>
     apiConfig.privateApi.post("/reports", data),
+  updateReport: (reportId: string, data: CreateReportRequest) =>
+    apiConfig.privateApi.put(`/reports/${reportId}`, data),
+  deleteReport: (reportId: string) =>
+    apiConfig.privateApi.delete(`/reports/${reportId}`),
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   runReport: (reportId: string, data: any) =>
     apiConfig.privateApi.post<ApiResponse<PagedReportResponse>>(
