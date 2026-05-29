@@ -12,10 +12,12 @@ import ManagementFilter, {
   type Filter,
 } from "@/components/ui/managementFilter/ManagementFilter";
 import { BookingSortByList } from "@/constants/sortByList";
+import DetailDialog from "./components/CheckTime/DetailDialog";
 
 function BookingHistories() {
   const { t } = useTranslation("user");
   const [bookingHistory, setBookingHistory] = useState<BookingHistory[]>([]);
+  const [timeResponse, setTimeResponse] = useState(null);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
@@ -23,6 +25,7 @@ function BookingHistories() {
     null,
   );
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [timeDialogOpen, setTimeDialogOpen] = useState(false);
   const [filters, setFilters] = useState<Filter>({
     search: "",
     sortBy: "createdAt",
@@ -47,6 +50,17 @@ function BookingHistories() {
       setLoading(false);
     }
   }, [page, filters]);
+
+  const handleCheckTime = async (bookingId: string) => {
+    try {
+      const response = await bookingApi.getChecktime(bookingId);
+      setTimeDialogOpen(true);
+      setTimeResponse(response.data.data);
+    } catch (error) {
+      console.log(error);
+      setTimeDialogOpen(false);
+    }
+  }
 
   useEffect(() => {
     fetchBookingHistory();
@@ -99,6 +113,7 @@ function BookingHistories() {
                         key={item.bookingId}
                         data={item}
                         onClick={handleCardClick}
+                        onCheckTime={handleCheckTime}
                       />
                     ))}
               </div>
@@ -148,6 +163,8 @@ function BookingHistories() {
           onClose={() => setIsDialogOpen(false)}
         />
       )}
+
+      <DetailDialog data={timeResponse} onClose={() => setTimeDialogOpen(false)} open={timeDialogOpen} />
     </div>
   );
 }

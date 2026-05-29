@@ -16,19 +16,15 @@ function FinishPayment() {
     navigate(path);
   };
 
-  if (!bookingData) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        {t("finish.notFound")}
-      </div>
-    );
+  if (bookingData === null) {
+    navigate("/");
+    return null;
   }
 
   const formatDate = (date: string) =>
     new Date(date).toLocaleDateString("vi-VN");
 
-  const totalGuests =
-    bookingData.noOfAdults + bookingData.noOfInfants + bookingData.noOfPets;
+  const totalGuests = bookingData.noOfAdults + bookingData.noOfChildren;
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4 py-8">
@@ -54,7 +50,9 @@ function FinishPayment() {
             <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
               <div className="flex items-center gap-2 mb-3">
                 <Calendar className="h-5 w-5 text-blue-600" />
-                <h3 className="font-semibold text-gray-900">{t("finish.bookDate")}</h3>
+                <h3 className="font-semibold text-gray-900">
+                  {t("finish.bookDate")}
+                </h3>
               </div>
               <div className="space-y-2">
                 <div>
@@ -80,7 +78,9 @@ function FinishPayment() {
             <div className="bg-purple-50 rounded-lg p-4 border border-purple-200">
               <div className="flex items-center gap-2 mb-3">
                 <Users className="h-5 w-5 text-purple-600" />
-                <h3 className="font-semibold text-gray-900">{t("finish.guestDetails")}</h3>
+                <h3 className="font-semibold text-gray-900">
+                  {t("finish.guestDetails")}
+                </h3>
               </div>
               <div className="space-y-2">
                 <div>
@@ -108,7 +108,9 @@ function FinishPayment() {
             <CardContent className="pt-6">
               <div className="flex items-center gap-2 mb-3">
                 <CreditCard className="h-5 w-5 text-amber-600" />
-                <h3 className="font-semibold text-gray-900">{t("finish.paymentInfo")}</h3>
+                <h3 className="font-semibold text-gray-900">
+                  {t("finish.paymentInfo")}
+                </h3>
               </div>
               <p className="text-lg font-medium text-amber-900">
                 {bookingData.paymentMode === "partial"

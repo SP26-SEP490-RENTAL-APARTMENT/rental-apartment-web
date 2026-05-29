@@ -21,7 +21,9 @@ import {
   CheckCircle2,
   AlertCircle,
   Upload,
+  Plus,
 } from "lucide-react";
+import AddBankDialog from "./components/AddBankDialog";
 
 function Profile() {
   const { t } = useTranslation("user");
@@ -30,6 +32,7 @@ function Profile() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isCCCDDialogOpen, setIsCCCDDialogOpen] = useState(false);
   const [isUploadingCCCD, setIsUploadingCCCD] = useState(false);
+  const [bankDialog, setBankDialog] = useState(false);
 
   const fetchProfile = async () => {
     try {
@@ -249,6 +252,14 @@ function Profile() {
           {/* Action Button */}
           <div className="flex justify-end gap-2">
             <Button
+              onClick={() => setBankDialog(true)}
+              className="bg-linear-to-r from-gray-600 to-black hover:from-gray-700 hover:to-black text-white font-semibold gap-2 px-6"
+            >
+              <Plus className="h-4 w-4" />
+              Bank
+            </Button>
+
+            <Button
               onClick={() => setIsCCCDDialogOpen(true)}
               className="bg-linear-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-semibold gap-2 px-6"
             >
@@ -284,6 +295,8 @@ function Profile() {
         onUpload={handleUploadCCCD}
         isLoading={isUploadingCCCD}
       />
+
+      <AddBankDialog onClose={() => setBankDialog(false)} open={bankDialog} />
     </div>
   );
 }

@@ -72,7 +72,7 @@ function TemplateDetailDialog({ open, onClose, template }: Props) {
                 <div>
                   <p className="text-sm text-muted-foreground">Updated at</p>
                   <p className="font-medium">
-                    {template.updatedAt}
+                    {template.updatedAt?.slice(0, 10) || "N/A"}
                   </p>
                 </div>
               </div>
@@ -133,7 +133,7 @@ function TemplateDetailDialog({ open, onClose, template }: Props) {
           </section>
 
           <div className="flex justify-end text-teal-500 text-xs">
-            Created at: {template.createdAt}
+            Created at: {template.createdAt?.slice(0, 10) || "N/A"}
           </div>
         </div>
       </DialogContent>

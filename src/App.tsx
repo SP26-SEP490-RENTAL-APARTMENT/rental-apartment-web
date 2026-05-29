@@ -55,6 +55,8 @@ import OccupiedManagement from "./pages/Admin/OccupiedManagement/OccupiedManagem
 import MyWallet from "./pages/Landlord/Wallet/MyWallet";
 import PricingTemplates from "./pages/Admin/PricingTemplate/PricingTemplates";
 import CancelPayment from "./pages/Tenant/ResultScreen/CancelPayment/CancelPayment";
+import FeeManagement from "./pages/Landlord/FeeManagement/FeeManagement";
+import DisputeManagement from "./pages/Admin/DisputeChecktime/DisputeManagement";
 
 /**
  * App Component - Simplified routing setup
@@ -205,6 +207,14 @@ export default function App() {
               </ProtectedRoute>
             }
           />
+          <Route
+            path={ROUTES.ADMIN_DISPUTES_CHECKTIME}
+            element={
+              <ProtectedRoute requiredRoles={["admin"]}>
+                <DisputeManagement />
+              </ProtectedRoute>
+            }
+          />
         </Route>
 
         {/* ========== Landlord Routes ========== */}
@@ -278,6 +288,10 @@ export default function App() {
             element={
               <ProtectedRoute requiredRoles={["landlord", "tenant"]}>
                 <ReportsWorkspace />
+            path={ROUTES.LANDLORD_FEE_MANAGEMENT}
+            element={
+              <ProtectedRoute requiredRoles={["landlord", "tenant"]}>
+                <FeeManagement />
               </ProtectedRoute>
             }
           />

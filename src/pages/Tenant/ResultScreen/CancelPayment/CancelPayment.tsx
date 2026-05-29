@@ -3,13 +3,7 @@ import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { useBookingStore } from "@/store/bookingStore";
 import { useTranslation } from "react-i18next";
-import {
-  XCircle,
-  Home,
-  Calendar,
-  Users,
-  CreditCard,
-} from "lucide-react";
+import { XCircle, Home, Calendar, Users, CreditCard } from "lucide-react";
 
 function CancelPayment() {
   const navigate = useNavigate();
@@ -23,18 +17,14 @@ function CancelPayment() {
   };
 
   if (!bookingData) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        {t("cancel.notFound") || "Booking information not found"}
-      </div>
-    );
+    navigate("/");
+    return null;
   }
 
   const formatDate = (date: string) =>
     new Date(date).toLocaleDateString("vi-VN");
 
-  const totalGuests =
-    bookingData.noOfAdults + bookingData.noOfInfants + bookingData.noOfPets;
+  const totalGuests = bookingData.noOfAdults + bookingData.noOfChildren;
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4 py-8">
@@ -58,7 +48,6 @@ function CancelPayment() {
 
         <CardContent className="pt-8 px-6 pb-8">
           {/* Alert Section */}
-          
 
           {/* Booking Details Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
@@ -137,7 +126,6 @@ function CancelPayment() {
           </Card>
 
           {/* Information Section */}
-          
 
           {/* Divider */}
           <div className="border-t border-gray-200 my-6" />

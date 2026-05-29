@@ -191,14 +191,17 @@
             "checkOutDate": "Check-out Date",
             "notes": "Notes",
             "cancel": "Cancel",
-            "notesPlaceholder": "Add a note"
+            "notesPlaceholder": "Add a note",
+            "evidence": "Upload Photo Evidence",
+            "uploadImage": "Upload Image",
+            "selectedPhotos": "Selected Photos"
         }
     },
     "occupant": {
-        "title": "Temporary Residents List",
+        "title": "Occupant List",
         "occupant": "Occupant",
         "form": {
-            "title": "Add Temporary Resident",
+            "title": "Add Occupant",
             "fullName": "Full Name",
             "passport": "Passport Number",
             "nationalID": "National ID",
@@ -218,6 +221,7 @@
         }
     },
     "payment": {
+        "purpose": "Purpose",
         "title": "Payment History",
         "description": "View and manage your payment history",
         "type": "Payment Type",
@@ -227,7 +231,14 @@
         "amount": "Amount",
         "refundBooking": "Refund",
         "fullBooking": "Full Booking Payment",
-        "depositBooking": "Deposit Booking Payment"
+        "depositBooking": "Deposit Booking Payment",
+        "balanceBooking": "Booking Balance",
+        "balance": "Booking Balance",
+        "refund": "Booking Refund",
+        "upfront": "Upfront Booking Payment",
+        "deposit": "Booking Deposit",
+        "other": "Other",
+        "penalty": "Penalty"
     },
     "payout": {
         "title": "My Wallet",
@@ -260,5 +271,23 @@
             "success": "Withdrawal request submitted successfully",
             "error": "Failed to submit withdrawal request"
         }
+    },
+    "fee": {
+        "title": "Fee Management",
+        "description": "View and manage your outstanding fees and penalties",
+        "outstandingFees": "Outstanding Fees",
+        "walletPenalties": "Wallet Penalties",
+        "totalOverdue": "Total Overdue",
+        "totalDisputed": "Total Disputed",
+        "feeType": "Fee Type",
+        "amount": "Amount",
+        "bookingId": "Booking ID",
+        "dueDate": "Due Date",
+        "status": "Status",
+        "actions": "Actions",
+        "payNow": "Pay Now",
+        "dispute": "Dispute",
+        "overdue": "overdue",
+        "disputed": "disputed"
     }
 }

@@ -122,7 +122,7 @@ function InspectionAction({
                     : "text-red-500"
                 }`}
               >
-                {inspections.approvedForListing ? "Yes" : "No"}
+                {inspections.approvedForListing ? "Yes" : "Not approved"}
               </span>
             </div>
           </div>

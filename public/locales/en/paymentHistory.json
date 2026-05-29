@@ -11,7 +11,44 @@
             "fullBooking": "Full Booking Payment",
             "depositBooking": "Deposit Booking Payment",
             "other": "Other",
-            "refund": "Refund"
+            "refund": "Refund",
+            "balance": "Balance",
+            "balanceBooking": "Booking Balance"
+        }
+    },
+    "checkTime": {
+        "respondButton": "Respond to Check Time",
+        "checkInPhoto": "Check-In Photo",
+        "checkOutPhoto": "Check-Out Photo",
+        "title": "Check Time Details",
+        "overview": "Overview",
+        "photos": "Photos",
+        "summary": {
+            "title": "Check Time Summary",
+            "subTitle": "Booking"
+        },
+        "timeLine": {
+            "checkIn": "Check In",
+            "checkOut": "Check Out",
+            "scheduled": "Scheduled",
+            "actual": "Actual",
+            "early": "Early",
+            "late": "Late",
+            "min": "min"
+        },
+        "fee": {
+            "title": "Fee Breakdown",
+            "earlyCheckIn": "Early Check-In Fee",
+            "lateCheckOut": "Late Check-Out Fee",
+            "total": "Total Fee"
+        },
+        "claim": {
+            "title": "Claim Information",
+            "status": "Status",
+            "open": "Open",
+            "expire": "Expire",
+            "tenantResponse": "Tenant Response",
+            "response": "Response"
         }
     }
 }

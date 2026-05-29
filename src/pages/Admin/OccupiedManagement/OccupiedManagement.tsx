@@ -1,7 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import DataTable from "@/components/ui/dataTable/DataTable";
-import ManagementFilter, { type Filter } from "@/components/ui/managementFilter/ManagementFilter";
+import ManagementFilter, {
+  type Filter,
+} from "@/components/ui/managementFilter/ManagementFilter";
 import {
   adminOccupyApi,
   userManagementApi,
@@ -22,6 +24,8 @@ import ApartmentDetailDialog from "@/components/ui/apartmentDetailDialog/Apartme
 import type { UserProfile } from "@/types/user";
 import UserDetailDialog from "@/components/ui/userDetailDialog/UserDetailDialog";
 import { occupySortByList } from "@/constants/sortByList";
+import { toast } from "sonner";
+import PenaltyForm from "./components/PenaltyForm";
 
 function OccupiedManagement() {
   const [occupies, setOccupies] = useState<Occupy[]>([]);
@@ -31,6 +35,9 @@ function OccupiedManagement() {
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
   const [apartmentDialogOpen, setApartmentDialogOpen] = useState(false);
+  const [penaltyDialogOpen, setPenaltyDialogOpen] = useState(false);
+  const [note, setNote] = useState("");
+  const [occupy, setOccupy] = useState<Occupy | null>(null);
   const [userDialogOpen, setUserDialogOpen] = useState(false);
   const [filters, setFilters] = useState<Filter>({
     search: "",
@@ -70,12 +77,30 @@ function OccupiedManagement() {
   const handleGetUser = async (id: string) => {
     try {
       const res = await userManagementApi.getUserDetail(id);
-      console.log(res.data);
-      
       setUser(res.data);
       setUserDialogOpen(true);
     } catch (error) {
       console.log(error);
+    }
+  };
+
+  const handleConfirmPenalty = async () => {
+    if (!occupy) return;
+    try {
+      await adminOccupyApi.confirmPenalty(occupy.bookingId, {
+        note,
+        ticketId: occupy.ticketId,
+      });
+      setPenaltyDialogOpen(false);
+      setOccupy(null);
+      fetchOccupies();
+      toast.success("Penalty confirmed successfully");
+    } catch (error: any) {
+      console.log(error);
+      toast.error(
+        error.response?.data?.message ||
+          "Failed to confirm penalty. Please try again.",
+      );
     }
   };
 
@@ -87,6 +112,11 @@ function OccupiedManagement() {
     setPage(newPage);
   };
 
+  const openPenaltyDialog = (occupy: Occupy) => {
+    setOccupy(occupy);
+    setPenaltyDialogOpen(true);
+  };
+
   const handleResetFilters = () => {
     setPage(1);
     setFilters({
@@ -94,7 +124,7 @@ function OccupiedManagement() {
       sortBy: "createdAt",
       sortOrder: "desc",
     });
-  }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -125,7 +155,7 @@ function OccupiedManagement() {
               setFilter={setFilters}
               sortByList={occupySortByList}
             />
-            
+
             <Button variant="outline" onClick={handleResetFilters}>
               Reset Filters
             </Button>
@@ -139,7 +169,11 @@ function OccupiedManagement() {
           </CardHeader>
           <CardContent className="pt-6">
             <DataTable
-              columns={OccupyColumns(handleGetApartment, handleGetUser)}
+              columns={OccupyColumns(
+                handleGetApartment,
+                handleGetUser,
+                openPenaltyDialog,
+              )}
               data={occupies}
               limit={10}
               loading={loading}
@@ -180,6 +214,14 @@ function OccupiedManagement() {
           {user && <UserDetailDialog user={user} />}
         </DialogContent>
       </Dialog>
+
+      <PenaltyForm
+        note={note}
+        onClose={() => setPenaltyDialogOpen(false)}
+        onSubmit={handleConfirmPenalty}
+        open={penaltyDialogOpen}
+        setNote={setNote}
+      />
     </div>
   );
 }

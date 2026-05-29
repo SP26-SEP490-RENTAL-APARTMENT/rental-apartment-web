@@ -249,6 +249,14 @@ export const supportManagementApi = {
 export const adminOccupyApi = {
   getAllOccupies: (params: ParamsProp) =>
     apiConfig.privateApi.get("/admin/bookings/reported", { params }),
+  confirmPenalty: (
+    bookingId: string,
+    data: { ticketId: string; note: string },
+  ) =>
+    apiConfig.privateApi.post(
+      `/Booking/${bookingId}/occupied-incident/confirm-penalty`,
+      data,
+    ),
 };
 
 export const pricingTemplateManagementApi = {
@@ -268,3 +276,8 @@ export const pricingTemplateManagementApi = {
       },
     ),
 };
+
+export const disputeManagementApi = {
+  getAllDisputes: (params: ParamsProp) =>
+    apiConfig.privateApi.get("/admin/bookings/disputes", { params }),
+}

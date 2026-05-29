@@ -22,9 +22,10 @@ import ApartmentDetailDialog from "@/components/ui/apartmentDetailDialog/Apartme
 import ManagementFilter, {
   type Filter,
 } from "@/components/ui/managementFilter/ManagementFilter";
-import { BookingSortByList } from "@/constants/sortByList";
+import { BookingSortByList, BookingStatusList } from "@/constants/sortByList";
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "react-i18next";
+import BookingFilter from "./components/BookingFilter";
 
 function BookingManagement() {
   const { t } = useTranslation("common");
@@ -40,6 +41,7 @@ function BookingManagement() {
     sortBy: "createdAt",
     sortOrder: "desc",
   });
+  const [status, setStatus] = useState("");
   const [open, setOpen] = useState({ viewOccupant: false, addOccupant: false });
   const [selectedBookingId, setSelectedBookingId] = useState<string | null>(
     null,
@@ -54,6 +56,7 @@ function BookingManagement() {
         search: filters.search,
         sortBy: filters.sortBy,
         sortOrder: filters.sortOrder,
+        status: status === "all" ? "" : status,
       });
       setBookings(response.data.items);
       setTotalCount(response.data.totalCount);
@@ -62,7 +65,7 @@ function BookingManagement() {
     } finally {
       setLoading(false);
     }
-  }, [page, filters]);
+  }, [page, filters, status]);
 
   const fetchOccupantList = async (bookingId: string) => {
     try {
@@ -89,9 +92,9 @@ function BookingManagement() {
       await bookingManagementApi.addOccupant(selectedBookingId!, formData);
       setOpen({ ...open, addOccupant: false });
       toast.success("Occupant added successfully");
-    } catch (error) {
+    } catch (error: any) {
       console.log(error);
-      toast.error("Failed to add occupant");
+      toast.error(error.response?.data?.message || "Failed to add occupant");
     }
   };
 
@@ -124,12 +127,10 @@ function BookingManagement() {
       sortBy: "createdAt",
       sortOrder: "desc",
     });
+    setStatus("");
   };
 
-  const handleCheckIn = async (
-    bookingId: string,
-    data: { actualCheckIn: Date; note: string },
-  ) => {
+  const handleCheckIn = async (bookingId: string, data: FormData) => {
     try {
       await bookingManagementApi.checkIn(bookingId, data);
       // Refresh bookings list after successful check-in
@@ -140,10 +141,7 @@ function BookingManagement() {
     }
   };
 
-  const handleCheckOut = async (
-    bookingId: string,
-    data: { actualCheckOut: Date; note: string },
-  ) => {
+  const handleCheckOut = async (bookingId: string, data: FormData) => {
     try {
       await bookingManagementApi.checkOut(bookingId, data);
       // Refresh bookings list after successful check-out
@@ -183,6 +181,7 @@ function BookingManagement() {
               setFilter={setFilters}
               sortByList={BookingSortByList()}
             />
+            <BookingFilter setStatus={setStatus} status={status} statusList={BookingStatusList()} />
             <Button variant="outline" onClick={handleResetFilters}>
               {t("button.resetFilters")}
             </Button>

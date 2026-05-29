@@ -5,7 +5,17 @@ import { useAuthStore } from "@/store/authStore";
 import { Badge } from "../badge";
 import { useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Bath, BedDouble, Camera, DoorOpen, MapPin, NotebookPen, PencilLine, Puzzle, RulerDimensionLine } from "lucide-react";
+import {
+  Bath,
+  BedDouble,
+  Camera,
+  DoorOpen,
+  MapPin,
+  NotebookPen,
+  PencilLine,
+  Puzzle,
+  RulerDimensionLine,
+} from "lucide-react";
 
 interface Props {
   apartment: Apartment;
@@ -21,6 +31,7 @@ function ApartmentDetailDialog({ apartment, onAddPhotos }: Props) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [imgUrl, setImgUrl] = useState<string>("");
   const location = useLocation();
 
   const getStatusBadge = (status?: string | null) => {
@@ -197,7 +208,7 @@ function ApartmentDetailDialog({ apartment, onAddPhotos }: Props) {
           <>
             <div className="w-full h-72 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow">
               <img
-                src={apartment.photos[0]}
+                src={imgUrl || apartment.photos[0]}
                 alt="Main"
                 className="w-full h-full object-cover"
               />
@@ -206,10 +217,9 @@ function ApartmentDetailDialog({ apartment, onAddPhotos }: Props) {
               <div className="grid grid-cols-4 gap-2">
                 {apartment.photos.map((img: string, index: number) => (
                   <div
+                  onClick={() => setImgUrl(img)}
                     key={index}
-                    className={`rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-all cursor-pointer h-20 ${
-                      index === 0 ? "ring-2 ring-primary" : ""
-                    }`}
+                    className={`rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-all cursor-pointer h-20 `}
                   >
                     <img
                       src={img}
@@ -320,7 +330,9 @@ function ApartmentDetailDialog({ apartment, onAddPhotos }: Props) {
       {apartment.room && (
         <div className="bg-linear-to-br from-indigo-50 to-blue-50 rounded-xl p-5 border border-indigo-200 space-y-4">
           <div className="flex items-center gap-2">
-            <span><NotebookPen size={16} /></span>
+            <span>
+              <NotebookPen size={16} />
+            </span>
             <p className="font-semibold text-gray-900">
               {t("apartment.room.info")}
             </p>
@@ -351,7 +363,9 @@ function ApartmentDetailDialog({ apartment, onAddPhotos }: Props) {
 
           <div className="bg-white/60 rounded-lg p-3 border border-indigo-100">
             <div className="flex items-center gap-2 mb-2">
-              <span><Bath size={16} /></span>
+              <span>
+                <Bath size={16} />
+              </span>
               <p className="text-xs font-semibold text-indigo-700 uppercase">
                 {t("apartment.room.privateBathroom")}
               </p>
