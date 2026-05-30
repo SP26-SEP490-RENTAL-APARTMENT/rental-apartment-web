@@ -76,8 +76,11 @@ function OccupantCard({ occupant, bookingId, onClose }: Props) {
       toast.success("Occupant information updated successfully");
       setIsEdit(false);
       onClose?.();
-    } catch (error) {
-      toast.error("Failed to update occupant information");
+    } catch (error: any) {
+      toast.error(
+        error?.response?.data?.message ||
+          "Failed to update occupant information",
+      );
     }
   };
   const infoItems = [
