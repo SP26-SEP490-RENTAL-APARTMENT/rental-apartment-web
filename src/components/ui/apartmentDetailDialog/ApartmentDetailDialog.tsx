@@ -25,6 +25,7 @@ interface Props {
 function ApartmentDetailDialog({ apartment, onAddPhotos }: Props) {
   const { t } = useTranslation("landlord");
   const { t: statusT } = useTranslation("status");
+  const { i18n } = useTranslation();
   const { user } = useAuthStore();
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [previewUrls, setPreviewUrls] = useState<string[]>([]);
@@ -217,7 +218,7 @@ function ApartmentDetailDialog({ apartment, onAddPhotos }: Props) {
               <div className="grid grid-cols-4 gap-2">
                 {apartment.photos.map((img: string, index: number) => (
                   <div
-                  onClick={() => setImgUrl(img)}
+                    onClick={() => setImgUrl(img)}
                     key={index}
                     className={`rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-all cursor-pointer h-20 `}
                   >
@@ -396,7 +397,7 @@ function ApartmentDetailDialog({ apartment, onAddPhotos }: Props) {
                 key={item.amenityId}
                 className="px-4 py-2 text-sm font-medium bg-linear-to-r from-primary/10 to-primary/5 text-primary rounded-full border border-primary/20 hover:border-primary/40 transition-colors"
               >
-                {item.nameVi}
+                {i18n.language === "en" ? item.nameEn : item.nameVi}
               </span>
             ))}
           </div>
