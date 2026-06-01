@@ -1,11 +1,11 @@
 export interface User {
-    userId: string;
-    fullName: string;
-    email: string;
-    phone: string;
-    role: "admin" | "tenant" | "landlord" | "staff";
-    createdAt: string;
-    identityVerified: boolean;
+  userId: string;
+  fullName: string;
+  email: string;
+  phone: string;
+  role: "admin" | "tenant" | "landlord" | "staff";
+  createdAt: string;
+  identityVerified: boolean;
 }
 
 export interface UserProfile {
@@ -20,5 +20,6 @@ export interface UserProfile {
   nationalIdCardNumber: string | null;
   identityVerified: boolean;
   createdAt: string;
+  bankBin: string;
+  bankAccountNumber: string;
 }
-

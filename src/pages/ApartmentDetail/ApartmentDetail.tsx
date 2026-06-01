@@ -1,4 +1,4 @@
-import type { Apartment, Room } from "@/types/apartment";
+import type { Apartment, PrimaryAttraction, Room } from "@/types/apartment";
 import ApartmentInfo from "./components/ApartmentInfo";
 import BookingBox from "./components/BookingQuote/BookingBox";
 import CommentSection from "./components/CommentSection";
@@ -25,6 +25,7 @@ function ApartmentDetail() {
   const { t } = useTranslation("common");
 
   const [apartment, setApartment] = useState<Apartment>();
+  const [attractions, setAttractions] = useState<PrimaryAttraction[]>([]);
   const [room, setRoom] = useState<Room>();
   const [amenities, setAmenities] = useState<Amenity[]>([]);
   const [availability, setAvailability] = useState<Availability>();
@@ -44,6 +45,7 @@ function ApartmentDetail() {
         setApartment(data);
         setRoom(data.room);
         setAmenities(data.amenities);
+        setAttractions(data.nearbyAttractions.primaryAttractions || []);
       } catch (error) {
         console.log(error);
       }
@@ -137,11 +139,7 @@ function ApartmentDetail() {
             </div>
 
             {/* Apartment Info */}
-            {apartment && (
-              
-                <ApartmentInfo apartment={apartment} />
-              
-            )}
+            {apartment && <ApartmentInfo apartment={apartment} />}
 
             {/* Room Details */}
             {room && (
@@ -214,6 +212,7 @@ function ApartmentDetail() {
                   <MapDetail
                     lat={apartment.latitude}
                     lng={apartment.longitude}
+                    attractions={attractions}
                   />
                 )}
               </div>

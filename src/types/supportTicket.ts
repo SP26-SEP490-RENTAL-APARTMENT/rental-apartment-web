@@ -12,6 +12,7 @@ export interface SupportTicket {
   resolveBy: string | null;
   resolutionNotes: string | null;
   attachments?: Attachment[];
+  bookingId: string
 }
 
 interface Attachment {

@@ -30,17 +30,17 @@ export const ProtectedRoute = ({
     return <>{children}</>;
   }
 
-  // Check if user is authenticated
-  if (!isAuthenticated()) {
-    return <Navigate to={ROUTES.LOGIN} replace />;
-  }
-
   // Check if user has required role
   if (requiredRoles && requiredRoles.length > 0) {
     const userRole = getUserRole();
     if (!hasRole(userRole, requiredRoles)) {
       return <Navigate to={ROUTES.HOME} replace />;
     }
+  }
+
+  // Check if user is authenticated
+  if (!isAuthenticated()) {
+    return <Navigate to={ROUTES.LOGIN} replace />;
   }
 
   return <>{children}</>;

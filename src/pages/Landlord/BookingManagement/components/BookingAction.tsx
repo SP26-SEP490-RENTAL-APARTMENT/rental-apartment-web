@@ -98,61 +98,62 @@ function BookingAction({
 
       toast.success("PDF file downloaded successfully");
     } catch (error: any) {
-      toast.error(error.response?.data?.message || "Failed to download PDF file");
+      toast.error(
+        error.response?.data?.message || "Failed to download PDF file",
+      );
     }
   };
 
   const handleGetDOC = async (id: string) => {
-  try {
-    const response = await bookingManagementApi.getDOCFile(id);
+    try {
+      const response = await bookingManagementApi.getDOCFile(id);
 
-    const contentType = response.headers["content-type"];
-    const contentDisposition = response.headers["content-disposition"];
+      const contentType = response.headers["content-type"];
+      const contentDisposition = response.headers["content-disposition"];
 
-    const blob = new Blob([response.data], {
-      type: contentType,
-    });
+      const blob = new Blob([response.data], {
+        type: contentType,
+      });
 
-    let extension = "docx"; // default
+      let extension = "docx"; // default
 
-    // ưu tiên lấy từ content-disposition nếu BE có filename
-    const fileNameMatch =
-      contentDisposition?.match(/filename="?(.+?)"?$/);
+      // ưu tiên lấy từ content-disposition nếu BE có filename
+      const fileNameMatch = contentDisposition?.match(/filename="?(.+?)"?$/);
 
-    if (fileNameMatch) {
-      extension = fileNameMatch[1].split(".").pop() || "docx";
-    } else {
-      // fallback theo content-type
-      if (contentType?.includes("application/zip")) {
-        extension = "zip";
-      } else if (contentType?.includes("application/msword")) {
-        extension = "doc";
-      } else if (
-        contentType?.includes(
-          "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-        )
-      ) {
-        extension = "docx";
+      if (fileNameMatch) {
+        extension = fileNameMatch[1].split(".").pop() || "docx";
+      } else {
+        // fallback theo content-type
+        if (contentType?.includes("application/zip")) {
+          extension = "zip";
+        } else if (contentType?.includes("application/msword")) {
+          extension = "doc";
+        } else if (
+          contentType?.includes(
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+          )
+        ) {
+          extension = "docx";
+        }
       }
+
+      const url = window.URL.createObjectURL(blob);
+
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `residence-report-${id}.${extension}`;
+
+      document.body.appendChild(link);
+      link.click();
+
+      link.remove();
+      window.URL.revokeObjectURL(url);
+
+      toast.success("File downloaded successfully");
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || "Failed to download file");
     }
-
-    const url = window.URL.createObjectURL(blob);
-
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = `residence-report-${id}.${extension}`;
-
-    document.body.appendChild(link);
-    link.click();
-
-    link.remove();
-    window.URL.revokeObjectURL(url);
-
-    toast.success("File downloaded successfully");
-  } catch (error: any) {
-    toast.error(error.response?.data?.message || "Failed to download file");
-  }
-};
+  };
 
   const handleCheckInSubmit = async (data: FormData) => {
     await onCheckIn(bookings.bookingId, data);
@@ -321,21 +322,23 @@ function BookingAction({
               {new Date(bookings.createdAt).toLocaleString()}
             </div>
 
-            <div className="flex justify-end">
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    onClick={handleSubmitResidenceReport}
-                    variant="outline"
-                  >
-                    <Send />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>{t("booking.dialog.submit")}</p>
-                </TooltipContent>
-              </Tooltip>
-            </div>
+            {!bookings.actualCheckOut && (
+              <div className="flex justify-end">
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      onClick={handleSubmitResidenceReport}
+                      variant="outline"
+                    >
+                      <Send />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>{t("booking.dialog.submit")}</p>
+                  </TooltipContent>
+                </Tooltip>
+              </div>
+            )}
           </div>
         </DialogContent>
       </Dialog>

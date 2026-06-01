@@ -7,7 +7,13 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { BadgeCheck, CirclePlay, Eye, NotebookPen } from "lucide-react";
+import {
+  BadgeCheck,
+  CirclePlay,
+  Eye,
+  NotebookPen,
+  OctagonX,
+} from "lucide-react";
 import { useAuthStore } from "@/store/authStore";
 
 export interface Props {
@@ -15,12 +21,14 @@ export interface Props {
   onStartInspection: (id: string) => void;
   onInspectionForm: (id: string) => void;
   onReviewInspection: (id: string) => void;
+  onCancelInspection: (id: string) => void;
 }
 function InspectionAction({
   inspections,
   onStartInspection,
   onInspectionForm,
   onReviewInspection,
+  onCancelInspection,
 }: Props) {
   const { user } = useAuthStore();
   return (
@@ -162,6 +170,16 @@ function InspectionAction({
             </Button>
           )}
         </>
+      )}
+
+      {inspections.status !== "passed" && (
+        <Button
+          variant="destructive"
+          onClick={() => onCancelInspection(inspections.inspectionId)}
+          size="sm"
+        >
+          <OctagonX />
+        </Button>
       )}
     </div>
   );

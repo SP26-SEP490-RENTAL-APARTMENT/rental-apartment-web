@@ -97,7 +97,7 @@ function DetailDialog({
         </Tabs>
 
         <div className="flex justify-end pt-4 gap-2">
-          {canPay && (
+          {canPay && data?.feeSettlementStatus !== "paid" && (
             <Button
               onClick={handlePayOutstandingFee}
               className="bg-blue-500 hover:bg-blue-600"
@@ -106,11 +106,14 @@ function DetailDialog({
             </Button>
           )}
 
-          {(!isResponse && data?.tenantResponseStatus !== "confirmed") || !isExpired && (
+          {data?.tenantResponseStatus !== "confirmed" && !isExpired && (
             <Button onClick={() => setIsResponse(true)} variant="default">
               {t("checkTime.respondButton") || "Respond to Check Time"}
             </Button>
           )}
+          {/* <Button onClick={() => setIsResponse(true)} variant="default">
+              {t("checkTime.respondButton") || "Respond to Check Time"}
+            </Button> */}
         </div>
 
         {isResponse && (

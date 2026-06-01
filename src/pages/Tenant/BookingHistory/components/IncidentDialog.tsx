@@ -146,7 +146,7 @@ function IncidentDialog({ open, onClose, bookingId }: Props) {
               <label className="text-sm font-medium">
                 {t("incident.photos")} ({previews.length})
               </label>
-              <div className="grid grid-cols-3 gap-3">
+              <div className="grid grid-cols-4 gap-3">
                 {previews.map((preview, index) => (
                   <div
                     key={index}

@@ -199,6 +199,8 @@ export const inspectionApi = {
     apiConfig.privateApi.post(`/PropertyInspection/${id}/complete`, data),
   reviewInspection: (id: string, data: { decision: string; reason: string }) =>
     apiConfig.privateApi.post(`/PropertyInspection/${id}/review`, data),
+  cancelInspection: (id: string, data: { reason: string }) =>
+    apiConfig.privateApi.post(`/PropertyInspection/${id}/cancel`, data),
 };
 
 export const reportApi = {

@@ -143,13 +143,6 @@ export default function OutstandingFeeCard({ data }: Props) {
             <Button className="w-full">
               Pay Now
             </Button>
-
-            <Button
-              variant="outline"
-              className="w-full"
-            >
-              View Details
-            </Button>
           </div>
         </div>
       </div>

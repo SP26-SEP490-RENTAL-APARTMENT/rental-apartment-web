@@ -13,7 +13,13 @@ const getInspectionStatusBadge = (inspectionStatus: string) => {
     case "pending":
       return <Badge className="bg-yellow-500 text-white">Pending</Badge>;
     case "passed":
-      return <Badge className="bg-gray-500 text-white">Passed</Badge>;
+      return <Badge className="bg-black text-white">Passed</Badge>;
+    case "re_inspection_needed":
+      return (
+        <Badge className="bg-red-500 text-white">Re-inspection needed</Badge>
+      );
+    case "failed":
+      return <Badge className="bg-gray-500 text-white">Failed</Badge>;
     default:
       return <Badge variant="secondary">Not scheduled</Badge>;
   }
@@ -24,6 +30,7 @@ export const InspectionColumns = (
   onInspectionForm: (id: string) => void,
   onReviewInspection: (id: string) => void,
   onGetApartment: (id: string) => void,
+  onCancelInspection: (id: string) => void,
 ): ColumnDef<Inspection>[] => [
   {
     accessorKey: "apartmentId",
@@ -62,6 +69,14 @@ export const InspectionColumns = (
     },
   },
   {
+    accessorKey: "scheduledDateTime",
+    header: "Scheduled Date",
+    cell: ({ row }) => {
+      const scheduledDate = row.original.scheduledDateTime;
+      return scheduledDate ? new Date(scheduledDate).toLocaleString() : "N/A";
+    },
+  },
+  {
     accessorKey: "approvedAt",
     header: "Approve at",
     cell: ({ row }) => {
@@ -80,6 +95,7 @@ export const InspectionColumns = (
           onStartInspection={onStartInspection}
           onInspectionForm={onInspectionForm}
           onReviewInspection={onReviewInspection}
+          onCancelInspection={onCancelInspection}
         />
       );
     },

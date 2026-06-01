@@ -224,7 +224,7 @@ function RoomForm({ isOpen, mode, onClose, onSubmit, room, apartment }: Props) {
               </div>
             </div>
             <div className="grid gap-2">
-              <Label>{t("apartment.room.size")}</Label>
+              <Label>{t("apartment.room.size")} (m²)</Label>
               <Input
                 type="number"
                 {...register("sizeSqm", { valueAsNumber: true })}

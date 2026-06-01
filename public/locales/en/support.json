@@ -55,7 +55,7 @@
         },
         "placeholders": {
             "subject": "Enter a brief subject (minimum 5 characters)",
-            "description": "Describe your issue in detail (minimum 10 characters)",
+            "description": "Describe your issue in detail (minimum 5 characters)",
             "category": "Select a category",
             "priority": "Select priority level"
         },
@@ -63,7 +63,7 @@
             "subjectRequired": "Subject is required",
             "subjectMinLength": "Subject must be at least 5 characters",
             "descriptionRequired": "Description is required",
-            "descriptionMinLength": "Description must be at least 10 characters",
+            "descriptionMinLength": "Description must be at least 5 characters",
             "categoryRequired": "Please select a category",
             "priorityRequired": "Please select a priority level"
         },
