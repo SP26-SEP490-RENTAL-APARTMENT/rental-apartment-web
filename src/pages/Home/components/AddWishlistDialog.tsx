@@ -33,7 +33,7 @@ function AddWishlistDialog({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent>
+      <DialogContent className="sm:max-w-3xl">
         <DialogHeader>
           <DialogTitle>Add to collection</DialogTitle>
         </DialogHeader>

@@ -56,7 +56,7 @@ function InspectionForm({ open, onClose, onSubmit }: Props) {
   const handleFormSubmit = async (data: InspectionFormData) => {
     try {
       await onSubmit(data, files);
-      handleClose()
+      handleClose();
     } catch (error) {
       console.log(error);
     }
@@ -72,7 +72,7 @@ function InspectionForm({ open, onClose, onSubmit }: Props) {
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent>
+      <DialogContent className="max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Inspection Form</DialogTitle>
         </DialogHeader>
@@ -134,7 +134,7 @@ function InspectionForm({ open, onClose, onSubmit }: Props) {
               )}
             </div>
 
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-4 gap-3">
               {previewImages.map((src, index) => (
                 <div key={index} className="relative group">
                   <img
@@ -156,10 +156,6 @@ function InspectionForm({ open, onClose, onSubmit }: Props) {
 
             {/* Button */}
             <div className="flex gap-2 justify-end">
-              <Button type="submit" disabled={isSubmitting}>
-                Submit
-              </Button>
-
               <Button
                 type="button"
                 variant="destructive"
@@ -170,6 +166,10 @@ function InspectionForm({ open, onClose, onSubmit }: Props) {
                 }}
               >
                 Cancel
+              </Button>
+
+              <Button type="submit" disabled={isSubmitting}>
+                Submit
               </Button>
             </div>
           </form>

@@ -42,6 +42,10 @@ export const AllApartmentColumns = (
     cell: ({ row }) => `${row.original.basePricePerNight.toLocaleString()} đ`,
   },
   {
+    accessorKey: "city",
+    header: "City",
+  },
+  {
     accessorKey: "status",
     header: "Status",
     cell: ({ row }) => {

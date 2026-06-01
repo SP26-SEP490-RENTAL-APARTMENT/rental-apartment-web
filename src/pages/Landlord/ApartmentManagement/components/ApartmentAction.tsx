@@ -139,7 +139,7 @@ function ApartmentAction({
               <Eye />
             </Button>
           </DialogTrigger>
-          <DialogContent>
+          <DialogContent className="sm:max-w-3xl">
             <DialogHeader>
               <DialogTitle>{t("apartment.infor.details")}</DialogTitle>
             </DialogHeader>
@@ -328,7 +328,9 @@ function ApartmentAction({
                           className="flex items-center gap-2 px-3 py-2 bg-primary/10 rounded-full"
                         >
                           <span className="text-sm">
-                            {amenity?.nameVi || amenity?.nameEn}
+                            {i18n?.language === "vi"
+                              ? amenity?.nameVi
+                              : amenity?.nameEn}
                           </span>
                           <button
                             onClick={() => handleRemoveAmenity(amenityId)}

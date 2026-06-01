@@ -2,6 +2,18 @@ import type { UserProfile } from "@/types/user";
 import { Badge } from "@/components/ui/badge";
 
 function UserDetailDialog({ user }: { user: UserProfile }) {
+  const getGender = (gender: string | null) => {
+    switch (gender) {
+      case "NAM":
+        return "Male";
+      case "male":
+        return "Male";
+      case "NỮ":
+        return "Female";
+      default:
+        return "Other";
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -19,62 +31,34 @@ function UserDetailDialog({ user }: { user: UserProfile }) {
 
       {/* Body */}
       <div className="grid grid-cols-2 gap-x-6 gap-y-4 text-sm">
-        <div className="text-muted-foreground">
-          UserId
-        </div>
-        <div className="font-medium break-all">
-          {user.userId}
-        </div>
+        <div className="text-muted-foreground">UserId</div>
+        <div className="font-medium break-all">{user.userId}</div>
 
-        <div className="text-muted-foreground">
-          Phone
-        </div>
-        <div className="font-medium">
-          {user.phone || "-"}
-        </div>
+        <div className="text-muted-foreground">Phone</div>
+        <div className="font-medium">{user.phone || "-"}</div>
 
-        <div className="text-muted-foreground">
-          Role
-        </div>
+        <div className="text-muted-foreground">Role</div>
         <div>
           <Badge variant="secondary" className="capitalize">
             {user.role}
           </Badge>
         </div>
 
-        <div className="text-muted-foreground">
-          Gender
-        </div>
-        <div className="capitalize">
-          {user.sex}
-        </div>
+        <div className="text-muted-foreground">Gender</div>
+        <div className="capitalize">{getGender(user.sex)}</div>
 
-        <div className="text-muted-foreground">
-          Birthday
-        </div>
-        <div>
-          {user.birthday || "-"}
-        </div>
+        <div className="text-muted-foreground">Birthday</div>
+        <div>{user.birthday || "-"}</div>
 
-        <div className="text-muted-foreground">
-          Nationality
-        </div>
-        <div>
-          {user.nationality}
-        </div>
+        <div className="text-muted-foreground">Nationality</div>
+        <div>{user.nationality}</div>
 
-        <div className="text-muted-foreground">
-          Verified
-        </div>
+        <div className="text-muted-foreground">Verified</div>
         <div>
           {user.identityVerified ? (
-            <Badge className="bg-green-500 hover:bg-green-500">
-              Verified
-            </Badge>
+            <Badge className="bg-green-500 hover:bg-green-500">Verified</Badge>
           ) : (
-            <Badge variant="destructive">
-              Not verified
-            </Badge>
+            <Badge variant="destructive">Not verified</Badge>
           )}
         </div>
       </div>

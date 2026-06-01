@@ -129,6 +129,12 @@ export const mySubscriptionApi = {
     renewalType: string;
     autoRenew: boolean;
   }) => apiConfig.privateApi.post("/landlord/subscription/momo-checkout", data),
+  payosCheckout: (data: {
+    planId: string;
+    renewalType: string;
+    autoRenew: boolean;
+  }) =>
+    apiConfig.privateApi.post("/landlord/subscription/payos-checkout", data),
   getSubscriptionHistory: (params: ParamsProp) =>
     apiConfig.privateApi.get("/landlord/subscriptions/history", { params }),
 };

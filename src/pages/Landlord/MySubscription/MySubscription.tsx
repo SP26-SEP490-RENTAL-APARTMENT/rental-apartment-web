@@ -2,10 +2,10 @@ import { mySubscriptionApi } from "@/services/privateApi/landlordApi";
 import type { SubscriptionPlan } from "@/types/subscriptionPlan";
 import { useCallback, useEffect, useState } from "react";
 import PricingCard from "./components/PricingCards";
-import { useAuthStore } from "@/store/authStore";
 import CheckoutDialog from "./components/CheckoutDialog";
 import { toast } from "sonner";
 import { Zap } from "lucide-react";
+import { profileApi } from "@/services/privateApi/tenantApi";
 
 function MySubscription() {
   const [subscriptions, setSubscriptions] = useState<SubscriptionPlan[]>([]);
@@ -16,8 +16,18 @@ function MySubscription() {
     renewalType: "",
     autoRenew: true,
   });
+  const [profile, setProfile] = useState<any>(null);
 
-  const { user } = useAuthStore();
+  const fetchUserProfile = useCallback(async () => {
+    try {
+      const response = await profileApi.getProfile();
+      console.log(response.data);
+
+      setProfile(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
 
   const fetchSubscriptions = useCallback(async () => {
     setLoading(true);
@@ -40,7 +50,7 @@ function MySubscription() {
   const handleCheckout = async () => {
     if (!selectedPlanId) return;
     try {
-      const response = await mySubscriptionApi.momoCheckout({
+      const response = await mySubscriptionApi.payosCheckout({
         ...form,
         planId: selectedPlanId,
       });
@@ -55,7 +65,8 @@ function MySubscription() {
 
   useEffect(() => {
     fetchSubscriptions();
-  }, [fetchSubscriptions]);
+    fetchUserProfile();
+  }, [fetchSubscriptions, fetchUserProfile]);
 
   const handleSelectPlan = (planId: string) => {
     setSelectedPlanId(planId);
@@ -86,7 +97,7 @@ function MySubscription() {
       {/* Pricing Section */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Current Plan Info */}
-        {user?.subscriptionPlanId && (
+        {profile?.subscriptionPlanId && (
           <div className="mb-8 p-4 bg-blue-50 border border-blue-200 rounded-xl">
             <p className="text-sm text-blue-900 font-medium">
               💡 Your current plan is displayed below. You can upgrade anytime
@@ -106,8 +117,8 @@ function MySubscription() {
               ))
             : subscriptions.map((sub) => {
                 const isCurrent =
-                  user?.subscriptionPlanId === sub.planId ||
-                  (!user?.subscriptionPlanId && sub.name === "Starter");
+                  profile?.subscriptionPlanId === sub.planId ||
+                  (!profile?.subscriptionPlanId && sub.name === "Starter");
 
                 const isHighlighted = sub.name === "Pro";
 

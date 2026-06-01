@@ -17,4 +17,5 @@ export interface FiltersParamsProps {
   type?: string;
   method?: string;
   paymentPurpose?: string;
+  isRead?: boolean;
 }

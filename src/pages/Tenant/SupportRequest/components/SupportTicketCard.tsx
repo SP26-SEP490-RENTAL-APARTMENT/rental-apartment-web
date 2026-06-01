@@ -1,6 +1,12 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Calendar, FileText } from "lucide-react";
+import { ArrowRight, Calendar, FileText, Shuffle } from "lucide-react";
 import type { SupportTicket } from "@/types/supportTicket";
 import { StatusBadge, PriorityBadge, CategoryBadge } from "./BadgeComponents";
 import { formatDistanceToNow } from "date-fns";
@@ -10,12 +16,17 @@ import { useTranslation } from "react-i18next";
 interface SupportTicketCardProps {
   ticket: SupportTicket;
   onView?: (ticket: SupportTicket) => void;
+  onGetAlternatives: (bookingId: string) => void;
 }
 
-export function SupportTicketCard({ ticket, onView }: SupportTicketCardProps) {
+export function SupportTicketCard({
+  ticket,
+  onView,
+  onGetAlternatives,
+}: SupportTicketCardProps) {
   const { i18n } = useTranslation("support");
-  const {t} = useTranslation("support");
-  const {t: commonT } = useTranslation("common");
+  const { t } = useTranslation("support");
+  const { t: commonT } = useTranslation("common");
   const locale = i18n.language === "vi" ? vi : enUS;
 
   const createdDate = new Date(ticket.createdAt);
@@ -23,7 +34,7 @@ export function SupportTicketCard({ ticket, onView }: SupportTicketCardProps) {
 
   return (
     <Card className="hover:shadow-lg transition-shadow overflow-hidden">
-      <CardHeader className="pb-3 border-b border-gray-100">
+      <CardHeader className="border-b border-gray-100 h-20">
         <div className="flex items-start justify-between gap-4">
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-2">
@@ -39,7 +50,7 @@ export function SupportTicketCard({ ticket, onView }: SupportTicketCardProps) {
         </div>
       </CardHeader>
 
-      <CardContent className="pt-4">
+      <CardContent className="h-20">
         {/* Badges Row */}
         <div className="flex flex-wrap gap-2 mb-4">
           <CategoryBadge value={ticket.category} />
@@ -62,17 +73,31 @@ export function SupportTicketCard({ ticket, onView }: SupportTicketCardProps) {
             </p>
           </div>
         )}
-
-        {/* Action Button */}
-        <Button
-          variant="ghost"
-          className="w-full justify-between text-blue-600 hover:text-blue-700"
-          onClick={() => onView?.(ticket)}
-        >
-          <span>{commonT("button.view")}</span>
-          <ArrowRight className="h-4 w-4" />
-        </Button>
       </CardContent>
+
+      <CardFooter className="w-full">
+        <div className="flex flex-col gap-2 w-full">
+          <Button
+            variant="ghost"
+            className="justify-between text-blue-600 hover:text-blue-700"
+            onClick={() => onView?.(ticket)}
+          >
+            <span>{commonT("button.view")}</span>
+            <ArrowRight className="h-4 w-4" />
+          </Button>
+
+          {ticket.category === "booking_issue" && (
+            <Button
+              variant="secondary"
+              className="justify-between"
+              onClick={() => onGetAlternatives(ticket.bookingId)}
+            >
+              <span>Alternative Options</span>
+              <Shuffle className="h-4 w-4" />
+            </Button>
+          )}
+        </div>
+      </CardFooter>
     </Card>
   );
 }

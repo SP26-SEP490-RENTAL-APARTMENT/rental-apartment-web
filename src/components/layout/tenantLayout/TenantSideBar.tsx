@@ -26,11 +26,11 @@ function TenantSideBar() {
       } sticky top-0 h-screen bg-white border-r border-gray-200 flex flex-col`}
     >
       {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b border-gray-200">
+      <div className="flex items-center justify-between p-5 border-b border-gray-200">
         {sidebarOpen && <Logo />}
         <button
           onClick={() => setSidebarOpen(!sidebarOpen)}
-          className="p-2 hover:bg-gray-100 rounded-lg transition"
+          className="p-2 hover:bg-gray-100 rounded-lg transition m-1"
         >
           {sidebarOpen ? (
             <X className="h-5 w-5" />

@@ -16,6 +16,7 @@ import {
   Clock3,
   CreditCard,
   Moon,
+  TriangleAlert,
   User,
   Users,
   Wallet,
@@ -263,6 +264,7 @@ function BookingViewDialog({ open, onClose, booking }: Props) {
               (booking.status === "paid" || booking.status === "confirmed") && (
                 <div className="flex justify-end gap-2">
                   <Button onClick={() => setReportDialog(true)}>
+                    <TriangleAlert size={16} />
                     {t("incident.title")}
                   </Button>
                   {booking.status === "confirmed" &&

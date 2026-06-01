@@ -24,6 +24,7 @@ import {
   Plus,
 } from "lucide-react";
 import AddBankDialog from "./components/AddBankDialog";
+import { bankList } from "@/constants/bankList";
 
 function Profile() {
   const { t } = useTranslation("user");
@@ -33,6 +34,11 @@ function Profile() {
   const [isCCCDDialogOpen, setIsCCCDDialogOpen] = useState(false);
   const [isUploadingCCCD, setIsUploadingCCCD] = useState(false);
   const [bankDialog, setBankDialog] = useState(false);
+
+  // Helper function to get bank info from BIN
+  const getBankInfo = (bankBin: string) => {
+    return bankList.find((bank) => bank.bin === bankBin);
+  };
 
   const fetchProfile = async () => {
     try {
@@ -246,6 +252,42 @@ function Profile() {
                     : "N/A"}
                 </p>
               </div>
+              {profile?.bankBin && (
+                <div className="space-y-1">
+                  <p className="text-xs text-gray-500 font-semibold uppercase">
+                    {t("profile.bank")}
+                  </p>
+                  {(() => {
+                    const bankInfo = getBankInfo(profile.bankBin);
+                    return bankInfo ? (
+                      <div className="flex items-center gap-3">
+                        <img
+                          src={bankInfo.logo}
+                          alt={bankInfo.name}
+                          className="h-8 w-8 object-contain"
+                        />
+                        <span className="text-sm font-medium text-gray-900">
+                          {bankInfo.name}
+                        </span>
+                      </div>
+                    ) : (
+                      <p className="text-sm font-medium text-gray-900 font-mono">
+                        {profile.bankBin}
+                      </p>
+                    );
+                  })()}
+                </div>
+              )}
+              {profile?.bankAccountNumber && (
+                <div className="space-y-1">
+                  <p className="text-xs text-gray-500 font-semibold uppercase">
+                    {t("profile.bankAccountNumber")}
+                  </p>
+                  <p className="text-sm font-medium text-gray-900 font-mono">
+                    {profile.bankAccountNumber}
+                  </p>
+                </div>
+              )}
             </CardContent>
           </Card>
 
@@ -296,7 +338,11 @@ function Profile() {
         isLoading={isUploadingCCCD}
       />
 
-      <AddBankDialog onClose={() => setBankDialog(false)} open={bankDialog} />
+      <AddBankDialog
+        onClose={() => setBankDialog(false)}
+        open={bankDialog}
+        refetchProfile={fetchProfile}
+      />
     </div>
   );
 }

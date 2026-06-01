@@ -6,6 +6,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { bankList } from "@/constants/bankList";
 import { indentityApi } from "@/services/privateApi/tenantApi";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -13,62 +14,10 @@ import { toast } from "sonner";
 interface Props {
   open: boolean;
   onClose: () => void;
+  refetchProfile: () => void;
 }
 
-const bankList = [
-  {
-    bin: "970436",
-    name: "Vietcombank",
-    logo: "https://img.mservice.com.vn/momo_app_v2/img/VCB.png",
-  },
-  {
-    bin: "970415",
-    name: "Vietinbank",
-    logo: "https://img.mservice.com.vn/momo_app_v2/img/CTG.png",
-  },
-  {
-    bin: "970407",
-    name: "Techcombank",
-    logo: "https://img.mservice.com.vn/momo_app_v2/img/TCB.png",
-  },
-  {
-    bin: "970418",
-    name: "BIDV",
-    logo: "https://img.mservice.com.vn/momo_app_v2/img/BIDV.png",
-  },
-  {
-    bin: "970405",
-    name: "VietinBank",
-    logo: "https://img.mservice.com.vn/momo_app_v2/img/VARB.png",
-  },
-  {
-    bin: "970419",
-    name: "NovaBank",
-    logo: "https://img.mservice.com.vn/momo_app_v2/img/NVB.png",
-  },
-  {
-    bin: "970403",
-    name: "Sacombank",
-    logo: "https://img.mservice.com.vn/momo_app_v2/img/STB.png",
-  },
-  {
-    bin: "970416",
-    name: "Asia Commercial Bank",
-    logo: "https://img.mservice.com.vn/momo_app_v2/img/ACB.png",
-  },
-  {
-    bin: "970422",
-    name: "MB Bank",
-    logo: "https://img.mservice.com.vn/momo_app_v2/img/MB.png",
-  },
-  {
-    bin: "970423",
-    name: "TPBank",
-    logo: "https://img.mservice.com.vn/momo_app_v2/img/TPB.png",
-  },
-];
-
-function AddBankDialog({ open, onClose }: Props) {
+function AddBankDialog({ open, onClose, refetchProfile }: Props) {
   const [form, setForm] = useState({
     bankAccountNumber: "",
     bankBin: "",
@@ -87,6 +36,7 @@ function AddBankDialog({ open, onClose }: Props) {
         await indentityApi.addBankAcc(form)
         toast.success("Bank account added successfully");
         onClose();
+        refetchProfile();
     } catch (error) {
         toast.error("Failed to add bank account. Please try again.");
     }
