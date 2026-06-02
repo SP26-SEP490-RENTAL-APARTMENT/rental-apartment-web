@@ -1,0 +1,161 @@
+{
+  "workspace": {
+    "title": "Report",
+    "description": "Select a report, load its saved configuration, and adjust the query before running.",
+    "catalogTitle": "Report catalog",
+    "catalogDesc": "Select a predefined report to open its blueprint.",
+    "chooseReport": "Choose report",
+    "selectReport": "Select a report",
+    "chartsTitle": "Report charts",
+    "chartsDesc": "Visual summary of the current preview result.",
+    "tableTitle": "Report table",
+    "tableDesc": "Run the report and scroll through the matching rows.",
+    "reports": {
+      "booking": "Booking Summary",
+      "occupancy": "Occupancy Report",
+      "review": "Guest Feedback / Reviews"
+    }
+  },
+  "shell": {
+    "kpi": {
+      "totalBookings": "Total Bookings",
+      "totalRevenue": "Total Revenue",
+      "avgRevenue": "Avg Revenue per Booking",
+      "occupancyRate": "Occupancy Rate"
+    },
+    "period": "Period",
+    "from": "From",
+    "to": "To",
+    "search": "Search",
+    "searchPlaceholder": "Search report data",
+    "status": "Status",
+    "apartment": "Apartment",
+    "allApartments": "All apartments",
+    "comparisonPeriod": "Comparison Period",
+    "dimensions": "Dimensions",
+    "metrics": "Metrics",
+    "pageSize": "Page size",
+    "run": "Run",
+    "running": "Running…",
+    "exportCsv": "Export CSV",
+    "exportXlsx": "Export XLSX",
+    "totalRows": "Total rows",
+    "noResults": "No results yet. Run the report.",
+    "presets": {
+      "last_30_days": "Last 30 days",
+      "this_day": "Today",
+      "last_day": "Yesterday",
+      "this_week": "This week",
+      "last_week": "Last week",
+      "this_month": "This month",
+      "last_month": "Last month",
+      "this_year": "This year",
+      "last_year": "Last year"
+    },
+    "comparison": {
+      "wow": "Week over Week",
+      "mom": "Month over Month",
+      "qoq": "Quarter over Quarter",
+      "yoy": "Year over Year"
+    },
+    "statuses": {
+      "Pending": "Pending",
+      "Confirmed": "Confirmed",
+      "Completed": "Completed",
+      "Cancelled": "Cancelled"
+    },
+    "dimensionLabels": {
+      "status": "Status",
+      "apartment_name": "Apartment",
+      "apartment": "Apartment",
+      "city": "City",
+      "guest_nationality": "Nationality",
+      "day_of_week": "Day of Week",
+      "holiday_period": "Holiday Period",
+      "week": "Week",
+      "month": "Month",
+      "quarter": "Quarter",
+      "year": "Year",
+      "date": "Date"
+    },
+    "metricLabels": {
+      "booking_count": "Bookings",
+      "total_bookings": "Total Bookings",
+      "completed_booking_count": "Completed",
+      "completed_bookings": "Completed Bookings",
+      "cancelled_booking_count": "Cancelled",
+      "cancelled_bookings": "Cancelled Bookings",
+      "total_revenue": "Revenue",
+      "total_revenue_vnd": "Revenue (VND)",
+      "avg_booking_value": "Avg Booking Value",
+      "avg_revenue_per_booking": "Avg Revenue/Booking",
+      "occupancy_percent": "Occupancy %",
+      "occupancy_rate_percent": "Occupancy Rate %",
+      "total_booked_nights": "Booked Nights",
+      "total_available_nights": "Available Nights",
+      "avg_length_of_stay": "Avg Stay (nights)",
+      "peak_occupancy_days": "Peak Days",
+      "low_occupancy_days": "Low Days",
+      "revenue_per_occupied_night": "Revenue/Night",
+      "review_avg_rating": "Avg Rating",
+      "average_rating": "Avg Rating",
+      "review_count": "Reviews",
+      "total_reviews": "Total Reviews",
+      "response_rate": "Response Rate",
+      "five_star_review_percent": "5-Star %",
+      "five_star_reviews_percent": "5-Star %",
+      "one_star_review_percent": "1-Star %",
+      "one_star_reviews_percent": "1-Star %",
+      "adr": "ADR"
+    }
+  },
+  "blueprints": {
+    "booking": {
+      "title": "Booking Summary",
+      "description": "Booking count, revenue, occupancy, and ADR overview.",
+      "label": "Landlord report"
+    },
+    "occupancy": {
+      "title": "Occupancy Report",
+      "description": "Occupancy rate, booked/available nights, ALOS, peak/low days, and revenue per occupied night.",
+      "label": "Landlord report"
+    },
+    "review": {
+      "title": "Guest Feedback / Reviews",
+      "description": "Review metrics including ratings, response rates, and sentiment analysis.",
+      "label": "Landlord report"
+    }
+  },
+  "charts": {
+    "mainTitle": "Trend chart",
+    "mainDesc": "Revenue and bookings over time",
+    "statusBreakdown": "Booking Status Breakdown",
+    "byStatus": "Bookings by Status",
+    "byApartment": "Revenue by Apartment"
+  },
+  "review": {
+    "kpi": {
+      "avgRating": "Avg Rating"
+    },
+    "charts": {
+      "ratingTrend": "Rating Trend",
+      "ratingTrendDesc": "Average rating and review volume over time",
+      "sentiment": "Sentiment & Response Rate",
+      "sentimentDesc": "5-star %, 1-star % and response rate over time",
+      "byApartment": "Reviews by Apartment",
+      "byApartmentDesc": "Average rating and review count per apartment. Click a bar to filter."
+    }
+  },
+  "occupancy": {
+    "charts": {
+      "occupancyTrend": "Occupancy Trend",
+      "occupancyTrendDesc": "Occupancy rate and booked vs. available nights",
+      "alosAdr": "Avg Stay & Revenue per Night",
+      "alosAdrDesc": "Average length of stay (nights) and revenue per occupied night",
+      "nightsByApartment": "Nights by Apartment",
+      "nightsByApartmentDesc": "Total booked vs. available nights per apartment",
+      "dowOccupancy": "Occupancy by Day of Week",
+      "dowOccupancyDesc": "Average occupancy rate (%) per day"
+    }
+  }
+}
