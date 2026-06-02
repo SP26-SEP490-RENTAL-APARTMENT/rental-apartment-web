@@ -72,7 +72,7 @@ function ApartmentForm({
           title: "",
           description: "",
           maxOccupants: 1,
-          maxInfants: 1,
+          maxInfants: 0,
           isPetAllowed: false,
           maxPets: 0,
           address: "",
@@ -113,7 +113,7 @@ function ApartmentForm({
         title: "",
         description: "",
         maxOccupants: 1,
-        maxInfants: 1,
+        maxInfants: 0,
         isPetAllowed: false,
         maxPets: 0,
         address: "",
@@ -133,7 +133,7 @@ function ApartmentForm({
         title: apartment.title || "",
         description: apartment.description || "",
         maxOccupants: apartment.maxOccupants || 1,
-        maxInfants: apartment.maxInfants || 1,
+        maxInfants: apartment.maxInfants || 0,
         isPetAllowed: apartment.isPetAllowed || false,
         maxPets: apartment.maxPets || 0,
         address: apartment.address || "",
@@ -187,12 +187,12 @@ function ApartmentForm({
     if (isCreate) {
       if (selectedFiles.length === 0) {
         console.error("❌ Validation error: Phải upload ít nhất 1 ảnh");
-        alert("Phải upload ít nhất 1 ảnh");
+        alert("Upload atleast 1 photo");
         return;
       }
       if (selectedFiles.length > 10) {
         console.error("❌ Validation error: Tối đa 10 ảnh");
-        alert("Tối đa 10 ảnh");
+        alert("Maximum 10 photos allowed");
         return;
       }
     }
@@ -309,6 +309,7 @@ function ApartmentForm({
                   id="maxOccupants"
                   type="number"
                   placeholder="10"
+                  min={1}
                   {...register("maxOccupants", { valueAsNumber: true })}
                 />
                 {errors.maxOccupants && (
@@ -324,6 +325,7 @@ function ApartmentForm({
                   id="maxInfants"
                   type="number"
                   placeholder="10"
+                  min={0}
                   {...register("maxInfants", { valueAsNumber: true })}
                 />
                 {errors.maxInfants && (
@@ -341,6 +343,7 @@ function ApartmentForm({
                   id="basePricePerNight"
                   type="number"
                   placeholder="100000"
+                  min={0}
                   {...register("basePricePerNight", { valueAsNumber: true })}
                 />
                 {errors.basePricePerNight && (
