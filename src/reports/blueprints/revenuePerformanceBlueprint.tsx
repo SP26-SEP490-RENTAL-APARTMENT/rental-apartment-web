@@ -14,6 +14,7 @@ const RevenuePerformanceBlueprint = createReportBlueprint({
     { field: 'avg_price_delta', aggregation: 'avg', alias: 'avg_price_delta' },
   ],
   pageSize: 50,
+  blueprintKey: ''
 });
 
 export default RevenuePerformanceBlueprint;

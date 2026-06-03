@@ -519,7 +519,7 @@ function BookingConfirm() {
               {isSubmitting ? (
                 <>
                   <div className="h-4 w-4 mr-2 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                  {t("confirm.processing")}
+                  Processing...
                 </>
               ) : (
                 <>

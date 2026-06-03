@@ -72,8 +72,8 @@ export const InspectionColumns = (
     accessorKey: "scheduledDateTime",
     header: "Scheduled Date",
     cell: ({ row }) => {
-      const scheduledDate = row.original.scheduledDateTime;
-      return scheduledDate ? new Date(scheduledDate).toLocaleString() : "N/A";
+      const scheduledDateTime = row.original.scheduledDateTime;
+      return scheduledDateTime ? new Date(scheduledDateTime).toLocaleString() : "N/A";
     },
   },
   {

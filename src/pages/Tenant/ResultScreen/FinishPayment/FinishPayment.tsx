@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { useBookingStore } from "@/store/bookingStore";
 import { useTranslation } from "react-i18next";
 import { CheckCircle, Calendar, Users, CreditCard, Home } from "lucide-react";
@@ -17,8 +17,7 @@ function FinishPayment() {
   };
 
   if (!bookingData) {
-    navigate("/");
-    return null;
+    return <Navigate to="/" replace />;
   }
 
   const formatDate = (date: string) =>

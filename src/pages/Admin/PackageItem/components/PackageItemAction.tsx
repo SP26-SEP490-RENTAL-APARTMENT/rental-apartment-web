@@ -8,7 +8,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import type { PackageItem } from "@/types/package";
-import { Trash2, UserRoundPen } from "lucide-react";
+import { Pen, Trash2 } from "lucide-react";
 
 export interface Props {
   packageItem: PackageItem;
@@ -27,7 +27,7 @@ function PackageItemAction({ packageItem, onDelete, onEdit }: Props) {
   return (
     <div className="flex gap-2">
       <Button size="sm" variant="outline" onClick={handleEdit}>
-        <UserRoundPen />
+        <Pen />
       </Button>
 
       <Dialog>

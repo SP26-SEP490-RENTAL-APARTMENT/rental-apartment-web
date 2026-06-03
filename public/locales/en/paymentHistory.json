@@ -49,6 +49,12 @@
             "expire": "Expire",
             "tenantResponse": "Tenant Response",
             "response": "Response"
+        },
+        "resolution": {
+            "title": "Dispute Resolution",
+            "status": "Resolution Details:",
+            "waived": "Waived",
+            "resolved": "Resolved"
         }
     }
 }

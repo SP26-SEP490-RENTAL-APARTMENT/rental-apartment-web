@@ -23,7 +23,7 @@ export const inspectionStatusList = [
 export const inspectionSortByList = [
   { label: "Apartment name", value: "apartmentName" },
   { label: "Status", value: "status" },
-  { label: "Scheduled date", value: "scheduledDateTime" },
+  { label: "Created at", value: "createdAt" },
 ];
 
 export const listingSortByList = [

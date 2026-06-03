@@ -208,6 +208,10 @@ export const reportApi = {
     apiConfig.privateApi.get("/reports/catalog", { params }),
   createReport: (data: CreateReportRequest) =>
     apiConfig.privateApi.post("/reports", data),
+  updateReport: (reportId: string, data: CreateReportRequest) =>
+    apiConfig.privateApi.put(`/reports/${reportId}`, data),
+  deleteReport: (reportId: string) =>
+    apiConfig.privateApi.delete(`/reports/${reportId}`),
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   runReport: (reportId: string, data: any) =>
     apiConfig.privateApi.post<ApiResponse<PagedReportResponse>>(
@@ -278,4 +282,9 @@ export const pricingTemplateManagementApi = {
 export const disputeManagementApi = {
   getAllDisputes: (params: ParamsProp) =>
     apiConfig.privateApi.get("/admin/bookings/disputes", { params }),
-}
+  resolveDispute: (
+    bookingId: string,
+    data: { notes: string; approveTenantDispute: boolean },
+  ) =>
+    apiConfig.privateApi.post(`/Booking/${bookingId}/check-time/resolve`, data),
+};

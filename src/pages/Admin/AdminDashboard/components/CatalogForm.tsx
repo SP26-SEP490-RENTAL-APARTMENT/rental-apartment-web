@@ -35,6 +35,7 @@ export interface Props {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (data: CatalogFormData) => void;
+  initialData?: Partial<CatalogFormData> | null;
 }
 
 const createMetricRow = (schema?: ReportSchema | null) => ({
@@ -59,7 +60,7 @@ const toggleDimensionValue = (
   return current.filter((dimension) => dimension.field !== dimensionField);
 };
 
-function CatalogForm({ isOpen, onClose, onSubmit }: Props) {
+function CatalogForm({ isOpen, onClose, onSubmit, initialData }: Props) {
   const [schema, setSchema] = useState<ReportSchema | null>(null);
   const [schemaLoading, setSchemaLoading] = useState(false);
   const [schemaError, setSchemaError] = useState<string | null>(null);
@@ -100,24 +101,36 @@ function CatalogForm({ isOpen, onClose, onSubmit }: Props) {
       setSchemaLoading(true);
       setSchemaError(null);
 
-      console.log("CatalogForm: loadSchema start, isOpen =", isOpen);
       try {
         const nextSchema = await getDefaultSchema();
-        console.log("CatalogForm: getDefaultSchema resolved", nextSchema);
-        if (cancelled) {
-          return;
-        }
+        if (cancelled) return;
 
         setSchema(nextSchema);
-        reset({
-          name: "",
-          category: "",
-          type: "custom",
-          description: "",
-          isActive: true,
-          dimensions: [],
-          metrics: [createMetricRow(nextSchema)],
-        });
+
+        // If initialData provided, use it; otherwise use defaults
+        if (initialData) {
+          reset({
+            name: initialData.name ?? "",
+            category: initialData.category ?? "",
+            type: (initialData.type as string) ?? "custom",
+            description: initialData.description ?? "",
+            isActive: initialData.isActive ?? true,
+            dimensions: initialData.dimensions ?? [],
+            metrics: (initialData.metrics && initialData.metrics.length > 0)
+              ? initialData.metrics
+              : [createMetricRow(nextSchema)],
+          });
+        } else {
+          reset({
+            name: "",
+            category: "",
+            type: "custom",
+            description: "",
+            isActive: true,
+            dimensions: [],
+            metrics: [createMetricRow(nextSchema)],
+          });
+        }
       } catch (err) {
         console.error("CatalogForm: getDefaultSchema error", err);
         if (!cancelled) {
@@ -129,13 +142,13 @@ function CatalogForm({ isOpen, onClose, onSubmit }: Props) {
             operators: [],
           });
           reset({
-            name: "",
-            category: "",
-            type: "custom",
-            description: "",
-            isActive: true,
-            dimensions: [],
-            metrics: [createMetricRow()],
+            name: initialData?.name ?? "",
+            category: initialData?.category ?? "",
+            type: (initialData?.type as string) ?? "custom",
+            description: initialData?.description ?? "",
+            isActive: initialData?.isActive ?? true,
+            dimensions: initialData?.dimensions ?? [],
+            metrics: initialData?.metrics ?? [createMetricRow()],
           });
         }
       } finally {
@@ -150,7 +163,7 @@ function CatalogForm({ isOpen, onClose, onSubmit }: Props) {
     return () => {
       cancelled = true;
     };
-  }, [isOpen, reset]);
+  }, [isOpen, reset, initialData]);
 
   const handleFormSubmit = async (data: CatalogFormData) => {
     try {
@@ -182,25 +195,11 @@ function CatalogForm({ isOpen, onClose, onSubmit }: Props) {
           <div className="grid gap-4 py-4">
             <div className="grid gap-2">
               <Label htmlFor="name">Name</Label>
-              <Controller
-                control={control}
-                name="name"
-                render={({ field }) => (
-                  <Select value={field.value} onValueChange={field.onChange}>
-                    <SelectTrigger className="w-full max-w-48">
-                      <SelectValue placeholder="Select a name" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectGroup>
-                        <SelectLabel>Name of report</SelectLabel>
-                        <SelectItem value="General">General</SelectItem>
-                        <SelectItem value="Revenue">Revenue</SelectItem>
-                        <SelectItem value="Booking">Booking</SelectItem>
-                        <SelectItem value="Booking Status">Booking Status</SelectItem>
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
-                )}
+              <Input
+                id="name"
+                type="text"
+                placeholder="Enter report name"
+                {...register("name")}
               />
               {errors.name && (
                 <p className="text-sm text-destructive">{errors.name.message}</p>
@@ -535,7 +534,7 @@ function CatalogForm({ isOpen, onClose, onSubmit }: Props) {
               Cancel
             </Button>
             <Button type="submit" disabled={isSubmitting || schemaLoading}>
-              {isSubmitting ? "Loading..." : "Create"}
+              {isSubmitting ? "Loading..." : initialData ? "Save" : "Create"}
             </Button>
           </DialogFooter>
         </form>

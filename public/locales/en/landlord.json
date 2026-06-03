@@ -24,9 +24,9 @@
             "price": "Price per Night",
             "allowPets": "Allow Pets",
             "maxPets": "Max Pets",
-            "uploadPhotos": "Upload Photos",
-            "photoGuidelines": "You can upload up to 10 photos",
-            "selectedPhotos": "Selected Photos"
+            "uploadPhotos": "Upload Media",
+            "photoGuidelines": "You can upload up to 10 media files (photos or videos)",
+            "selectedPhotos": "Selected Media"
         },
         "infor": {
             "host": "Host",

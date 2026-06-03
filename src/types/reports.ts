@@ -153,6 +153,10 @@ export interface ReportDefinitionResponse {
   type?: string;
   category?: string;
   isActive?: boolean;
+  DimensionsJson?: string | null;
+  MetricsJson?: string | null;
+  FiltersJson?: string | null;
+  TimeRangeJson?: string | null;
 }
 
 export interface AdminAnalyticsSnapshot {

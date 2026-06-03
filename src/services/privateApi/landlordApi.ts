@@ -45,6 +45,20 @@ export const apartmentManagementApi = {
     apiConfig.privateApi.post(`/apartments/${apartmentId}/availability`, {
       ranges: availableDate,
     }),
+  deleteAvailableDate: (
+    apartmentId: string,
+    data: {
+      ranges: [
+        {
+          startDate: string;
+          endDate: string;
+        },
+      ];
+    },
+  ): Promise<ApiResponse<null>> =>
+    apiConfig.privateApi.delete(`/apartments/${apartmentId}/availability`, {
+      data,
+    }),
   sendToApprove: (
     apartmentId: string,
     { submissionNotes }: { submissionNotes: string },

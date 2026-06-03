@@ -46,14 +46,9 @@ export const useLandlordNavList = () => {
       icon: Layers,
     },
     {
-      title: "Reports",
-      url: "/landlord/reports",
-      icon: BarChart3,
-    },
-    {
-      title: "Booking Summary",
+      title: t("landlord.report"),
       url: "/landlord/reports/booking-summary",
-      icon: CalendarCheck,
+      icon: BarChart3,
     },
     {
       title: t("landlord.wallet"),
@@ -66,7 +61,7 @@ export const useLandlordNavList = () => {
       icon: BanknoteX,
     },
     {
-      title: 'Smart Pricing History',
+      title: t("landlord.smartPricing"),
       url: "/landlord/smart-pricing",
       icon: BadgePercent,
     },

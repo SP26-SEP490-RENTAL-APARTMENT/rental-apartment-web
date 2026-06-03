@@ -50,7 +50,7 @@ export function SupportTicketCard({
         </div>
       </CardHeader>
 
-      <CardContent className="h-20">
+      <CardContent>
         {/* Badges Row */}
         <div className="flex flex-wrap gap-2 mb-4">
           <CategoryBadge value={ticket.category} />
@@ -86,16 +86,17 @@ export function SupportTicketCard({
             <ArrowRight className="h-4 w-4" />
           </Button>
 
-          {ticket.category === "booking_issue" && (
-            <Button
-              variant="secondary"
-              className="justify-between"
-              onClick={() => onGetAlternatives(ticket.bookingId)}
-            >
-              <span>Alternative Options</span>
-              <Shuffle className="h-4 w-4" />
-            </Button>
-          )}
+          {ticket.category === "booking_issue" &&
+            (ticket.status === "resolved" || ticket.status === "closed") && (
+              <Button
+                variant="secondary"
+                className="justify-between"
+                onClick={() => onGetAlternatives(ticket.bookingId)}
+              >
+                <span>Alternative Options</span>
+                <Shuffle className="h-4 w-4" />
+              </Button>
+            )}
         </div>
       </CardFooter>
     </Card>

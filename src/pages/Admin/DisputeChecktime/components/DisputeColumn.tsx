@@ -2,19 +2,37 @@ import type { Dispute } from "@/types/checkTime";
 import type { ColumnDef } from "@tanstack/react-table";
 import DisputeActions from "./DisputeActions";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 
-export const DisputeColumns = (): ColumnDef<Dispute>[] => [
+const getStatus = (status: string) => {
+  switch (status) {
+    case "resolved_in_favor_of_landlord":
+      return (
+        <Badge className="bg-blue-500">Resolved in Favor of Landlord</Badge>
+      );
+    case "resolved_in_favor_of_tenant":
+      return <Badge>Resolved in Favor of Tenant</Badge>;
+    default:
+      return <Badge className="bg-gray-500">{status}</Badge>;
+  }
+};
+
+export const DisputeColumns = (
+  onViewApartment: (id: string) => void,
+  onViewUser: (id: string) => void,
+  onResolveDispute: (bookingId: string) => void,
+): ColumnDef<Dispute>[] => [
   {
     accessorKey: "tenantFullName",
     header: "Tenant",
     cell: ({ row }) => {
-      // const tenantId = row.original.tenantId;
+      const tenantId = row.original.tenantId;
       const tenant = row.original.tenantFullName;
       return (
         <Button
           variant="secondary"
           className="max-w-20 truncate cursor-pointer"
-          //   onClick={() => onViewUser(tenantId)}
+          onClick={() => onViewUser(tenantId)}
         >
           {tenant}
         </Button>
@@ -30,7 +48,7 @@ export const DisputeColumns = (): ColumnDef<Dispute>[] => [
         <Button
           variant="secondary"
           className="max-w-20 truncate cursor-pointer"
-          //   onClick={() => onViewApartment(apartmentId)}
+          onClick={() => onViewApartment(apartmentId)}
         >
           {apartmentId}
         </Button>
@@ -41,13 +59,13 @@ export const DisputeColumns = (): ColumnDef<Dispute>[] => [
     accessorKey: "landlordFullName",
     header: "Landlord",
     cell: ({ row }) => {
-      // const landlordId = row.original.landlordId;
+      const landlordId = row.original.landlordId;
       const landlord = row.original.landlordFullName;
       return (
         <Button
           variant="secondary"
           className="max-w-20 truncate cursor-pointer"
-          //   onClick={() => onViewUser(landlordId)}
+          onClick={() => onViewUser(landlordId)}
         >
           {landlord}
         </Button>
@@ -65,7 +83,7 @@ export const DisputeColumns = (): ColumnDef<Dispute>[] => [
     accessorKey: "disputeResolutionStatus",
     header: "Dispute Resolution Status",
     cell: ({ row }) => {
-      return <span className="line-clamp-1">{row.original.disputeResolutionStatus}</span>;
+      return getStatus(row.original.disputeResolutionStatus);
     },
   },
   {
@@ -81,7 +99,7 @@ export const DisputeColumns = (): ColumnDef<Dispute>[] => [
     header: "Actions",
     cell: ({ row }) => {
       const dispute = row.original;
-      return <DisputeActions data={dispute} />;
+      return <DisputeActions data={dispute} onResolve={onResolveDispute} />;
     },
   },
 ];

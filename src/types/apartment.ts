@@ -26,6 +26,13 @@ export interface Apartment extends InspectionStatus {
   collectionId?: string;
   priceChanges: PriceChange[];
   nearbyAttractions?: NearbyAttraction;
+  noShowGraceHours: number;
+  media: ApartmentMedia[];
+}
+
+export interface ApartmentMedia {
+  mediaId: string;
+  url: string;
 }
 
 export interface AlternativeApartment {
