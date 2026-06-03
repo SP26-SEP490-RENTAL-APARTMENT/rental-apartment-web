@@ -239,15 +239,6 @@ export default function GuestReviewReportPanels({ result, request, onDrillDown }
   const avgRating =
     totalMetrics["average_rating"] ?? totalMetrics["review_avg_rating"] ?? null;
 
-  const responseRate =
-    totalMetrics["response_rate"] ?? null;
-
-  const fiveStarPct =
-    totalMetrics["five_star_reviews_percent"] ?? totalMetrics["five_star_review_percent"] ?? null;
-
-  const oneStarPct =
-    totalMetrics["one_star_reviews_percent"] ?? totalMetrics["one_star_review_percent"] ?? null;
-
   // ── determine primary dimension ─────────────────────────────────────────
 
   const sampleDims = rows[0]?.dimensions ?? {};
