@@ -13,4 +13,5 @@ export interface Inspection {
     approvedAt: string
     approvedBy: string
     photos: string[]
+    createdAt: string
 }

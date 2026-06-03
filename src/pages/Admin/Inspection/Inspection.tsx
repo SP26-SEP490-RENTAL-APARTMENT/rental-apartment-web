@@ -41,7 +41,7 @@ function Inspections() {
   const [form, setForm] = useState({ decision: "approve", reason: "" });
   const [reviewForm, setReviewForm] = useState(false);
   const [filters, setFilters] = useState<Filter>({
-    sortBy: "scheduledDateTime",
+    sortBy: "createdAt",
     sortOrder: "desc",
     search: "",
   });
@@ -162,7 +162,7 @@ function Inspections() {
 
   const handleResetFilters = () => {
     setFilters({
-      sortBy: "scheduledDateTime",
+      sortBy: "createdAt",
       sortOrder: "desc",
       search: "",
     });
@@ -252,7 +252,7 @@ function Inspections() {
 
       {/* Apartment Detail Modal */}
       <Dialog open={!!apartment} onOpenChange={() => setApartment(undefined)}>
-        <DialogContent>
+        <DialogContent className="sm:max-w-3xl">
           <DialogHeader>
             <DialogTitle>{apartment?.title || "Apartment"}</DialogTitle>
           </DialogHeader>

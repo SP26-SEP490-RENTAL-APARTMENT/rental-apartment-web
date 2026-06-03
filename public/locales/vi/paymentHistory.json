@@ -49,6 +49,12 @@
             "expire": "Hết hạn",
             "tenantResponse": "Phản hồi của Người thuê",
             "response": "Phản hồi"
+        },
+        "resolution": {
+            "title": "Giải quyết Khiếu nại",
+            "status": "Chi tiết giải quyết:",
+            "waived": "Được miễn",
+            "resolved": "Đã giải quyết"
         }
     }
 }

@@ -15,6 +15,7 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 export interface Props {
   open: boolean;
@@ -31,25 +32,66 @@ function InspectionForm({ open, onClose, onSubmit }: Props) {
     formState: { errors, isSubmitting },
   } = useForm<InspectionFormData>({ resolver: zodResolver(inspectionChema) });
   const [files, setFiles] = useState<File[]>([]);
-  const [previewImages, setPreviewImages] = useState<string[]>([]);
+  const [previewMedia, setPreviewMedia] = useState<
+    { url: string; type: "image" | "video" }[]
+  >([]);
+
+  const MAX_VIDEO_SIZE = 100 * 1024 * 1024;
+
+  const ALLOWED_VIDEO_TYPES = [
+    "video/mp4",
+    "video/quicktime",
+    "video/x-msvideo",
+    "video/x-matroska",
+    "video/webm",
+  ];
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newFiles = Array.from(e.target.files || []);
+    const selectedFiles = Array.from(e.target.files || []);
 
-    const updatedFiles = [...files, ...newFiles];
+    const validFiles = selectedFiles.filter((file) => {
+      // Ảnh
+      if (file.type.startsWith("image/")) {
+        return true;
+      }
+
+      // Video
+      if (ALLOWED_VIDEO_TYPES.includes(file.type)) {
+        if (file.size > MAX_VIDEO_SIZE) {
+          toast.error(`${file.name} can not exceed 100MB`);
+          return false;
+        }
+
+        return true;
+      }
+
+      toast.error(`${file.name} is not a supported format`);
+      return false;
+    });
+
+    const updatedFiles = [...files, ...validFiles];
+
     setFiles(updatedFiles);
     setValue("Photos", updatedFiles);
 
-    const newPreviews = newFiles.map((file) => URL.createObjectURL(file));
-    setPreviewImages((prev) => [...prev, ...newPreviews]);
+    const previews = validFiles.map((file) => ({
+      url: URL.createObjectURL(file),
+      type: file.type.startsWith("image/")
+        ? ("image" as const)
+        : ("video" as const),
+    }));
+
+    setPreviewMedia((prev) => [...prev, ...previews]);
+
+    e.target.value = "";
   };
 
-  const handleRemoveImage = (index: number) => {
+  const handleRemoveMedia = (index: number) => {
     const updatedFiles = files.filter((_, i) => i !== index);
-    const updatedPreviews = previewImages.filter((_, i) => i !== index);
+    const updatedPreviews = previewMedia.filter((_, i) => i !== index);
 
     setFiles(updatedFiles);
-    setPreviewImages(updatedPreviews);
+    setPreviewMedia(updatedPreviews);
     setValue("Photos", updatedFiles);
   };
 
@@ -64,7 +106,7 @@ function InspectionForm({ open, onClose, onSubmit }: Props) {
   const handleClose = () => {
     reset();
     setFiles([]);
-    setPreviewImages([]);
+    setPreviewMedia([]);
     onClose();
   };
 
@@ -124,7 +166,14 @@ function InspectionForm({ open, onClose, onSubmit }: Props) {
               <Input
                 type="file"
                 multiple
-                accept="image/*"
+                accept="
+    image/*,
+    .mp4,
+    .mov,
+    .avi,
+    .mkv,
+    .webm
+  "
                 onChange={handleFileChange}
                 className="cursor-pointer"
               />
@@ -135,17 +184,25 @@ function InspectionForm({ open, onClose, onSubmit }: Props) {
             </div>
 
             <div className="grid grid-cols-4 gap-3">
-              {previewImages.map((src, index) => (
+              {previewMedia.map((item, index) => (
                 <div key={index} className="relative group">
-                  <img
-                    src={src}
-                    alt="preview"
-                    className="w-full h-24 object-cover rounded-lg border"
-                  />
+                  {item.type === "image" ? (
+                    <img
+                      src={item.url}
+                      alt="preview"
+                      className="w-full h-24 object-cover rounded-lg border"
+                    />
+                  ) : (
+                    <video
+                      src={item.url}
+                      controls
+                      className="w-full h-24 object-cover rounded-lg border"
+                    />
+                  )}
 
                   <button
                     type="button"
-                    onClick={() => handleRemoveImage(index)}
+                    onClick={() => handleRemoveMedia(index)}
                     className="absolute top-1 right-1 bg-black/60 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition"
                   >
                     ✕
@@ -161,7 +218,7 @@ function InspectionForm({ open, onClose, onSubmit }: Props) {
                 variant="destructive"
                 onClick={() => {
                   reset();
-                  setPreviewImages([]);
+                  setPreviewMedia([]);
                   onClose();
                 }}
               >

@@ -31,7 +31,7 @@ function ApproveListings() {
   const [inspectionForm, setInspectionForm] = useState(false);
   const [filter, setFilter] = useState<Filter>({
     search: "",
-    sortOrder: "asc",
+    sortOrder: "desc",
     sortBy: listingSortByList[0]?.value || "",
   });
   const [inspectionStatus, setInspectionStatus] = useState<string>("all");
@@ -103,7 +103,7 @@ function ApproveListings() {
   const handleResetFilters = () => {
     setFilter({
       search: "",
-      sortOrder: "asc",
+      sortOrder: "desc",
       sortBy: listingSortByList[0]?.value || "",
     });
     setInspectionStatus("all");

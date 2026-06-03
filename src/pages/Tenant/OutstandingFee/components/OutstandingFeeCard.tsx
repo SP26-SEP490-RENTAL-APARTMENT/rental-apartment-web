@@ -1,13 +1,10 @@
-
-import {
-  AlertTriangle,
-  Calendar,
-  Clock3,
-  Wallet,
-} from "lucide-react";
+import { AlertTriangle, Calendar, Clock3, Wallet } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import type { OutstandingFee } from "@/types/outstandingFee";
+import { toast } from "sonner";
+import { bookingApi } from "@/services/privateApi/tenantApi";
+import { useState } from "react";
 
 interface Props {
   data: OutstandingFee;
@@ -22,39 +19,47 @@ const statusConfig: Record<
 > = {
   due: {
     label: "Due",
-    className:
-      "bg-yellow-100 text-yellow-700 border-yellow-200",
+    className: "bg-yellow-100 text-yellow-700 border-yellow-200",
   },
   payment_submitted_pending_veri: {
     label: "Pending Verification",
-    className:
-      "bg-blue-100 text-blue-700 border-blue-200",
+    className: "bg-blue-100 text-blue-700 border-blue-200",
   },
   settled: {
     label: "Settled",
-    className:
-      "bg-emerald-100 text-emerald-700 border-emerald-200",
+    className: "bg-emerald-100 text-emerald-700 border-emerald-200",
   },
 };
 
 export default function OutstandingFeeCard({ data }: Props) {
-  const status =
-    statusConfig[data.feeSettlementStatus] ||
-    statusConfig.due;
+  const [loading, setLoading] = useState(false);
+  const status = statusConfig[data.feeSettlementStatus] || statusConfig.due;
+
+  const handlePayFee = async () => {
+    setLoading(true);
+    try {
+      const response = await bookingApi.payOutstandingFee(data.bookingId, {
+        paymentMethod: "payos",
+        devicePlatform: "web",
+      });
+      window.location.href = response.data.data.url;
+    } catch (error) {
+      toast.error("Failed to initiate payment. Please try again.");
+      console.error("Payment initiation error:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="rounded-2xl border bg-white p-5 shadow-sm transition hover:shadow-md">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
         <div className="space-y-4">
           <div>
-            <h3 className="text-lg font-semibold">
-              {data.apartmentAddress}
-            </h3>
+            <h3 className="text-lg font-semibold">{data.apartmentAddress}</h3>
 
             <div className="mt-2 flex flex-wrap gap-2">
-              <Badge className={status.className}>
-                {status.label}
-              </Badge>
+              <Badge className={status.className}>{status.label}</Badge>
 
               {data.isOverdue && (
                 <Badge className="border-red-200 bg-red-100 text-red-700">
@@ -69,9 +74,7 @@ export default function OutstandingFeeCard({ data }: Props) {
               <Calendar className="h-4 w-4" />
               Check-in:
               <span className="font-medium text-black">
-                {new Date(
-                  data.scheduledCheckIn
-                ).toLocaleString()}
+                {new Date(data.scheduledCheckIn).toLocaleString()}
               </span>
             </div>
 
@@ -79,9 +82,7 @@ export default function OutstandingFeeCard({ data }: Props) {
               <Calendar className="h-4 w-4" />
               Check-out:
               <span className="font-medium text-black">
-                {new Date(
-                  data.scheduledCheckOut
-                ).toLocaleString()}
+                {new Date(data.scheduledCheckOut).toLocaleString()}
               </span>
             </div>
 
@@ -119,9 +120,7 @@ export default function OutstandingFeeCard({ data }: Props) {
               <AlertTriangle className="mt-0.5 h-4 w-4" />
 
               <div>
-                <p className="font-medium">
-                  Tenant Dispute
-                </p>
+                <p className="font-medium">Tenant Dispute</p>
 
                 <p>{data.tenantDisputeReason}</p>
               </div>
@@ -129,7 +128,7 @@ export default function OutstandingFeeCard({ data }: Props) {
           )}
         </div>
 
-        <div className="min-w-[220px] rounded-2xl bg-slate-50 p-4">
+        <div className="min-w-55 rounded-2xl bg-slate-50 p-4">
           <div className="flex items-center gap-2 text-muted-foreground">
             <Wallet className="h-4 w-4" />
             Total Fee
@@ -140,7 +139,11 @@ export default function OutstandingFeeCard({ data }: Props) {
           </h2>
 
           <div className="mt-4 flex flex-col gap-2">
-            <Button className="w-full">
+            <Button
+              onClick={handlePayFee}
+              className="w-full"
+              disabled={loading}
+            >
               Pay Now
             </Button>
           </div>

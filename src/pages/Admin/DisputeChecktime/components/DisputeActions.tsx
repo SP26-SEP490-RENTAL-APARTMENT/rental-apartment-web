@@ -1,20 +1,30 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { Separator } from "@/components/ui/separator";
+import { formatDate } from "@/lib/utils";
 import type { Dispute } from "@/types/checkTime";
-import { Eye } from "lucide-react";
+import { CircleEllipsis, Eye } from "lucide-react";
 
 interface Props {
   data: Dispute;
+  onResolve: (bookingId: string) => void;
 }
 
-function DisputeActions({ data }: Props) {
+function DisputeActions({ data, onResolve }: Props) {
   return (
     <div className="flex gap-2">
       <Dialog>
@@ -31,108 +41,116 @@ function DisputeActions({ data }: Props) {
             </DialogTitle>
           </DialogHeader>
 
-          <div className="space-y-6">
-            {/* STATUS */}
-            <div className="flex flex-wrap gap-2">
-              <Badge variant="destructive">Disputed</Badge>
+          <Card>
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle>Check Time Dispute</CardTitle>
+                  <CardDescription>
+                    Created at {formatDate(data.disputeCreatedAt)}
+                  </CardDescription>
+                </div>
 
-              <Badge className="bg-green-100 text-green-700 hover:bg-green-100">
-                {data.disputeResolutionStatus}
-              </Badge>
+                <Badge className="bg-green-100 text-green-700">
+                  Resolved In Favor Of Tenant
+                </Badge>
+              </div>
+            </CardHeader>
 
-              <Badge variant="secondary">{data.bookingStatus}</Badge>
-            </div>
+            <CardContent className="space-y-6">
+              {/* Parties */}
+              <div className="grid md:grid-cols-2 gap-4">
+                <div>
+                  <p className="text-sm text-muted-foreground">Tenant</p>
+                  <p className="font-medium">{data.tenantFullName}</p>
+                </div>
 
-            {/* BOOKING INFO */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="rounded-xl border p-4 space-y-3">
-                <h3 className="font-semibold text-base">Booking Information</h3>
-
-                <InfoRow label="Booking ID" value={data.bookingId} />
-
-                <InfoRow label="Apartment" value={data.apartmentAddress} />
-
-                <InfoRow label="Check In" value={data.checkInDate} />
-
-                <InfoRow label="Check Out" value={data.checkOutDate} />
-
-                <InfoRow label="Nights" value={`${data.nights} night`} />
-
-                <InfoRow
-                  label="Total Price"
-                  value={`${data.totalPrice.toLocaleString()} đ`}
-                />
+                <div>
+                  <p className="text-sm text-muted-foreground">Landlord</p>
+                  <p className="font-medium">{data.landlordFullName}</p>
+                </div>
               </div>
 
-              {/* PEOPLE */}
-              <div className="rounded-xl border p-4 space-y-3">
-                <h3 className="font-semibold text-base">Participants</h3>
+              <Separator />
 
-                <InfoRow label="Tenant" value={data.tenantFullName} />
+              {/* Booking */}
+              <div>
+                <h3 className="font-semibold mb-3">Booking Information</h3>
 
-                <InfoRow label="Landlord" value={data.landlordFullName} />
+                <div className="grid md:grid-cols-2 gap-4">
+                  <InfoItem label="Apartment" value={data.apartmentAddress} />
 
-                <InfoRow
-                  label="Support Tickets"
-                  value={String(data.supportTicketCount)}
-                />
+                  <InfoItem label="Booking Status" value={data.bookingStatus} />
 
-                <InfoRow label="Ticket ID" value={data.ticketId} />
+                  <InfoItem
+                    label="Check In"
+                    value={formatDate(data.checkInDate)}
+                  />
+
+                  <InfoItem
+                    label="Check Out"
+                    value={formatDate(data.checkOutDate)}
+                  />
+
+                  <InfoItem label="Nights" value={data.nights} />
+
+                  <InfoItem
+                    label="Total Price"
+                    value={`${Number(data.totalPrice).toLocaleString()} VNĐ`}
+                  />
+                </div>
               </div>
-            </div>
 
-            {/* DISPUTE REASON */}
-            <div className="rounded-xl border p-4 space-y-3">
-              <h3 className="font-semibold text-base">Dispute Reason</h3>
+              <Separator />
 
-              <div className="rounded-lg bg-muted p-4 text-sm leading-relaxed">
-                {data.disputeReason}
+              {/* Reason */}
+              <div>
+                <h3 className="font-semibold mb-3">Dispute Reason</h3>
+
+                <div className="rounded-lg border bg-muted/30 p-4">
+                  {data.disputeReason}
+                </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
-                <InfoRow
-                  label="Dispute Created"
-                  value={new Date(data.disputeCreatedAt).toLocaleString()}
-                />
+              {/* Images */}
+              {data.checkTimeImages.length > 0 && (
+                <div>
+                  <h3 className="font-semibold mb-3">Check Time Images</h3>
 
-                <InfoRow
-                  label="Check Time Evidence Created"
-                  value={new Date(data.createdAt).toLocaleString()}
-                />
-              </div>
-            </div>
-
-            {/* EVIDENCE */}
-            <div className="rounded-xl border p-4 space-y-4">
-              <h3 className="font-semibold text-base">Evidence Images</h3>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {data.checkTimeImages.map((image, index) => (
-                  <div
-                    key={index}
-                    className="overflow-hidden rounded-xl border bg-muted"
-                  >
-                    <img
-                      src={image}
-                      alt={`evidence-${index}`}
-                      className="h-64 w-full object-cover hover:scale-105 transition-transform duration-300"
-                    />
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    {data.checkTimeImages.map((img) => (
+                      <img
+                        key={img}
+                        src={img}
+                        alt=""
+                        className="h-40 w-full rounded-lg border object-cover"
+                      />
+                    ))}
                   </div>
-                ))}
-              </div>
-            </div>
-          </div>
+                </div>
+              )}
+            </CardContent>
+          </Card>
         </DialogContent>
       </Dialog>
+
+      <Button
+        size="sm"
+        variant="secondary"
+        onClick={() => onResolve(data.bookingId)}
+      >
+        <CircleEllipsis className="w-4 h-4" />
+      </Button>
     </div>
   );
 }
-function InfoRow({ label, value }: { label: string; value: React.ReactNode }) {
-  return (
-    <div className="flex flex-col gap-1">
-      <span className="text-xs text-muted-foreground">{label}</span>
 
-      <span className="text-sm font-medium break-all">{value}</span>
+function InfoItem({ label, value }: { label: string; value: React.ReactNode }) {
+  return (
+    <div>
+      <p className="text-sm text-muted-foreground">{label}</p>
+
+      <p className="font-medium wrap-break-word">{value}</p>
     </div>
   );
 }

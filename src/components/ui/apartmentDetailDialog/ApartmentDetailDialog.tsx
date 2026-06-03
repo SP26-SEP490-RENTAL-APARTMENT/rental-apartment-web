@@ -1,5 +1,5 @@
 import type { Apartment } from "@/types/apartment";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/store/authStore";
 import { Badge } from "../badge";
@@ -32,7 +32,7 @@ function ApartmentDetailDialog({ apartment, onAddPhotos }: Props) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [imgUrl, setImgUrl] = useState<string>("");
+  const [selectedMedia, setSelectedMedia] = useState("");
   const location = useLocation();
 
   const getStatusBadge = (status?: string | null) => {
@@ -201,40 +201,75 @@ function ApartmentDetailDialog({ apartment, onAddPhotos }: Props) {
     }
   };
 
+  useEffect(() => {
+    setSelectedMedia(apartment.media?.[0]?.url || "");
+  }, [apartment]);
+
+  const isVideo = (url: string) => {
+    return url.includes("/video/upload/");
+  };
+
   return (
     <div className="max-h-[75vh] overflow-y-auto space-y-6 pr-2">
       {/* ===== GALLERY ===== */}
       <div className="space-y-3">
-        {apartment.photos?.length > 0 ? (
+        {apartment.media?.length > 0 ? (
           <>
             <div className="w-full h-72 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow">
-              <img
-                src={imgUrl || apartment.photos[0]}
-                alt="Main"
-                className="w-full h-full object-cover"
-              />
+              {isVideo(selectedMedia || apartment.media[0]?.url) ? (
+                <video
+                  src={selectedMedia || apartment.media[0]?.url}
+                  controls
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <img
+                  src={selectedMedia || apartment.media[0]?.url}
+                  alt="Main"
+                  className="w-full h-full object-cover"
+                />
+              )}
             </div>
-            {apartment.photos.length > 1 && (
+            {apartment.media.length > 1 && (
               <div className="grid grid-cols-4 gap-2">
-                {apartment.photos.map((img: string, index: number) => (
+                {apartment.media.map((item, index) => (
                   <div
-                    onClick={() => setImgUrl(img)}
-                    key={index}
-                    className={`rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-all cursor-pointer h-20 `}
+                    key={item.mediaId}
+                    onClick={() => setSelectedMedia(item.url)}
+                    className={`
+          rounded-lg overflow-hidden shadow-md hover:shadow-lg
+          transition-all cursor-pointer h-20
+          ${selectedMedia === item.url ? "ring-2 ring-primary" : ""}
+        `}
                   >
-                    <img
-                      src={img}
-                      alt={`Gallery ${index}`}
-                      className="w-full h-full object-cover"
-                    />
+                    {isVideo(item.url) ? (
+                      <div className="relative w-full h-full">
+                        <video
+                          src={item.url}
+                          className="w-full h-full object-cover"
+                          muted
+                        />
+                        <div className="absolute inset-0 flex items-center justify-center bg-black/20 text-white text-xl">
+                          ▶
+                        </div>
+                      </div>
+                    ) : (
+                      <img
+                        src={item.url}
+                        alt={`Gallery ${index}`}
+                        className="w-full h-full object-cover"
+                      />
+                    )}
                   </div>
                 ))}
               </div>
             )}
           </>
         ) : (
-          <div className="w-full h-72 flex items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200 rounded-xl text-muted-foreground">
-            <span className="text-lg font-medium">No images available</span>
+          <div className="w-full h-72 flex items-center justify-center bg-linear-to-br from-slate-100 to-slate-200 rounded-xl text-muted-foreground">
+            <span className="text-lg font-medium">
+              No images / video available
+            </span>
           </div>
         )}
       </div>
@@ -324,6 +359,9 @@ function ApartmentDetailDialog({ apartment, onAddPhotos }: Props) {
         </p>
         <p className="text-sm text-gray-700 leading-relaxed">
           {apartment.description}
+        </p>
+        <p className="text-sm text-gray-700 leading-relaxed">
+          Booking grace period: {apartment.noShowGraceHours}{" "}
         </p>
       </div>
 
@@ -469,8 +507,8 @@ function ApartmentDetailDialog({ apartment, onAddPhotos }: Props) {
                 className="w-full bg-linear-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold py-2 transition-all"
               >
                 {loading
-                  ? "⏳ Uploading..."
-                  : "✓ Upload " + selectedFiles.length + " Photo(s)"}
+                  ? "Uploading..."
+                  : "Upload " + selectedFiles.length + " Photo(s)"}
               </Button>
             )}
           </div>

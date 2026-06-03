@@ -13,6 +13,8 @@ const getInspectionStatusBadge = (inspectionStatus?: string | null) => {
       return <Badge className="bg-yellow-500 text-white">Pending</Badge>;
     case "passed":
       return <Badge className="bg-gray-500 text-white">Passed</Badge>;
+    case "failed":
+      return <Badge className="bg-red-500 text-white">Failed</Badge>;
     default:
       return <Badge variant="secondary">Not scheduled</Badge>;
   }

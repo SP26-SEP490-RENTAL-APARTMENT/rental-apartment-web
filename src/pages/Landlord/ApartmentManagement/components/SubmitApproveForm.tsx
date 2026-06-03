@@ -26,7 +26,7 @@ function SubmitApproveForm({
   isOpen,
   onClose,
 }: Props) {
-  const {t} = useTranslation('landlord');
+  const { t } = useTranslation("landlord");
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DialogContent>
@@ -41,14 +41,12 @@ function SubmitApproveForm({
           }}
         >
           <div className="space-y-4">
-
-              <Input
-                value={apartmentId}
-                type="hidden"
-                disabled
-                id="apartmentId"
-              />
-
+            <Input
+              value={apartmentId}
+              type="hidden"
+              disabled
+              id="apartmentId"
+            />
 
             <div className="grid gap-2">
               <Label htmlFor="note">{t("approve.note")}</Label>
@@ -61,7 +59,7 @@ function SubmitApproveForm({
             </div>
           </div>
 
-          <div className="flex justify-center mt-4">
+          <div className="flex justify-end mt-4">
             <Button type="submit">{t("approve.submit")}</Button>
           </div>
         </form>

@@ -1,11 +1,26 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import DataTable from "@/components/ui/dataTable/DataTable";
 import type { Filter } from "@/components/ui/managementFilter/ManagementFilter";
-import { disputeManagementApi } from "@/services/privateApi/adminApi";
+import {
+  disputeManagementApi,
+  userManagementApi,
+} from "@/services/privateApi/adminApi";
 import type { Dispute } from "@/types/checkTime";
 import { BadgeAlert } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { DisputeColumns } from "./components/DisputeColumn";
+import { apartmentApi } from "@/services/publicApi/apartmentApi";
+import type { Apartment } from "@/types/apartment";
+import type { UserProfile } from "@/types/user";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import ApartmentDetailDialog from "@/components/ui/apartmentDetailDialog/ApartmentDetailDialog";
+import UserDetailDialog from "@/components/ui/userDetailDialog/UserDetailDialog";
+import ResolveDialog from "./components/ResolveDialog";
 
 function DisputeManagement() {
   const [disputeList, setDisputeList] = useState<Dispute[]>([]);
@@ -17,6 +32,14 @@ function DisputeManagement() {
     sortBy: "createdAt",
     sortOrder: "desc",
   });
+  const [apartment, setApartment] = useState<Apartment | null>(null);
+  const [apartmentDialogOpen, setApartmentDialogOpen] = useState(false);
+  const [user, setUser] = useState<UserProfile | null>(null);
+  const [userDialogOpen, setUserDialogOpen] = useState(false);
+  const [resolveDialogOpen, setResolveDialogOpen] = useState(false);
+  const [selectedBookingId, setSelectedBookingId] = useState<string | null>(
+    null,
+  );
 
   const fetchDisputes = useCallback(async () => {
     setLoading(true);
@@ -37,9 +60,34 @@ function DisputeManagement() {
     }
   }, [page, filters]);
 
+  const handleGetApartment = async (id: string) => {
+    try {
+      const res = await apartmentApi.getApartmentById(id);
+      setApartment(res.data.data);
+      setApartmentDialogOpen(true);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleGetUser = async (id: string) => {
+    try {
+      const res = await userManagementApi.getUserDetail(id);
+      setUser(res.data);
+      setUserDialogOpen(true);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     fetchDisputes();
   }, [fetchDisputes]);
+
+  const triggerResolveDispute = (bookingId: string) => {
+    setSelectedBookingId(bookingId);
+    setResolveDialogOpen(true);
+  };
 
   const handlePageChange = (newPage: number) => {
     setPage(newPage);
@@ -89,7 +137,11 @@ function DisputeManagement() {
           </CardHeader>
           <CardContent className="pt-6">
             <DataTable
-              columns={DisputeColumns()}
+              columns={DisputeColumns(
+                handleGetApartment,
+                handleGetUser,
+                triggerResolveDispute,
+              )}
               data={disputeList}
               limit={10}
               loading={loading}
@@ -100,6 +152,43 @@ function DisputeManagement() {
           </CardContent>
         </Card>
       </div>
+
+      <Dialog
+        open={apartmentDialogOpen}
+        onOpenChange={() => {
+          setApartmentDialogOpen(false);
+          setApartment(null);
+        }}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{apartment?.title || "Apartment"}</DialogTitle>
+          </DialogHeader>
+          {apartment && <ApartmentDetailDialog apartment={apartment} />}
+        </DialogContent>
+      </Dialog>
+
+      <Dialog
+        open={userDialogOpen}
+        onOpenChange={() => {
+          setUserDialogOpen(false);
+          setUser(null);
+        }}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{user?.fullName || "User"}</DialogTitle>
+          </DialogHeader>
+          {user && <UserDetailDialog user={user} />}
+        </DialogContent>
+      </Dialog>
+
+      <ResolveDialog
+        onClose={() => setResolveDialogOpen(false)}
+        open={resolveDialogOpen}
+        bookingId={selectedBookingId!}
+        refetch={fetchDisputes}
+      />
     </div>
   );
 }

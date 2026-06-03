@@ -51,7 +51,7 @@ function InspectionAction({
             {/* Status + Condition */}
             <div className="flex items-center justify-between">
               <span className="font-medium text-muted-foreground">Status</span>
-              <span className="capitalize font-semibold text-green-600">
+              <span className="capitalize font-semibold text-green-600 bg-gray-500/10 px-2 py-1 rounded-full">
                 {inspections.status}
               </span>
             </div>
@@ -78,26 +78,38 @@ function InspectionAction({
 
             {/* Photos */}
             <div>
-              <p className="text-muted-foreground mb-2">Photos</p>
+              <p className="text-muted-foreground mb-2">Media</p>
 
               {inspections.photos?.length > 0 ? (
                 <div className="grid grid-cols-3 gap-2">
-                  {inspections.photos.map((photo: any, index: number) => (
-                    <div
-                      key={index}
-                      className="aspect-square overflow-hidden rounded-md border"
-                    >
-                      <img
-                        src={photo.fileUrl}
-                        alt={`inspection-${index}`}
-                        className="w-full h-full object-cover hover:scale-105 transition"
-                      />
-                    </div>
-                  ))}
+                  {inspections.photos.map((media: any, index: number) => {
+                    const isVideo = media.fileUrl.includes("/video/upload/");
+
+                    return (
+                      <div
+                        key={media.photoId}
+                        className="aspect-square overflow-hidden rounded-md border"
+                      >
+                        {isVideo ? (
+                          <video
+                            src={media.fileUrl}
+                            controls
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <img
+                            src={media.fileUrl}
+                            alt={`inspection-${index}`}
+                            className="w-full h-full object-cover hover:scale-105 transition"
+                          />
+                        )}
+                      </div>
+                    );
+                  })}
                 </div>
               ) : (
                 <p className="text-muted-foreground italic">
-                  No photos available
+                  No media available
                 </p>
               )}
             </div>
@@ -172,7 +184,7 @@ function InspectionAction({
         </>
       )}
 
-      {inspections.status !== "passed" && (
+      {inspections.status !== "passed" && inspections.status !== "failed" && (
         <Button
           variant="destructive"
           onClick={() => onCancelInspection(inspections.inspectionId)}

@@ -56,6 +56,7 @@ interface Props {
   onViewPriceChange: (apartmentId: string) => void;
   onApplyPricingTemplate: (apartmentId: string) => void;
   onViewAvailablePolicies: (apartmentId: string) => void;
+  onViewAvailability: (apartmentId: string) => void;
 }
 function ApartmentAction({
   apartment,
@@ -72,6 +73,7 @@ function ApartmentAction({
   onViewPriceChange,
   onApplyPricingTemplate,
   onViewAvailablePolicies,
+  onViewAvailability
 }: Props) {
   const { t } = useTranslation("landlord");
   const { i18n } = useTranslation();
@@ -291,6 +293,11 @@ function ApartmentAction({
               onClick={() => onAddAvailability(apartment.apartmentId)}
             >
               {t("button.addAvailability")}
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => onViewAvailability(apartment.apartmentId)}
+            >
+              View Availability
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

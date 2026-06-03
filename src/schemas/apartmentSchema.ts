@@ -16,6 +16,7 @@ export const createApartmentSchema = z
     basePricePerNight: z
       .number()
       .min(0, "Price must be greater than or equal to 0"),
+    noShowGraceHours: z.number().min(0, "No-show grace hours must be 0 or more"),
   })
   .refine(
     (data) => {
@@ -46,6 +47,7 @@ export const updateApartmentSchema = z
     basePricePerNight: z
       .number()
       .min(0, "Price must be greater than or equal to 0"),
+    noShowGraceHours: z.number().min(0, "No-show grace hours must be 0 or more"),
   })
   .refine(
     (data) => {

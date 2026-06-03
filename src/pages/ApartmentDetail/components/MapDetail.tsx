@@ -85,7 +85,7 @@ function RecenterButton({ lat, lng }: { lat: number; lng: number }) {
     <Button
       onClick={() => map.setView([lat, lng], 15)}
       size="icon"
-      className="absolute top-4 right-4 z-1000 shadow-lg"
+      className="absolute top-4 right-4 z-500 shadow-lg"
     >
       <LocateFixed className="h-4 w-4" />
     </Button>
@@ -97,6 +97,7 @@ function MapDetail({ lat, lng, attractions = [] }: MapDetailProps) {
     <MapContainer
       center={[lat, lng]}
       zoom={15}
+      className="z-0"
       style={{
         height: "100%",
         width: "100%",

@@ -278,4 +278,9 @@ export const pricingTemplateManagementApi = {
 export const disputeManagementApi = {
   getAllDisputes: (params: ParamsProp) =>
     apiConfig.privateApi.get("/admin/bookings/disputes", { params }),
-}
+  resolveDispute: (
+    bookingId: string,
+    data: { notes: string; approveTenantDispute: boolean },
+  ) =>
+    apiConfig.privateApi.post(`/Booking/${bookingId}/check-time/resolve`, data),
+};
