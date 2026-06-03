@@ -3,7 +3,9 @@ import type { ColumnDef } from "@tanstack/react-table";
 import DashboardAction from "./DashboardAction";
 
 export const DashboardColumns = (
-  onRunReport: (report: Catalog) => void
+  onRunReport: (report: Catalog) => void,
+  onEdit: (report: Catalog) => void,
+  onDelete: (report: Catalog) => void,
 ): ColumnDef<Catalog>[] => [
   {
     accessorKey: "name",
@@ -32,7 +34,7 @@ export const DashboardColumns = (
     cell: ({ row }) => {
       const catalog = row.original;
       return (
-        <DashboardAction catalog={catalog} onRunReport={onRunReport} />
+        <DashboardAction catalog={catalog} onRunReport={onRunReport} onEdit={onEdit} onDelete={onDelete} />
       );
     },
   },

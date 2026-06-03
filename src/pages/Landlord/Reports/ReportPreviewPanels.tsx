@@ -1,4 +1,5 @@
 // React import not required with the automatic JSX runtime
+import { useTranslation } from "react-i18next";
 import {
   ChartContainer,
   ChartTooltip,
@@ -37,6 +38,7 @@ type Props = {
 };
 
 export default function ReportPreviewPanels({ result, request }: Props) {
+  const { t } = useTranslation('reports');
   // derive KPIs and chart series from `result` when available, otherwise fall back to sample data
   const rawRows =
     (Array.isArray(result?.rows)
@@ -116,12 +118,16 @@ export default function ReportPreviewPanels({ result, request }: Props) {
     Object.keys(totalMetrics).find((k) => k !== seriesMetricA) ??
     "metricB";
 
+  // Translated labels used as dataKey so Recharts legend renders them directly
+  const labelA = t(`shell.metricLabels.${seriesMetricA}`, { defaultValue: seriesMetricA });
+  const labelB = t(`shell.metricLabels.${seriesMetricB}`, { defaultValue: seriesMetricB });
+
   const timeseries = rows.map((r) => {
     const x = r.dimensions?.[xKey] ?? r.dimensions ?? "";
     return {
       x: typeof x === "string" ? x.split("T")[0] : String(x),
-      [seriesMetricA]: r.metrics?.[seriesMetricA] ?? 0,
-      [seriesMetricB]: r.metrics?.[seriesMetricB] ?? 0,
+      [labelA]: r.metrics?.[seriesMetricA] ?? 0,
+      [labelB]: r.metrics?.[seriesMetricB] ?? 0,
     };
   });
 
@@ -131,13 +137,15 @@ export default function ReportPreviewPanels({ result, request }: Props) {
 
   const toStatusLabel = (value: unknown) => {
     const raw = String(value ?? "Unknown").trim();
-    if (!raw) return "Unknown";
-    return raw
+    if (!raw) return t("shell.statuses.Unknown", { defaultValue: "Unknown" });
+    // Normalise to PascalCase key for the translation lookup
+    const key = raw
       .toLowerCase()
       .split(/[_\s-]+/)
       .filter(Boolean)
       .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-      .join(" ");
+      .join("");
+    return t(`shell.statuses.${key}`, { defaultValue: raw });
   };
 
   // find requested status/apartment dimension from request (prefer alias then field)
@@ -246,23 +254,23 @@ export default function ReportPreviewPanels({ result, request }: Props) {
 
     const statusMetricDefs = [
       {
-        label: "Pending",
+        label: t('shell.statuses.Pending'),
         key: findStatusMetricKey(/pending(_booking)?(_count)?|pending/i),
       },
       {
-        label: "Confirmed",
+        label: t('shell.statuses.Confirmed'),
         key: findStatusMetricKey(
           /confirmed(_booking)?(_count)?|confirmed/i,
         ),
       },
       {
-        label: "Completed",
+        label: t('shell.statuses.Completed'),
         key: findStatusMetricKey(
           /completed(_booking)?(_count)?|completed/i,
         ),
       },
       {
-        label: "Cancelled",
+        label: t('shell.statuses.Cancelled'),
         key: findStatusMetricKey(
           /cancelled(_booking)?(_count)?|canceled(_booking)?(_count)?|cancelled|canceled/i,
         ),
@@ -305,7 +313,8 @@ export default function ReportPreviewPanels({ result, request }: Props) {
   );
 
   // revenue by apartment using requested revenue metric
-  let revenueApts: Array<{ name: string; revenue: number }> = [];
+  const revenueLabel = t("shell.metricLabels.total_revenue", { defaultValue: "Revenue" });
+  let revenueApts: Array<{ name: string; [key: string]: number | string }> = [];
   if (aptKey) {
     const map = new Map<string, number>();
     rows.forEach((r) => {
@@ -315,11 +324,11 @@ export default function ReportPreviewPanels({ result, request }: Props) {
         : r.metrics
           ? (Object.values(r.metrics || {})[0] ?? 0)
           : 0;
-      map.set(name, (map.get(name) || 0) + rev);
+      map.set(name, (map.get(name) || 0) + (rev as number));
     });
-    revenueApts = Array.from(map.entries()).map(([name, revenue]) => ({
+    revenueApts = Array.from(map.entries()).map(([name, rev]) => ({
       name,
-      revenue,
+      [revenueLabel]: rev,
     }));
   }
 
@@ -345,16 +354,16 @@ export default function ReportPreviewPanels({ result, request }: Props) {
           <div className="lg:col-span-2">
             <Card className="min-h-[320px] bg-white border border-slate-200 rounded-xl shadow-sm">
               <CardHeader>
-                <CardTitle>Main chart</CardTitle>
-                <CardDescription>Revenue and bookings over time</CardDescription>
+                <CardTitle>{t('charts.mainTitle')}</CardTitle>
+                <CardDescription>{t('charts.mainDesc')}</CardDescription>
               </CardHeader>
               <CardContent>
                 <ChartContainer
                   id="main"
                   className="!aspect-auto h-[320px] w-full"
                   config={{
-                    [seriesMetricA]: { label: seriesMetricA },
-                    [seriesMetricB]: { label: seriesMetricB },
+                    [labelA]: { label: labelA },
+                    [labelB]: { label: labelB },
                   }}
                 >
                   <LineChart data={timeseries}>
@@ -367,7 +376,7 @@ export default function ReportPreviewPanels({ result, request }: Props) {
                     <Line
                       yAxisId="right"
                       type="monotone"
-                      dataKey={seriesMetricA}
+                      dataKey={labelA}
                       stroke="var(--color-chart-1)"
                       strokeWidth={2}
                       dot={false}
@@ -375,7 +384,7 @@ export default function ReportPreviewPanels({ result, request }: Props) {
                     <Line
                       yAxisId="left"
                       type="monotone"
-                      dataKey={seriesMetricB}
+                      dataKey={labelB}
                       stroke="var(--color-chart-2)"
                       strokeWidth={2}
                       dot={{ r: 3 }}
@@ -391,7 +400,7 @@ export default function ReportPreviewPanels({ result, request }: Props) {
           <div>
             <Card className="min-h-[320px] bg-white border border-slate-200 rounded-xl shadow-sm">
               <CardHeader>
-                <CardTitle>Booking Status Breakdown</CardTitle>
+                <CardTitle>{t('charts.statusBreakdown')}</CardTitle>
               </CardHeader>
               <CardContent>
                 <ChartContainer
@@ -430,7 +439,7 @@ export default function ReportPreviewPanels({ result, request }: Props) {
         {hasStackData ? (
           <Card className="bg-white border border-slate-200 rounded-xl shadow-sm">
             <CardHeader>
-              <CardTitle>Bookings by Status (stacked)</CardTitle>
+              <CardTitle>{t('charts.byStatus')}</CardTitle>
             </CardHeader>
             <CardContent>
               <ChartContainer
@@ -466,13 +475,15 @@ export default function ReportPreviewPanels({ result, request }: Props) {
         {hasRevenueApartmentData ? (
           <Card className="bg-white border border-slate-200 rounded-xl shadow-sm">
             <CardHeader>
-              <CardTitle>Revenue by Apartment</CardTitle>
+              <CardTitle>{t('charts.byApartment')}</CardTitle>
             </CardHeader>
             <CardContent>
               <ChartContainer
                 id="revenue-apartments"
                 className="!aspect-auto h-[320px] w-full"
-                config={{}}
+                config={{
+                  [revenueLabel]: { label: revenueLabel },
+                }}
               >
                 <BarChart data={revenueApts}>
                   <CartesianGrid strokeDasharray="3 3" />
@@ -480,7 +491,7 @@ export default function ReportPreviewPanels({ result, request }: Props) {
                   <YAxis />
                   <ChartTooltip />
                   <ChartLegend />
-                  <Bar dataKey="revenue" fill="var(--color-chart-4)" />
+                  <Bar dataKey={revenueLabel} fill="var(--color-chart-4)" />
                 </BarChart>
               </ChartContainer>
             </CardContent>

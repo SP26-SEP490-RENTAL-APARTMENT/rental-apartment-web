@@ -6,6 +6,8 @@
         "payments": "Payment History",
         "subscriptions": "Subscriptions",
         "wallet": "Wallet",
-        "feeManagement": "Fee Management"
+        "feeManagement": "Fee Management",
+        "report": "Report",
+        "smartPricing": "Smart Pricing History"
     }
 }

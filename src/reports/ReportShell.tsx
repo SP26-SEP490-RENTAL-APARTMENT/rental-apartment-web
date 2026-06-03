@@ -1,6 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
+import { useTranslation } from 'react-i18next';
 import type {
+  ReportDimensionRequestDto,
+  ReportMetricRequestDto,
   ReportSchemaDto,
   ReportRunRequestDto,
   ReportResultPageDto,
@@ -15,16 +18,43 @@ export interface ReportShellProps {
   allowedDimensions?: string[];
   allowedMetrics?: string[];
   enableApartmentFilter?: boolean;
+  /** Replace individual time dimension toggles with a single WoW/MoM/QoQ/YoY selector */
+  useComparisonPeriod?: boolean;
+  /** Base name for exported files (no extension). Defaults to a slug derived from reportId. */
+  exportFileName?: string;
   onRunResult?: (payload: {
     request: ReportRunRequestDto;
     result: ReportResultPageDto | null;
   }) => void;
   tablePortalId?: string;
+  hideGenericKpis?: boolean;
 }
+
+type ComparisonPeriod = 'wow' | 'mom' | 'qoq' | 'yoy';
+
+const COMPARISON_PERIOD_OPTIONS: { value: ComparisonPeriod; field: string }[] = [
+  { value: 'wow', field: 'week' },
+  { value: 'mom', field: 'month' },
+  { value: 'qoq', field: 'quarter' },
+  { value: 'yoy', field: 'year' },
+];
 
 type RangePreset = 'last_30_days' | 'this_day' | 'last_day' | 'this_week' | 'last_week' | 'this_month' | 'last_month' | 'this_year' | 'last_year';
 
-export const ReportShell: React.FC<ReportShellProps> = ({ reportId, defaultRequest, allowedDimensions: propsAllowedDimensions, allowedMetrics: propsAllowedMetrics, enableApartmentFilter = false, onRunResult, tablePortalId }) => {
+function normalizeDimensions(dimensions?: ReportDimensionRequestDto[]) {
+  return (dimensions ?? []).filter((dimension): dimension is ReportDimensionRequestDto => {
+    return typeof dimension?.field === 'string' && dimension.field.trim().length > 0;
+  });
+}
+
+function normalizeMetrics(metrics?: ReportMetricRequestDto[]) {
+  return (metrics ?? []).filter((metric): metric is ReportMetricRequestDto => {
+    return typeof metric?.field === 'string' && metric.field.trim().length > 0;
+  });
+}
+
+export const ReportShell: React.FC<ReportShellProps> = ({ reportId, defaultRequest, allowedDimensions: propsAllowedDimensions, allowedMetrics: propsAllowedMetrics, enableApartmentFilter = false, useComparisonPeriod = false, exportFileName, onRunResult, tablePortalId, hideGenericKpis = false }) => {
+  const { t } = useTranslation('reports');
   const [schema, setSchema] = useState<ReportSchemaDto | null>(null);
   const [request, setRequest] = useState<ReportRunRequestDto>({
     from: undefined,
@@ -39,6 +69,7 @@ export const ReportShell: React.FC<ReportShellProps> = ({ reportId, defaultReque
   const [result, setResult] = useState<ReportResultPageDto | null>(null);
   const [loading, setLoading] = useState(false);
   const [rangePreset, setRangePreset] = useState<RangePreset>('last_30_days');
+  const [comparisonPeriod, setComparisonPeriod] = useState<ComparisonPeriod>('mom');
   const [tablePortalTarget, setTablePortalTarget] = useState<HTMLElement | null>(null);
   const [apartmentOptions, setApartmentOptions] = useState<Array<Pick<Apartment, 'apartmentId' | 'title'>>>([]);
   const [selectedApartmentId, setSelectedApartmentId] = useState<string>('');
@@ -57,6 +88,19 @@ export const ReportShell: React.FC<ReportShellProps> = ({ reportId, defaultReque
     getSchema(reportId).then(s => mounted && setSchema(s)).catch(() => {});
     return () => { mounted = false; };
   }, [reportId]);
+
+  useEffect(() => {
+    setRequest({
+      from: defaultRequest?.from,
+      to: defaultRequest?.to,
+      searchTerm: defaultRequest?.searchTerm,
+      dimensions: normalizeDimensions(defaultRequest?.dimensions),
+      metrics: normalizeMetrics(defaultRequest?.metrics),
+      filters: defaultRequest?.filters,
+      page: defaultRequest?.page ?? 1,
+      pageSize: defaultRequest?.pageSize ?? 100,
+    });
+  }, [defaultRequest, reportId]);
 
   useEffect(() => {
     if (!enableApartmentFilter) {
@@ -238,22 +282,46 @@ export const ReportShell: React.FC<ReportShellProps> = ({ reportId, defaultReque
         return { ...r, metrics };
       }
 
-      const defaultAgg = schema?.aggregations?.[0] ?? 'sum';
+      const countOnlyFields = ['booking_count', 'paid_booking_count', 'confirmed_booking_count', 'completed_booking_count', 'cancelled_booking_count', 'unique_tenant_count', 'unique_apartment_count', 'unique_paid_tenant_count', 'peak_occupancy_days', 'low_occupancy_days', 'total_booked_nights', 'total_available_nights'];
+      const defaultAgg = countOnlyFields.includes(field) ? 'count' : (schema?.aggregations?.[0] ?? 'sum');
       const metrics = [...(r.metrics ?? []), { field, alias: field, aggregation: defaultAgg }];
       return { ...r, metrics };
     });
   }
 
-  function formatDimensionValue(value: unknown) {
+  function periodEndDate(startStr: string, period: ComparisonPeriod): string {
+    const start = new Date(startStr);
+    if (isNaN(start.getTime())) return startStr;
+    let end: Date;
+    if (period === 'wow') {
+      end = new Date(start);
+      end.setDate(end.getDate() + 6);
+    } else if (period === 'mom') {
+      end = new Date(start.getFullYear(), start.getMonth() + 1, 0);
+    } else if (period === 'qoq') {
+      end = new Date(start.getFullYear(), start.getMonth() + 3, 0);
+    } else {
+      end = new Date(start.getFullYear(), 11, 31);
+    }
+    return end.toISOString().slice(0, 10);
+  }
+
+  function formatDimensionValue(value: unknown, columnKey?: string) {
     if (value == null) {
       return '';
     }
 
     const text = String(value);
-    // Keep report tables readable by collapsing ISO datetime values to date-only.
-    if (/^\d{4}-\d{2}-\d{2}T/.test(text)) {
-      return text.split('T')[0];
+    const dateStr = /^\d{4}-\d{2}-\d{2}T/.test(text) ? text.split('T')[0] : (/^\d{4}-\d{2}-\d{2}$/.test(text) ? text : null);
+
+    if (dateStr && useComparisonPeriod && columnKey) {
+      const activeField = COMPARISON_PERIOD_OPTIONS.find(o => o.value === comparisonPeriod)?.field;
+      if (activeField && columnKey === activeField) {
+        return `${dateStr} – ${periodEndDate(dateStr, comparisonPeriod)}`;
+      }
     }
+
+    if (dateStr) return dateStr;
 
     return text;
   }
@@ -268,7 +336,7 @@ export const ReportShell: React.FC<ReportShellProps> = ({ reportId, defaultReque
       return String(value);
     }
 
-    if (metricField === 'total_revenue' || metricField === 'avg_booking_value' || metricField === 'net_revenue' || metricField === 'deposit_collected' || metricField === 'balance_collected' || metricField === 'refunded_amount') {
+    if (metricField === 'total_revenue' || metricField === 'avg_booking_value' || metricField === 'net_revenue' || metricField === 'deposit_collected' || metricField === 'balance_collected' || metricField === 'refunded_amount' || metricField === 'revenue_per_occupied_night') {
       return numericValue.toLocaleString('vi-VN');
     }
 
@@ -323,8 +391,10 @@ export const ReportShell: React.FC<ReportShellProps> = ({ reportId, defaultReque
     }
 
     // ensure time dimension is present and first
-    const timeField = timeFieldForPreset(rangePreset);
-    const dims = (request.dimensions ?? []).filter(d => !['date','week','month','quarter','year'].includes(d.field));
+    const timeField = useComparisonPeriod
+      ? COMPARISON_PERIOD_OPTIONS.find(o => o.value === comparisonPeriod)!.field
+      : timeFieldForPreset(rangePreset);
+    const dims = normalizeDimensions(request.dimensions).filter(d => !['date','week','month','quarter','year'].includes(d.field));
     if (timeField) dims.unshift({ field: timeField, alias: timeField });
 
     // ensure any filter target dimensions are included in dimensions list
@@ -336,9 +406,12 @@ export const ReportShell: React.FC<ReportShellProps> = ({ reportId, defaultReque
       if (!exists) dims.push({ field: f.field, alias: f.field });
     });
 
+    const metrics = normalizeMetrics(request.metrics);
+
     const runRequest: ReportRunRequestDto = {
       ...request,
       dimensions: dims,
+      metrics,
       filters: filters.length > 0 ? filters : undefined,
     };
 
@@ -347,13 +420,21 @@ export const ReportShell: React.FC<ReportShellProps> = ({ reportId, defaultReque
     return runRequest;
   }
 
+  function buildExportFileName(ext: string) {
+    const base = exportFileName ?? 'report';
+    const from = request.from ?? '';
+    const to = request.to ?? '';
+    const datePart = from && to ? `_${from}_${to}` : from ? `_${from}` : '';
+    return `${base}${datePart}.${ext}`;
+  }
+
   async function handleExport() {
     try {
       const blob = await exportReport(reportId, { format: 'csv', runRequest: buildRunRequest() as any });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `${reportId || 'report'}.csv`;
+      a.download = buildExportFileName('csv');
       document.body.appendChild(a);
       a.click();
       a.remove();
@@ -369,7 +450,7 @@ export const ReportShell: React.FC<ReportShellProps> = ({ reportId, defaultReque
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `${reportId || 'report'}.xlsx`;
+      a.download = buildExportFileName('xlsx');
       document.body.appendChild(a);
       a.click();
       a.remove();
@@ -385,29 +466,49 @@ export const ReportShell: React.FC<ReportShellProps> = ({ reportId, defaultReque
     }
   }, [tablePortalId]);
 
+  // Always hold a ref to the latest buildRunRequest so the debounce effect never uses a stale closure
+  const buildRunRequestRef = useRef(buildRunRequest);
+  buildRunRequestRef.current = buildRunRequest;
+
   // Reactive fetch: whenever filters/controls change, refetch after debounce
+  const metricsKey = JSON.stringify(request.metrics);
   useEffect(() => {
     const id = setTimeout(() => {
-      handleRun();
+      void (async () => {
+        setLoading(true);
+        const runRequest = buildRunRequestRef.current();
+        try {
+          const res = await runReport(reportId, runRequest as any);
+          setResult(res as ReportResultPageDto);
+          onRunResult?.({ request: runRequest, result: res as ReportResultPageDto });
+        } catch (e) {
+          console.error(e);
+          setResult(null);
+          onRunResult?.({ request: runRequest, result: null });
+        } finally {
+          setLoading(false);
+        }
+      })();
     }, 300);
     return () => clearTimeout(id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [request.from, request.to, request.page, request.pageSize, request.metrics, rangePreset, selectedStatuses, selectedApartmentId, request.searchTerm]);
+  }, [request.from, request.to, request.page, request.pageSize, metricsKey, rangePreset, comparisonPeriod, JSON.stringify(selectedStatuses), selectedApartmentId, request.searchTerm]);
 
-  const statusOptions = ['Pending', 'Confirmed', 'Completed', 'Cancelled'];
+  const statusOptions = ['Pending', 'Confirmed', 'Completed', 'Cancelled'] as const;
 
-  const totalBookings = result
-    ? Math.round(result.totalMetrics?.total_bookings ?? result.totalMetrics?.booking_count ?? 0)
-    : 0;
-  const totalRevenue = result
-    ? Number(result.totalMetrics?.total_revenue_vnd ?? result.totalMetrics?.total_revenue ?? 0)
-    : 0;
-  const averageRevenue = result
-    ? Number(result.totalMetrics?.avg_revenue_per_booking ?? result.totalMetrics?.avg_booking_value ?? 0)
-    : 0;
-  const occupancyRate = result
-    ? Number(result.totalMetrics?.occupancy_rate_percent ?? result.totalMetrics?.occupancy_percent ?? 0)
-    : 0;
+  const tm = result?.totalMetrics;
+  const totalBookings = tm != null && ('total_bookings' in tm || 'booking_count' in tm)
+    ? Math.round(Number(tm.total_bookings ?? tm.booking_count))
+    : null;
+  const totalRevenue = tm != null && ('total_revenue_vnd' in tm || 'total_revenue' in tm)
+    ? Number(tm.total_revenue_vnd ?? tm.total_revenue)
+    : null;
+  const averageRevenue = tm != null && ('avg_revenue_per_booking' in tm || 'avg_booking_value' in tm)
+    ? Number(tm.avg_revenue_per_booking ?? tm.avg_booking_value)
+    : null;
+  const occupancyRate = tm != null && ('occupancy_rate_percent' in tm || 'occupancy_percent' in tm)
+    ? Number(tm.occupancy_rate_percent ?? tm.occupancy_percent)
+    : null;
 
   const formatCurrencyVnd = (value: number) => `${Math.round(value).toLocaleString('vi-VN')} VND`;
 
@@ -425,7 +526,7 @@ export const ReportShell: React.FC<ReportShellProps> = ({ reportId, defaultReque
   const tableArea = result ? (
     <div className="bg-white rounded-xl border border-slate-200 p-4">
       <div className="mb-3 text-sm text-slate-600">
-        Total rows: <span className="font-semibold text-slate-900">{result.totalCount ?? result.rows.length}</span>
+        {t('shell.totalRows')}: <span className="font-semibold text-slate-900">{result.totalCount ?? result.rows.length}</span>
       </div>
 
       <div className="w-full overflow-x-auto rounded-xl border border-slate-200">
@@ -434,10 +535,10 @@ export const ReportShell: React.FC<ReportShellProps> = ({ reportId, defaultReque
             <tr>
               <th className="px-4 py-3 text-left text-xs font-semibold text-slate-500 tracking-wider uppercase whitespace-nowrap">#</th>
               {result.rows.length > 0 && Object.keys(result.rows[0].dimensions).map(k => (
-                <th key={k} className="px-4 py-3 text-left text-xs font-semibold text-slate-500 tracking-wider uppercase whitespace-nowrap">{k}</th>
+                <th key={k} className="px-4 py-3 text-left text-xs font-semibold text-slate-500 tracking-wider uppercase whitespace-nowrap">{t(`shell.dimensionLabels.${k}`, { defaultValue: k })}</th>
               ))}
               {result.rows.length > 0 && Object.keys(result.rows[0].metrics).map(k => (
-                <th key={k} className="px-4 py-3 text-right text-xs font-semibold text-slate-500 tracking-wider uppercase whitespace-nowrap">{k}</th>
+                <th key={k} className="px-4 py-3 text-right text-xs font-semibold text-slate-500 tracking-wider uppercase whitespace-nowrap">{t(`shell.metricLabels.${k}`, { defaultValue: k })}</th>
               ))}
             </tr>
           </thead>
@@ -447,13 +548,22 @@ export const ReportShell: React.FC<ReportShellProps> = ({ reportId, defaultReque
               <tr key={idx} className="hover:bg-slate-50">
                 <td className="px-4 py-3 whitespace-nowrap text-left">{idx + 1}</td>
                 {Object.keys(r.dimensions).map(k => {
-                  const value = formatDimensionValue(r.dimensions[k]);
+                  const value = formatDimensionValue(r.dimensions[k], k);
                   const isStatus = /status|state/i.test(k);
+                  const statusKey = String(value)
+                    .toLowerCase()
+                    .split(/[_\s-]+/)
+                    .filter(Boolean)
+                    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+                    .join('');
+                  const displayValue = isStatus
+                    ? t(`shell.statuses.${statusKey}`, { defaultValue: String(value) })
+                    : value;
                   return (
                     <td key={k} className="px-4 py-3 whitespace-nowrap text-left">
                       {isStatus ? (
                         <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-semibold ${statusBadgeClass(String(value))}`}>
-                          {value}
+                          {displayValue}
                         </span>
                       ) : (
                         value
@@ -478,7 +588,7 @@ export const ReportShell: React.FC<ReportShellProps> = ({ reportId, defaultReque
     </div>
   ) : (
     <div className="bg-white rounded-xl border border-slate-200 p-6 text-sm text-slate-600">
-      No results yet. Run the report.
+      {t('shell.noResults')}
     </div>
   );
 
@@ -486,50 +596,52 @@ export const ReportShell: React.FC<ReportShellProps> = ({ reportId, defaultReque
 
   return (
     <div className="space-y-6">
-      <h3 className="text-sm font-semibold uppercase tracking-[0.2em] text-slate-500">Report: {reportId}</h3>
+      <h3 className="text-sm font-semibold uppercase tracking-[0.2em] text-slate-500">{t('workspace.title')}</h3>
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="bg-white rounded-xl border border-slate-200 p-6">
-          <p className="text-sm text-slate-500 font-medium">Total Bookings</p>
-          <p className="text-2xl font-bold text-slate-900 mt-1">{result ? totalBookings.toLocaleString('vi-VN') : '—'}</p>
+      {!hideGenericKpis && (
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div className="bg-white rounded-xl border border-slate-200 p-6">
+            <p className="text-sm text-slate-500 font-medium">{t('shell.kpi.totalBookings')}</p>
+            <p className="text-2xl font-bold text-slate-900 mt-1">{totalBookings != null ? totalBookings.toLocaleString('vi-VN') : '—'}</p>
+          </div>
+          <div className="bg-white rounded-xl border border-slate-200 p-6">
+            <p className="text-sm text-slate-500 font-medium">{t('shell.kpi.totalRevenue')}</p>
+            <p className="text-2xl font-bold text-slate-900 mt-1">{totalRevenue != null ? formatCurrencyVnd(totalRevenue) : '—'}</p>
+          </div>
+          <div className="bg-white rounded-xl border border-slate-200 p-6">
+            <p className="text-sm text-slate-500 font-medium">{t('shell.kpi.avgRevenue')}</p>
+            <p className="text-2xl font-bold text-slate-900 mt-1">{averageRevenue != null ? formatCurrencyVnd(averageRevenue) : '—'}</p>
+          </div>
+          <div className="bg-white rounded-xl border border-slate-200 p-6">
+            <p className="text-sm text-slate-500 font-medium">{t('shell.kpi.occupancyRate')}</p>
+            <p className="text-2xl font-bold text-slate-900 mt-1">{occupancyRate != null ? `${occupancyRate.toFixed(1)}%` : '—'}</p>
+          </div>
         </div>
-        <div className="bg-white rounded-xl border border-slate-200 p-6">
-          <p className="text-sm text-slate-500 font-medium">Total Revenue</p>
-          <p className="text-2xl font-bold text-slate-900 mt-1">{result ? formatCurrencyVnd(totalRevenue) : '—'}</p>
-        </div>
-        <div className="bg-white rounded-xl border border-slate-200 p-6">
-          <p className="text-sm text-slate-500 font-medium">Avg Revenue per Booking</p>
-          <p className="text-2xl font-bold text-slate-900 mt-1">{result ? formatCurrencyVnd(averageRevenue) : '—'}</p>
-        </div>
-        <div className="bg-white rounded-xl border border-slate-200 p-6">
-          <p className="text-sm text-slate-500 font-medium">Occupancy Rate</p>
-          <p className="text-2xl font-bold text-slate-900 mt-1">{result ? `${occupancyRate.toFixed(1)}%` : '—'}</p>
-        </div>
-      </div>
+      )}
 
       <div className="bg-white rounded-xl border border-slate-200 p-6 space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
           <div className="space-y-2">
-            <label className="text-sm font-medium text-slate-600">Period</label>
+            <label className="text-sm font-medium text-slate-600">{t('shell.period')}</label>
             <select
               value={rangePreset}
               onChange={e => applyRangePreset(e.target.value as RangePreset)}
               className="w-full rounded-lg border border-slate-300 py-2 px-3 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500"
             >
-              <option value="last_30_days">Last 30 days</option>
-              <option value="this_day">This day</option>
-              <option value="last_day">Last day</option>
-              <option value="this_week">This week</option>
-              <option value="last_week">Last week</option>
-              <option value="this_month">This month</option>
-              <option value="last_month">Last month</option>
-              <option value="this_year">This year</option>
-              <option value="last_year">Last year</option>
+              <option value="last_30_days">{t('shell.presets.last_30_days')}</option>
+              <option value="this_day">{t('shell.presets.this_day')}</option>
+              <option value="last_day">{t('shell.presets.last_day')}</option>
+              <option value="this_week">{t('shell.presets.this_week')}</option>
+              <option value="last_week">{t('shell.presets.last_week')}</option>
+              <option value="this_month">{t('shell.presets.this_month')}</option>
+              <option value="last_month">{t('shell.presets.last_month')}</option>
+              <option value="this_year">{t('shell.presets.this_year')}</option>
+              <option value="last_year">{t('shell.presets.last_year')}</option>
             </select>
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-medium text-slate-600">From</label>
+            <label className="text-sm font-medium text-slate-600">{t('shell.from')}</label>
             <input
               type="date"
               value={request.from ?? ''}
@@ -539,7 +651,7 @@ export const ReportShell: React.FC<ReportShellProps> = ({ reportId, defaultReque
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-medium text-slate-600">To</label>
+            <label className="text-sm font-medium text-slate-600">{t('shell.to')}</label>
             <input
               type="date"
               value={request.to ?? ''}
@@ -549,19 +661,19 @@ export const ReportShell: React.FC<ReportShellProps> = ({ reportId, defaultReque
           </div>
 
           <div className="space-y-2 md:col-span-2">
-            <label className="text-sm font-medium text-slate-600">Search</label>
+            <label className="text-sm font-medium text-slate-600">{t('shell.search')}</label>
             <input
               type="text"
               value={request.searchTerm ?? ''}
               onChange={e => setSearchTerm(e.target.value || undefined)}
-              placeholder="Search report data"
+              placeholder={t('shell.searchPlaceholder')}
               className="w-full rounded-lg border border-slate-300 py-2 px-3 text-sm text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500"
             />
           </div>
         </div>
 
         <div className="space-y-2">
-          <label className="text-sm font-medium text-slate-600">Status</label>
+          <label className="text-sm font-medium text-slate-600">{t('shell.status')}</label>
           <div className="flex flex-wrap gap-2">
             {statusOptions.map(status => {
               const active = selectedStatuses.includes(status);
@@ -572,7 +684,7 @@ export const ReportShell: React.FC<ReportShellProps> = ({ reportId, defaultReque
                   onClick={() => setSelectedStatuses(prev => prev.includes(status) ? prev.filter(x => x !== status) : [...prev, status])}
                   className={`rounded-full border px-3 py-1.5 text-sm font-medium transition-colors ${active ? 'border-indigo-600 bg-indigo-600 text-white' : 'border-slate-300 bg-white text-slate-700 hover:bg-slate-50'}`}
                 >
-                  {status}
+                  {t(`shell.statuses.${status}`)}
                 </button>
               );
             })}
@@ -581,13 +693,13 @@ export const ReportShell: React.FC<ReportShellProps> = ({ reportId, defaultReque
 
         {enableApartmentFilter && (
           <div className="space-y-2">
-            <label className="text-sm font-medium text-slate-600">Apartment</label>
+            <label className="text-sm font-medium text-slate-600">{t('shell.apartment')}</label>
             <select
               value={selectedApartmentId}
               onChange={e => setSelectedApartmentId(e.target.value)}
               className="w-full rounded-lg border border-slate-300 py-2 px-3 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500"
             >
-              <option value="">All apartments</option>
+              <option value="">{t('shell.allApartments')}</option>
               {apartmentOptions.map((apartment) => (
                 <option key={apartment.apartmentId} value={apartment.apartmentId}>
                   {apartment.title || apartment.apartmentId}
@@ -599,7 +711,23 @@ export const ReportShell: React.FC<ReportShellProps> = ({ reportId, defaultReque
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <div className="space-y-2">
-            <p className="text-sm font-medium text-slate-600">Dimensions</p>
+            <p className="text-sm font-medium text-slate-600">
+              {useComparisonPeriod ? t('shell.comparisonPeriod') : t('shell.dimensions')}
+            </p>
+            {useComparisonPeriod && (
+              <div className="flex flex-wrap gap-2">
+                {COMPARISON_PERIOD_OPTIONS.map(opt => (
+                  <button
+                    key={opt.value}
+                    type="button"
+                    onClick={() => setComparisonPeriod(opt.value)}
+                    className={`rounded-full border px-3 py-1.5 text-sm font-medium transition-colors ${comparisonPeriod === opt.value ? 'border-indigo-600 bg-indigo-600 text-white' : 'border-slate-300 bg-white text-slate-700 hover:bg-slate-50'}`}
+                  >
+                    {t(`shell.comparison.${opt.value}`)}
+                  </button>
+                ))}
+              </div>
+            )}
             <div className="flex flex-wrap gap-2">
               {schema?.dimensions
                 .filter(d => !propsAllowedDimensions || propsAllowedDimensions.includes(d))
@@ -612,7 +740,7 @@ export const ReportShell: React.FC<ReportShellProps> = ({ reportId, defaultReque
                       onClick={() => toggleDimension(d)}
                       className={`rounded-full border px-3 py-1.5 text-sm font-medium transition-colors ${active ? 'border-indigo-600 bg-indigo-600 text-white' : 'border-slate-300 bg-white text-slate-700 hover:bg-slate-50'}`}
                     >
-                      {d}
+                      {t(`shell.dimensionLabels.${d}`, { defaultValue: d })}
                     </button>
                   );
                 })}
@@ -620,7 +748,7 @@ export const ReportShell: React.FC<ReportShellProps> = ({ reportId, defaultReque
           </div>
 
           <div className="space-y-2">
-            <p className="text-sm font-medium text-slate-600">Metrics</p>
+            <p className="text-sm font-medium text-slate-600">{t('shell.metrics')}</p>
             <div className="flex flex-wrap gap-2">
               {schema?.metricFields
                 .filter(m => !propsAllowedMetrics || propsAllowedMetrics.includes(m))
@@ -633,7 +761,7 @@ export const ReportShell: React.FC<ReportShellProps> = ({ reportId, defaultReque
                       onClick={() => toggleMetric(m)}
                       className={`rounded-full border px-3 py-1.5 text-sm font-medium transition-colors ${active ? 'border-indigo-600 bg-indigo-600 text-white' : 'border-slate-300 bg-white text-slate-700 hover:bg-slate-50'}`}
                     >
-                      {m}
+                      {t(`shell.metricLabels.${m}`, { defaultValue: m })}
                     </button>
                   );
                 })}
@@ -643,7 +771,7 @@ export const ReportShell: React.FC<ReportShellProps> = ({ reportId, defaultReque
 
         <div className="flex flex-wrap items-end gap-3">
           <div className="space-y-2">
-            <label className="text-sm font-medium text-slate-600">Page size</label>
+            <label className="text-sm font-medium text-slate-600">{t('shell.pageSize')}</label>
             <input
               type="number"
               value={request.pageSize ?? 100}
@@ -658,7 +786,7 @@ export const ReportShell: React.FC<ReportShellProps> = ({ reportId, defaultReque
             disabled={loading}
             className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-60"
           >
-            {loading ? 'Running…' : 'Run'}
+            {loading ? t('shell.running') : t('shell.run')}
           </button>
 
           <button
@@ -666,7 +794,7 @@ export const ReportShell: React.FC<ReportShellProps> = ({ reportId, defaultReque
             onClick={handleExport}
             className="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
           >
-            Export CSV
+            {t('shell.exportCsv')}
           </button>
 
           <button
@@ -674,7 +802,7 @@ export const ReportShell: React.FC<ReportShellProps> = ({ reportId, defaultReque
             onClick={handleExportXlsx}
             className="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
           >
-            Export XLSX
+            {t('shell.exportXlsx')}
           </button>
         </div>
       </div>

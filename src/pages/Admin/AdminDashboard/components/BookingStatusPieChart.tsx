@@ -93,19 +93,19 @@ function BookingStatusPieChart({ data }: { data: any }) {
                   <ChartTooltip
                     content={
                       <ChartTooltipContent
-                        formatter={(value, props: any) => {
-                          const item = props.payload;
-                          const percent = item.percent || 0;
+                        formatter={(value, _name, item: any) => {
+                          const payload = item?.payload ?? {};
+                          const percent = payload.percent || 0;
                           return [
                             <div key="tooltip" className="space-y-1">
                               <p className="font-semibold">
-                                {STATUS_LABELS[item.name] || item.name}
+                                {STATUS_LABELS[payload.name] || payload.name}
                               </p>
                               <p className="text-sm">
                                 {value} bookings ({percent}%)
                               </p>
                               <p className="text-sm text-green-600">
-                                {Number(item.revenue).toLocaleString("vi-VN")} đ
+                                {Number(payload.revenue).toLocaleString("vi-VN")} đ
                               </p>
                             </div>,
                           ];

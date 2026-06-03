@@ -5,4 +5,8 @@ export interface Catalog {
   type: "standard" | "custom" | "scheduled" | "real_time";
   category: string;
   isActive: boolean;
+  DimensionsJson?: string | null;
+  MetricsJson?: string | null;
+  FiltersJson?: string | null;
+  TimeRangeJson?: string | null;
 }

@@ -4,12 +4,15 @@ import type { Catalog } from "@/types/catalog";
 import type { GeneralMetrics } from "@/types/generalMetrics";
 import { useEffect, useState } from "react";
 import { DashboardColumns } from "./components/DashboardColumns";
+import { getConfig } from "@/api/reports";
 import { Button } from "@/components/ui/button";
 import type { CatalogFormData } from "@/schemas/catalogSchema";
 import { toast } from "sonner";
 import CatalogForm from "./components/CatalogForm.tsx";
 import RunReportDialog from "./components/RunReportDialog";
-import { BOOKING, BOOKING_STATUS, GENERAL, REVENUE } from "@/constants/reportBody";
+import {
+  GENERAL,
+} from "@/constants/reportBody";
 import RevenueLineChart from "./components/RevenueLineChart";
 import { useChartStore } from "@/store/chartStore";
 import GeneralCard from "./components/GeneralCard";
@@ -41,11 +44,16 @@ function AdminDashboard() {
   const [pageSize, setPageSize] = useState(5);
   const [totalCount, setTotalCount] = useState(0);
   const [selectedReport, setSelectedReport] = useState<Catalog | null>(null);
+  const [editingCatalog, setEditingCatalog] = useState<Catalog | null>(null);
+  const [formInitialData, setFormInitialData] = useState<Partial<CatalogFormData> | null>(null);
   const [open, setOpen] = useState({ catalog: false, runReport: false });
   const [dateRange, setDateRange] = useState({ from: "", to: "" });
   const [exportFormat, setExportFormat] = useState<"csv" | "xlsx">("csv");
   // const [reportResult, setReportResult] = useState(null);
   const { chartData, setChartData } = useChartStore();
+
+  const normalizeReportName = (name?: string | null) =>
+    name?.trim().toLowerCase() ?? "";
 
   const reportRows = chartData?.rows ?? [];
   const firstReportRow = reportRows[0];
@@ -70,7 +78,7 @@ function AdminDashboard() {
     try {
       const response = await reportApi.getCatalog({
         page,
-          pageSize,
+        pageSize,
       });
       setCatalogs(response.data.items);
       setTotalCount(response.data.totalCount);
@@ -114,23 +122,98 @@ function AdminDashboard() {
     }
   };
 
-  const REPORT_BODY_MAP: Record<string, any> = {
-    Revenue: REVENUE,
-    Booking: BOOKING,
-    "Booking Status": BOOKING_STATUS,
+  const handleUpdateReport = async (data: CatalogFormData) => {
+    if (!editingCatalog) return;
+
+    try {
+      const { dimensions, metrics, ...reportDefinition } = data;
+
+      await reportApi.updateReport(editingCatalog.reportId, {
+        ...reportDefinition,
+        DimensionsJson: JSON.stringify(dimensions ?? []),
+        MetricsJson: JSON.stringify(metrics ?? []),
+        TimeRangeJson: JSON.stringify({}),
+      });
+
+      setEditingCatalog(null);
+      fetchCatalogs();
+      toast.success("Report updated successfully");
+    } catch (error) {
+      console.log(error);
+      toast.error("Failed to update report");
+    }
+  };
+
+  const handleDeleteReport = async (catalog: Catalog) => {
+    const confirm = window.confirm(`Delete report "${catalog.name}"? This cannot be undone.`);
+    if (!confirm) return;
+
+    try {
+      await reportApi.deleteReport(catalog.reportId);
+      fetchCatalogs();
+      toast.success("Report deleted");
+    } catch (error) {
+      console.log(error);
+      toast.error("Failed to delete report");
+    }
   };
 
   const buildReportRequest = () => {
     if (!selectedReport) return null;
 
-    const reportBody = REPORT_BODY_MAP[selectedReport.name];
-    if (!reportBody) return null;
+    try {
+      const getConfigJson = (key: string) => {
+        const report = selectedReport as unknown as Record<string, unknown>;
+        return (report[key] ?? report[key.charAt(0).toLowerCase() + key.slice(1)]) as string | null | undefined;
+      };
 
-    return {
-      ...reportBody,
-      from: dateRange.from,
-      to: dateRange.to,
-    };
+      const request: Record<string, unknown> = {
+        from: dateRange.from,
+        to: dateRange.to,
+      };
+
+      const dimensionsJson = getConfigJson("DimensionsJson");
+      if (dimensionsJson) {
+        request.dimensions = JSON.parse(dimensionsJson);
+      }
+
+      const metricsJson = getConfigJson("MetricsJson");
+      if (metricsJson) {
+        request.metrics = JSON.parse(metricsJson);
+      }
+
+      const filtersJson = getConfigJson("FiltersJson");
+      if (filtersJson) {
+        request.filters = JSON.parse(filtersJson);
+      }
+
+      const timeRangeJson = getConfigJson("TimeRangeJson");
+      if (timeRangeJson) {
+        const parsedTimeRange = JSON.parse(timeRangeJson) as {
+          from?: string;
+          to?: string;
+          searchTerm?: string;
+          page?: number;
+          pageSize?: number;
+        };
+
+        if (parsedTimeRange.from) request.from = parsedTimeRange.from;
+        if (parsedTimeRange.to) request.to = parsedTimeRange.to;
+        if (parsedTimeRange.searchTerm) request.searchTerm = parsedTimeRange.searchTerm;
+        if (parsedTimeRange.page) request.page = parsedTimeRange.page;
+        if (parsedTimeRange.pageSize) request.pageSize = parsedTimeRange.pageSize;
+      }
+
+      return request;
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
+  };
+
+  const isSelectedReportName = (...names: string[]) => {
+    const selectedName = normalizeReportName(selectedReport?.name);
+    return names.some((name) => normalizeReportName(name) === selectedName);
   };
 
   const handleRunReport = async () => {
@@ -141,7 +224,10 @@ function AdminDashboard() {
       return;
     }
     try {
-      const response = await reportApi.runReport(selectedReport.reportId, request);
+      const response = await reportApi.runReport(
+        selectedReport.reportId,
+        request,
+      );
       setOpen({ ...open, runReport: false });
       setChartData(response.data.data);
       toast.success("Report run successfully");
@@ -253,19 +339,22 @@ function AdminDashboard() {
 
         {/* Charts Section */}
         <div className="space-y-6">
-          {chartData && selectedReport?.name === "Revenue" && (
+          {chartData && isSelectedReportName("Revenue", "Revenue Performance") && (
             <RevenueLineChart data={chartData} />
           )}
-          {chartData && selectedReport?.name === "Booking" && (
+          {chartData && isSelectedReportName("Booking", "Booking Summary") && (
             <BookingLineChart data={chartData} />
           )}
-          {chartData && selectedReport?.name === "Booking Status" && (
+          {chartData && isSelectedReportName("Booking Status") && (
             <BookingStatusPieChart data={chartData} />
           )}
 
           {chartData && selectedReport && (
             <div className="flex flex-col items-end gap-3 sm:flex-row sm:items-center sm:justify-end">
-              <Select value={exportFormat} onValueChange={(value) => setExportFormat(value as any)}>
+              <Select
+                value={exportFormat}
+                onValueChange={(value) => setExportFormat(value as any)}
+              >
                 <SelectTrigger className="w-40">
                   <SelectValue placeholder="Format" />
                 </SelectTrigger>
@@ -300,12 +389,18 @@ function AdminDashboard() {
                           #
                         </th>
                         {reportDimensionKeys.map((key) => (
-                          <th key={key} className="px-3 py-2 text-left font-medium text-gray-700">
+                          <th
+                            key={key}
+                            className="px-3 py-2 text-left font-medium text-gray-700"
+                          >
                             {humanizeReportField(key)}
                           </th>
                         ))}
                         {reportMetricKeys.map((key) => (
-                          <th key={key} className="px-3 py-2 text-left font-medium text-gray-700">
+                          <th
+                            key={key}
+                            className="px-3 py-2 text-left font-medium text-gray-700"
+                          >
                             {humanizeReportField(key)}
                           </th>
                         ))}
@@ -313,8 +408,13 @@ function AdminDashboard() {
                     </thead>
                     <tbody>
                       {reportRows.map((row: any, index: number) => (
-                        <tr key={index} className="border-b border-gray-100 hover:bg-gray-50">
-                          <td className="px-3 py-2 text-gray-500">{index + 1}</td>
+                        <tr
+                          key={index}
+                          className="border-b border-gray-100 hover:bg-gray-50"
+                        >
+                          <td className="px-3 py-2 text-gray-500">
+                            {index + 1}
+                          </td>
                           {reportDimensionKeys.map((key) => (
                             <td key={key} className="px-3 py-2 text-gray-900">
                               {formatTableValue(row.dimensions?.[key])}
@@ -346,7 +446,10 @@ function AdminDashboard() {
             </div>
             <div className="flex items-center gap-2">
               <span className="text-sm text-gray-500">Rows per page</span>
-              <Select value={String(pageSize)} onValueChange={handlePageSizeChange}>
+              <Select
+                value={String(pageSize)}
+                onValueChange={handlePageSizeChange}
+              >
                 <SelectTrigger className="w-24">
                   <SelectValue placeholder="Rows" />
                 </SelectTrigger>
@@ -360,7 +463,41 @@ function AdminDashboard() {
           </CardHeader>
           <CardContent>
             <DataTable
-              columns={DashboardColumns(triggerRunReport)}
+              columns={DashboardColumns(triggerRunReport, (r) => {
+                // Edit handler: fetch config and open form
+                const openEdit = async () => {
+                  try {
+                    const cfg = await getConfig(r.reportId);
+                    let dimensions = [] as any[];
+                    let metrics = [] as any[];
+
+                    try {
+                      dimensions = cfg.DimensionsJson ? JSON.parse(cfg.DimensionsJson) : [];
+                    } catch {}
+                    try {
+                      metrics = cfg.MetricsJson ? JSON.parse(cfg.MetricsJson) : [];
+                    } catch {}
+
+                    setFormInitialData({
+                      name: r.name,
+                      category: r.category,
+                      type: r.type as any,
+                      description: r.description,
+                      isActive: r.isActive,
+                      dimensions,
+                      metrics,
+                    });
+
+                    setEditingCatalog(r);
+                    setOpen({ ...open, catalog: true });
+                  } catch (err) {
+                    console.log(err);
+                    toast.error("Failed to load report config");
+                  }
+                };
+
+                void openEdit();
+              }, handleDeleteReport)}
               data={catalogs}
               limit={pageSize}
               loading={loading}
@@ -375,8 +512,13 @@ function AdminDashboard() {
       {/* Dialogs */}
       <CatalogForm
         isOpen={open.catalog}
-        onClose={() => setOpen({ ...open, catalog: false })}
-        onSubmit={handleCreateReport}
+        onClose={() => {
+          setOpen({ ...open, catalog: false });
+          setEditingCatalog(null);
+          setFormInitialData(null);
+        }}
+        onSubmit={editingCatalog ? handleUpdateReport : handleCreateReport}
+        initialData={formInitialData}
       />
 
       {selectedReport && (

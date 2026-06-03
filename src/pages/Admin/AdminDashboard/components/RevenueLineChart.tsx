@@ -99,16 +99,16 @@ function RevenueLineChart({ data }: { data: any }) {
                 <ChartTooltip
                   content={
                     <ChartTooltipContent
-                      formatter={(props: any) => {
-                        const item = props.payload;
+                      formatter={(_value, _name, item: any) => {
+                        const payload = item?.payload ?? {};
                         return [
                           <div key="tooltip" className="space-y-1">
-                            <p className="font-semibold">{item?.date}</p>
+                            <p className="font-semibold">{payload.date}</p>
                             <p className="text-sm text-green-600">
-                              {Number(item?.revenue).toLocaleString("en-US")} VND
+                              {Number(payload.revenue).toLocaleString("en-US")} VND
                             </p>
                             <p className="text-sm text-blue-600">
-                              {item?.bookings} bookings
+                              {payload.bookings} bookings
                             </p>
                           </div>,
                         ];

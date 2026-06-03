@@ -1,0 +1,161 @@
+{
+  "workspace": {
+    "title": "Báo cáo",
+    "description": "Chọn báo cáo, tải cấu hình đã lưu và điều chỉnh truy vấn trước khi chạy.",
+    "catalogTitle": "Danh mục báo cáo",
+    "catalogDesc": "Chọn một báo cáo có sẵn để mở.",
+    "chooseReport": "Chọn báo cáo",
+    "selectReport": "Chọn một báo cáo",
+    "chartsTitle": "Biểu đồ báo cáo",
+    "chartsDesc": "Tóm tắt trực quan kết quả hiện tại.",
+    "tableTitle": "Bảng dữ liệu",
+    "tableDesc": "Chạy báo cáo và cuộn qua các hàng kết quả.",
+    "reports": {
+      "booking": "Tổng quan đặt phòng",
+      "occupancy": "Báo cáo công suất",
+      "review": "Đánh giá của khách"
+    }
+  },
+  "shell": {
+    "kpi": {
+      "totalBookings": "Tổng đặt phòng",
+      "totalRevenue": "Tổng doanh thu",
+      "avgRevenue": "Doanh thu TB / đặt phòng",
+      "occupancyRate": "Tỷ lệ lấp đầy phòng"
+    },
+    "period": "Khoảng thời gian",
+    "from": "Từ ngày",
+    "to": "Đến ngày",
+    "search": "Tìm kiếm",
+    "searchPlaceholder": "Tìm kiếm dữ liệu báo cáo",
+    "status": "Trạng thái",
+    "apartment": "Căn hộ",
+    "allApartments": "Tất cả căn hộ",
+    "comparisonPeriod": "Kỳ so sánh",
+    "dimensions": "Chiều dữ liệu",
+    "metrics": "Chỉ số",
+    "pageSize": "Số hàng / trang",
+    "run": "Chạy",
+    "running": "Đang xử lý…",
+    "exportCsv": "Xuất CSV",
+    "exportXlsx": "Xuất XLSX",
+    "totalRows": "Tổng số hàng",
+    "noResults": "Chưa có kết quả. Nhấn Chạy để xem dữ liệu.",
+    "presets": {
+      "last_30_days": "30 ngày qua",
+      "this_day": "Hôm nay",
+      "last_day": "Hôm qua",
+      "this_week": "Tuần này",
+      "last_week": "Tuần trước",
+      "this_month": "Tháng này",
+      "last_month": "Tháng trước",
+      "this_year": "Năm nay",
+      "last_year": "Năm ngoái"
+    },
+    "comparison": {
+      "wow": "Tuần so tuần",
+      "mom": "Tháng so tháng",
+      "qoq": "Quý so quý",
+      "yoy": "Năm so năm"
+    },
+    "statuses": {
+      "Pending": "Chờ xử lý",
+      "Confirmed": "Đã xác nhận",
+      "Completed": "Hoàn thành",
+      "Cancelled": "Đã hủy"
+    },
+    "dimensionLabels": {
+      "status": "Trạng thái",
+      "apartment_name": "Căn hộ",
+      "apartment": "Căn hộ",
+      "city": "Thành phố",
+      "guest_nationality": "Quốc tịch",
+      "day_of_week": "Ngày trong tuần",
+      "holiday_period": "Kỳ nghỉ lễ",
+      "week": "Tuần",
+      "month": "Tháng",
+      "quarter": "Quý",
+      "year": "Năm",
+      "date": "Ngày"
+    },
+    "metricLabels": {
+      "booking_count": "Đặt phòng",
+      "total_bookings": "Tổng đặt phòng",
+      "completed_booking_count": "Hoàn thành",
+      "completed_bookings": "Đặt phòng hoàn thành",
+      "cancelled_booking_count": "Đã hủy",
+      "cancelled_bookings": "Đặt phòng đã hủy",
+      "total_revenue": "Doanh thu",
+      "total_revenue_vnd": "Doanh thu (VND)",
+      "avg_booking_value": "Giá trị TB",
+      "avg_revenue_per_booking": "Doanh thu TB/đặt phòng",
+      "occupancy_percent": "Lấp đầy %",
+      "occupancy_rate_percent": "Tỷ lệ lấp đầy %",
+      "total_booked_nights": "Đêm đã đặt",
+      "total_available_nights": "Đêm khả dụng",
+      "avg_length_of_stay": "Số đêm TB",
+      "peak_occupancy_days": "Ngày cao điểm",
+      "low_occupancy_days": "Ngày thấp điểm",
+      "revenue_per_occupied_night": "Doanh thu/đêm",
+      "review_avg_rating": "Đánh giá TB",
+      "average_rating": "Đánh giá TB",
+      "review_count": "Số đánh giá",
+      "total_reviews": "Tổng đánh giá",
+      "response_rate": "Tỷ lệ phản hồi",
+      "five_star_review_percent": "5 sao %",
+      "five_star_reviews_percent": "5 sao %",
+      "one_star_review_percent": "1 sao %",
+      "one_star_reviews_percent": "1 sao %",
+      "adr": "Giá phòng TB"
+    }
+  },
+  "blueprints": {
+    "booking": {
+      "title": "Tổng quan đặt phòng",
+      "description": "Số lượng đặt phòng, doanh thu, tỷ lệ lấp đầy và ADR tổng hợp.",
+      "label": "Báo cáo chủ nhà"
+    },
+    "occupancy": {
+      "title": "Báo cáo công suất",
+      "description": "Tỷ lệ lấp đầy, đêm đã đặt/khả dụng, thời gian lưu trú TB, ngày cao/thấp điểm và doanh thu mỗi đêm.",
+      "label": "Báo cáo chủ nhà"
+    },
+    "review": {
+      "title": "Đánh giá của khách",
+      "description": "Chỉ số đánh giá bao gồm xếp hạng, tỷ lệ phản hồi và phân tích cảm xúc.",
+      "label": "Báo cáo chủ nhà"
+    }
+  },
+  "charts": {
+    "mainTitle": "Biểu đồ xu hướng",
+    "mainDesc": "Doanh thu và đặt phòng theo thời gian",
+    "statusBreakdown": "Phân tích trạng thái đặt phòng",
+    "byStatus": "Đặt phòng theo trạng thái",
+    "byApartment": "Doanh thu theo căn hộ"
+  },
+  "review": {
+    "kpi": {
+      "avgRating": "Đánh giá TB"
+    },
+    "charts": {
+      "ratingTrend": "Xu hướng đánh giá",
+      "ratingTrendDesc": "Điểm đánh giá trung bình và lượng đánh giá theo thời gian",
+      "sentiment": "Cảm xúc & Tỷ lệ phản hồi",
+      "sentimentDesc": "5 sao %, 1 sao % và tỷ lệ phản hồi theo thời gian",
+      "byApartment": "Đánh giá theo căn hộ",
+      "byApartmentDesc": "Điểm TB và số lượng đánh giá theo từng căn hộ. Nhấn để lọc."
+    }
+  },
+  "occupancy": {
+    "charts": {
+      "occupancyTrend": "Xu hướng lấp đầy",
+      "occupancyTrendDesc": "Tỷ lệ lấp đầy và đêm đã đặt so với khả dụng",
+      "alosAdr": "Thời gian lưu trú TB & Doanh thu mỗi đêm",
+      "alosAdrDesc": "Số đêm lưu trú trung bình và doanh thu trên mỗi đêm có khách",
+      "nightsByApartment": "Số đêm theo căn hộ",
+      "nightsByApartmentDesc": "Tổng đêm đã đặt so với đêm khả dụng theo từng căn hộ",
+      "dowOccupancy": "Lấp đầy theo ngày trong tuần",
+      "dowOccupancyDesc": "Tỷ lệ lấp đầy trung bình (%) theo ngày"
+    }
+  }
+}
