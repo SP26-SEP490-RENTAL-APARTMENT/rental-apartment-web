@@ -1,6 +1,7 @@
 import { useTranslation } from "react-i18next";
 
 export const sortByList = [
+  { label: "Created At", value: "createdAt" },
   { label: "Full Name", value: "fullName" },
   { label: "Email", value: "email" },
   { label: "Role", value: "role" },

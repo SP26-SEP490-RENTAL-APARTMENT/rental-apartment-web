@@ -192,8 +192,8 @@
             "notes": "Notes",
             "cancel": "Cancel",
             "notesPlaceholder": "Add a note",
-            "evidence": "Upload Photo Evidence",
-            "uploadImage": "Upload Image",
+            "evidence": "Upload Media Evidence",
+            "uploadImage": "Upload Media",
             "selectedPhotos": "Selected Photos"
         }
     },

@@ -73,7 +73,7 @@ function DetailDialog({
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-3xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>{t("checkTime.title")}</DialogTitle>
         </DialogHeader>
@@ -117,7 +117,8 @@ function DetailDialog({
           {data?.tenantResponseStatus !== "confirmed" &&
             !isExpired &&
             data?.feeSettlementStatus !== "waived" &&
-            !data?.disputeResolutionNotes && (
+            !data?.disputeResolutionNotes &&
+            data?.feeSettlementStatus !== "none" && (
               <Button onClick={() => setIsResponse(true)} variant="default">
                 {t("checkTime.respondButton") || "Respond to Check Time"}
               </Button>
