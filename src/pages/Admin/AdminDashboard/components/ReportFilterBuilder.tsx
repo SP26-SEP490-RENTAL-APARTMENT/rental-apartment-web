@@ -1,4 +1,4 @@
-import { useState, useId } from "react";
+import { useId } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -53,9 +53,9 @@ function operatorsFor(dt: FilterField["dataType"]): FilterOperator[] {
   return ["eq", "ne", "gt", "gte", "lt", "lte", "between"];
 }
 
-function defaultOperator(dt: FilterField["dataType"]): FilterOperator {
-  return dt === "string" ? "eq" : "eq";
-}
+// function defaultOperator(dt: FilterField["dataType"]): FilterOperator {
+//   return dt === "string" ? "eq" : "eq";
+// }
 
 /* ─── serialise to backend shape ─── */
 
