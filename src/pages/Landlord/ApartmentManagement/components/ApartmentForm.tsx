@@ -21,6 +21,8 @@ import { useEffect, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import AddressAutocomplete from "./AddressAutocomplete";
 import { useTranslation } from "react-i18next";
+import { apartmentManagementApi } from "@/services/privateApi/landlordApi";
+import { toast } from "sonner";
 
 // Allowed file types for upload
 const ALLOWED_IMAGE_EXTENSIONS = [".jpg", ".jpeg", ".png", ".gif", ".webp"];
@@ -56,14 +58,8 @@ export interface ApartmentFormProps {
   ) => Promise<void>;
   apartment: Partial<Apartment> | null;
   mode: "create" | "update";
+  refetchApartments?: () => void;
 }
-
-// const generateLatLng = () => {
-//   return {
-//     lat: 10.7 + Math.random() * 0.1,
-//     lng: 106.6 + Math.random() * 0.1,
-//   };
-// };
 
 function ApartmentForm({
   isOpen,
@@ -71,12 +67,13 @@ function ApartmentForm({
   onSubmit,
   apartment,
   mode,
+  refetchApartments,
 }: ApartmentFormProps) {
   const { t } = useTranslation("landlord");
   const isCreate = mode === "create";
   const schema = isCreate ? createApartmentSchema : updateApartmentSchema;
 
-  const [preview, setPreview] = useState<string[]>([]);
+  const [preview, setPreview] = useState<any[]>([]);
   const [coords, setCoords] = useState<{
     lat: number;
     lng: number;
@@ -173,7 +170,7 @@ function ApartmentForm({
         noShowGraceHours: apartment.noShowGraceHours || 0,
       });
       queueMicrotask(() => {
-        setPreview(apartment.photos || []);
+        setPreview(apartment.media || []);
         setSelectedFiles([]);
         // Set coordinates for existing apartment
         if (apartment.latitude && apartment.longitude) {
@@ -219,7 +216,11 @@ function ApartmentForm({
       const combinedFiles = [...selectedFiles, ...validFiles].slice(0, 10);
       setSelectedFiles(combinedFiles);
 
-      const newPreviews = validFiles.map((file) => URL.createObjectURL(file));
+      const newPreviews = validFiles.map((file) => ({
+        id: Math.random().toString(36).substr(2, 9),
+        url: URL.createObjectURL(file),
+        type: file.type.startsWith("image/") ? "image" : "video",
+      }));
       const combinedPreviews = [...preview, ...newPreviews].slice(0, 10);
 
       setPreview(combinedPreviews);
@@ -306,6 +307,20 @@ function ApartmentForm({
         console.error("Error message:", error.message);
         console.error("Error stack:", error.stack);
       }
+    }
+  };
+
+  const handleDeleteMedia = async (mediaId: string) => {
+    if (!apartment?.apartmentId) return;
+    try {
+      await apartmentManagementApi.deleteMedia(apartment.apartmentId, mediaId);
+      toast.success("Media deleted successfully");
+      onClose();
+      refetchApartments?.();
+      setPreview((prev) => prev.filter((m) => m.mediaId !== mediaId));
+    } catch (error) {
+      console.error("Error deleting media:", error);
+      toast.error("Failed to delete media. Please try again.");
     }
   };
 
@@ -589,15 +604,16 @@ function ApartmentForm({
                       key={idx}
                       className="relative w-full h-28 rounded-lg overflow-hidden bg-muted group"
                     >
-                      {selectedFiles[idx]?.type.startsWith("video/") ? (
+                      {selectedFiles[idx]?.type.startsWith("video/") ||
+                      src.url.includes("video/upload") ? (
                         <video
-                          src={src}
+                          src={src.url}
                           className="w-full h-full object-cover"
                           controls
                         />
                       ) : (
                         <img
-                          src={src}
+                          src={src.url}
                           alt={`preview-${idx}`}
                           className="w-full h-full object-cover"
                         />
@@ -607,7 +623,15 @@ function ApartmentForm({
                           type="button"
                           onClick={() => removePhoto(idx)}
                           className="absolute top-1 right-1 bg-red-500 hover:bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition"
-                          title="Xóa ảnh này"
+                        >
+                          ✕
+                        </button>
+                      )}
+                      {!isCreate && (
+                        <button
+                          onClick={() => handleDeleteMedia(src.mediaId)}
+                          type="button"
+                          className="absolute top-1 right-1 bg-red-500 hover:bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition"
                         >
                           ✕
                         </button>

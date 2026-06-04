@@ -40,8 +40,8 @@
             "bookingStatus": "Trạng Thái Đặt Phòng",
             "address": "Địa Chỉ",
             "description": "Mô Tả",
-            "browsePhotos": "Chọn Ảnh",
-            "uploadPhotos": "Tải Lên Ảnh",
+            "browsePhotos": "Chọn Ảnh/Video",
+            "uploadPhotos": "Tải Lên Ảnh/Video",
             "yes": "Có",
             "no": "Không"
         },

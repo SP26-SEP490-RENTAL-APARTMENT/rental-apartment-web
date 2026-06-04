@@ -40,8 +40,8 @@
             "bookingStatus": "Booking Status",
             "address": "Address",
             "description": "Description",
-            "browsePhotos": "Browse Photos",
-            "uploadPhotos": "Upload Photos",
+            "browsePhotos": "Browse Media",
+            "uploadPhotos": "Upload Media",
             "yes": "Yes",
             "no": "No"
         },
