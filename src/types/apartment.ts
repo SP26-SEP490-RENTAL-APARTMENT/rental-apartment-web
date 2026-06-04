@@ -25,6 +25,42 @@ export interface Apartment extends InspectionStatus {
   isFavorite?: boolean;
   collectionId?: string;
   priceChanges: PriceChange[];
+  nearbyAttractions?: NearbyAttraction;
+  noShowGraceHours: number;
+  media: ApartmentMedia[];
+}
+
+export interface ApartmentMedia {
+  mediaId: string;
+  url: string;
+}
+
+export interface AlternativeApartment {
+  reasons: string[];
+  adjustmentType: "upgrade" | "downgrade" | "same";
+  priceDifference: number;
+  estimatedTotalPrice: number;
+  distanceKm: number;
+  apartment: Apartment;
+}
+
+export interface NearbyAttraction {
+  primaryRadiusKm: string;
+  expandedRadiusKm: number;
+  hasExpandedAttractions: boolean;
+  primaryAttractions: PrimaryAttraction[];
+}
+
+export interface PrimaryAttraction {
+  attractionId: string;
+  nameEn: string;
+  nameVi: string;
+  type: string;
+  latitude: number;
+  longitude: number;
+  address: string;
+  city: string;
+  distanceKm: number;
 }
 
 export interface PriceChange {

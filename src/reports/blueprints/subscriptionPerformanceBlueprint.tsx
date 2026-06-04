@@ -13,6 +13,7 @@ const SubscriptionPerformanceBlueprint = createReportBlueprint({
     { field: 'subscription_churn_rate', aggregation: 'avg', alias: 'subscription_churn_rate' },
   ],
   pageSize: 50,
+  blueprintKey: ''
 });
 
 export default SubscriptionPerformanceBlueprint;

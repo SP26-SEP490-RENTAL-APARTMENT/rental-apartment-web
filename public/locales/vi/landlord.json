@@ -24,9 +24,9 @@
             "price": "Giá mỗi đêm",
             "allowPets": "Cho phép thú cưng",
             "maxPets": "Số lượng thú cưng tối đa",
-            "uploadPhotos": "Tải lên ảnh",
-            "photoGuidelines": "Bạn có thể tải lên đến 10 ảnh",
-            "selectedPhotos": "Ảnh đã chọn"
+            "uploadPhotos": "Tải lên phương tiện",
+            "photoGuidelines": "Bạn có thể tải lên đến 10 tệp phương tiện (ảnh hoặc video)",
+            "selectedPhotos": "Phương tiện đã chọn"
         },
         "infor": {
             "host": "Chủ Hộ",
@@ -193,8 +193,8 @@
             "notes": "Ghi chú",
             "cancel": "Hủy",
             "notesPlaceholder": "Thêm ghi chú",
-            "evidence": "Tải lên Chứng cứ Hình ảnh",
-            "uploadImage": "Tải lên Hình ảnh",
+            "evidence": "Tải lên Phương tiện",
+            "uploadImage": "Tải lên Phương tiện",
             "selectedPhotos": "Hình ảnh Đã Chọn"
         }
     },

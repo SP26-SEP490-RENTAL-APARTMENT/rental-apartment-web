@@ -18,6 +18,10 @@ function ApartmentCard({ apartment, onClickHeart }: ApartmentCardProps) {
 
   const { min, max } = getDisplayPrice(apartment);
 
+  const thumbnail =
+    apartment.photos?.find((url) => !url.includes("/video/upload/")) ||
+    "/placeholder-image.jpg";
+
   return (
     <Card
       onClick={() =>
@@ -33,7 +37,7 @@ function ApartmentCard({ apartment, onClickHeart }: ApartmentCardProps) {
       {/* IMAGE CONTAINER */}
       <div className="relative overflow-hidden bg-gray-200 h-64">
         <img
-          src={apartment.photos[0]}
+          src={thumbnail}
           alt={apartment.title}
           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
         />

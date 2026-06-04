@@ -178,93 +178,6 @@ function BookingBox({ apartmentId, onSubmit, apartment }: Props) {
             <CalendarIcon className="h-4 w-4 text-blue-600" />
             {t("booking.checkIn")} & {t("booking.checkOut")}
           </Label>
-
-          {/* <Popover>
-            <PopoverTrigger asChild>
-              <Button
-                variant="outline"
-                className="w-full justify-start border-gray-300"
-              >
-                {range?.from ? (
-                  range.to ? (
-                    <>
-                      {format(range.from, "dd/MM/yyyy")} -{" "}
-                      {format(range.to, "dd/MM/yyyy")}
-                    </>
-                  ) : (
-                    format(range.from, "dd/MM/yyyy")
-                  )
-                ) : (
-                  t("booking.selectDate")
-                )}
-              </Button>
-            </PopoverTrigger>
-
-            <PopoverContent
-              align="end"
-              className="w-auto p-4 bg-white border rounded-xl shadow-xl z-50"
-            >
-              <Calendar
-                mode="range"
-                numberOfMonths={2}
-                selected={range}
-                onSelect={(value) => {
-                  setRange(value);
-
-                  if (value?.from) {
-                    setCheckIn(mergeDateTime(value.from, checkInTime));
-                  }
-
-                  if (value?.to) {
-                    setCheckOut(mergeDateTime(value.to, checkOutTime));
-                  }
-                }}
-                disabled={disableCheckIn}
-                components={{
-                  DayButton: ({ day, ...props }) => (
-                    <button {...props} className="h-12 w-12">
-                      <PriceDay date={day.date} apartment={apartment} />
-                    </button>
-                  ),
-                }}
-              />
-              <div className="mt-4 grid grid-cols-2 gap-4">
-                <div>
-                  <label className="text-sm font-medium">Check in time</label>
-                  <input
-                    type="time"
-                    value={checkInTime}
-                    onChange={(e) => {
-                      const time = e.target.value;
-                      setCheckInTime(time);
-
-                      if (range?.from) {
-                        setCheckIn(mergeDateTime(range.from, time));
-                      }
-                    }}
-                    className="w-full mt-1 border rounded-md px-3 py-2"
-                  />
-                </div>
-
-                <div>
-                  <label className="text-sm font-medium">Check out time</label>
-                  <input
-                    type="time"
-                    value={checkOutTime}
-                    onChange={(e) => {
-                      const time = e.target.value;
-                      setCheckOutTime(time);
-
-                      if (range?.to) {
-                        setCheckOut(mergeDateTime(range.to, time));
-                      }
-                    }}
-                    className="w-full mt-1 border rounded-md px-3 py-2"
-                  />
-                </div>
-              </div>
-            </PopoverContent>
-          </Popover> */}
           <Drawer>
             <DrawerTrigger asChild>
               <Button
@@ -294,7 +207,7 @@ function BookingBox({ apartmentId, onSubmit, apartment }: Props) {
               <div className="px-4 pb-6 overflow-y-auto">
                 <Calendar
                   mode="range"
-                  numberOfMonths={2} // mobile nên để 1 tháng
+                  numberOfMonths={2}
                   selected={range}
                   onSelect={(value) => {
                     setRange(value);
@@ -519,7 +432,7 @@ function BookingBox({ apartmentId, onSubmit, apartment }: Props) {
           </Button>
           {checkIn && checkOut && noOfAdults >= 1 && (
             <Button
-              className="w-full cursor-pointer bg-linear-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-semibold py-2.5"
+              className="w-full cursor-pointer bg-linear-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold py-2.5"
               onClick={handleBook}
             >
               {t("booking.reserve")}

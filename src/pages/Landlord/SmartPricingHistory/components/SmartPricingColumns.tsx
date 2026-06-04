@@ -3,7 +3,9 @@ import type { SmartPricing } from "@/types/smartPricing";
 import type { ColumnDef } from "@tanstack/react-table";
 import SmartPricingActions from "./SmartPricingActions";
 
-export const SmartPricingColumns = (): ColumnDef<SmartPricing>[] => {
+export const SmartPricingColumns = (
+  onViewApartmentDetails: (id: string) => void,
+): ColumnDef<SmartPricing>[] => {
   return [
     {
       accessorKey: "apartmentId",
@@ -14,6 +16,7 @@ export const SmartPricingColumns = (): ColumnDef<SmartPricing>[] => {
           <Button
             variant="secondary"
             className="max-w-20 truncate cursor-pointer"
+            onClick={() => onViewApartmentDetails(apartmentId)}
           >
             {apartmentId}
           </Button>

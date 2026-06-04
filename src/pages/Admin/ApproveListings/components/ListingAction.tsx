@@ -24,7 +24,7 @@ function ListingAction({ listings, onAppvrove, onAssign }: Props) {
             <Eye />
           </Button>
         </DialogTrigger>
-        <DialogContent>
+        <DialogContent className="sm:max-w-3xl">
           <DialogHeader>
             <DialogTitle>Detail</DialogTitle>
           </DialogHeader>
@@ -43,7 +43,8 @@ function ListingAction({ listings, onAppvrove, onAssign }: Props) {
         </Button>
       )}
 
-      {!listings.inspectionStatus && (
+      {(!listings.inspectionStatus ||
+        listings.inspectionStatus === "failed") && (
         <Button
           onClick={() => onAssign(listings.apartmentId)}
           size="sm"

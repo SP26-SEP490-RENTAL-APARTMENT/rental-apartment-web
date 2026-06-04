@@ -3,7 +3,7 @@ export interface Inspection {
     apartmentName: string
     apartmentId: string
     inspectorId: string
-    scheduledDate: string
+    scheduledDateTime: string
     completedDate: string
     status: string
     overallCondition: string
@@ -13,4 +13,5 @@ export interface Inspection {
     approvedAt: string
     approvedBy: string
     photos: string[]
+    createdAt: string
 }

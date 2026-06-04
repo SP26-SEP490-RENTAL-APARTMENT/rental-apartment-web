@@ -16,6 +16,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { formatLocalDateTime } from "@/pages/Landlord/BookingManagement/components/formatTime";
 import {
   assignInspectionSchema,
   type AssignInspectionFormData,
@@ -75,25 +76,32 @@ function AssignInspectionForm({
     defaultValues: {
       apartmentId: apartmentId,
       inspectorId: "",
-      scheduledDate: "",
+      scheduledDateTime: formatLocalDateTime(new Date()),
     },
   });
   useEffect(() => {
     reset({
       apartmentId,
       inspectorId: "",
-      scheduledDate: "",
+      scheduledDateTime: formatLocalDateTime(new Date()),
     });
   }, [apartmentId, reset]);
+
   const handleClose = () => {
     reset();
     onClose();
   };
 
   const handleFormSubmit = async (data: AssignInspectionFormData) => {
-    await onSubmit(data);
+    const formattedData = {
+      ...data,
+      scheduledDateTime: new Date(data.scheduledDateTime).toISOString(),
+    };
+
+    await onSubmit(formattedData);
     handleClose();
   };
+
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-md">
@@ -102,12 +110,6 @@ function AssignInspectionForm({
         </DialogHeader>
         <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
           <div className="grid gap-4 py-4">
-            {/* Apartment */}
-            {/* <div className="grid gap-2">
-              <Label htmlFor="apartmentId">Apartment</Label>
-              <input disabled id="apartmentId" {...register("apartmentId")} />
-            </div> */}
-
             {/* Inspector */}
             <div className="grid gap-2">
               <Label htmlFor="inspectorId">Inspector *</Label>
@@ -138,17 +140,17 @@ function AssignInspectionForm({
               )}
             </div>
 
-            {/* Scheduled Date */}
+            {/* Scheduled Date & Time */}
             <div className="grid gap-2">
-              <Label htmlFor="scheduledDate">Scheduled Date *</Label>
+              <Label htmlFor="scheduledDateTime">Scheduled Date & Time *</Label>
               <Input
-                type="date"
-                {...register("scheduledDate")}
+                type="datetime-local"
+                {...register("scheduledDateTime")}
                 className="border rounded px-3 py-2"
               />
-              {errors.scheduledDate && (
+              {errors.scheduledDateTime && (
                 <p className="text-sm text-red-500">
-                  {errors.scheduledDate.message}
+                  {errors.scheduledDateTime.message}
                 </p>
               )}
             </div>

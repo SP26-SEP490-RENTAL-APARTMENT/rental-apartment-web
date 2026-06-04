@@ -14,6 +14,7 @@ import {
   Info,
   MapPin,
   PawPrint,
+  TriangleAlert,
   Users,
   Zap,
 } from "lucide-react";
@@ -159,6 +160,20 @@ function ApartmentInfo({ apartment }: ApartmentInfoProps) {
                 </span>
               </>
             )}
+          </div>
+        </div>
+
+        <div className="space-y-1">
+          <div className="flex items-center gap-2 text-gray-500">
+            <TriangleAlert size={16} />
+            <span className="text-sm">Booking Grace Period</span>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-red-500">
+              Your booking will be automatically cancelled if not check in{" "}
+              {apartment.noShowGraceHours} hours after the check-in date.
+            </span>
           </div>
         </div>
       </div>

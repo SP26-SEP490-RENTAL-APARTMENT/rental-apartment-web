@@ -199,6 +199,8 @@ export const inspectionApi = {
     apiConfig.privateApi.post(`/PropertyInspection/${id}/complete`, data),
   reviewInspection: (id: string, data: { decision: string; reason: string }) =>
     apiConfig.privateApi.post(`/PropertyInspection/${id}/review`, data),
+  cancelInspection: (id: string, data: { reason: string }) =>
+    apiConfig.privateApi.post(`/PropertyInspection/${id}/cancel`, data),
 };
 
 export const reportApi = {
@@ -313,3 +315,9 @@ export interface AppSettingsData {
   occupiedRoomAlternatives: { defaultRadiusMeters: number };
   booking: { occupiedIncidentPenaltyRate: number };
 }
+  resolveDispute: (
+    bookingId: string,
+    data: { notes: string; approveTenantDispute: boolean },
+  ) =>
+    apiConfig.privateApi.post(`/Booking/${bookingId}/check-time/resolve`, data),
+};

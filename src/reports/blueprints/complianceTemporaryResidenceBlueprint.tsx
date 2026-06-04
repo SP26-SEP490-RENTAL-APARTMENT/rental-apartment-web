@@ -12,6 +12,7 @@ const ComplianceTemporaryResidenceBlueprint = createReportBlueprint({
     { field: 'booking_count', aggregation: 'count', alias: 'booking_count' },
   ],
   pageSize: 50,
+  blueprintKey: ''
 });
 
 export default ComplianceTemporaryResidenceBlueprint;

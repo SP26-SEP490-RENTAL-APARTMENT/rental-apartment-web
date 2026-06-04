@@ -130,8 +130,11 @@ export const supportTicketApi = {
     ticketId: string,
     data: { newStatus: string; statusChangeNotes: string },
   ) => apiConfig.privateApi.patch(`/SupportTicket/${ticketId}/status`, data),
-  // getTicketById: (ticketId: string) =>
-  //   apiConfig.privateApi.get(`/SupportTicket/${ticketId}`),
+  getAlternativeApartments: (bookingId: string, params: ParamsProp) =>
+    apiConfig.privateApi.get(
+      `/Booking/${bookingId}/occupied-alternatives/assessment`,
+      { params },
+    ),
 };
 
 export const tenantPaymentApi = {
@@ -149,4 +152,12 @@ export const occupiedIncident = {
 export const outstandingFee = {
   getMyFee: (userId: string) =>
     apiConfig.privateApi.get(`/Booking/outstanding-fees/${userId}`),
+};
+
+export const notificationApi = {
+  getNotifications: (params: ParamsProp) =>
+    apiConfig.privateApi.get("/Notification/my", { params }),
+  markAsRead: (notificationId: string) =>
+    apiConfig.privateApi.post(`/Notification/${notificationId}/read`),
+  markAllAsRead: () => apiConfig.privateApi.post("/Notification/read-all"),
 };

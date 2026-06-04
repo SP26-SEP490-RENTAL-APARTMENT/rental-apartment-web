@@ -158,7 +158,7 @@ export function CreateTicketDialog({
 
     if (!formData.description.trim()) {
       newErrors.description = t("support.validation.descriptionRequired");
-    } else if (formData.description.length < 10) {
+    } else if (formData.description.length < 5) {
       newErrors.description = t("support.validation.descriptionMinLength");
     }
 

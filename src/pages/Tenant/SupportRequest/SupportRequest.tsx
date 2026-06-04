@@ -22,6 +22,8 @@ import ManagementFilter from "@/components/ui/managementFilter/ManagementFilter"
 
 import { Card, CardContent } from "@/components/ui/card";
 import { SupportTicketSortByList } from "@/constants/sortByList";
+import AlternativeDialog from "./components/Alternatives/AlternativeDialog";
+import type { AlternativeApartment } from "@/types/apartment";
 
 function SupportRequest() {
   const { t } = useTranslation("support");
@@ -29,6 +31,10 @@ function SupportRequest() {
   const [tickets, setTickets] = useState<SupportTicket[]>([]);
   const [ticketDetail, setTicketDetail] = useState<SupportTicket | null>(null);
   const [detailDialogOpen, setDetailDialogOpen] = useState(false);
+  const [alternatives, setAlternatives] = useState<
+    AlternativeApartment[] | null
+  >(null);
+  const [alternativesDialog, setAlternativesDialog] = useState(false);
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -72,8 +78,26 @@ function SupportRequest() {
     }
   }, [page, filters, addFilters]);
 
+  const fetchAlternatives = async (bookingId: string) => {
+    setAlternativesDialog(true);
+
+    if (!bookingId) return;
+    try {
+      const response = await supportTicketApi.getAlternativeApartments(
+        bookingId,
+        {
+          page: 1,
+          pageSize: 10,
+        },
+      );
+      setAlternatives(response.data.data.items);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
-    setPage(1); // Reset to page 1 when filters change
+    setPage(1);
   }, [filters, addFilters]);
 
   useEffect(() => {
@@ -178,6 +202,7 @@ function SupportRequest() {
                       key={ticket.ticketId}
                       ticket={ticket}
                       onView={handleViewTicket}
+                      onGetAlternatives={fetchAlternatives}
                     />
                   ))
                 )}
@@ -266,6 +291,12 @@ function SupportRequest() {
         onOpenChange={setDetailDialogOpen}
         ticket={ticketDetail}
         refetch={fetchMyTickets}
+      />
+
+      <AlternativeDialog
+        open={alternativesDialog}
+        onClose={() => setAlternativesDialog(false)}
+        alternatives={alternatives}
       />
     </div>
   );

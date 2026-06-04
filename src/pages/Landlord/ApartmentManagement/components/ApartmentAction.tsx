@@ -56,6 +56,7 @@ interface Props {
   onViewPriceChange: (apartmentId: string) => void;
   onApplyPricingTemplate: (apartmentId: string) => void;
   onViewAvailablePolicies: (apartmentId: string) => void;
+  onViewAvailability: (apartmentId: string) => void;
 }
 function ApartmentAction({
   apartment,
@@ -72,6 +73,7 @@ function ApartmentAction({
   onViewPriceChange,
   onApplyPricingTemplate,
   onViewAvailablePolicies,
+  onViewAvailability,
 }: Props) {
   const { t } = useTranslation("landlord");
   const { i18n } = useTranslation();
@@ -139,7 +141,7 @@ function ApartmentAction({
               <Eye />
             </Button>
           </DialogTrigger>
-          <DialogContent>
+          <DialogContent className="sm:max-w-3xl">
             <DialogHeader>
               <DialogTitle>{t("apartment.infor.details")}</DialogTitle>
             </DialogHeader>
@@ -292,6 +294,11 @@ function ApartmentAction({
             >
               {t("button.addAvailability")}
             </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => onViewAvailability(apartment.apartmentId)}
+            >
+              View Availability
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
 
@@ -328,7 +335,9 @@ function ApartmentAction({
                           className="flex items-center gap-2 px-3 py-2 bg-primary/10 rounded-full"
                         >
                           <span className="text-sm">
-                            {amenity?.nameVi || amenity?.nameEn}
+                            {i18n?.language === "vi"
+                              ? amenity?.nameVi
+                              : amenity?.nameEn}
                           </span>
                           <button
                             onClick={() => handleRemoveAmenity(amenityId)}
@@ -408,24 +417,26 @@ function ApartmentAction({
           </DialogContent>
         </Dialog>
       </div>
-      {apartment.status === "draft" && (
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                size="sm"
-                className="bg-blue-500"
-                onClick={() => onSendApprove(apartment.apartmentId)}
-              >
-                <Send />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>Send to approve</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-      )}
+      {apartment.status === "draft" &&
+        apartment.room &&
+        apartment.amenities.length > 0 && (
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  size="sm"
+                  className="bg-blue-500"
+                  onClick={() => onSendApprove(apartment.apartmentId)}
+                >
+                  <Send />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Send to approve</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        )}
     </div>
   );
 }

@@ -2,6 +2,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import type { PaymentHistory } from "@/types/paymentHistory";
 import {
+  ArrowDownLeft,
   CheckCircle,
   Clock,
   CreditCard,
@@ -30,6 +31,12 @@ const getStatus = (status: PaymentHistory["status"]) => {
         label: "Failed",
         icon: <XCircle className="w-4 h-4" />,
         className: "bg-red-100 text-red-600",
+      };
+    case "refunded":
+      return {
+        label: "Refunded",
+        icon: <ArrowDownLeft className="w-4 h-4" />,
+        className: "bg-blue-100 text-blue-600",
       };
     default:
       return {
@@ -95,6 +102,12 @@ function PaymentCard({ payment }: { payment: PaymentHistory }) {
         return (
           <Badge className="bg-green-500">
             {t("payment.card.balanceBooking")}
+          </Badge>
+        );
+      case "refund_booking":
+        return (
+          <Badge className="bg-red-500">
+            Refund Booking
           </Badge>
         );
       default:

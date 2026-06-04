@@ -27,6 +27,7 @@ import {
 } from "@/constants/sortByList";
 import { Button } from "@/components/ui/button";
 import InspectionFilter from "./components/InspectionFilter";
+import CancelInspectionDialog from "./components/CancelInspectionDialog";
 
 function Inspections() {
   const [inspections, setInspections] = useState<Inspection[]>([]);
@@ -40,11 +41,12 @@ function Inspections() {
   const [form, setForm] = useState({ decision: "approve", reason: "" });
   const [reviewForm, setReviewForm] = useState(false);
   const [filters, setFilters] = useState<Filter>({
-    sortBy: "apartmentName",
-    sortOrder: "asc",
+    sortBy: "createdAt",
+    sortOrder: "desc",
     search: "",
   });
   const [status, setStatus] = useState("all");
+  const [cancelDialog, setCancelDialog] = useState(false);
 
   const fetchInspections = async () => {
     if (!user) return;
@@ -153,10 +155,15 @@ function Inspections() {
     setReviewForm(true);
   };
 
+  const triggerCancelInspection = (id: string) => {
+    setSelectedId(id);
+    setCancelDialog(true);
+  };
+
   const handleResetFilters = () => {
     setFilters({
-      sortBy: "apartmentName",
-      sortOrder: "asc",
+      sortBy: "createdAt",
+      sortOrder: "desc",
       search: "",
     });
     setStatus("all");
@@ -214,6 +221,7 @@ function Inspections() {
                 triggerInspectionForm,
                 triggerReviewInspection,
                 handleGetApartment,
+                triggerCancelInspection,
               )}
               data={inspections}
               limit={10}
@@ -244,13 +252,21 @@ function Inspections() {
 
       {/* Apartment Detail Modal */}
       <Dialog open={!!apartment} onOpenChange={() => setApartment(undefined)}>
-        <DialogContent>
+        <DialogContent className="sm:max-w-3xl">
           <DialogHeader>
             <DialogTitle>{apartment?.title || "Apartment"}</DialogTitle>
           </DialogHeader>
           {apartment && <ApartmentDetailDialog apartment={apartment} />}
         </DialogContent>
       </Dialog>
+
+      {/* Cancel Inspection Dialog */}
+      <CancelInspectionDialog
+        inspectionId={selectedId}
+        refetchInspections={fetchInspections}
+        open={cancelDialog}
+        onClose={() => setCancelDialog(false)}
+      />
     </div>
   );
 }

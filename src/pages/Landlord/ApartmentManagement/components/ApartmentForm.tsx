@@ -22,6 +22,32 @@ import { useForm, useWatch } from "react-hook-form";
 import AddressAutocomplete from "./AddressAutocomplete";
 import { useTranslation } from "react-i18next";
 
+// Allowed file types for upload
+const ALLOWED_IMAGE_EXTENSIONS = [".jpg", ".jpeg", ".png", ".gif", ".webp"];
+const ALLOWED_IMAGE_CONTENT_TYPES = [
+  "image/jpeg",
+  "image/png",
+  "image/gif",
+  "image/webp",
+];
+const ALLOWED_VIDEO_EXTENSIONS = [".mp4", ".mov", ".avi", ".mkv", ".webm"];
+const ALLOWED_VIDEO_CONTENT_TYPES = [
+  "video/mp4",
+  "video/quicktime",
+  "video/x-msvideo",
+  "video/x-matroska",
+  "video/webm",
+];
+const ALLOWED_EXTENSIONS = [
+  ...ALLOWED_IMAGE_EXTENSIONS,
+  ...ALLOWED_VIDEO_EXTENSIONS,
+];
+const ALLOWED_CONTENT_TYPES = [
+  ...ALLOWED_IMAGE_CONTENT_TYPES,
+  ...ALLOWED_VIDEO_CONTENT_TYPES,
+];
+const ACCEPT_ATTRIBUTE = "image/*,video/*";
+
 export interface ApartmentFormProps {
   isOpen: boolean;
   onClose: () => void;
@@ -81,6 +107,7 @@ function ApartmentForm({
           latitude: 0,
           longitude: 0,
           basePricePerNight: 0,
+          noShowGraceHours: 0,
         }
       : undefined,
   });
@@ -122,6 +149,7 @@ function ApartmentForm({
         latitude: 0,
         longitude: 0,
         basePricePerNight: 0,
+        noShowGraceHours: 0,
       });
       queueMicrotask(() => {
         setPreview([]);
@@ -142,6 +170,7 @@ function ApartmentForm({
         latitude: apartment.latitude || 0,
         longitude: apartment.longitude || 0,
         basePricePerNight: apartment.basePricePerNight || 0,
+        noShowGraceHours: apartment.noShowGraceHours || 0,
       });
       queueMicrotask(() => {
         setPreview(apartment.photos || []);
@@ -157,19 +186,46 @@ function ApartmentForm({
     }
   }, [apartment, mode, reset, isCreate, isOpen]);
 
+  const isValidFile = (file: File): boolean => {
+    // Check file extension
+    const fileName = file.name.toLowerCase();
+    const fileExtension = "."
+      .concat(fileName.split(".").pop() || "")
+      .toLowerCase();
+    const hasValidExtension = ALLOWED_EXTENSIONS.includes(fileExtension);
+
+    // Check content type
+    const hasValidContentType = ALLOWED_CONTENT_TYPES.includes(file.type);
+
+    return hasValidExtension && hasValidContentType;
+  };
+
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
+
     if (files) {
       const newFileArray = Array.from(files);
-      // Combine new files with existing ones (max 10)
-      const combinedFiles = [...selectedFiles, ...newFileArray].slice(0, 10);
+
+      const validFiles = newFileArray.filter((file) => {
+        if (!isValidFile(file)) {
+          alert(
+            `Invalid file: ${file.name}. Only images (JPG, PNG, GIF, WebP) and videos (MP4, MOV, AVI, MKV, WebM) are allowed.`,
+          );
+          return false;
+        }
+        return true;
+      });
+
+      const combinedFiles = [...selectedFiles, ...validFiles].slice(0, 10);
       setSelectedFiles(combinedFiles);
 
-      // Create preview URLs for new files
-      const newPreviews = newFileArray.map((file) => URL.createObjectURL(file));
+      const newPreviews = validFiles.map((file) => URL.createObjectURL(file));
       const combinedPreviews = [...preview, ...newPreviews].slice(0, 10);
+
       setPreview(combinedPreviews);
     }
+
+    event.target.value = "";
   };
 
   const removePhoto = (index: number) => {
@@ -217,6 +273,7 @@ function ApartmentForm({
         formData.append("latitude", String(coords?.lat));
         formData.append("longitude", String(coords?.lng));
         formData.append("basePricePerNight", String(data.basePricePerNight));
+        formData.append("noShowGraceHours", String(data.noShowGraceHours));
 
         // Add photos
         if (selectedFiles.length > 0) {
@@ -234,7 +291,6 @@ function ApartmentForm({
             | UpdateApartmentFormData,
         );
         console.log(formData);
-        
       } else {
         // Update mode: use regular form data (JSON)
         await onSubmit(data);
@@ -265,7 +321,9 @@ function ApartmentForm({
       <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>
-            {isCreate ? t("apartment.addApartment.addTitle") : t("apartment.addApartment.updateTitle")}
+            {isCreate
+              ? t("apartment.addApartment.addTitle")
+              : t("apartment.addApartment.updateTitle")}
           </DialogTitle>
         </DialogHeader>
 
@@ -273,7 +331,9 @@ function ApartmentForm({
           <div className="grid gap-4 py-4">
             {/* TITLE */}
             <div className="grid gap-2">
-              <Label htmlFor="title">{t("apartment.addApartment.title")} *</Label>
+              <Label htmlFor="title">
+                {t("apartment.addApartment.title")} *
+              </Label>
               <Input
                 id="title"
                 placeholder={t("apartment.addApartment.titlePlaceholder")}
@@ -288,7 +348,9 @@ function ApartmentForm({
 
             {/* DESCRIPTION */}
             <div className="grid gap-2">
-              <Label htmlFor="description">{t("apartment.addApartment.description")} *</Label>
+              <Label htmlFor="description">
+                {t("apartment.addApartment.description")} *
+              </Label>
               <Textarea
                 id="description"
                 placeholder={t("apartment.addApartment.descriptionPlaceholder")}
@@ -304,7 +366,9 @@ function ApartmentForm({
             {/* GRID: MAX OCCUPANTS & PRICE */}
             <div className="grid grid-cols-3 gap-4">
               <div className="grid gap-2">
-                <Label htmlFor="maxOccupants">{t("apartment.addApartment.maxOccupancy")}</Label>
+                <Label htmlFor="maxOccupants">
+                  {t("apartment.addApartment.maxOccupancy")}
+                </Label>
                 <Input
                   id="maxOccupants"
                   type="number"
@@ -320,7 +384,9 @@ function ApartmentForm({
               </div>
 
               <div className="grid gap-2">
-                <Label htmlFor="maxInfants">{t("apartment.addApartment.maxInfants")}</Label>
+                <Label htmlFor="maxInfants">
+                  {t("apartment.addApartment.maxInfants")}
+                </Label>
                 <Input
                   id="maxInfants"
                   type="number"
@@ -356,7 +422,9 @@ function ApartmentForm({
 
             {/* ADDRESS */}
             <div className="grid gap-2">
-              <Label htmlFor="address">{t("apartment.addApartment.address")} *</Label>
+              <Label htmlFor="address">
+                {t("apartment.addApartment.address")} *
+              </Label>
 
               <AddressAutocomplete
                 value={currentAddress}
@@ -437,7 +505,9 @@ function ApartmentForm({
               </Label>
               {isPetAllowed && (
                 <div className="grid gap-2 pl-7">
-                  <Label htmlFor="maxPets">{t("apartment.addApartment.maxPets")}</Label>
+                  <Label htmlFor="maxPets">
+                    {t("apartment.addApartment.maxPets")}
+                  </Label>
                   <Input
                     id="maxPets"
                     type="number"
@@ -451,31 +521,55 @@ function ApartmentForm({
                   )}
                 </div>
               )}
+
+              <div className="grid gap-2">
+                <Label htmlFor="noShowGraceHours">Grace Hours</Label>
+                <Input
+                  id="noShowGraceHours"
+                  type="number"
+                  min={0}
+                  max={6}
+                  {...register("noShowGraceHours", { valueAsNumber: true })}
+                />
+                {errors.noShowGraceHours && (
+                  <p className="text-sm text-destructive">
+                    {errors.noShowGraceHours.message}
+                  </p>
+                )}
+              </div>
             </div>
 
             {/* PHOTOS - ONLY FOR CREATE */}
             {isCreate && (
               <div className="grid gap-3">
                 <div>
-                  <Label htmlFor="photos">{t("apartment.addApartment.uploadPhotos")} *</Label>
+                  <Label htmlFor="photos">
+                    {t("apartment.addApartment.uploadPhotos")} *
+                  </Label>
                   <p className="text-xs text-muted-foreground mt-1 mb-2">
                     {t("apartment.addApartment.photoGuidelines")}
                   </p>
-                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:border-gray-400 transition cursor-pointer">
+                  <label
+                    htmlFor="photos"
+                    className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:border-gray-400 transition cursor-pointer block"
+                  >
                     <Input
                       id="photos"
                       type="file"
                       multiple
-                      accept="image/*"
+                      accept={ACCEPT_ATTRIBUTE}
                       onChange={handleFileChange}
                       className="hidden"
                     />
-                    <label htmlFor="photos" className="cursor-pointer block">
-                      <div className="text-sm text-gray-600">
-                        <p className="text-xs mt-1">PNG, JPG, GIF</p>
-                      </div>
-                    </label>
-                  </div>
+
+                    <div className="text-sm text-gray-600">
+                      <p>Click to upload images or videos</p>
+                      <p className="text-xs mt-1">
+                        Images: PNG, JPG, GIF, WebP | Videos: MP4, MOV, AVI,
+                        MKV, WebM
+                      </p>
+                    </div>
+                  </label>
                 </div>
               </div>
             )}
@@ -484,7 +578,10 @@ function ApartmentForm({
             {preview.length > 0 && (
               <div className="grid gap-3">
                 <div className="flex justify-between items-center">
-                  <Label>{t("apartment.addApartment.selectedPhotos")} ({preview.length}/10)</Label>
+                  <Label>
+                    {t("apartment.addApartment.selectedPhotos")} (
+                    {preview.length}/10)
+                  </Label>
                 </div>
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
                   {preview.map((src, idx) => (
@@ -492,11 +589,19 @@ function ApartmentForm({
                       key={idx}
                       className="relative w-full h-28 rounded-lg overflow-hidden bg-muted group"
                     >
-                      <img
-                        src={src}
-                        alt={`preview-${idx}`}
-                        className="w-full h-full object-cover"
-                      />
+                      {selectedFiles[idx]?.type.startsWith("video/") ? (
+                        <video
+                          src={src}
+                          className="w-full h-full object-cover"
+                          controls
+                        />
+                      ) : (
+                        <img
+                          src={src}
+                          alt={`preview-${idx}`}
+                          className="w-full h-full object-cover"
+                        />
+                      )}
                       {isCreate && (
                         <button
                           type="button"
@@ -528,7 +633,9 @@ function ApartmentForm({
             </Button>
 
             <Button type="submit" disabled={isSubmitting}>
-              {isCreate ? t("apartment.button.create") : t("apartment.button.update")}
+              {isCreate
+                ? t("apartment.button.create")
+                : t("apartment.button.update")}
             </Button>
           </DialogFooter>
         </form>

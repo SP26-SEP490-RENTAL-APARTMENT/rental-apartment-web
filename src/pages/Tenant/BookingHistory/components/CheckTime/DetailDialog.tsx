@@ -18,6 +18,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
 import { bookingApi } from "@/services/privateApi/tenantApi";
 import { toast } from "sonner";
+import DisputeResolution from "./DisputeResolution";
 
 function DetailDialog({
   open,
@@ -52,10 +53,11 @@ function DetailDialog({
 
   const handlePayOutstandingFee = async () => {
     try {
-      await bookingApi.payOutstandingFee(data?.bookingId, {
+      const response = await bookingApi.payOutstandingFee(data?.bookingId, {
         paymentMethod: "payos",
         devicePlatform: "web",
       });
+      window.location.href = response.data.data.url;
       toast.success("Payment successful");
       onClose();
       // refetchCheckTime(data.bookingId);
@@ -71,7 +73,7 @@ function DetailDialog({
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-3xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>{t("checkTime.title")}</DialogTitle>
         </DialogHeader>
@@ -89,6 +91,10 @@ function DetailDialog({
             <TimeLine data={data} />
             <FeeBreakDown data={data} />
             <Claim data={data} />
+            {(data?.feeSettlementStatus === "waived" ||
+              data?.tenantResponseStatus === "refuted") && (
+              <DisputeResolution data={data} />
+            )}
           </TabsContent>
 
           <TabsContent value="photos">
@@ -97,7 +103,9 @@ function DetailDialog({
         </Tabs>
 
         <div className="flex justify-end pt-4 gap-2">
-          {canPay && (
+          {((canPay && data?.feeSettlementStatus !== "paid") ||
+            (data?.feeSettlementStatus === "due" &&
+              data?.disputeResolutionNotes)) && (
             <Button
               onClick={handlePayOutstandingFee}
               className="bg-blue-500 hover:bg-blue-600"
@@ -106,11 +114,18 @@ function DetailDialog({
             </Button>
           )}
 
-          {(!isResponse && data?.tenantResponseStatus !== "confirmed") || !isExpired && (
-            <Button onClick={() => setIsResponse(true)} variant="default">
+          {data?.tenantResponseStatus !== "confirmed" &&
+            !isExpired &&
+            data?.feeSettlementStatus !== "waived" &&
+            !data?.disputeResolutionNotes &&
+            data?.feeSettlementStatus !== "none" && (
+              <Button onClick={() => setIsResponse(true)} variant="default">
+                {t("checkTime.respondButton") || "Respond to Check Time"}
+              </Button>
+            )}
+          {/* <Button onClick={() => setIsResponse(true)} variant="default">
               {t("checkTime.respondButton") || "Respond to Check Time"}
-            </Button>
-          )}
+            </Button> */}
         </div>
 
         {isResponse && (

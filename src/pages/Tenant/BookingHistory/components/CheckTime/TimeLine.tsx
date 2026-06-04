@@ -21,8 +21,13 @@ function TimeLine({ data }: { data: any }) {
           {t("checkTime.timeLine.actual")}: {formatDateTime(data.actualCheckIn)}
         </p>
         <p className="text-blue-500">
-          {t("checkTime.timeLine.early")} {early} {t("checkTime.timeLine.min")}{" "}
-          ({formatCurrency(data.earlyCheckInFee)})
+          {early < 0 && (
+            <>
+              {t("checkTime.timeLine.early")} {early}{" "}
+              {t("checkTime.timeLine.min")} (
+              {formatCurrency(data.earlyCheckInFee)})
+            </>
+          )}
         </p>
       </Card>
 

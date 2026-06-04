@@ -6,9 +6,19 @@ import type { SmartPricing } from "@/types/smartPricing";
 import { BadgePercent } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { SmartPricingColumns } from "./components/SmartPricingColumns";
+import { apartmentApi } from "@/services/publicApi/apartmentApi";
+import type { Apartment } from "@/types/apartment";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import ApartmentDetailDialog from "@/components/ui/apartmentDetailDialog/ApartmentDetailDialog";
 
 function SmartPricingHistory() {
   const [smartPricing, setSmartPricing] = useState<SmartPricing[]>([]);
+  const [apartment, setApartment] = useState<Apartment | null>(null);
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -36,6 +46,15 @@ function SmartPricingHistory() {
       setLoading(false);
     }
   }, [page, filters]);
+
+  const fetchApartmentDetails = async (id: string) => {
+    try {
+      const response = await apartmentApi.getApartmentById(id);
+      setApartment(response.data.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
     fetchSmartPricingHistory();
@@ -89,7 +108,7 @@ function SmartPricingHistory() {
           </CardHeader>
           <CardContent className="pt-6">
             <DataTable
-              columns={SmartPricingColumns()}
+              columns={SmartPricingColumns(fetchApartmentDetails)}
               data={smartPricing}
               limit={10}
               loading={loading}
@@ -100,6 +119,15 @@ function SmartPricingHistory() {
           </CardContent>
         </Card>
       </div>
+
+      <Dialog open={!!apartment} onOpenChange={() => setApartment(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{apartment?.title || "Apartment"}</DialogTitle>
+          </DialogHeader>
+          {apartment && <ApartmentDetailDialog apartment={apartment} />}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

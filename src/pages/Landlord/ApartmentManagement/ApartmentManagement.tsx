@@ -26,7 +26,7 @@ import type {
   CreateRoomFormData,
   UpdateRoomFormData,
 } from "@/schemas/roomSchema";
-import AvailableDateForm from "./components/AvailableDateForm";
+import AvailableDateForm from "./components/availabilityDate/AvailableDateForm";
 import type { AddAvailableDateFormData } from "@/schemas/availableDateSchema";
 import type { Package } from "@/types/package";
 import PackageDialog from "./components/PackageDialog";
@@ -48,6 +48,9 @@ import type { AvailablePolicy, PricingTemplate } from "@/types/pricingTemplate";
 import PricingPolicyForm from "./components/PricingPolicy/PricingPolicyForm";
 import ViewAvailablePolicy from "./components/PricingPolicy/ViewAvailablePolicy";
 import SmartPriceDialog from "./components/SmartPricing/SmartPriceDialog";
+import type { Availability } from "@/types/availability";
+import { apartmentApi } from "@/services/publicApi/apartmentApi";
+import ViewAvailability from "./components/availabilityDate/ViewAvailability";
 
 function ApartmentManagement() {
   const { t } = useTranslation("landlord");
@@ -82,6 +85,7 @@ function ApartmentManagement() {
   const [selectedApartmentForPackage, setSelectedApartmentForPackage] =
     useState<Apartment | null>(null);
   const [selectedApartmentId, setSelectedApartmentId] = useState<string>("");
+  const [availability, setAvailability] = useState<Availability | null>(null);
   const [isOpen, setIsOpen] = useState({
     apartmentForm: false,
     packageForm: false,
@@ -94,6 +98,7 @@ function ApartmentManagement() {
     pricingPolicyForm: false,
     pricingPolicyDialog: false,
     smartPricingDialog: false,
+    viewAvailabilityDialog: false,
   });
 
   const fetchApartmentList = useCallback(async () => {
@@ -338,6 +343,19 @@ function ApartmentManagement() {
     }
   };
 
+  const handleViewAvailability = async (apartmentId: string) => {
+    try {
+      const response = await apartmentApi.checkAvailability(apartmentId, {
+        startDate: null,
+        endDate: null,
+      });
+      setAvailability(response.data.data);
+      setIsOpen((prev) => ({ ...prev, viewAvailabilityDialog: true }));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     fetchApartmentList();
     fetchPricingTemplates();
@@ -494,6 +512,7 @@ function ApartmentManagement() {
                 triggerApplyPricingTemplate,
                 handleGetAvailablePolicies,
                 triggerSmartPricing,
+                handleViewAvailability
               )}
               data={apartmentList}
               limit={10}
@@ -556,6 +575,14 @@ function ApartmentManagement() {
         }}
         onSubmit={handleAddAvailability}
         // apartmentId={selectedApartmentId}
+      />
+
+      <ViewAvailability
+        data={availability}
+        open={isOpen.viewAvailabilityDialog}
+        onClose={() =>
+          setIsOpen((prev) => ({ ...prev, viewAvailabilityDialog: false }))
+        }
       />
 
       <PackageDialog

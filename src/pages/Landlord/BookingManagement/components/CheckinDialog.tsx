@@ -6,11 +6,12 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Loader2, X, Upload, Eye } from "lucide-react";
+import { Loader2, X, Upload } from "lucide-react";
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
 import { Textarea } from "@/components/ui/textarea";
 import { formatLocalDateTime } from "./formatTime";
+import { ALLOWED_TYPES, MAX_FILE_SIZE } from "@/constants/validTypeUpload";
 
 export interface Props {
   open: boolean;
@@ -21,50 +22,61 @@ export interface Props {
 function CheckInDialog({ open, onClose, onSubmit }: Props) {
   const { t } = useTranslation("landlord");
   const [actualCheckIn, setActualCheckIn] = useState(
-  formatLocalDateTime(new Date())
-);
+    formatLocalDateTime(new Date()),
+  );
   const [note, setNote] = useState("");
-  const [photos, setPhotos] = useState<File[]>([]);
-  const [previews, setPreviews] = useState<string[]>([]);
+  const [mediaFiles, setMediaFiles] = useState<File[]>([]);
+  const [previews, setPreviews] = useState<
+    {
+      url: string;
+      type: "image" | "video";
+    }[]
+  >([]);
   const [loading, setLoading] = useState(false);
-  const [previewModal, setPreviewModal] = useState<{
-    open: boolean;
-    src: string;
-  }>({ open: false, src: "" });
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handlePhotoSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
+
     if (files.length === 0) return;
 
-    // Validate file types
     const validFiles = files.filter((file) => {
-      if (!file.type.startsWith("image/")) {
-        toast.error(`${file.name} is not a valid image`);
+      if (!ALLOWED_TYPES.includes(file.type)) {
+        toast.error(`${file.name} is not a supported file`);
         return false;
       }
+
+      if (file.size > MAX_FILE_SIZE) {
+        toast.error(`${file.name} exceeds 100MB limit`);
+        return false;
+      }
+
       return true;
     });
 
-    setPhotos((prev) => [...prev, ...validFiles]);
+    setMediaFiles((prev) => [...prev, ...validFiles]);
 
-    // Create previews
     validFiles.forEach((file) => {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setPreviews((prev) => [...prev, reader.result as string]);
-      };
-      reader.readAsDataURL(file);
+      const url = URL.createObjectURL(file);
+
+      setPreviews((prev) => [
+        ...prev,
+        {
+          url,
+          type: file.type.startsWith("video/") ? "video" : "image",
+        },
+      ]);
     });
 
-    // Reset input
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
   };
 
   const removePhoto = (index: number) => {
-    setPhotos((prev) => prev.filter((_, i) => i !== index));
+    URL.revokeObjectURL(previews[index].url);
+
+    setMediaFiles((prev) => prev.filter((_, i) => i !== index));
     setPreviews((prev) => prev.filter((_, i) => i !== index));
   };
 
@@ -81,8 +93,8 @@ function CheckInDialog({ open, onClose, onSubmit }: Props) {
       formData.append("Notes", note);
 
       // Add photos
-      photos.forEach((photo) => {
-        formData.append("PhotoEvidence", photo);
+      mediaFiles.forEach((file) => {
+        formData.append("PhotoEvidence", file);
       });
 
       await onSubmit(formData);
@@ -90,7 +102,7 @@ function CheckInDialog({ open, onClose, onSubmit }: Props) {
       // Reset form
       setActualCheckIn(formatLocalDateTime(new Date()));
       setNote("");
-      setPhotos([]);
+      setMediaFiles([]);
       setPreviews([]);
       onClose();
     } catch (error: any) {
@@ -148,7 +160,14 @@ function CheckInDialog({ open, onClose, onSubmit }: Props) {
                   ref={fileInputRef}
                   type="file"
                   multiple
-                  accept="image/*"
+                  accept="
+                          image/*,
+                          video/mp4,
+                          video/quicktime,
+                          video/x-msvideo,
+                          video/x-matroska,
+                          video/webm
+                        "
                   onChange={handlePhotoSelect}
                   className="hidden"
                 />
@@ -162,9 +181,6 @@ function CheckInDialog({ open, onClose, onSubmit }: Props) {
                   <Upload className="w-4 h-4" />
                   {t("booking.form.uploadImage")}
                 </Button>
-                <span className="text-sm text-gray-500 py-2">
-                  {t("booking.form.selectedPhotos")}: {photos.length}
-                </span>
               </div>
 
               {/* Photo Previews */}
@@ -175,23 +191,22 @@ function CheckInDialog({ open, onClose, onSubmit }: Props) {
                       key={index}
                       className="relative group rounded-lg overflow-hidden bg-gray-100 aspect-square"
                     >
-                      <img
-                        src={preview}
-                        alt={`Preview ${index + 1}`}
-                        className="w-full h-full object-cover"
-                      />
-                      <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="sm"
-                          onClick={() =>
-                            setPreviewModal({ open: true, src: preview })
-                          }
-                          className="text-white hover:bg-blue-600"
-                        >
-                          <Eye className="w-4 h-4" />
-                        </Button>
+                      {preview.type === "image" ? (
+                        <img
+                          src={preview.url}
+                          alt={`Preview ${index + 1}`}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <video
+                          src={preview.url}
+                          className="w-full h-full object-cover"
+                          controls
+                          muted
+                        />
+                      )}
+
+                      <div className="absolute inset-10 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-start justify-end gap-2">
                         <Button
                           type="button"
                           variant="ghost"
@@ -202,9 +217,6 @@ function CheckInDialog({ open, onClose, onSubmit }: Props) {
                           <X className="w-4 h-4" />
                         </Button>
                       </div>
-                      <span className="absolute top-1 right-1 bg-blue-500 text-white text-xs rounded px-2 py-1">
-                        {index + 1}
-                      </span>
                     </div>
                   ))}
                 </div>
@@ -224,27 +236,6 @@ function CheckInDialog({ open, onClose, onSubmit }: Props) {
           </div>
         </DialogContent>
       </Dialog>
-
-      {/* Image Preview Modal */}
-      {previewModal.open && (
-        <Dialog
-          open={previewModal.open}
-          onOpenChange={() => setPreviewModal({ ...previewModal, open: false })}
-        >
-          <DialogContent className="max-w-2xl">
-            <DialogHeader>
-              <DialogTitle>Image Preview</DialogTitle>
-            </DialogHeader>
-            <div className="w-full flex justify-center">
-              <img
-                src={previewModal.src}
-                alt="Preview"
-                className="max-w-full max-h-[60vh] object-contain"
-              />
-            </div>
-          </DialogContent>
-        </Dialog>
-      )}
     </>
   );
 }

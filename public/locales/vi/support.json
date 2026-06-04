@@ -55,7 +55,7 @@
         },
         "placeholders": {
             "subject": "Nhập một chủ đề ngắn (tối thiểu 5 ký tự)",
-            "description": "Mô tả vấn đề của bạn chi tiết (tối thiểu 10 ký tự)",
+            "description": "Mô tả vấn đề của bạn chi tiết (tối thiểu 5 ký tự)",
             "category": "Chọn một danh mục",
             "priority": "Chọn mức độ ưu tiên"
         },
@@ -63,7 +63,7 @@
             "subjectRequired": "Chủ đề là bắt buộc",
             "subjectMinLength": "Chủ đề phải có ít nhất 5 ký tự",
             "descriptionRequired": "Mô tả là bắt buộc",
-            "descriptionMinLength": "Mô tả phải có ít nhất 10 ký tự",
+            "descriptionMinLength": "Mô tả phải có ít nhất 5 ký tự",
             "categoryRequired": "Vui lòng chọn một danh mục",
             "priorityRequired": "Vui lòng chọn mức độ ưu tiên"
         },

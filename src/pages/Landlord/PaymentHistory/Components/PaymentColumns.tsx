@@ -32,6 +32,8 @@ export const PaymentColumns = (): ColumnDef<PaymentHistory>[] => {
         return <Badge className="bg-blue-500 text-white">Stripe</Badge>;
       case "payos":
         return <Badge className="bg-green-500 text-white">PayOS</Badge>;
+      case "payos_bank":
+        return <Badge className="bg-green-500 text-white">PayOS</Badge>;
       case "landlord_wallet_penalty":
         return (
           <Badge className="bg-red-500 text-white">
@@ -121,7 +123,6 @@ export const PaymentColumns = (): ColumnDef<PaymentHistory>[] => {
     {
       accessorKey: "signedAmountDisplay",
       header: t("payment.amount"),
-      
     },
   ];
 };

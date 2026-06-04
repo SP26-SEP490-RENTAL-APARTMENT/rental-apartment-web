@@ -27,7 +27,7 @@ function ViewAvailablePolicy({ open, onClose, template }: Props) {
     }).format(value);
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-3xl max-h-[90vh] overflow-y-auto">
         <DialogHeader className="pb-6 border-b">
           <DialogTitle className="text-2xl font-bold">
             Pricing Policy Overview
@@ -36,7 +36,7 @@ function ViewAvailablePolicy({ open, onClose, template }: Props) {
 
         <div className="space-y-6">
           {/* Base price - Enhanced */}
-          <div className="relative overflow-hidden rounded-xl bg-gradient-to-r from-blue-600 to-blue-700 p-6 text-white shadow-lg hover:shadow-xl transition-shadow">
+          <div className="relative overflow-hidden rounded-xl bg-linear-to-r from-blue-600 to-blue-700 p-6 text-white shadow-lg hover:shadow-xl transition-shadow">
             <div className="absolute -right-8 -top-8 opacity-10">
               <DollarSign className="w-32 h-32" />
             </div>

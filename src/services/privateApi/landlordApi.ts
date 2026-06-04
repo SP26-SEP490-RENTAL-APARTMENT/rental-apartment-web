@@ -45,6 +45,20 @@ export const apartmentManagementApi = {
     apiConfig.privateApi.post(`/apartments/${apartmentId}/availability`, {
       ranges: availableDate,
     }),
+  deleteAvailableDate: (
+    apartmentId: string,
+    data: {
+      ranges: [
+        {
+          startDate: string;
+          endDate: string;
+        },
+      ];
+    },
+  ): Promise<ApiResponse<null>> =>
+    apiConfig.privateApi.delete(`/apartments/${apartmentId}/availability`, {
+      data,
+    }),
   sendToApprove: (
     apartmentId: string,
     { submissionNotes }: { submissionNotes: string },
@@ -129,6 +143,12 @@ export const mySubscriptionApi = {
     renewalType: string;
     autoRenew: boolean;
   }) => apiConfig.privateApi.post("/landlord/subscription/momo-checkout", data),
+  payosCheckout: (data: {
+    planId: string;
+    renewalType: string;
+    autoRenew: boolean;
+  }) =>
+    apiConfig.privateApi.post("/landlord/subscription/payos-checkout", data),
   getSubscriptionHistory: (params: ParamsProp) =>
     apiConfig.privateApi.get("/landlord/subscriptions/history", { params }),
 };
