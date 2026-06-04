@@ -68,6 +68,8 @@ export const apartmentManagementApi = {
     }),
   putPhotosForApartment: (apartmentId: string, data: FormData) =>
     apiConfig.privateApi.put(`/apartments/${apartmentId}/photos`, data),
+  uploadMediaApartment: (apartmentId: string, data: FormData) =>
+    apiConfig.privateApi.post(`/apartments/${apartmentId}/attachments`, data),
   getApproveListings: (params: ParamsProp) =>
     apiConfig.privateApi.get("/apartments/pending-review", { params }),
   approveListing: (
@@ -75,6 +77,13 @@ export const apartmentManagementApi = {
     data: ListingApproveFormData,
   ): Promise<ApiResponse<null>> =>
     apiConfig.privateApi.post(`/apartments/${apartmentId}/approve`, data),
+  deleteMedia: (
+    apartmentId: string,
+    mediaId: string,
+  ): Promise<ApiResponse<null>> =>
+    apiConfig.privateApi.delete(
+      `/apartments/${apartmentId}/attachments/${mediaId}`,
+    ),
 };
 
 export const roomManagementApi = {

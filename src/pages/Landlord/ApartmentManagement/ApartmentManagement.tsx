@@ -206,16 +206,16 @@ function ApartmentManagement() {
     try {
       const formData = new FormData();
       files.forEach((file) => {
-        formData.append("photos", file);
+        formData.append("files", file);
       });
 
-      await apartmentManagementApi.putPhotosForApartment(apartmentId, formData);
-      toast.success("Photos added successfully");
+      await apartmentManagementApi.uploadMediaApartment(apartmentId, formData);
+      toast.success("Media added successfully");
       fetchApartmentList();
     } catch (error: unknown) {
       console.log(error);
       const errorMessage =
-        error instanceof Error ? error.message : "Failed to add photos";
+        error instanceof Error ? error.message : "Failed to add media";
       toast.error(errorMessage);
       throw error;
     }
@@ -533,6 +533,7 @@ function ApartmentManagement() {
         }
         apartment={selectedApartment}
         mode={formMode}
+        refetchApartments={fetchApartmentList}
       />
 
       <PackageForm

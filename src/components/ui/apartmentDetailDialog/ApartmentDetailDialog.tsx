@@ -16,6 +16,11 @@ import {
   Puzzle,
   RulerDimensionLine,
 } from "lucide-react";
+import {
+  ALLOWED_VIDEO_EXTENSIONS,
+  ALLOWED_VIDEO_TYPES,
+  MAX_FILE_SIZE,
+} from "@/constants/validTypeUpload";
 
 interface Props {
   apartment: Apartment;
@@ -28,7 +33,12 @@ function ApartmentDetailDialog({ apartment, onAddPhotos }: Props) {
   const { i18n } = useTranslation();
   const { user } = useAuthStore();
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
-  const [previewUrls, setPreviewUrls] = useState<string[]>([]);
+  const [previewItems, setPreviewItems] = useState<
+    {
+      url: string;
+      type: "image" | "video";
+    }[]
+  >([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -153,31 +163,66 @@ function ApartmentDetailDialog({ apartment, onAddPhotos }: Props) {
     const files = Array.from(e.target.files || []);
 
     if (selectedFiles.length + files.length > 10) {
-      setError("Maximum 10 photos allowed");
+      setError("Maximum 10 files allowed");
       return;
     }
 
-    setSelectedFiles((prev) => [...prev, ...files]);
-    setError(null);
+    const validFiles: File[] = [];
 
-    // Create preview URLs
     files.forEach((file) => {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setPreviewUrls((prev) => [...prev, reader.result as string]);
-      };
-      reader.readAsDataURL(file);
+      const extension = file.name
+        .substring(file.name.lastIndexOf("."))
+        .toLowerCase();
+
+      const isImage = file.type.startsWith("image/");
+
+      const isVideo =
+        ALLOWED_VIDEO_TYPES.includes(file.type) &&
+        ALLOWED_VIDEO_EXTENSIONS.includes(extension);
+
+      if (!isImage && !isVideo) {
+        setError(
+          "Only images and videos (.mp4, .mov, .avi, .mkv, .webm) are allowed",
+        );
+        return;
+      }
+
+      if (file.size > MAX_FILE_SIZE) {
+        setError(`${file.name} exceeds the maximum size of 100MB`);
+        return;
+      }
+
+      validFiles.push(file);
     });
 
-    // Reset input
+    if (validFiles.length === 0) return;
+
+    setSelectedFiles((prev) => [...prev, ...validFiles]);
+    setError(null);
+
+    validFiles.forEach((file) => {
+      const url = URL.createObjectURL(file);
+
+      setPreviewItems((prev) => [
+        ...prev,
+        {
+          url,
+          type: file.type.startsWith("video/") ? "video" : "image",
+        },
+      ]);
+    });
+
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
   };
 
   const handleRemoveFile = (index: number) => {
+    URL.revokeObjectURL(previewItems[index]?.url);
+
     setSelectedFiles((prev) => prev.filter((_, i) => i !== index));
-    setPreviewUrls((prev) => prev.filter((_, i) => i !== index));
+
+    setPreviewItems((prev) => prev.filter((_, i) => i !== index));
   };
 
   const handleSubmit = async () => {
@@ -192,9 +237,10 @@ function ApartmentDetailDialog({ apartment, onAddPhotos }: Props) {
     try {
       await onAddPhotos(apartment.apartmentId, selectedFiles);
       setSelectedFiles([]);
-      setPreviewUrls([]);
+      previewItems.forEach((item) => URL.revokeObjectURL(item.url));
+      setPreviewItems([]);
     } catch (err) {
-      setError("Failed to upload photos");
+      setError("Failed to upload media");
       console.error(err);
     } finally {
       setLoading(false);
@@ -462,7 +508,14 @@ function ApartmentDetailDialog({ apartment, onAddPhotos }: Props) {
               ref={fileInputRef}
               type="file"
               multiple
-              accept="image/*"
+              accept="
+image/*,
+video/mp4,
+video/quicktime,
+video/x-msvideo,
+video/x-matroska,
+video/webm
+"
               onChange={handleFileSelect}
               className="hidden"
             />
@@ -475,30 +528,32 @@ function ApartmentDetailDialog({ apartment, onAddPhotos }: Props) {
               + {t("apartment.infor.browsePhotos")}
             </Button>
 
-            {previewUrls.length > 0 && (
-              <div>
-                <p className="text-xs font-semibold text-gray-600 mb-3">
-                  {previewUrls.length} photo(s) selected
-                </p>
-                <div className="grid grid-cols-4 gap-3">
-                  {previewUrls.map((url, index) => (
-                    <div key={index} className="relative group">
-                      <img
-                        src={url}
-                        alt={`Preview ${index}`}
-                        className="h-24 w-full object-cover rounded-lg shadow-md"
-                      />
-                      <button
-                        onClick={() => handleRemoveFile(index)}
-                        className="absolute -top-2 -right-2 bg-red-500 hover:bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold opacity-0 group-hover:opacity-100 transition-opacity shadow-lg"
-                      >
-                        ×
-                      </button>
-                    </div>
-                  ))}
+            <div className="grid grid-cols-4 gap-2">
+              {previewItems.map((item, index) => (
+                <div key={index} className="relative group">
+                  {item.type === "image" ? (
+                    <img
+                      src={item.url}
+                      alt={`Preview ${index}`}
+                      className="h-24 w-full object-cover rounded-lg shadow-md"
+                    />
+                  ) : (
+                    <video
+                      src={item.url}
+                      controls
+                      className="h-24 w-full object-cover rounded-lg shadow-md"
+                    />
+                  )}
+
+                  <button
+                    onClick={() => handleRemoveFile(index)}
+                    className="absolute -top-2 -right-2 bg-red-500 hover:bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold opacity-0 group-hover:opacity-100 transition-opacity shadow-lg"
+                  >
+                    ×
+                  </button>
                 </div>
-              </div>
-            )}
+              ))}
+            </div>
 
             {selectedFiles.length > 0 && (
               <Button
@@ -508,7 +563,7 @@ function ApartmentDetailDialog({ apartment, onAddPhotos }: Props) {
               >
                 {loading
                   ? "Uploading..."
-                  : "Upload " + selectedFiles.length + " Photo(s)"}
+                  : "Upload " + selectedFiles.length + " Media(s)"}
               </Button>
             )}
           </div>
