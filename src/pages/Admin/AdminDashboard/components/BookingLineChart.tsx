@@ -19,19 +19,38 @@ type Props = {
 };
 
 export default function BookingLineChart({ data }: Props) {
-  // 🔥 transform data
+  const firstRow = data?.rows?.[0];
+  const dimKey = firstRow ? Object.keys(firstRow.dimensions)[0] : "date";
+  const bookingKey = firstRow
+    ? Object.keys(firstRow.metrics).find((k) => /booking/i.test(k)) ??
+      Object.keys(firstRow.metrics)[0]
+    : "bookings";
+  const revKey = firstRow
+    ? Object.keys(firstRow.metrics).find((k) => /revenue/i.test(k))
+    : undefined;
+
   const chartData =
     data?.rows
-      ?.map((item: any) => ({
-        date: new Date(item.dimensions.date).toLocaleDateString("vi-VN"),
-        bookings: item.metrics.bookings,
-        revenue: item.metrics.revenue,
-        rawDate: new Date(item.dimensions.date),
-      }))
-      // sort theo ngày
+      ?.map((item: any) => {
+        const rawVal = item.dimensions[dimKey];
+        const rawDate = new Date(rawVal);
+        const dateLabel = isNaN(rawDate.getTime())
+          ? String(rawVal)
+          : rawDate.toLocaleDateString("vi-VN");
+        return {
+          date: dateLabel,
+          bookings: item.metrics[bookingKey],
+          revenue: revKey ? item.metrics[revKey] : undefined,
+          rawDate: isNaN(rawDate.getTime()) ? 0 : rawDate.getTime(),
+        };
+      })
       .sort((a: any, b: any) => a.rawDate - b.rawDate) || [];
 
-  const total = data?.totalMetrics?.bookings || 0;
+  const total =
+    data?.totalMetrics?.[bookingKey] ??
+    data?.totalMetrics?.total_booking ??
+    data?.totalMetrics?.bookings ??
+    0;
 
   // Tính toán thống kê
   const maxBookings = Math.max(

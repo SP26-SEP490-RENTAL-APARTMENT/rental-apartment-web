@@ -26,7 +26,16 @@ export const DashboardColumns = (
   {
     accessorKey: "isActive",
     header: "Active",
-    cell: ({ row }) => (row.original.isActive ? "Yes" : "No"),
+    cell: ({ row }) =>
+      row.original.isActive ? (
+        <span className="inline-flex items-center rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-semibold text-emerald-700">
+          Active
+        </span>
+      ) : (
+        <span className="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-semibold text-gray-500">
+          Inactive
+        </span>
+      ),
   },
   {
     id: "actions",

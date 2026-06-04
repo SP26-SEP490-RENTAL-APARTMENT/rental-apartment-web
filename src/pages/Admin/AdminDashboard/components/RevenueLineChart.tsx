@@ -28,19 +28,37 @@ function RevenueLineChart({ data }: { data: any }) {
     );
   }
 
+  const firstRow = data.rows[0];
+  const dimKey = firstRow ? Object.keys(firstRow.dimensions)[0] : "date";
+  const revKey = firstRow
+    ? Object.keys(firstRow.metrics).find((k) => /revenue/i.test(k)) ??
+      Object.keys(firstRow.metrics)[0]
+    : "revenue";
+  const bookingKey = firstRow
+    ? Object.keys(firstRow.metrics).find((k) => /booking/i.test(k))
+    : undefined;
+
   const chartData = data.rows
-    .map((item: any) => ({
-      rawDate: new Date(item.dimensions.date),
-      date: new Date(item.dimensions.date).toLocaleDateString("en-US", {
-        month: "short",
-        day: "numeric",
-      }),
-      revenue: item.metrics.revenue,
-      bookings: item.metrics.bookings,
-    }))
+    .map((item: any) => {
+      const rawVal = item.dimensions[dimKey];
+      const rawDate = new Date(rawVal);
+      const dateLabel = isNaN(rawDate.getTime())
+        ? String(rawVal)
+        : rawDate.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+      return {
+        rawDate: isNaN(rawDate.getTime()) ? 0 : rawDate.getTime(),
+        date: dateLabel,
+        revenue: item.metrics[revKey],
+        bookings: bookingKey ? item.metrics[bookingKey] : undefined,
+      };
+    })
     .sort((a: any, b: any) => a.rawDate - b.rawDate);
 
-  const total = data?.totalMetrics?.revenue || 0;
+  const total =
+    data?.totalMetrics?.[revKey] ??
+    data?.totalMetrics?.total_revenue ??
+    data?.totalMetrics?.revenue ??
+    0;
 
   // Calculate statistics
   const maxRevenue = Math.max(...chartData.map((item: any) => item.revenue), 0);

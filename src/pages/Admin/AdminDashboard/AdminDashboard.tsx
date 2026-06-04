@@ -9,11 +9,7 @@ import { Button } from "@/components/ui/button";
 import type { CatalogFormData } from "@/schemas/catalogSchema";
 import { toast } from "sonner";
 import CatalogForm from "./components/CatalogForm.tsx";
-import RunReportDialog from "./components/RunReportDialog";
-import {
-  GENERAL,
-} from "@/constants/reportBody";
-import RevenueLineChart from "./components/RevenueLineChart";
+import { GENERAL } from "@/constants/reportBody";
 import { useChartStore } from "@/store/chartStore";
 import GeneralCard from "./components/GeneralCard";
 import {
@@ -22,10 +18,10 @@ import {
   UsersRound,
   Plus,
   Download,
+  Play,
+  RotateCcw,
 } from "lucide-react";
-import BookingLineChart from "./components/BookingLineChart";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import BookingStatusPieChart from "./components/BookingStatusPieChart";
 import {
   Select,
   SelectContent,
@@ -33,8 +29,38 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { applyRangePreset, type RangePreset } from "@/utils/datePresets";
+import ReportResults from "./components/ReportResults";
+import ReportFilterBuilder, {
+  type FilterField,
+  type FilterRow,
+  toBackendFilters,
+} from "./components/ReportFilterBuilder";
 import { humanizeReportField } from "@/utils/reportLabels";
-// import BookStatusPieChart from "./components/BookStatusPieChart";
+
+type QuickPreset = { label: string; preset: RangePreset | "custom" };
+
+const QUICK_PRESETS: QuickPreset[] = [
+  { label: "Today", preset: "this_day" },
+  { label: "Last 7 Days", preset: "last_week" },
+  { label: "Last 30 Days", preset: "last_30_days" },
+  { label: "This Month", preset: "this_month" },
+  { label: "Last Month", preset: "last_month" },
+  { label: "This Year", preset: "this_year" },
+  { label: "Custom", preset: "custom" },
+];
+
+type ComparisonPeriod = "none" | "wow" | "mom" | "qoq" | "yoy";
+
+const COMPARISON_OPTIONS: { value: ComparisonPeriod; label: string; dimField: string | null }[] = [
+  { value: "none", label: "None", dimField: null },
+  { value: "wow", label: "WoW", dimField: "week" },
+  { value: "mom", label: "MoM", dimField: "month" },
+  { value: "qoq", label: "QoQ", dimField: "quarter" },
+  { value: "yoy", label: "YoY", dimField: "year" },
+];
+
+const DEFAULT_PRESET: RangePreset = "last_30_days";
 
 function AdminDashboard() {
   const [catalogs, setCatalogs] = useState<Catalog[]>([]);
@@ -46,44 +72,70 @@ function AdminDashboard() {
   const [selectedReport, setSelectedReport] = useState<Catalog | null>(null);
   const [editingCatalog, setEditingCatalog] = useState<Catalog | null>(null);
   const [formInitialData, setFormInitialData] = useState<Partial<CatalogFormData> | null>(null);
-  const [open, setOpen] = useState({ catalog: false, runReport: false });
-  const [dateRange, setDateRange] = useState({ from: "", to: "" });
+  const [catalogFormOpen, setCatalogFormOpen] = useState(false);
+  const [dateRange, setDateRange] = useState(() => applyRangePreset(DEFAULT_PRESET));
+  const [activePreset, setActivePreset] = useState<RangePreset | "custom">(DEFAULT_PRESET);
   const [exportFormat, setExportFormat] = useState<"csv" | "xlsx">("csv");
-  // const [reportResult, setReportResult] = useState(null);
+  const [isRunning, setIsRunning] = useState(false);
+  const [comparisonPeriod, setComparisonPeriod] = useState<ComparisonPeriod>("none");
+  const [filterRows, setFilterRows] = useState<FilterRow[]>([]);
   const { chartData, setChartData } = useChartStore();
 
-  const normalizeReportName = (name?: string | null) =>
-    name?.trim().toLowerCase() ?? "";
+  /* Derive filterable fields from the selected report's dimension + metric definitions */
+  const filterFields: FilterField[] = (() => {
+    if (!selectedReport) return [];
+    const r = selectedReport as unknown as Record<string, unknown>;
+    const get = (key: string) => (r[key] ?? r[key.charAt(0).toLowerCase() + key.slice(1)]) as string | undefined;
 
-  const reportRows = chartData?.rows ?? [];
-  const firstReportRow = reportRows[0];
-  const reportDimensionKeys = firstReportRow?.dimensions
-    ? Object.keys(firstReportRow.dimensions)
-    : [];
-  const reportMetricKeys = firstReportRow?.metrics
-    ? Object.keys(firstReportRow.metrics)
-    : [];
+    const NUMERIC_FIELDS = new Set([
+      "nights", "booking_count", "total_revenue", "avg_booking_value", "min_booking_value",
+      "max_booking_value", "paid_booking_count", "unique_tenant_count", "unique_apartment_count",
+      "unique_paid_tenant_count", "occupancy_percent", "adr", "avg", "min", "max", "sum", "count",
+      "p50", "p90", "p95", "avg_length_of_stay", "review_avg_rating", "review_count",
+      "package_revenue", "package_count", "subscription_revenue", "subscription_churn_count",
+      "subscription_churn_rate", "avg_sold_price", "avg_base_price", "avg_price_delta",
+      "revenue", "bookings", "total_booking", "total_user",
+    ]);
+    const DATE_FIELDS = new Set(["date", "week", "month", "quarter", "year"]);
 
-  const formatTableValue = (value: unknown) => {
-    if (value === null || value === undefined) return "-";
-    if (typeof value === "string" && value.includes("T")) {
-      return value.split("T")[0];
+    function dataType(field: string): FilterField["dataType"] {
+      if (DATE_FIELDS.has(field)) return "date";
+      if (NUMERIC_FIELDS.has(field) || /revenue|price|count|rate|value|amount|nights|rating|pct/i.test(field)) return "number";
+      return "string";
     }
-    if (typeof value === "number") return value.toLocaleString();
-    return String(value);
-  };
+
+    const fields: FilterField[] = [];
+    try {
+      const dims = get("DimensionsJson");
+      if (dims) {
+        JSON.parse(dims).forEach(({ field, alias }: { field: string; alias?: string }) => {
+          const key = alias || field;
+          fields.push({ key, label: humanizeReportField(key), target: "dimension", dataType: dataType(key) });
+        });
+      }
+    } catch {}
+    try {
+      const metrics = get("MetricsJson");
+      if (metrics) {
+        JSON.parse(metrics).forEach(({ field, alias }: { field: string; alias?: string }) => {
+          const key = alias || field;
+          fields.push({ key, label: humanizeReportField(key), target: "metric", dataType: dataType(key) });
+        });
+      }
+    } catch {}
+    return fields;
+  })();
+
+  /* ─── catalog fetch ─── */
 
   const fetchCatalogs = async () => {
     setLoading(true);
     try {
-      const response = await reportApi.getCatalog({
-        page,
-        pageSize,
-      });
-      setCatalogs(response.data.items);
-      setTotalCount(response.data.totalCount);
-    } catch (error) {
-      console.log(error);
+      const res = await reportApi.getCatalog({ page, pageSize });
+      setCatalogs(res.data.items);
+      setTotalCount(res.data.totalCount);
+    } catch (err) {
+      console.log(err);
     } finally {
       setLoading(false);
     }
@@ -91,366 +143,414 @@ function AdminDashboard() {
 
   const fetchGeneralData = async (reportId: string) => {
     try {
-      const response = await reportApi.runReport(reportId, GENERAL);
-      const totals = response.data.data.totalMetrics;
+      const res = await reportApi.runReport(reportId, GENERAL);
+      const totals = res.data.data.totalMetrics;
       setGeneralData({
         total_revenue: totals.total_revenue ?? 0,
         total_booking: totals.total_booking ?? 0,
         total_user: totals.total_user ?? 0,
       });
-    } catch (error) {
-      console.log(error);
+    } catch (err) {
+      console.log(err);
     }
   };
 
+  useEffect(() => { fetchCatalogs(); }, [page, pageSize]);
+  useEffect(() => { if (catalogs.length > 0) fetchGeneralData(catalogs[0].reportId); }, [catalogs]);
+
+  /* ─── report CRUD ─── */
+
   const handleCreateReport = async (data: CatalogFormData) => {
     try {
-      const { dimensions, metrics, ...reportDefinition } = data;
-
+      const { dimensions, metrics, ...def } = data;
       await reportApi.createReport({
-        ...reportDefinition,
+        ...def,
         DimensionsJson: JSON.stringify(dimensions ?? []),
         MetricsJson: JSON.stringify(metrics ?? []),
         TimeRangeJson: JSON.stringify({}),
       });
       fetchCatalogs();
       toast.success("Report created successfully");
-    } catch (error) {
-      console.log(error);
-
+    } catch (err) {
+      console.log(err);
       toast.error("Failed to create report");
     }
   };
 
   const handleUpdateReport = async (data: CatalogFormData) => {
     if (!editingCatalog) return;
-
     try {
-      const { dimensions, metrics, ...reportDefinition } = data;
-
+      const { dimensions, metrics, ...def } = data;
       await reportApi.updateReport(editingCatalog.reportId, {
-        ...reportDefinition,
+        ...def,
         DimensionsJson: JSON.stringify(dimensions ?? []),
         MetricsJson: JSON.stringify(metrics ?? []),
         TimeRangeJson: JSON.stringify({}),
       });
-
       setEditingCatalog(null);
       fetchCatalogs();
       toast.success("Report updated successfully");
-    } catch (error) {
-      console.log(error);
+    } catch (err) {
+      console.log(err);
       toast.error("Failed to update report");
     }
   };
 
   const handleDeleteReport = async (catalog: Catalog) => {
-    const confirm = window.confirm(`Delete report "${catalog.name}"? This cannot be undone.`);
-    if (!confirm) return;
-
+    if (!window.confirm(`Delete report "${catalog.name}"? This cannot be undone.`)) return;
     try {
       await reportApi.deleteReport(catalog.reportId);
       fetchCatalogs();
       toast.success("Report deleted");
-    } catch (error) {
-      console.log(error);
+    } catch (err) {
+      console.log(err);
       toast.error("Failed to delete report");
     }
   };
 
+  /* ─── request builder ─── */
+
   const buildReportRequest = () => {
     if (!selectedReport) return null;
-
     try {
-      const getConfigJson = (key: string) => {
-        const report = selectedReport as unknown as Record<string, unknown>;
-        return (report[key] ?? report[key.charAt(0).toLowerCase() + key.slice(1)]) as string | null | undefined;
+      const get = (key: string) => {
+        const r = selectedReport as unknown as Record<string, unknown>;
+        return (r[key] ?? r[key.charAt(0).toLowerCase() + key.slice(1)]) as string | null | undefined;
       };
 
-      const request: Record<string, unknown> = {
-        from: dateRange.from,
-        to: dateRange.to,
-      };
+      const request: Record<string, unknown> = { from: dateRange.from, to: dateRange.to };
 
-      const dimensionsJson = getConfigJson("DimensionsJson");
-      if (dimensionsJson) {
-        request.dimensions = JSON.parse(dimensionsJson);
+      const compOption = COMPARISON_OPTIONS.find((o) => o.value === comparisonPeriod);
+      const timeDimField = compOption?.dimField ?? null;
+
+      const dims = get("DimensionsJson");
+      if (dims) {
+        const parsed: { field: string; alias: string }[] = JSON.parse(dims);
+        // remove any existing time dimensions, then prepend the selected one
+        const TIME_DIMS = ["date", "week", "month", "quarter", "year"];
+        const stripped = parsed.filter((d) => !TIME_DIMS.includes(d.field));
+        if (timeDimField) {
+          request.dimensions = [{ field: timeDimField, alias: timeDimField }, ...stripped];
+        } else {
+          request.dimensions = parsed;
+        }
+      } else if (timeDimField) {
+        request.dimensions = [{ field: timeDimField, alias: timeDimField }];
       }
 
-      const metricsJson = getConfigJson("MetricsJson");
-      if (metricsJson) {
-        request.metrics = JSON.parse(metricsJson);
-      }
+      const metrics = get("MetricsJson");
+      if (metrics) request.metrics = JSON.parse(metrics);
 
-      const filtersJson = getConfigJson("FiltersJson");
-      if (filtersJson) {
-        request.filters = JSON.parse(filtersJson);
-      }
+      // Merge saved FiltersJson with ad-hoc filters from the UI
+      const savedFilters = (() => { try { const f = get("FiltersJson"); return f ? JSON.parse(f) : []; } catch { return []; } })();
+      const adHocFilters = toBackendFilters(filterRows, filterFields);
+      const allFilters = [...savedFilters, ...adHocFilters];
+      if (allFilters.length > 0) request.filters = allFilters;
 
-      const timeRangeJson = getConfigJson("TimeRangeJson");
-      if (timeRangeJson) {
-        const parsedTimeRange = JSON.parse(timeRangeJson) as {
-          from?: string;
-          to?: string;
-          searchTerm?: string;
-          page?: number;
-          pageSize?: number;
-        };
-
-        if (parsedTimeRange.from) request.from = parsedTimeRange.from;
-        if (parsedTimeRange.to) request.to = parsedTimeRange.to;
-        if (parsedTimeRange.searchTerm) request.searchTerm = parsedTimeRange.searchTerm;
-        if (parsedTimeRange.page) request.page = parsedTimeRange.page;
-        if (parsedTimeRange.pageSize) request.pageSize = parsedTimeRange.pageSize;
+      const timeRange = get("TimeRangeJson");
+      if (timeRange) {
+        const p = JSON.parse(timeRange) as { from?: string; to?: string; searchTerm?: string; page?: number; pageSize?: number };
+        if (p.from) request.from = p.from;
+        if (p.to) request.to = p.to;
+        if (p.searchTerm) request.searchTerm = p.searchTerm;
+        if (p.page) request.page = p.page;
+        if (p.pageSize) request.pageSize = p.pageSize;
       }
 
       return request;
-    } catch (error) {
-      console.log(error);
+    } catch (err) {
+      console.log(err);
       return null;
     }
   };
 
-  const isSelectedReportName = (...names: string[]) => {
-    const selectedName = normalizeReportName(selectedReport?.name);
-    return names.some((name) => normalizeReportName(name) === selectedName);
-  };
+  /* ─── run / export ─── */
 
   const handleRunReport = async () => {
     if (!selectedReport) return;
     const request = buildReportRequest();
-    if (!request) {
-      toast.error("Unsupported report type");
-      return;
-    }
+    if (!request) { toast.error("Unsupported report type"); return; }
+    setIsRunning(true);
     try {
-      const response = await reportApi.runReport(
-        selectedReport.reportId,
-        request,
-      );
-      setOpen({ ...open, runReport: false });
-      setChartData(response.data.data);
-      toast.success("Report run successfully");
-    } catch (error) {
+      const res = await reportApi.runReport(selectedReport.reportId, request);
+      setChartData(res.data.data);
+      toast.success("Report generated");
+    } catch (err) {
       toast.error("Failed to run report");
-      console.log(error);
+      console.log(err);
+    } finally {
+      setIsRunning(false);
     }
   };
 
-  const handleExportReport = async () => {
+  const doExport = async (format: "csv" | "xlsx") => {
     if (!selectedReport) return;
-
     const request = buildReportRequest();
-    if (!request) {
-      toast.error("Unsupported report type");
-      return;
-    }
-
+    if (!request) { toast.error("Unsupported report type"); return; }
     try {
-      const response = await reportApi.exportReport(selectedReport.reportId, {
-        fileName: `${selectedReport.name.replace(/\s+/g, "_").toLowerCase()}_${dateRange.from || "from"}_${dateRange.to || "to"}.${exportFormat}`,
-        format: exportFormat,
+      const res = await reportApi.exportReport(selectedReport.reportId, {
+        fileName: `${selectedReport.name.replace(/\s+/g, "_").toLowerCase()}_${dateRange.from}_${dateRange.to}.${format}`,
+        format,
         stream: true,
         runRequest: request,
       });
-
-      const blob = response.data;
-      const downloadUrl = window.URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = downloadUrl;
-      link.download = `${selectedReport.name.replace(/\s+/g, "_").toLowerCase()}.${exportFormat}`;
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-      window.URL.revokeObjectURL(downloadUrl);
-      toast.success("Report exported successfully");
-    } catch (error) {
+      const url = window.URL.createObjectURL(res.data);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `${selectedReport.name.replace(/\s+/g, "_").toLowerCase()}.${format}`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+      toast.success("Export downloaded");
+    } catch (err) {
       toast.error("Failed to export report");
-      console.log(error);
+      console.log(err);
     }
   };
 
-  useEffect(() => {
-    fetchCatalogs();
-  }, [page, pageSize]);
+  /* ─── reset ─── */
 
-  useEffect(() => {
-    if (catalogs.length > 0) {
-      fetchGeneralData(catalogs[0].reportId);
-    }
-  }, [catalogs]);
+  function handleReset() {
+    setSelectedReport(null);
+    setDateRange(applyRangePreset(DEFAULT_PRESET));
+    setActivePreset(DEFAULT_PRESET);
+    setComparisonPeriod("none");
+    setFilterRows([]);
+    setChartData(null);
+  }
 
-  const handlePageChange = (newPage: number) => {
-    setPage(newPage);
-  };
+  /* ─── date controls ─── */
 
-  const handlePageSizeChange = (value: string) => {
-    setPage(1);
-    setPageSize(Number(value));
-  };
+  function handlePreset(preset: RangePreset | "custom") {
+    setActivePreset(preset);
+    if (preset !== "custom") setDateRange(applyRangePreset(preset));
+  }
 
+  function handleFromChange(v: string) {
+    setActivePreset("custom");
+    setDateRange((r) => ({ ...r, from: v }));
+  }
+
+  function handleToChange(v: string) {
+    setActivePreset("custom");
+    setDateRange((r) => ({ ...r, to: v }));
+  }
+
+  /* ─── catalog table pagination ─── */
+
+  const handlePageChange = (p: number) => setPage(p);
+  const handlePageSizeChange = (v: string) => { setPage(1); setPageSize(Number(v)); };
   const triggerRunReport = (report: Catalog) => {
     setSelectedReport(report);
-    setOpen({ ...open, runReport: true });
+    toast.info(`"${report.name}" selected — configure the date range and click Run.`);
   };
 
+  /* ─── render ─── */
+
   return (
-    <div className="min-h-screen bg-gray-50 space-y-8">
-      {/* Header */}
+    <div className="min-h-screen bg-gray-50">
+      {/* ── Sticky header ── */}
       <div className="bg-white border-b border-gray-200 sticky top-0 z-30 shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex justify-between items-center">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex justify-between items-center">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-            <p className="text-gray-600 mt-1">Welcome to admin dashboard</p>
+            <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
+            <p className="text-sm text-gray-500 mt-0.5">Admin reporting &amp; analytics</p>
           </div>
           <Button
-            onClick={() => setOpen({ ...open, catalog: true })}
-            className="bg-linear-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold gap-2"
+            onClick={() => setCatalogFormOpen(true)}
+            className="bg-blue-600 hover:bg-blue-700 text-white font-semibold gap-2 shadow-sm"
           >
             <Plus className="h-4 w-4" />
-            Create Report
+            <span className="hidden sm:inline">Create Report</span>
           </Button>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-        {/* Metrics Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {generalData && (
-            <>
-              <GeneralCard
-                title="Total Revenue"
-                data={generalData.total_revenue}
-                Icon={BanknoteArrowUp}
-              />
-              <GeneralCard
-                title="Total Bookings"
-                data={generalData.total_booking}
-                Icon={ChartNoAxesColumnIncreasing}
-              />
-              <GeneralCard
-                title="Total Tenants"
-                data={generalData.total_user}
-                Icon={UsersRound}
-              />
-            </>
-          )}
-        </div>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
 
-        {/* Charts Section */}
-        <div className="space-y-6">
-          {chartData && isSelectedReportName("Revenue", "Revenue Performance") && (
-            <RevenueLineChart data={chartData} />
-          )}
-          {chartData && isSelectedReportName("Booking", "Booking Summary") && (
-            <BookingLineChart data={chartData} />
-          )}
-          {chartData && isSelectedReportName("Booking Status") && (
-            <BookingStatusPieChart data={chartData} />
-          )}
+        {/* ── KPI cards ── */}
+        {generalData && (
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <GeneralCard title="Total Revenue" data={generalData.total_revenue} Icon={BanknoteArrowUp} />
+            <GeneralCard title="Total Bookings" data={generalData.total_booking} Icon={ChartNoAxesColumnIncreasing} />
+            <GeneralCard title="Total Tenants" data={generalData.total_user} Icon={UsersRound} />
+          </div>
+        )}
 
-          {chartData && selectedReport && (
-            <div className="flex flex-col items-end gap-3 sm:flex-row sm:items-center sm:justify-end">
-              <Select
-                value={exportFormat}
-                onValueChange={(value) => setExportFormat(value as any)}
-              >
-                <SelectTrigger className="w-40">
-                  <SelectValue placeholder="Format" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="csv">CSV (.csv)</SelectItem>
-                  <SelectItem value="xlsx">Excel (.xlsx)</SelectItem>
-                </SelectContent>
-              </Select>
-
-              <Button
-                variant="outline"
-                onClick={handleExportReport}
-                className="gap-2"
-              >
-                <Download className="h-4 w-4" />
-                Export
-              </Button>
-            </div>
-          )}
-
-          {reportRows.length > 0 && selectedReport && (
-            <Card className="border-0 shadow-sm">
-              <CardHeader>
-                <CardTitle>{selectedReport.name} Table</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="overflow-x-auto">
-                  <table className="w-full border-collapse text-sm">
-                    <thead>
-                      <tr className="border-b border-gray-200 bg-gray-50">
-                        <th className="px-3 py-2 text-left font-medium text-gray-700">
-                          #
-                        </th>
-                        {reportDimensionKeys.map((key) => (
-                          <th
-                            key={key}
-                            className="px-3 py-2 text-left font-medium text-gray-700"
-                          >
-                            {humanizeReportField(key)}
-                          </th>
-                        ))}
-                        {reportMetricKeys.map((key) => (
-                          <th
-                            key={key}
-                            className="px-3 py-2 text-left font-medium text-gray-700"
-                          >
-                            {humanizeReportField(key)}
-                          </th>
-                        ))}
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {reportRows.map((row: any, index: number) => (
-                        <tr
-                          key={index}
-                          className="border-b border-gray-100 hover:bg-gray-50"
-                        >
-                          <td className="px-3 py-2 text-gray-500">
-                            {index + 1}
-                          </td>
-                          {reportDimensionKeys.map((key) => (
-                            <td key={key} className="px-3 py-2 text-gray-900">
-                              {formatTableValue(row.dimensions?.[key])}
-                            </td>
-                          ))}
-                          {reportMetricKeys.map((key) => (
-                            <td key={key} className="px-3 py-2 text-gray-900">
-                              {formatTableValue(row.metrics?.[key])}
-                            </td>
-                          ))}
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
+        {/* ── Inline report runner ── */}
+        {selectedReport && (
+          <Card className="border border-gray-200 shadow-sm bg-white">
+            <CardHeader className="pb-4 border-b border-gray-100">
+              <div className="flex items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <CardTitle className="text-base text-gray-800">{selectedReport.name}</CardTitle>
+                  {selectedReport.description && (
+                    <p className="text-sm text-gray-500 mt-0.5 truncate">{selectedReport.description}</p>
+                  )}
                 </div>
-              </CardContent>
-            </Card>
-          )}
-        </div>
+                {/* Reset — clearly visible, destructive-neutral */}
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleReset}
+                  className="shrink-0 gap-1.5 text-gray-500 border-gray-300 hover:border-red-300 hover:text-red-600"
+                >
+                  <RotateCcw className="h-3.5 w-3.5" />
+                  Reset
+                </Button>
+              </div>
+            </CardHeader>
 
-        {/* Reports Table */}
-        <Card className="border-0 shadow-sm">
-          <CardHeader className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <CardContent className="space-y-5 pt-5">
+              {/* Step 1 — date range */}
+              <div className="space-y-3">
+                <p className="text-xs font-semibold uppercase tracking-wider text-gray-400">
+                  Date Range
+                </p>
+
+                {/* Pickers */}
+                <div className="grid grid-cols-2 gap-3 max-w-xs">
+                  <div className="space-y-1">
+                    <label className="text-xs font-medium text-gray-600">From Date</label>
+                    <input
+                      type="date"
+                      value={dateRange.from}
+                      onChange={(e) => handleFromChange(e.target.value)}
+                      className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-xs font-medium text-gray-600">To Date</label>
+                    <input
+                      type="date"
+                      value={dateRange.to}
+                      onChange={(e) => handleToChange(e.target.value)}
+                      className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    />
+                  </div>
+                </div>
+
+                {/* Quick presets */}
+                <div className="flex flex-wrap gap-2">
+                  {QUICK_PRESETS.map(({ label, preset }) => (
+                    <button
+                      key={preset}
+                      type="button"
+                      onClick={() => handlePreset(preset)}
+                      className={`rounded-full border px-3 py-1.5 text-xs font-semibold transition-colors ${
+                        activePreset === preset
+                          ? "border-blue-600 bg-blue-600 text-white shadow-sm"
+                          : "border-gray-300 bg-white text-gray-600 hover:border-blue-400 hover:text-blue-600"
+                      }`}
+                    >
+                      {label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Step 2 — comparison period */}
+              <div className="space-y-2">
+                <p className="text-xs font-semibold uppercase tracking-wider text-gray-400">
+                  Comparison Period
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {COMPARISON_OPTIONS.map(({ value, label }) => (
+                    <button
+                      key={value}
+                      type="button"
+                      onClick={() => setComparisonPeriod(value)}
+                      className={`rounded-full border px-3 py-1.5 text-xs font-semibold transition-colors ${
+                        comparisonPeriod === value
+                          ? "border-blue-600 bg-blue-600 text-white shadow-sm"
+                          : "border-gray-300 bg-white text-gray-600 hover:border-blue-400 hover:text-blue-600"
+                      }`}
+                    >
+                      {label}
+                    </button>
+                  ))}
+                </div>
+                {comparisonPeriod !== "none" && (
+                  <p className="text-xs text-gray-400">
+                    Groups data by{" "}
+                    <span className="font-medium text-blue-600">
+                      {COMPARISON_OPTIONS.find((o) => o.value === comparisonPeriod)?.dimField}
+                    </span>{" "}
+                    within the selected date range.
+                  </p>
+                )}
+              </div>
+
+              {/* Step 3 — filters */}
+              <div className="border-t border-gray-100 pt-4">
+                <ReportFilterBuilder
+                  fields={filterFields}
+                  filters={filterRows}
+                  onChange={setFilterRows}
+                />
+              </div>
+
+              {/* Step 4 — actions */}
+              <div className="flex flex-wrap items-center gap-3 pt-1 border-t border-gray-100">
+                <Button
+                  onClick={handleRunReport}
+                  disabled={isRunning}
+                  className="bg-blue-600 hover:bg-blue-700 text-white gap-2 shadow-sm"
+                >
+                  <Play className="h-4 w-4" />
+                  {isRunning ? "Running…" : "Run Report"}
+                </Button>
+
+                <div className="flex items-center gap-2 ml-auto">
+                  <Select value={exportFormat} onValueChange={(v) => setExportFormat(v as "csv" | "xlsx")}>
+                    <SelectTrigger className="w-36 h-9 text-sm border-gray-300">
+                      <SelectValue placeholder="Format" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="csv">CSV (.csv)</SelectItem>
+                      <SelectItem value="xlsx">Excel (.xlsx)</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <Button
+                    variant="outline"
+                    onClick={() => doExport(exportFormat)}
+                    disabled={!chartData}
+                    className="h-9 gap-2 border-gray-300 text-gray-600"
+                  >
+                    <Download className="h-4 w-4" />
+                    Export
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* ── Results: spinner / success banner / table+chart ── */}
+        {(isRunning || chartData) && selectedReport && (
+          <ReportResults
+            data={chartData}
+            isRunning={isRunning}
+            reportName={selectedReport.name}
+            onDownloadCsv={() => doExport("csv")}
+            onDownloadXlsx={() => doExport("xlsx")}
+          />
+        )}
+
+        {/* ── Report Catalogs Table ── */}
+        <Card className="border border-gray-200 shadow-sm">
+          <CardHeader className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between border-b border-gray-100 pb-4">
             <div>
-              <CardTitle>Report Catalogs</CardTitle>
-              <p className="text-sm text-gray-500 mt-1">
-                Showing {catalogs.length} of {totalCount} reports
+              <CardTitle className="text-base text-gray-800">Report Catalogs</CardTitle>
+              <p className="text-sm text-gray-400 mt-0.5">
+                {totalCount} report{totalCount !== 1 ? "s" : ""} total
               </p>
             </div>
             <div className="flex items-center gap-2">
-              <span className="text-sm text-gray-500">Rows per page</span>
-              <Select
-                value={String(pageSize)}
-                onValueChange={handlePageSizeChange}
-              >
-                <SelectTrigger className="w-24">
+              <span className="text-xs text-gray-400">Rows per page</span>
+              <Select value={String(pageSize)} onValueChange={handlePageSizeChange}>
+                <SelectTrigger className="w-20 h-8 text-sm border-gray-300">
                   <SelectValue placeholder="Rows" />
                 </SelectTrigger>
                 <SelectContent>
@@ -461,23 +561,16 @@ function AdminDashboard() {
               </Select>
             </div>
           </CardHeader>
-          <CardContent>
+          <CardContent className="p-0">
             <DataTable
               columns={DashboardColumns(triggerRunReport, (r) => {
-                // Edit handler: fetch config and open form
                 const openEdit = async () => {
                   try {
                     const cfg = await getConfig(r.reportId);
                     let dimensions = [] as any[];
                     let metrics = [] as any[];
-
-                    try {
-                      dimensions = cfg.DimensionsJson ? JSON.parse(cfg.DimensionsJson) : [];
-                    } catch {}
-                    try {
-                      metrics = cfg.MetricsJson ? JSON.parse(cfg.MetricsJson) : [];
-                    } catch {}
-
+                    try { dimensions = cfg.DimensionsJson ? JSON.parse(cfg.DimensionsJson) : []; } catch {}
+                    try { metrics = cfg.MetricsJson ? JSON.parse(cfg.MetricsJson) : []; } catch {}
                     setFormInitialData({
                       name: r.name,
                       category: r.category,
@@ -487,15 +580,13 @@ function AdminDashboard() {
                       dimensions,
                       metrics,
                     });
-
                     setEditingCatalog(r);
-                    setOpen({ ...open, catalog: true });
+                    setCatalogFormOpen(true);
                   } catch (err) {
                     console.log(err);
                     toast.error("Failed to load report config");
                   }
                 };
-
                 void openEdit();
               }, handleDeleteReport)}
               data={catalogs}
@@ -509,28 +600,16 @@ function AdminDashboard() {
         </Card>
       </div>
 
-      {/* Dialogs */}
       <CatalogForm
-        isOpen={open.catalog}
+        isOpen={catalogFormOpen}
         onClose={() => {
-          setOpen({ ...open, catalog: false });
+          setCatalogFormOpen(false);
           setEditingCatalog(null);
           setFormInitialData(null);
         }}
         onSubmit={editingCatalog ? handleUpdateReport : handleCreateReport}
         initialData={formInitialData}
       />
-
-      {selectedReport && (
-        <RunReportDialog
-          open={open.runReport}
-          onClose={() => setOpen({ ...open, runReport: false })}
-          report={selectedReport}
-          dateRange={dateRange}
-          setDateRange={setDateRange}
-          onRun={handleRunReport}
-        />
-      )}
     </div>
   );
 }
