@@ -119,54 +119,50 @@ function InspectionForm({ open, onClose, onSubmit }: Props) {
           <DialogTitle>Inspection Form</DialogTitle>
         </DialogHeader>
 
-        <div className="p-4 space-y-4">
-          <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
-            <div className="space-y-2">
-              <Label>Overall Condition</Label>
-              <Input
-                placeholder="Overall Condition"
-                {...register("OverallCondition")}
-              />
-              {errors.OverallCondition && (
-                <p className="text-red-500 text-sm">
-                  {errors.OverallCondition.message}
-                </p>
-              )}
-            </div>
+        <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
+          <div className="space-y-2">
+            <Label>Overall Condition</Label>
+            <Input
+              placeholder="Overall Condition"
+              {...register("OverallCondition")}
+            />
+            {errors.OverallCondition && (
+              <p className="text-red-500 text-sm">
+                {errors.OverallCondition.message}
+              </p>
+            )}
+          </div>
 
-            <div className="space-y-2">
-              <Label>Issues</Label>
-              <Textarea
-                placeholder="Issues Found"
-                {...register("IssuesFound")}
-              />
-              {errors.IssuesFound && (
-                <p className="text-red-500 text-sm">
-                  {errors.IssuesFound.message}
-                </p>
-              )}
-            </div>
+          <div className="space-y-2">
+            <Label>Issues</Label>
+            <Textarea placeholder="Issues Found" {...register("IssuesFound")} />
+            {errors.IssuesFound && (
+              <p className="text-red-500 text-sm">
+                {errors.IssuesFound.message}
+              </p>
+            )}
+          </div>
 
-            <div className="space-y-2">
-              <Label>Recommendations</Label>
-              <Textarea
-                placeholder="Recommendations"
-                {...register("Recommendations")}
-              />
-              {errors.Recommendations && (
-                <p className="text-red-500 text-sm">
-                  {errors.Recommendations.message}
-                </p>
-              )}
-            </div>
+          <div className="space-y-2">
+            <Label>Recommendations</Label>
+            <Textarea
+              placeholder="Recommendations"
+              {...register("Recommendations")}
+            />
+            {errors.Recommendations && (
+              <p className="text-red-500 text-sm">
+                {errors.Recommendations.message}
+              </p>
+            )}
+          </div>
 
-            <div className="space-y-2">
-              <Label>Upload pictures</Label>
+          <div className="space-y-2">
+            <Label>Upload pictures</Label>
 
-              <Input
-                type="file"
-                multiple
-                accept="
+            <Input
+              type="file"
+              multiple
+              accept="
     image/*,
     .mp4,
     .mov,
@@ -174,63 +170,62 @@ function InspectionForm({ open, onClose, onSubmit }: Props) {
     .mkv,
     .webm
   "
-                onChange={handleFileChange}
-                className="cursor-pointer"
-              />
+              onChange={handleFileChange}
+              className="cursor-pointer"
+            />
 
-              {errors.Photos && (
-                <p className="text-red-500 text-sm">{errors.Photos.message}</p>
-              )}
-            </div>
+            {errors.Photos && (
+              <p className="text-red-500 text-sm">{errors.Photos.message}</p>
+            )}
+          </div>
 
-            <div className="grid grid-cols-4 gap-3">
-              {previewMedia.map((item, index) => (
-                <div key={index} className="relative group">
-                  {item.type === "image" ? (
-                    <img
-                      src={item.url}
-                      alt="preview"
-                      className="w-full h-24 object-cover rounded-lg border"
-                    />
-                  ) : (
-                    <video
-                      src={item.url}
-                      controls
-                      className="w-full h-24 object-cover rounded-lg border"
-                    />
-                  )}
+          <div className="grid grid-cols-4 gap-3">
+            {previewMedia.map((item, index) => (
+              <div key={index} className="relative group">
+                {item.type === "image" ? (
+                  <img
+                    src={item.url}
+                    alt="preview"
+                    className="w-full h-24 object-cover rounded-lg border"
+                  />
+                ) : (
+                  <video
+                    src={item.url}
+                    controls
+                    className="w-full h-24 object-cover rounded-lg border"
+                  />
+                )}
 
-                  <button
-                    type="button"
-                    onClick={() => handleRemoveMedia(index)}
-                    className="absolute top-1 right-1 bg-black/60 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition"
-                  >
-                    ✕
-                  </button>
-                </div>
-              ))}
-            </div>
+                <button
+                  type="button"
+                  onClick={() => handleRemoveMedia(index)}
+                  className="absolute top-1 right-1 bg-black/60 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition"
+                >
+                  ✕
+                </button>
+              </div>
+            ))}
+          </div>
 
-            {/* Button */}
-            <div className="flex gap-2 justify-end">
-              <Button
-                type="button"
-                variant="destructive"
-                onClick={() => {
-                  reset();
-                  setPreviewMedia([]);
-                  onClose();
-                }}
-              >
-                Cancel
-              </Button>
+          {/* Button */}
+          <div className="flex gap-2 justify-end">
+            <Button
+              type="button"
+              variant="destructive"
+              onClick={() => {
+                reset();
+                setPreviewMedia([]);
+                onClose();
+              }}
+            >
+              Cancel
+            </Button>
 
-              <Button type="submit" disabled={isSubmitting}>
-                Submit
-              </Button>
-            </div>
-          </form>
-        </div>
+            <Button type="submit" disabled={isSubmitting}>
+              Submit
+            </Button>
+          </div>
+        </form>
       </DialogContent>
     </Dialog>
   );

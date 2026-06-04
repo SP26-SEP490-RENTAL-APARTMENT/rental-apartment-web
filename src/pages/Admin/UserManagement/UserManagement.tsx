@@ -27,7 +27,7 @@ function UserManagement() {
   const [total, setTotal] = useState(0);
   const [filter, setFilter] = useState<Filter>({
     search: "",
-    sortOrder: "asc",
+    sortOrder: "desc",
     sortBy: sortByList[0]?.value || "",
   });
   const [role, setRole] = useState<string>("all");
@@ -132,7 +132,7 @@ function UserManagement() {
   const handleResetFilters = () => {
     setFilter({
       search: "",
-      sortOrder: "asc",
+      sortOrder: "desc",
       sortBy: sortByList[0]?.value || "",
     });
     setRole("all");

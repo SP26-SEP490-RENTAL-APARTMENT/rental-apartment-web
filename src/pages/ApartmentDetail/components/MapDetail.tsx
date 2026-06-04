@@ -14,6 +14,7 @@ import {
 import L from "leaflet";
 import { renderToString } from "react-dom/server";
 import type { PrimaryAttraction } from "@/types/apartment";
+import { useTranslation } from "react-i18next";
 
 interface MapDetailProps {
   lat: number;
@@ -93,6 +94,7 @@ function RecenterButton({ lat, lng }: { lat: number; lng: number }) {
 }
 
 function MapDetail({ lat, lng, attractions = [] }: MapDetailProps) {
+  const { i18n } = useTranslation();
   return (
     <MapContainer
       center={[lat, lng]}
@@ -123,7 +125,9 @@ function MapDetail({ lat, lng, attractions = [] }: MapDetailProps) {
         >
           <Popup>
             <div className="space-y-1 max-w-62.5">
-              <div className="font-semibold">{item.nameVi || item.nameEn}</div>
+              <div className="font-semibold">
+                {i18n.language === "vi" ? item.nameVi : item.nameEn}
+              </div>
 
               <div className="text-xs text-muted-foreground">
                 {item.address}

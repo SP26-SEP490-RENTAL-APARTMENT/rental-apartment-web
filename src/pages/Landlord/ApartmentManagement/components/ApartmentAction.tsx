@@ -73,7 +73,7 @@ function ApartmentAction({
   onViewPriceChange,
   onApplyPricingTemplate,
   onViewAvailablePolicies,
-  onViewAvailability
+  onViewAvailability,
 }: Props) {
   const { t } = useTranslation("landlord");
   const { i18n } = useTranslation();
@@ -417,24 +417,26 @@ function ApartmentAction({
           </DialogContent>
         </Dialog>
       </div>
-      {apartment.status === "draft" && (
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                size="sm"
-                className="bg-blue-500"
-                onClick={() => onSendApprove(apartment.apartmentId)}
-              >
-                <Send />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>Send to approve</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-      )}
+      {apartment.status === "draft" &&
+        apartment.room &&
+        apartment.amenities.length > 0 && (
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  size="sm"
+                  className="bg-blue-500"
+                  onClick={() => onSendApprove(apartment.apartmentId)}
+                >
+                  <Send />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Send to approve</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        )}
     </div>
   );
 }
