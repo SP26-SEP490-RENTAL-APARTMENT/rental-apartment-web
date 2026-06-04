@@ -13,6 +13,7 @@ import {
   MessageSquareWarning,
   CirclePercent,
   BadgeAlert,
+  Settings,
 } from "lucide-react";
 
 export const useAadminNavList = () => {
@@ -108,6 +109,11 @@ export const useAadminNavList = () => {
       title: "Disputes Checktime",
       url: "/admin/disputes-checktime",
       icon: BadgeAlert,
+    },
+    {
+      title: "Platform Settings",
+      url: "/admin/settings",
+      icon: Settings,
     },
   ];
 };

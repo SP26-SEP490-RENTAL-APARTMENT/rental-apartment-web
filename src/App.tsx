@@ -56,6 +56,7 @@ import PricingTemplates from "./pages/Admin/PricingTemplate/PricingTemplates";
 import CancelPayment from "./pages/Tenant/ResultScreen/CancelPayment/CancelPayment";
 import FeeManagement from "./pages/Landlord/FeeManagement/FeeManagement";
 import DisputeManagement from "./pages/Admin/DisputeChecktime/DisputeManagement";
+import AdminSettings from "./pages/Admin/AdminSettings/AdminSettings";
 import SmartPricingHistory from "./pages/Landlord/SmartPricingHistory/SmartPricingHistory";
 import OutstandingFees from "./pages/Tenant/OutstandingFee/OutstandingFees";
 
@@ -213,6 +214,14 @@ export default function App() {
             element={
               <ProtectedRoute requiredRoles={["admin"]}>
                 <DisputeManagement />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path={ROUTES.ADMIN_SETTINGS}
+            element={
+              <ProtectedRoute requiredRoles={["admin"]}>
+                <AdminSettings />
               </ProtectedRoute>
             }
           />

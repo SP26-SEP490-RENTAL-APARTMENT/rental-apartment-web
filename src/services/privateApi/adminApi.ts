@@ -280,4 +280,36 @@ export const pricingTemplateManagementApi = {
 export const disputeManagementApi = {
   getAllDisputes: (params: ParamsProp) =>
     apiConfig.privateApi.get("/admin/bookings/disputes", { params }),
+};
+
+export const appSettingsApi = {
+  getSettings: () => apiConfig.privateApi.get("/admin/settings"),
+  updateSettings: (data: AppSettingsData) =>
+    apiConfig.privateApi.put("/admin/settings", data),
+};
+
+export interface BookingCheckTimeSettingsData {
+  earlyCheckInFeePercentOfDaily: number;
+  lateCheckOutFeePercentPerHour: number;
+  lateCheckOutFeeCapPercentOfDaily: number;
+  correctionWindowHours: number;
+  tenantResponseSilenceHours: number;
+  noShowGraceHours: number;
+  missingCheckOutGraceHours: number;
+  closedWithoutCheckOutHours: number;
+  automationPollIntervalSeconds: number;
+  feeSettlementGraceDays: number;
+}
+
+export interface BookingAdmissionPolicyData {
+  graceWindowHours: number;
+  maxSimultaneousUnpaidConfirmedBookings: number;
+  allowedPaymentModesWhenDebtExists: string[];
+}
+
+export interface AppSettingsData {
+  bookingCheckTimeSettings: BookingCheckTimeSettingsData;
+  bookingAdmissionPolicy: BookingAdmissionPolicyData;
+  occupiedRoomAlternatives: { defaultRadiusMeters: number };
+  booking: { occupiedIncidentPenaltyRate: number };
 }
