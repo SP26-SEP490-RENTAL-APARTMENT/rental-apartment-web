@@ -24,7 +24,6 @@ function GeneralCard({ title, data, Icon }: Props) {
             <Icon className="h-6 w-6 text-blue-600" />
           </div>
         </div>
-        <p className="text-xs text-gray-400 mt-4">Updated just now</p>
       </CardContent>
     </Card>
   );

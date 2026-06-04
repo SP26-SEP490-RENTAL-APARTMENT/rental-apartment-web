@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
+import { applyRangePreset, type RangePreset } from '@/utils/datePresets';
 import type {
   ReportDimensionRequestDto,
   ReportMetricRequestDto,
@@ -38,8 +39,6 @@ const COMPARISON_PERIOD_OPTIONS: { value: ComparisonPeriod; field: string }[] = 
   { value: 'qoq', field: 'quarter' },
   { value: 'yoy', field: 'year' },
 ];
-
-type RangePreset = 'last_30_days' | 'this_day' | 'last_day' | 'this_week' | 'last_week' | 'this_month' | 'last_month' | 'this_year' | 'last_year';
 
 function normalizeDimensions(dimensions?: ReportDimensionRequestDto[]) {
   return (dimensions ?? []).filter((dimension): dimension is ReportDimensionRequestDto => {
@@ -146,112 +145,10 @@ export const ReportShell: React.FC<ReportShellProps> = ({ reportId, defaultReque
     };
   }, [enableApartmentFilter]);
 
-  function startOfDay(date: Date) {
-    return new Date(date.getFullYear(), date.getMonth(), date.getDate());
-  }
-
-  function endOfDay(date: Date) {
-    return new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59, 999);
-  }
-
-  function startOfWeek(date: Date) {
-    const d = startOfDay(date);
-    const day = (d.getDay() + 6) % 7;
-    d.setDate(d.getDate() - day);
-    return d;
-  }
-
-  function endOfWeek(date: Date) {
-    const d = startOfWeek(date);
-    d.setDate(d.getDate() + 6);
-    return endOfDay(d);
-  }
-
-  function startOfMonth(date: Date) {
-    return new Date(date.getFullYear(), date.getMonth(), 1);
-  }
-
-  function endOfMonth(date: Date) {
-    return new Date(date.getFullYear(), date.getMonth() + 1, 0, 23, 59, 59, 999);
-  }
-
-  function startOfYear(date: Date) {
-    return new Date(date.getFullYear(), 0, 1);
-  }
-
-  function endOfYear(date: Date) {
-    return new Date(date.getFullYear(), 11, 31, 23, 59, 59, 999);
-  }
-
-  function formatDateInput(date: Date) {
-    return date.toISOString().slice(0, 10);
-  }
-
-  function applyRangePreset(preset: RangePreset) {
-    const now = new Date();
-    let fromDate = startOfDay(now);
-    let toDate = endOfDay(now);
-
-    switch (preset) {
-      case 'this_day':
-        fromDate = startOfDay(now);
-        toDate = endOfDay(now);
-        break;
-      case 'last_day': {
-        const prev = new Date(now);
-        prev.setDate(prev.getDate() - 1);
-        fromDate = startOfDay(prev);
-        toDate = endOfDay(prev);
-        break;
-      }
-      case 'this_week':
-        fromDate = startOfWeek(now);
-        toDate = endOfDay(now);
-        break;
-      case 'last_week': {
-        const prev = new Date(now);
-        prev.setDate(prev.getDate() - 7);
-        fromDate = startOfWeek(prev);
-        toDate = endOfWeek(prev);
-        break;
-      }
-      case 'this_month':
-        fromDate = startOfMonth(now);
-        toDate = endOfDay(now);
-        break;
-      case 'last_month': {
-        const prev = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-        fromDate = startOfMonth(prev);
-        toDate = endOfMonth(prev);
-        break;
-      }
-      case 'this_year':
-        fromDate = startOfYear(now);
-        toDate = endOfDay(now);
-        break;
-      case 'last_year': {
-        const prev = new Date(now.getFullYear() - 1, 0, 1);
-        fromDate = startOfYear(prev);
-        toDate = endOfYear(prev);
-        break;
-      }
-      case 'last_30_days':
-      default: {
-        const prev = new Date(now);
-        prev.setDate(prev.getDate() - 29);
-        fromDate = startOfDay(prev);
-        toDate = endOfDay(now);
-        break;
-      }
-    }
-
+  function handleRangePreset(preset: RangePreset) {
+    const { from, to } = applyRangePreset(preset);
     setRangePreset(preset);
-    setRequest(r => ({
-      ...r,
-      from: formatDateInput(fromDate),
-      to: formatDateInput(toDate),
-      page: 1,
-    }));
+    setRequest(r => ({ ...r, from, to, page: 1 }));
   }
 
   function setFrom(date?: string) {
@@ -625,7 +522,7 @@ export const ReportShell: React.FC<ReportShellProps> = ({ reportId, defaultReque
             <label className="text-sm font-medium text-slate-600">{t('shell.period')}</label>
             <select
               value={rangePreset}
-              onChange={e => applyRangePreset(e.target.value as RangePreset)}
+              onChange={e => handleRangePreset(e.target.value as RangePreset)}
               className="w-full rounded-lg border border-slate-300 py-2 px-3 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500"
             >
               <option value="last_30_days">{t('shell.presets.last_30_days')}</option>
