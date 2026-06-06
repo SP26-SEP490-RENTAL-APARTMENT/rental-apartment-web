@@ -125,7 +125,9 @@ function ApartmentManagement() {
   const fetchPricingTemplates = useCallback(async () => {
     try {
       const response = await pricingPolicyApi.getAllPricingPolicy();
-      setTemplates(response.data);
+      setTemplates(
+        response.data.filter((item: PricingTemplate) => item.isActive === true),
+      );
     } catch (error: unknown) {
       console.log(error);
       toast.error("Failed to fetch pricing templates");
@@ -512,7 +514,7 @@ function ApartmentManagement() {
                 triggerApplyPricingTemplate,
                 handleGetAvailablePolicies,
                 triggerSmartPricing,
-                handleViewAvailability
+                handleViewAvailability,
               )}
               data={apartmentList}
               limit={10}

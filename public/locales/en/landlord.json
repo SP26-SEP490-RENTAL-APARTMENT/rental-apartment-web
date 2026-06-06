@@ -316,5 +316,52 @@
         "acceptErrorMessage": "Failed to accept smart pricing",
         "createdAt": "Created at",
         "idLabel": "ID"
+    },
+    "pricingPolicy": {
+        "form": {
+            "title": "Pricing Policy Configuration",
+            "selectTemplate": "Select Template",
+            "selectTemplateDescription": "Choose a pricing template to apply",
+            "selectTemplateplaceholder": "Select a template...",
+            "policyPeriod": "Policy Period",
+            "policyPeriodDescription": "Set the active date range for this policy",
+            "startDate": "Start Date",
+            "endDate": "End Date",
+            "policyStatus": "Policy Status",
+            "enablePolicy": "Enable Policy",
+            "policyIsActive": "Policy is active",
+            "policyIsInactive": "Policy is inactive",
+            "adjustParameters": "Adjust Parameters",
+            "adjustParametersDescription": "Customize pricing parameters for this policy",
+            "saveButton": "Save Pricing Policy",
+            "savingButton": "Saving...",
+            "successMessage": "Pricing policy applied successfully",
+            "errorMessage": "Failed to apply pricing policy. Please try again."
+        },
+        "detail": {
+            "selectTemplate": "Select a pricing template to view details",
+            "code": "Code",
+            "pricingParameters": "Pricing Parameters",
+            "active": "Active",
+            "inactive": "Inactive",
+            "adjustable": "Adjustable",
+            "fixed": "Fixed",
+            "default": "Default",
+            "min": "Min",
+            "max": "Max"
+        },
+        "view": {
+            "title": "Pricing Policy Overview",
+            "basePrice": "Apartment Base Price",
+            "noPoliciesAvailable": "No pricing policies available",
+            "dateRange": "Date Range",
+            "to": "to",
+            "priceMultiplier": "Price Multiplier",
+            "adjustmentFactor": "Adjustment factor",
+            "finalPricePerNight": "Final Price/Night",
+            "configurationParameters": "Configuration Parameters",
+            "range": "Range",
+            "dash": "−"
+        }
     }
 }

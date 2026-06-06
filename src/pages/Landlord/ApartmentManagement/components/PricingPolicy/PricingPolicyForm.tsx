@@ -34,6 +34,7 @@ import { Label } from "@/components/ui/label";
 import { pricingPolicyApi } from "@/services/privateApi/landlordApi";
 import { toast } from "sonner";
 import { AlertCircle, Calendar, Zap } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 interface Props {
   open: boolean;
@@ -50,6 +51,7 @@ function PricingPolicyForm({
   apartmentId,
   refetch,
 }: Props) {
+  const { t } = useTranslation("landlord");
   const [selectedTemplate, setSelectedTemplate] =
     useState<PricingTemplate | null>(null);
 
@@ -96,9 +98,9 @@ function PricingPolicyForm({
       await pricingPolicyApi.applyPolicy(apartmentId, data);
       onClose();
       refetch?.();
-      toast.success("Pricing policy applied successfully");
+      toast.success(t("pricingPolicy.form.successMessage"));
     } catch (error) {
-      toast.error("Failed to apply pricing policy. Please try again.");
+      toast.error(t("pricingPolicy.form.errorMessage"));
       console.log(error);
     }
   };
@@ -111,10 +113,10 @@ function PricingPolicyForm({
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="overflow-y-auto max-h-[90vh] w-full max-w-2xl">
+      <DialogContent className="overflow-y-auto max-h-[90vh] sm:max-w-3xl">
         <DialogHeader className="pb-4 border-b">
           <DialogTitle className="text-2xl font-bold">
-            Pricing Policy Configuration
+            {t("pricingPolicy.form.title")}
           </DialogTitle>
         </DialogHeader>
 
@@ -124,10 +126,10 @@ function PricingPolicyForm({
             <CardHeader className="pb-3">
               <CardTitle className="text-lg flex items-center gap-2">
                 <Zap className="w-5 h-5 text-blue-500" />
-                Select Template
+                {t("pricingPolicy.form.selectTemplate")}
               </CardTitle>
               <CardDescription>
-                Choose a pricing template to apply
+                {t("pricingPolicy.form.selectTemplateDescription")}
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -136,7 +138,11 @@ function PricingPolicyForm({
                 onValueChange={handleSelectTemplate}
               >
                 <SelectTrigger className="border-slate-300 focus:border-blue-500">
-                  <SelectValue placeholder="Select a template..." />
+                  <SelectValue
+                    placeholder={t(
+                      "pricingPolicy.form.selectTemplateplaceholder",
+                    )}
+                  />
                 </SelectTrigger>
                 <SelectContent>
                   {templateList.map((item) => (
@@ -158,26 +164,25 @@ function PricingPolicyForm({
           {selectedTemplate && (
             <>
               {/* Template Details */}
-              
-                  <PricingTemplateDetail template={selectedTemplate} />
-                
+
+              <PricingTemplateDetail template={selectedTemplate} />
 
               {/* Date Range */}
               <Card className="border-slate-200">
                 <CardHeader className="pb-3">
                   <CardTitle className="text-lg flex items-center gap-2">
                     <Calendar className="w-5 h-5 text-green-500" />
-                    Policy Period
+                    {t("pricingPolicy.form.policyPeriod")}
                   </CardTitle>
                   <CardDescription>
-                    Set the active date range for this policy
+                    {t("pricingPolicy.form.policyPeriodDescription")}
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <Label htmlFor="startDate" className="font-semibold">
-                        Start Date
+                        {t("pricingPolicy.form.startDate")}
                       </Label>
                       <Input
                         id="startDate"
@@ -195,7 +200,7 @@ function PricingPolicyForm({
 
                     <div className="space-y-2">
                       <Label htmlFor="endDate" className="font-semibold">
-                        End Date
+                        {t("pricingPolicy.form.endDate")}
                       </Label>
                       <Input
                         id="endDate"
@@ -217,18 +222,20 @@ function PricingPolicyForm({
               {/* Policy Status */}
               <Card className="border-slate-200 bg-linear-to-r from-blue-50 to-indigo-50">
                 <CardHeader className="pb-3">
-                  <CardTitle className="text-lg">Policy Status</CardTitle>
+                  <CardTitle className="text-lg">
+                    {t("pricingPolicy.form.policyStatus")}
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="flex items-center justify-between p-4 rounded-lg border border-blue-200 bg-white">
                     <div>
                       <p className="font-semibold text-gray-700">
-                        Enable Policy
+                        {t("pricingPolicy.form.enablePolicy")}
                       </p>
                       <p className="text-sm text-gray-500">
                         {watch("isEnabled")
-                          ? "Policy is active"
-                          : "Policy is inactive"}
+                          ? t("pricingPolicy.form.policyIsActive")
+                          : t("pricingPolicy.form.policyIsInactive")}
                       </p>
                     </div>
                     <Switch
@@ -244,9 +251,11 @@ function PricingPolicyForm({
                 .length > 0 && (
                 <Card className="border-slate-200">
                   <CardHeader className="pb-3">
-                    <CardTitle className="text-lg">Adjust Parameters</CardTitle>
+                    <CardTitle className="text-lg">
+                      {t("pricingPolicy.form.adjustParameters")}
+                    </CardTitle>
                     <CardDescription>
-                      Customize pricing parameters for this policy
+                      {t("pricingPolicy.form.adjustParametersDescription")}
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
@@ -304,7 +313,9 @@ function PricingPolicyForm({
                   disabled={isSubmitting}
                   className="flex-1 bg-blue-600 hover:bg-blue-700 text-white"
                 >
-                  {isSubmitting ? "Saving..." : "Save Pricing Policy"}
+                  {isSubmitting
+                    ? t("pricingPolicy.form.savingButton")
+                    : t("pricingPolicy.form.saveButton")}
                 </Button>
               </div>
             </>

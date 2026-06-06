@@ -316,5 +316,52 @@
         "acceptErrorMessage": "Không thể chấp nhận giá thông minh",
         "createdAt": "Tạo vào",
         "idLabel": "ID"
+    },
+    "pricingPolicy": {
+        "form": {
+            "title": "Cấu hình Chính sách Giá",
+            "selectTemplate": "Chọn Mẫu",
+            "selectTemplateDescription": "Chọn một mẫu giá để áp dụng",
+            "selectTemplateplaceholder": "Chọn một mẫu...",
+            "policyPeriod": "Khoảng Thời gian Chính sách",
+            "policyPeriodDescription": "Đặt khoảng ngày hoạt động cho chính sách này",
+            "startDate": "Ngày Bắt đầu",
+            "endDate": "Ngày Kết thúc",
+            "policyStatus": "Trạng thái Chính sách",
+            "enablePolicy": "Bật Chính sách",
+            "policyIsActive": "Chính sách đang hoạt động",
+            "policyIsInactive": "Chính sách không hoạt động",
+            "adjustParameters": "Điều chỉnh Tham số",
+            "adjustParametersDescription": "Tùy chỉnh tham số giá cho chính sách này",
+            "saveButton": "Lưu Chính sách Giá",
+            "savingButton": "Đang lưu...",
+            "successMessage": "Chính sách giá được áp dụng thành công",
+            "errorMessage": "Không thể áp dụng chính sách giá. Vui lòng thử lại."
+        },
+        "detail": {
+            "selectTemplate": "Chọn một mẫu giá để xem chi tiết",
+            "code": "Mã",
+            "pricingParameters": "Tham số Giá",
+            "active": "Đang hoạt động",
+            "inactive": "Không hoạt động",
+            "adjustable": "Có thể điều chỉnh",
+            "fixed": "Cố định",
+            "default": "Mặc định",
+            "min": "Tối thiểu",
+            "max": "Tối đa"
+        },
+        "view": {
+            "title": "Tổng quan Chính sách Giá",
+            "basePrice": "Giá Cơ bản Căn hộ",
+            "noPoliciesAvailable": "Không có chính sách giá nào",
+            "dateRange": "Khoảng Ngày",
+            "to": "đến",
+            "priceMultiplier": "Hệ số Nhân Giá",
+            "adjustmentFactor": "Hệ số Điều chỉnh",
+            "finalPricePerNight": "Giá Cuối cùng/Đêm",
+            "configurationParameters": "Tham số Cấu hình",
+            "range": "Khoảng",
+            "dash": "−"
+        }
     }
 }

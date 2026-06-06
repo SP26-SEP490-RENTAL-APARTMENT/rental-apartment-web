@@ -114,6 +114,7 @@ function BookingHistories() {
                         data={item}
                         onClick={handleCardClick}
                         onCheckTime={handleCheckTime}
+                        refetch={fetchBookingHistory}
                       />
                     ))}
               </div>

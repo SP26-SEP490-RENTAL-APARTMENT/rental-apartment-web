@@ -14,12 +14,15 @@ import {
   Tag,
   Settings,
 } from "lucide-react";
+import { useTranslation } from "react-i18next";
+
 interface Props {
   open: boolean;
   onClose: () => void;
   template: AvailablePolicy | null;
 }
 function ViewAvailablePolicy({ open, onClose, template }: Props) {
+  const { t } = useTranslation("landlord");
   const formatCurrency = (value: number) =>
     new Intl.NumberFormat("vi-VN", {
       style: "currency",
@@ -30,7 +33,7 @@ function ViewAvailablePolicy({ open, onClose, template }: Props) {
       <DialogContent className="sm:max-w-3xl max-h-[90vh] overflow-y-auto">
         <DialogHeader className="pb-6 border-b">
           <DialogTitle className="text-2xl font-bold">
-            Pricing Policy Overview
+            {t("pricingPolicy.view.title")}
           </DialogTitle>
         </DialogHeader>
 
@@ -46,7 +49,7 @@ function ViewAvailablePolicy({ open, onClose, template }: Props) {
                   <DollarSign size={20} />
                 </div>
                 <p className="text-sm font-medium text-blue-100">
-                  Apartment Base Price
+                  {t("pricingPolicy.view.basePrice")}
                 </p>
               </div>
               <p className="text-4xl font-bold">
@@ -62,7 +65,7 @@ function ViewAvailablePolicy({ open, onClose, template }: Props) {
                 <CardContent className="py-8 flex flex-col items-center justify-center">
                   <Tag className="w-10 h-10 text-muted-foreground/50 mb-2" />
                   <p className="text-muted-foreground">
-                    No pricing policies available
+                    {t("pricingPolicy.view.noPoliciesAvailable")}
                   </p>
                 </CardContent>
               </Card>
@@ -101,13 +104,13 @@ function ViewAvailablePolicy({ open, onClose, template }: Props) {
                       <div className="rounded-lg bg-gradient-to-br from-orange-50 to-orange-100 border border-orange-200 p-4 hover:shadow-md transition-shadow">
                         <div className="flex items-center gap-2 text-sm font-medium text-orange-900 mb-2">
                           <CalendarDays size={16} className="text-orange-600" />
-                          Date Range
+                          {t("pricingPolicy.view.dateRange")}
                         </div>
                         <p className="font-bold text-orange-700">
                           {item.startDate}
                         </p>
                         <p className="text-xs text-orange-600 mt-1">
-                          to {item.endDate}
+                          {t("pricingPolicy.view.to")} {item.endDate}
                         </p>
                       </div>
 
@@ -115,13 +118,13 @@ function ViewAvailablePolicy({ open, onClose, template }: Props) {
                       <div className="rounded-lg bg-gradient-to-br from-purple-50 to-purple-100 border border-purple-200 p-4 hover:shadow-md transition-shadow">
                         <div className="flex items-center gap-2 text-sm font-medium text-purple-900 mb-2">
                           <TrendingUp size={16} className="text-purple-600" />
-                          Price Multiplier
+                          {t("pricingPolicy.view.priceMultiplier")}
                         </div>
                         <p className="font-bold text-purple-700 text-xl">
                           x{item.previewMultiplier}
                         </p>
                         <p className="text-xs text-purple-600 mt-1">
-                          Adjustment factor
+                          {t("pricingPolicy.view.adjustmentFactor")}
                         </p>
                       </div>
 
@@ -129,7 +132,7 @@ function ViewAvailablePolicy({ open, onClose, template }: Props) {
                       <div className="rounded-lg bg-gradient-to-br from-green-50 to-green-100 border border-green-200 p-4 hover:shadow-md transition-shadow">
                         <div className="flex items-center gap-2 text-sm font-medium text-green-900 mb-2">
                           <DollarSign size={16} className="text-green-600" />
-                          Final Price/Night
+                          {t("pricingPolicy.view.finalPricePerNight")}
                         </div>
                         <p className="font-bold text-green-700 text-lg">
                           {formatCurrency(item.previewPricePerNight)}
@@ -146,7 +149,7 @@ function ViewAvailablePolicy({ open, onClose, template }: Props) {
                             className="text-muted-foreground"
                           />
                           <p className="font-semibold">
-                            Configuration Parameters
+                            {t("pricingPolicy.view.configurationParameters")}
                           </p>
                         </div>
 
@@ -174,8 +177,12 @@ function ViewAvailablePolicy({ open, onClose, template }: Props) {
                               </div>
                               <div className="mt-2 pt-2 border-t border-slate-200/50">
                                 <p className="text-xs text-muted-foreground">
-                                  <span className="font-medium">Range:</span>{" "}
-                                  {param.minValue} − {param.maxValue}
+                                  <span className="font-medium">
+                                    {t("pricingPolicy.view.range")}:
+                                  </span>{" "}
+                                  {param.minValue}{" "}
+                                  {t("pricingPolicy.view.dash")}{" "}
+                                  {param.maxValue}
                                 </p>
                               </div>
                             </div>

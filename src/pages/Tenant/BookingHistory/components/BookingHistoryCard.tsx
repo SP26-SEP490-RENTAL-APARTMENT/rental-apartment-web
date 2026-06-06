@@ -5,11 +5,14 @@ import { useTranslation } from "react-i18next";
 import { ChevronRight, Home } from "lucide-react";
 import { useGetStatus } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import CancelBookingDialog from "./CancelBookingDialog";
 
 export interface Props {
   data: BookingHistory;
   onClick?: (booking: BookingHistory) => void;
   onCheckTime?: (bookingId: string) => void;
+  refetch: () => void;
 }
 
 const formatDate = (date: string) => new Date(date).toLocaleDateString("vi-VN");
@@ -41,8 +44,10 @@ export default function BookingHistoryCard({
   data,
   onClick,
   onCheckTime,
+  refetch
 }: Props) {
   const { t } = useTranslation("user");
+  const [cancelDialog, setCancelDialog] = useState(false);
 
   const getPaymentModeLabel = (mode: "full" | "partial") => {
     return mode === "full"
@@ -53,96 +58,97 @@ export default function BookingHistoryCard({
   const remainingAmount = data.totalPrice - (data.depositAmount || 0);
 
   return (
-    <Card className="w-full hover:shadow-lg border-0 transition-all duration-300 group bg-white overflow-hidden">
-      <CardContent className="p-6">
-        {/* Header Row */}
-        <div className="flex items-start justify-between mb-4">
-          <div className="flex-1">
-            <div className="flex items-center gap-3 mb-2">
-              <div className="p-2 bg-blue-50 rounded-lg group-hover:bg-blue-100 transition-colors">
-                <Home className="h-4 w-4 text-blue-600" />
+    <>
+      <Card className="w-full hover:shadow-lg border-0 transition-all duration-300 group bg-white overflow-hidden">
+        <CardContent className="p-6">
+          {/* Header Row */}
+          <div className="flex items-start justify-between mb-4">
+            <div className="flex-1">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="p-2 bg-blue-50 rounded-lg group-hover:bg-blue-100 transition-colors">
+                  <Home className="h-4 w-4 text-blue-600" />
+                </div>
+                <p className="font-semibold text-gray-900 text-lg">
+                  {t("booking.booking")} #
+                  {data.bookingId.slice(0, 8).toUpperCase()}
+                </p>
               </div>
-              <p className="font-semibold text-gray-900 text-lg">
-                {t("booking.booking")} #
-                {data.bookingId.slice(0, 8).toUpperCase()}
+              <p className="text-xs text-gray-500">
+                {t("booking.bookedOn")} {formatDate(data.createdAt)}
               </p>
             </div>
-            <p className="text-xs text-gray-500">
-              {t("booking.bookedOn")} {formatDate(data.createdAt)}
-            </p>
-          </div>
 
-          {/* Badges & Amount */}
-          <div className="flex flex-col items-end gap-3">
-            <div className="flex gap-2 flex-wrap justify-end">
-              <Badge className={getStatusColor(data.status)}>
-                {useGetStatus(data.status)}
-              </Badge>
-              <Badge className={getPaymentModeColor(data.paymentMode)}>
-                {getPaymentModeLabel(data.paymentMode)}
-              </Badge>
-            </div>
-            <div className="text-right">
-              <p className="text-sm text-gray-600 mb-1">
-                {t("booking.totalPrice")}
-              </p>
-              <p className="text-2xl font-bold text-blue-600">
-                {formatCurrency(data.totalPrice)}
-              </p>
+            {/* Badges & Amount */}
+            <div className="flex flex-col items-end gap-3">
+              <div className="flex gap-2 flex-wrap justify-end">
+                <Badge className={getStatusColor(data.status)}>
+                  {useGetStatus(data.status)}
+                </Badge>
+                <Badge className={getPaymentModeColor(data.paymentMode)}>
+                  {getPaymentModeLabel(data.paymentMode)}
+                </Badge>
+              </div>
+              <div className="text-right">
+                <p className="text-sm text-gray-600 mb-1">
+                  {t("booking.totalPrice")}
+                </p>
+                <p className="text-2xl font-bold text-blue-600">
+                  {formatCurrency(data.totalPrice)}
+                </p>
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* Divider */}
-        <div className="h-px bg-gray-100 my-4" />
+          {/* Divider */}
+          <div className="h-px bg-gray-100 my-4" />
 
-        {/* Details Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
-          {/* Check-in */}
-          <div>
-            <p className="text-xs text-gray-500 font-medium mb-1">
-              {t("booking.checkIn")}
-            </p>
-            <p className="font-semibold text-gray-900">
-              {formatDate(data.checkInDate)}
-            </p>
+          {/* Details Grid */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+            {/* Check-in */}
+            <div>
+              <p className="text-xs text-gray-500 font-medium mb-1">
+                {t("booking.checkIn")}
+              </p>
+              <p className="font-semibold text-gray-900">
+                {formatDate(data.checkInDate)}
+              </p>
+            </div>
+
+            {/* Check-out */}
+            <div>
+              <p className="text-xs text-gray-500 font-medium mb-1">
+                {t("booking.checkOut")}
+              </p>
+              <p className="font-semibold text-gray-900">
+                {formatDate(data.checkOutDate)}
+              </p>
+            </div>
+
+            {/* Nights */}
+            <div>
+              <p className="text-xs text-gray-500 font-medium mb-1">
+                {t("booking.nights")}
+              </p>
+              <p className="font-semibold text-gray-900">
+                {data.nights} {t("booking.nightsUnit")}
+              </p>
+            </div>
+
+            {/* Guests */}
+            <div>
+              <p className="text-xs text-gray-500 font-medium mb-1">
+                {t("booking.guests")}
+              </p>
+              <p className="font-semibold text-gray-900">
+                {data.noOfAdults + data.noOfChildren} {t("booking.guestsUnit")}
+              </p>
+            </div>
           </div>
 
-          {/* Check-out */}
-          <div>
-            <p className="text-xs text-gray-500 font-medium mb-1">
-              {t("booking.checkOut")}
-            </p>
-            <p className="font-semibold text-gray-900">
-              {formatDate(data.checkOutDate)}
-            </p>
-          </div>
-
-          {/* Nights */}
-          <div>
-            <p className="text-xs text-gray-500 font-medium mb-1">
-              {t("booking.nights")}
-            </p>
-            <p className="font-semibold text-gray-900">
-              {data.nights} {t("booking.nightsUnit")}
-            </p>
-          </div>
-
-          {/* Guests */}
-          <div>
-            <p className="text-xs text-gray-500 font-medium mb-1">
-              {t("booking.guests")}
-            </p>
-            <p className="font-semibold text-gray-900">
-              {data.noOfAdults + data.noOfChildren} {t("booking.guestsUnit")}
-            </p>
-          </div>
-        </div>
-
-        {/* Footer Row - Payment Status */}
-        <div className="flex items-center justify-between pt-3 border-t border-gray-100">
-          <div className="flex items-center gap-2">
-            {/* {data.depositPaid ? (
+          {/* Footer Row - Payment Status */}
+          <div className="flex items-center justify-between pt-3 border-t border-gray-100">
+            <div className="flex items-center gap-2">
+              {/* {data.depositPaid ? (
               <>
                 <CheckCircle2 className="h-4 w-4 text-green-600" />
                 <span className="text-sm font-medium text-green-600">
@@ -157,29 +163,49 @@ export default function BookingHistoryCard({
                 </span>
               </>
             )} */}
-            {data.paymentMode === "partial" && data.status === "confirmed" && (
-              <span className="text-xs text-gray-500 ml-2">
-                ({t("booking.depositLabel")}{" "}
-                {formatCurrency(data.depositAmount)} |{" "}
-                {t("booking.remainingLabel")}: {formatCurrency(remainingAmount)}
-                )
-              </span>
-            )}
-          </div>
-          <div className="flex gap-2">
-            {data.status === "completed" && (
-              <Button onClick={() => onCheckTime?.(data.bookingId)}>
-                {t("booking.checkTime")}
-              </Button>
-            )}
+              {data.paymentMode === "partial" &&
+                data.status === "confirmed" && (
+                  <span className="text-xs text-gray-500 ml-2">
+                    ({t("booking.depositLabel")}{" "}
+                    {formatCurrency(data.depositAmount)} |{" "}
+                    {t("booking.remainingLabel")}:{" "}
+                    {formatCurrency(remainingAmount)})
+                  </span>
+                )}
+            </div>
+            <div className="flex w-full">
+              {(data.status === "confirmed" || data.status === "paid") && (
+                <Button
+                  onClick={() => setCancelDialog(true)}
+                  variant="destructive"
+                >
+                  Cancel Booking
+                </Button>
+              )}
 
-            <Button variant="outline" onClick={() => onClick?.(data)}>
-              {t("booking.viewDetails")}
-              <ChevronRight className="h-4 w-4 text-gray-400 group-hover:text-blue-600 transition-colors" />
-            </Button>
+              <div className="flex gap-2 ml-auto">
+                {data.status === "completed" && (
+                  <Button onClick={() => onCheckTime?.(data.bookingId)}>
+                    {t("booking.checkTime")}
+                  </Button>
+                )}
+
+                <Button variant="outline" onClick={() => onClick?.(data)}>
+                  {t("booking.viewDetails")}
+                  <ChevronRight className="h-4 w-4 text-gray-400 group-hover:text-blue-600 transition-colors" />
+                </Button>
+              </div>
+            </div>
           </div>
-        </div>
-      </CardContent>
-    </Card>
+        </CardContent>
+      </Card>
+
+      <CancelBookingDialog
+        open={cancelDialog}
+        onClose={() => setCancelDialog(false)}
+        bookingId={data.bookingId}
+        refetch={refetch}
+      />
+    </>
   );
 }
