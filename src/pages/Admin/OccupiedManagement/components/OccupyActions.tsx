@@ -199,13 +199,16 @@ function OccupyActions({ occupy, onOpenPenaltyDialog }: Props) {
         </DialogContent>
       </Dialog>
 
-      <Button
-        variant="destructive"
-        size="sm"
-        onClick={() => onOpenPenaltyDialog(occupy)}
-      >
-        <ShieldX />
-      </Button>
+      {(occupy.bookingStatus === "paid" ||
+        occupy.bookingStatus === "confirmed") && (
+        <Button
+          variant="destructive"
+          size="sm"
+          onClick={() => onOpenPenaltyDialog(occupy)}
+        >
+          <ShieldX />
+        </Button>
+      )}
     </div>
   );
 }

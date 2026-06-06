@@ -44,6 +44,7 @@ function OccupiedManagement() {
     sortBy: "createdAt",
     sortOrder: "desc",
   });
+  const [penaltyLoading, setPenaltyLoading] = useState(false);
 
   const fetchOccupies = useCallback(async () => {
     setLoading(true);
@@ -86,6 +87,7 @@ function OccupiedManagement() {
 
   const handleConfirmPenalty = async () => {
     if (!occupy) return;
+    setPenaltyLoading(true);
     try {
       await adminOccupyApi.confirmPenalty(occupy.bookingId, {
         note,
@@ -101,6 +103,8 @@ function OccupiedManagement() {
         error.response?.data?.message ||
           "Failed to confirm penalty. Please try again.",
       );
+    } finally {
+      setPenaltyLoading(false);
     }
   };
 
@@ -221,6 +225,7 @@ function OccupiedManagement() {
         onSubmit={handleConfirmPenalty}
         open={penaltyDialogOpen}
         setNote={setNote}
+        loading={penaltyLoading}
       />
     </div>
   );
