@@ -57,7 +57,7 @@ function ResolveDialog({ open, onClose, bookingId, refetch }: Props) {
           <div className="grid gap-2">
             <Label>Decision</Label>
             <RadioGroup
-              className="flex justify-around"
+              className="flex gap-5"
               value={String(form.approveTenantDispute)}
               onValueChange={(value) =>
                 setForm((prev) => ({
