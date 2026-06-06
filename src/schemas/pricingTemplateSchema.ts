@@ -5,6 +5,10 @@ export const createTemplateSchema = z.object({
     .string()
     .min(1, "Template name is required")
     .max(100, "Template name must be less than 100 characters"),
+  nameVi: z
+    .string()
+    .min(1, "Template name is required")
+    .max(100, "Template name must be less than 100 characters"),
   code: z
     .string()
     .min(1, "Code is required")
@@ -18,6 +22,11 @@ export const createTemplateSchema = z.object({
     .max(500, "Description must be less than 500 characters")
     .optional()
     .or(z.literal("")),
+  descriptionVi: z
+    .string()
+    .max(500, "Description must be less than 500 characters")
+    .optional()
+    .or(z.literal("")),
 
   isActive: z.boolean(),
   parameters: z
@@ -27,6 +36,8 @@ export const createTemplateSchema = z.object({
           parameterKey: z.string().min(1, "Parameter key is required"),
 
           displayName: z.string().min(1, "Display name is required"),
+
+          displayNameVi: z.string().min(1, "Display name is required"),
 
           defaultValue: z.number().min(1, "Default value must be at least 1"),
 

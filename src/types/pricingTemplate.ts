@@ -2,8 +2,10 @@ export interface PricingTemplate {
   templateId: string;
   createdByAdminId?: string;
   name: string;
+  nameVi: string;
   code?: string;
   description?: string;
+  descriptionVi?: string;
   isActive: boolean;
   createdAt?: string;
   updatedAt?: string;
@@ -15,6 +17,7 @@ export interface PricingParameter {
   templateId: string;
   parameterKey: string;
   displayName: string;
+  displayNameVi: string;
   defaultValue: number;
   minValue: number;
   maxValue: number;

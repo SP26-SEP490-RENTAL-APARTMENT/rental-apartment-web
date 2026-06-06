@@ -103,7 +103,19 @@ export const bookingApi = {
       data,
     ),
   submitOfflinePayment: (bookingId: string, data: FormData) =>
-    apiConfig.privateApi.post(`/Booking/${bookingId}/submit-offline-payment`, data),
+    apiConfig.privateApi.post(
+      `/Booking/${bookingId}/submit-offline-payment`,
+      data,
+    ),
+  cancelWithRefund: (
+    bookingId: string,
+    data: {
+      reason: string;
+      notes: string;
+      payOsBankCode: string;
+      payOsAccountNumber: string;
+    },
+  ) => apiConfig.privateApi.post(`/Booking/${bookingId}/refund/payos`, data),
 };
 
 export const reviewApi = {

@@ -64,13 +64,16 @@ function TemplateForm({ open, onClose, onSubmit, mode, template }: Props) {
       if (isCreate) {
         reset({
           name: "",
+          nameVi: "",
           description: "",
+          descriptionVi: "",
           code: "",
           isActive: true,
           parameters: [
             {
               parameterKey: "",
               displayName: "",
+              displayNameVi: "",
               defaultValue: 0,
               minValue: 0,
               maxValue: 0,
@@ -81,7 +84,9 @@ function TemplateForm({ open, onClose, onSubmit, mode, template }: Props) {
       } else if (template) {
         reset({
           name: template.name,
+          nameVi: template.nameVi,
           description: template.description,
+          descriptionVi: template.descriptionVi,
           code: template.code,
           isActive: template.isActive,
           parameters: template.parameters,
@@ -97,6 +102,7 @@ function TemplateForm({ open, onClose, onSubmit, mode, template }: Props) {
       {
         parameterKey: "",
         displayName: "",
+        displayNameVi: "",
         defaultValue: 0,
         minValue: 0,
         maxValue: 0,
@@ -131,17 +137,33 @@ function TemplateForm({ open, onClose, onSubmit, mode, template }: Props) {
             <h3 className="font-semibold text-sm">Basic Information</h3>
 
             {/* Template Name */}
-            <div className="space-y-2">
-              <Label htmlFor="name">Template Name *</Label>
-              <Input
-                id="name"
-                placeholder="Enter template name"
-                {...register("name")}
-                disabled={isSubmitting}
-              />
-              {errors.name && (
-                <p className="text-sm text-red-500">{errors.name.message}</p>
-              )}
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="name">Template Name (EN) *</Label>
+                <Input
+                  id="name"
+                  placeholder="Enter template name in English"
+                  {...register("name")}
+                  disabled={isSubmitting}
+                />
+                {errors.name && (
+                  <p className="text-sm text-red-500">{errors.name.message}</p>
+                )}
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="nameVi">Template Name (VI) *</Label>
+                <Input
+                  id="nameVi"
+                  placeholder="Enter template name in Vietnamese"
+                  {...register("nameVi")}
+                  disabled={isSubmitting}
+                />
+                {errors.nameVi && (
+                  <p className="text-sm text-red-500">
+                    {errors.nameVi.message}
+                  </p>
+                )}
+              </div>
             </div>
 
             {/* Code */}
@@ -162,20 +184,37 @@ function TemplateForm({ open, onClose, onSubmit, mode, template }: Props) {
             </div>
 
             {/* Description */}
-            <div className="space-y-2">
-              <Label htmlFor="description">Description</Label>
-              <Textarea
-                id="description"
-                placeholder="Enter template description"
-                {...register("description")}
-                disabled={isSubmitting}
-                className="min-h-20"
-              />
-              {errors.description && (
-                <p className="text-sm text-red-500">
-                  {errors.description.message}
-                </p>
-              )}
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="description">Description (EN)</Label>
+                <Textarea
+                  id="description"
+                  placeholder="Enter template description in English"
+                  {...register("description")}
+                  disabled={isSubmitting}
+                  className="min-h-20"
+                />
+                {errors.description && (
+                  <p className="text-sm text-red-500">
+                    {errors.description.message}
+                  </p>
+                )}
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="descriptionVi">Description (VI)</Label>
+                <Textarea
+                  id="descriptionVi"
+                  placeholder="Enter template description in Vietnamese"
+                  {...register("descriptionVi")}
+                  disabled={isSubmitting}
+                  className="min-h-20"
+                />
+                {errors.descriptionVi && (
+                  <p className="text-sm text-red-500">
+                    {errors.descriptionVi.message}
+                  </p>
+                )}
+              </div>
             </div>
 
             {/* Active Status */}
@@ -284,7 +323,7 @@ function TemplateForm({ open, onClose, onSubmit, mode, template }: Props) {
 
                       <div className="space-y-2">
                         <Label htmlFor={`param-display-${index}`}>
-                          Display Name *
+                          Display Name (EN) *
                         </Label>
                         <Input
                           id={`param-display-${index}`}
@@ -299,7 +338,93 @@ function TemplateForm({ open, onClose, onSubmit, mode, template }: Props) {
                         )}
                       </div>
 
-                      <div className="flex items-end">
+                      <div className="space-y-2">
+                        <Label htmlFor={`param-display-${index}`}>
+                          Display Name (VI) *
+                        </Label>
+                        <Input
+                          id={`param-display-${index}`}
+                          placeholder="e.g., Price"
+                          {...register(`parameters.${index}.displayNameVi`)}
+                          disabled={isSubmitting}
+                        />
+                        {errors.parameters?.[index]?.displayNameVi && (
+                          <p className="text-xs text-red-500">
+                            {errors.parameters[index]?.displayNameVi?.message}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Group 2: Min, Max, Default Values */}
+                    <div className="grid gap-3 sm:grid-cols-3">
+                      <div className="space-y-2">
+                        <Label htmlFor={`param-min-${index}`}>
+                          Min Value *
+                        </Label>
+                        <Input
+                          id={`param-min-${index}`}
+                          type="number"
+                          placeholder="1.0"
+                          min={1}
+                          step={0.1}
+                          {...register(`parameters.${index}.minValue`, {
+                            valueAsNumber: true,
+                          })}
+                          disabled={isSubmitting}
+                        />
+                        {errors.parameters?.[index]?.minValue && (
+                          <p className="text-xs text-red-500">
+                            {errors.parameters[index]?.minValue?.message}
+                          </p>
+                        )}
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor={`param-max-${index}`}>
+                          Max Value *
+                        </Label>
+                        <Input
+                          id={`param-max-${index}`}
+                          type="number"
+                          placeholder="5.0"
+                          min={1}
+                          step={0.1}
+                          {...register(`parameters.${index}.maxValue`, {
+                            valueAsNumber: true,
+                          })}
+                          disabled={isSubmitting}
+                        />
+                        {errors.parameters?.[index]?.maxValue && (
+                          <p className="text-xs text-red-500">
+                            {errors.parameters[index]?.maxValue?.message}
+                          </p>
+                        )}
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor={`param-default-${index}`}>
+                          Default Value *
+                        </Label>
+                        <Input
+                          id={`param-default-${index}`}
+                          type="number"
+                          placeholder="1.2"
+                          min={1}
+                          step={0.1}
+                          {...register(`parameters.${index}.defaultValue`, {
+                            valueAsNumber: true,
+                          })}
+                          disabled={isSubmitting}
+                        />
+                        {errors.parameters?.[index]?.defaultValue && (
+                          <p className="text-xs text-red-500">
+                            {errors.parameters[index]?.defaultValue?.message}
+                          </p>
+                        )}
+                      </div>
+
+                      <div className="flex items-end justify-end">
                         <div className="w-full space-y-2">
                           <Label className="text-xs">Adjustable</Label>
                           <div className="flex items-center space-x-2">
@@ -321,69 +446,6 @@ function TemplateForm({ open, onClose, onSubmit, mode, template }: Props) {
                             </span>
                           </div>
                         </div>
-                      </div>
-                    </div>
-
-                    {/* Group 2: Min, Max, Default Values */}
-                    <div className="grid gap-3 sm:grid-cols-3">
-                      <div className="space-y-2">
-                        <Label htmlFor={`param-min-${index}`}>
-                          Min Value *
-                        </Label>
-                        <Input
-                          id={`param-min-${index}`}
-                          type="number"
-                          placeholder="0"
-                          {...register(`parameters.${index}.minValue`, {
-                            valueAsNumber: true,
-                          })}
-                          disabled={isSubmitting}
-                        />
-                        {errors.parameters?.[index]?.minValue && (
-                          <p className="text-xs text-red-500">
-                            {errors.parameters[index]?.minValue?.message}
-                          </p>
-                        )}
-                      </div>
-
-                      <div className="space-y-2">
-                        <Label htmlFor={`param-max-${index}`}>
-                          Max Value *
-                        </Label>
-                        <Input
-                          id={`param-max-${index}`}
-                          type="number"
-                          placeholder="100"
-                          {...register(`parameters.${index}.maxValue`, {
-                            valueAsNumber: true,
-                          })}
-                          disabled={isSubmitting}
-                        />
-                        {errors.parameters?.[index]?.maxValue && (
-                          <p className="text-xs text-red-500">
-                            {errors.parameters[index]?.maxValue?.message}
-                          </p>
-                        )}
-                      </div>
-
-                      <div className="space-y-2">
-                        <Label htmlFor={`param-default-${index}`}>
-                          Default Value *
-                        </Label>
-                        <Input
-                          id={`param-default-${index}`}
-                          type="number"
-                          placeholder="50"
-                          {...register(`parameters.${index}.defaultValue`, {
-                            valueAsNumber: true,
-                          })}
-                          disabled={isSubmitting}
-                        />
-                        {errors.parameters?.[index]?.defaultValue && (
-                          <p className="text-xs text-red-500">
-                            {errors.parameters[index]?.defaultValue?.message}
-                          </p>
-                        )}
                       </div>
                     </div>
                   </div>

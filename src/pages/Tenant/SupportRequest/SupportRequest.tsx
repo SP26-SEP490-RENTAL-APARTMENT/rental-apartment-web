@@ -82,15 +82,21 @@ function SupportRequest() {
     setAlternativesDialog(true);
 
     if (!bookingId) return;
+
     try {
       const response = await supportTicketApi.getAlternativeApartments(
         bookingId,
         {
           page: 1,
-          pageSize: 10,
+          pageSize: 15,
         },
       );
-      setAlternatives(response.data.data.items);
+
+      const postedApartments = response.data.data.items.filter(
+        (item: any) => item.apartment?.status === "posted",
+      );
+
+      setAlternatives(postedApartments);
     } catch (error) {
       console.log(error);
     }
