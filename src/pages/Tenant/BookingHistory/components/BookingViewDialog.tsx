@@ -13,6 +13,7 @@ import { useTranslation } from "react-i18next";
 import { useGetPaymentMode, useGetStatus } from "@/lib/utils";
 import {
   CalendarDays,
+  ChevronDown,
   Clock3,
   CreditCard,
   Moon,
@@ -25,6 +26,13 @@ import IncidentDialog from "./IncidentDialog";
 import { bookingApi } from "@/services/privateApi/tenantApi";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import OfflinePaymentDialog from "./OfflinePaymentDialog";
 
 export interface Props {
   open: boolean;
@@ -49,6 +57,7 @@ function BookingViewDialog({ open, onClose, booking }: Props) {
   const { t } = useTranslation("user");
   const [showReviewDialog, setShowReviewDialog] = useState(false);
   const [reportDialog, setReportDialog] = useState(false);
+  const [offlinePaymentDialog, setOfflinePaymentDialog] = useState(false);
 
   const handleReviewClick = () => {
     setShowReviewDialog(true);
@@ -299,7 +308,7 @@ function BookingViewDialog({ open, onClose, booking }: Props) {
             {/* Actions */}
             {!booking.actualCheckIn &&
               (booking.status === "paid" || booking.status === "confirmed") && (
-                <div className="flex justify-end gap-3">
+                <div className="flex flex-wrap justify-end gap-3">
                   <Button
                     variant="outline"
                     onClick={() => setReportDialog(true)}
@@ -310,9 +319,34 @@ function BookingViewDialog({ open, onClose, booking }: Props) {
 
                   {booking.status === "confirmed" &&
                     booking.paymentMode === "partial" && (
-                      <Button onClick={handlePayBalance}>
-                        {t("incident.payBalance")}
-                      </Button>
+                      <div className="flex">
+                        <Button
+                          className="rounded-r-none"
+                          onClick={handlePayBalance}
+                        >
+                          Pay Balance
+                        </Button>
+
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button
+                              variant="default"
+                              size="icon"
+                              className="rounded-l-none border-l"
+                            >
+                              <ChevronDown size={16} />
+                            </Button>
+                          </DropdownMenuTrigger>
+
+                          <DropdownMenuContent align="end">
+                            <DropdownMenuItem
+                              onClick={() => setOfflinePaymentDialog(true)}
+                            >
+                              Pay offline
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </div>
                     )}
                 </div>
               )}
@@ -337,6 +371,12 @@ function BookingViewDialog({ open, onClose, booking }: Props) {
       <IncidentDialog
         open={reportDialog}
         onClose={() => setReportDialog(false)}
+        bookingId={booking.bookingId}
+      />
+
+      <OfflinePaymentDialog
+        onClose={() => setOfflinePaymentDialog(false)}
+        open={offlinePaymentDialog}
         bookingId={booking.bookingId}
       />
     </>

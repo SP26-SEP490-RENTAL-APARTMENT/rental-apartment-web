@@ -1,4 +1,12 @@
 {
+    "accountCenter": "Trung tâm tài khoản",
+    "notify": {
+        "title": "Thông báo",
+        "unread": "Chưa đọc",
+        "read": "Đã đọc",
+        "noNotifications": "Không có thông báo nào",
+        "markAllAsRead": "Đánh dấu tất cả là đã đọc"
+    },
     "button": {
         "save": "Lưu",
         "cancel": "Hủy",

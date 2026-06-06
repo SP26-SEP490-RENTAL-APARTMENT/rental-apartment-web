@@ -132,13 +132,13 @@ function FinishPayment() {
 
           {/* Action Buttons */}
           <div className="flex flex-col gap-3 pt-2">
-            <Button
+            {/* <Button
               onClick={() => handleNavigate("/tenant/booking-history")}
               className="w-full h-12 bg-linear-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-bold gap-2 rounded-xl shadow-md hover:shadow-lg transition-all"
             >
               <Calendar className="h-4 w-4" />
               {t("finish.bookingHistory")}
-            </Button>
+            </Button> */}
 
             <Button
               variant="outline"

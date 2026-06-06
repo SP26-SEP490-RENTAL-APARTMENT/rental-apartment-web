@@ -1,5 +1,11 @@
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -45,7 +51,9 @@ function PackageItemForm({
     if (isCreate) {
       reset({
         itemName: "",
+        itemNameVi: "",
         itemDescription: "",
+        itemDescriptionVi: "",
         quantity: 0,
         estimatedValue: 0,
         sortOrder: 0,
@@ -53,7 +61,9 @@ function PackageItemForm({
     } else if (packageItem) {
       reset({
         itemName: packageItem.itemName,
+        itemNameVi: packageItem.itemNameVi || "",
         itemDescription: packageItem.itemDescription || "",
+        itemDescriptionVi: packageItem.itemDescriptionVi || "",
         quantity: packageItem.quantity,
         estimatedValue: packageItem.estimatedValue,
         sortOrder: packageItem.sortOrder || 0,
@@ -73,41 +83,75 @@ function PackageItemForm({
     reset();
     onClose();
   };
-  return <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-106.25">
+  return (
+    <Dialog open={isOpen} onOpenChange={handleClose}>
+      <DialogContent className="sm:max-w-3xl">
         <DialogHeader>
-          <DialogTitle>{isCreate ? 'Add Package Item' : 'Edit Package Item'}</DialogTitle>
+          <DialogTitle>
+            {isCreate ? "Add Package Item" : "Edit Package Item"}
+          </DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit(handleSubmitForm)} className="space-y-4">
           <div className="grid gap-4 py-4">
-            <div className="grid gap-2">
-              <Label htmlFor="itemName">Item name</Label>
-              <Input
-                id="itemName"
-                type="text"
-                placeholder="Name of the package item"
-                {...register("itemName")}
-              />
-              {errors.itemName && (
-                <p className="text-sm text-destructive">
-                  {errors.itemName.message}
-                </p>
-              )}
+            <div className="grid grid-cols-2 gap-3">
+              <div className="grid gap-2">
+                <Label htmlFor="itemName">Item name (EN)</Label>
+                <Input
+                  id="itemName"
+                  type="text"
+                  placeholder="Name of the package item"
+                  {...register("itemName")}
+                />
+                {errors.itemName && (
+                  <p className="text-sm text-destructive">
+                    {errors.itemName.message}
+                  </p>
+                )}
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="itemNameVi">Item name (VI)</Label>
+                <Input
+                  id="itemNameVi"
+                  type="text"
+                  placeholder="Name of the package item"
+                  {...register("itemNameVi")}
+                />
+                {errors.itemNameVi && (
+                  <p className="text-sm text-destructive">
+                    {errors.itemNameVi.message}
+                  </p>
+                )}
+              </div>
             </div>
-
-            <div className="grid gap-2">
-              <Label htmlFor="itemDescription">Description</Label>
-              <Input
-                id="itemDescription"
-                type="text"
-                placeholder="Description of the package item"
-                {...register("itemDescription")}
-              />
-              {errors.itemDescription && (
-                <p className="text-sm text-destructive">
-                  {errors.itemDescription.message}
-                </p>
-              )}
+            <div className="grid grid-cols-2 gap-3">
+              <div className="grid gap-2">
+                <Label htmlFor="itemDescription">Description (EN)</Label>
+                <Input
+                  id="itemDescription"
+                  type="text"
+                  placeholder="Description of the package item"
+                  {...register("itemDescription")}
+                />
+                {errors.itemDescription && (
+                  <p className="text-sm text-destructive">
+                    {errors.itemDescription.message}
+                  </p>
+                )}
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="itemDescriptionVi">Description (VI)</Label>
+                <Input
+                  id="itemDescriptionVi"
+                  type="text"
+                  placeholder="Description of the package item"
+                  {...register("itemDescriptionVi")}
+                />
+                {errors.itemDescriptionVi && (
+                  <p className="text-sm text-destructive">
+                    {errors.itemDescriptionVi.message}
+                  </p>
+                )}
+              </div>
             </div>
             <div className="grid gap-2">
               <Label htmlFor="quantity">Quantity</Label>
@@ -163,6 +207,7 @@ function PackageItemForm({
         </form>
       </DialogContent>
     </Dialog>
+  );
 }
 
 export default PackageItemForm;

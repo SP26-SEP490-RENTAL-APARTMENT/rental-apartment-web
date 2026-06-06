@@ -278,7 +278,7 @@ function ApartmentAction({
 
           <DropdownMenuContent>
             <DropdownMenuItem onClick={() => onAddPackage(apartment)}>
-              Create Package
+              {t("button.createPackage")}
             </DropdownMenuItem>
             <DropdownMenuItem
               onClick={() => onViewPackage(apartment.apartmentId)}
@@ -297,7 +297,7 @@ function ApartmentAction({
             <DropdownMenuItem
               onClick={() => onViewAvailability(apartment.apartmentId)}
             >
-              View Availability
+              {t("button.viewAvailability")}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

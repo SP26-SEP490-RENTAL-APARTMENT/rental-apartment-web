@@ -9,6 +9,7 @@ import IsReadTabs from "./IsReadTabs";
 import type { Notification } from "@/types/notification";
 import { notificationApi } from "@/services/privateApi/tenantApi";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 
 interface Props {
   open: boolean;
@@ -27,6 +28,8 @@ function NotifyButton({
   notifications,
   loading,
 }: Props) {
+  const { t } = useTranslation("common");
+
   const handleMarkAllAsRead = async () => {
     try {
       await notificationApi.markAllAsRead();
@@ -52,7 +55,7 @@ function NotifyButton({
       <DropdownMenuTrigger asChild>
         <Button variant="secondary" className="flex items-center gap-2">
           <Bell size={20} />
-          Notifications
+          {t("notify.title")}
         </Button>
       </DropdownMenuTrigger>
 
@@ -71,7 +74,7 @@ function NotifyButton({
             size="sm"
             onClick={handleMarkAllAsRead}
           >
-            Read all <ArrowUpRightIcon size={16} />
+            {t("notify.markAllAsRead")} <ArrowUpRightIcon size={16} />
           </Button>
         </div>
       </DropdownMenuContent>

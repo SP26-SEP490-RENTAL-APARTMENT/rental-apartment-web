@@ -199,12 +199,12 @@ function BookingBox({ apartmentId, onSubmit, apartment }: Props) {
               </Button>
             </DrawerTrigger>
 
-            <DrawerContent className="max-h-[90vh]">
+            <DrawerContent className="max-h-[90vh] flex flex-col">
               <DrawerHeader>
                 <DrawerTitle>{t("booking.selectDate")}</DrawerTitle>
               </DrawerHeader>
 
-              <div className="px-4 pb-6 overflow-y-auto">
+              <div className="px-4 overflow-y-auto flex-1">
                 <Calendar
                   mode="range"
                   numberOfMonths={2}
@@ -230,8 +230,10 @@ function BookingBox({ apartmentId, onSubmit, apartment }: Props) {
                     ),
                   }}
                 />
+              </div>
 
-                <div className="mt-6 grid grid-cols-2 gap-4">
+              <div className="px-4 py-4 border-t bg-white">
+                <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="text-sm font-medium">Check in</label>
                     <input

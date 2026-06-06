@@ -102,6 +102,8 @@ export const bookingApi = {
       `/Booking/${bookingId}/check-time/claim/pay`,
       data,
     ),
+  submitOfflinePayment: (bookingId: string, data: FormData) =>
+    apiConfig.privateApi.post(`/Booking/${bookingId}/submit-offline-payment`, data),
 };
 
 export const reviewApi = {

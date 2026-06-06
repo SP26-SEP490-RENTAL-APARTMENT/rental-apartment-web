@@ -5,7 +5,7 @@
         "phone": "Phone Number",
         "gender": "Gender",
         "birthday": "Birthday",
-        "nationality":"Nationality",
+        "nationality": "Nationality",
         "address": "Address",
         "forgotPassword": "Forgot Password?",
         "personalInfo": "Personal Information",
@@ -20,7 +20,10 @@
         "createdAt": "Created at",
         "profile": "Profile",
         "vietnam": "Vietnam",
-        "other": "Other"
+        "other": "Other",
+        "bank": "Bank",
+        "bankAccountNumber": "Bank account",
+        "outstandingFee": "Outstanding fee"
     },
     "auth": {
         "password": "Password",
@@ -174,5 +177,15 @@
         "success": "Incident reported successfully! Our team will review your report and get back to you shortly.",
         "failure": "An error occurred while submitting your incident report. Please try again later.",
         "payBalance": "Pay Balance"
+    },
+    "bankDialog": {
+        "title": "Add Bank Account",
+        "selectBank": "Select Bank",
+        "bankAccountNumber": "Bank Account Number",
+        "accountNumberPlaceholder": "Enter your bank account number",
+        "cancelButton": "Cancel",
+        "addButton": "Add Bank Account",
+        "successMessage": "Bank account added successfully",
+        "errorMessage": "Failed to add bank account. Please try again."
     }
 }

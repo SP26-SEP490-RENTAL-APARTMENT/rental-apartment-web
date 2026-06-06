@@ -166,13 +166,14 @@ function ApartmentInfo({ apartment }: ApartmentInfoProps) {
         <div className="space-y-1">
           <div className="flex items-center gap-2 text-gray-500">
             <TriangleAlert size={16} />
-            <span className="text-sm">Booking Grace Period</span>
+            <span className="text-sm">{t("apartment.bookingGracePeriod")}</span>
           </div>
 
           <div className="flex items-center gap-2">
             <span className="text-sm text-red-500">
-              Your booking will be automatically cancelled if not check in{" "}
-              {apartment.noShowGraceHours} hours after the check-in date.
+              {t("apartment.noShowCancellation", {
+                hours: apartment.noShowGraceHours,
+              })}
             </span>
           </div>
         </div>

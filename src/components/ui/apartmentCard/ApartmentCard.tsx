@@ -1,10 +1,10 @@
-import { Card } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { PUBLIC_ROUTES } from "@/constants/routes";
 import type { Apartment } from "@/types/apartment";
-import { Heart, MapPin, PawPrint, Users } from "lucide-react";
+import { Heart, MapPin, PawPrint, Star, Users } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { Button } from "../button";
-import { useState } from "react";
 import { getDisplayPrice } from "./getPrice";
 
 interface ApartmentCardProps {
@@ -14,7 +14,7 @@ interface ApartmentCardProps {
 
 function ApartmentCard({ apartment, onClickHeart }: ApartmentCardProps) {
   const navigate = useNavigate();
-  const [isHeartHovered, setIsHeartHovered] = useState(false);
+  const { t } = useTranslation("book");
 
   const { min, max } = getDisplayPrice(apartment);
 
@@ -32,89 +32,81 @@ function ApartmentCard({ apartment, onClickHeart }: ApartmentCardProps) {
           ),
         )
       }
-      className="group overflow-hidden rounded-xl border pt-0 border-gray-200 hover:border-gray-300 hover:shadow-2xl transition-all duration-300 cursor-pointer flex flex-col h-full bg-white"
+      className="border-0 shadow-none overflow-hidden cursor-pointer bg-transparent group"
     >
-      {/* IMAGE CONTAINER */}
-      <div className="relative overflow-hidden bg-gray-200 h-64">
+      {/* IMAGE */}
+      <div className="relative aspect-4/3 overflow-hidden rounded-2xl">
         <img
           src={thumbnail}
           alt={apartment.title}
-          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+          className="w-full h-full object-cover transition duration-500 group-hover:scale-105"
         />
 
-        {/* PRICE BADGE */}
-        <div className="absolute top-3 left-3 bg-linear-to-r from-blue-600 to-blue-700 text-white px-3 py-1.5 rounded-lg shadow-md text-sm font-bold">
-          {min === max
-            ? min.toLocaleString("vi-VN")
-            : `${min.toLocaleString("vi-VN")} - ${max.toLocaleString("vi-VN")}`}{" "}
-          VNĐ/night
-        </div>
-
-        {/* HEART BUTTON */}
+        {/* FAVORITE */}
         <Button
+          variant="ghost"
+          size="icon"
           onClick={(e) => {
             e.stopPropagation();
             onClickHeart(apartment.apartmentId);
           }}
-          onMouseEnter={() => setIsHeartHovered(true)}
-          onMouseLeave={() => setIsHeartHovered(false)}
-          variant="ghost"
-          size="icon"
-          className={`absolute top-3 right-3 rounded-full transition-all duration-200 ${
-            isHeartHovered
-              ? "bg-white shadow-lg scale-110"
-              : "bg-white/80 backdrop-blur"
-          }`}
+          className="absolute top-3 right-3 bg-white/90 hover:bg-white rounded-full shadow-md"
         >
           <Heart
             size={18}
-            className={isHeartHovered ? "fill-red-500 text-red-500" : ""}
+            className="text-gray-700 hover:fill-red-500 hover:text-red-500"
           />
         </Button>
       </div>
 
       {/* CONTENT */}
-      <div className="p-4 flex flex-col grow space-y-3">
-        {/* TITLE */}
-        <div>
-          <h3 className="font-bold text-lg text-gray-900 line-clamp-1 group-hover:text-blue-600 transition-colors">
-            {apartment.title}
-          </h3>
-        </div>
+      <CardContent className="px-0 pt-3 pb-0">
+        {/* TITLE + RATING */}
+        <div className="flex justify-between gap-2">
+          <h3 className="font-semibold line-clamp-1">{apartment.title}</h3>
 
-        {/* LOCATION */}
-        <div className="flex items-center gap-1.5 text-sm text-gray-600">
-          <MapPin size={16} className="text-blue-600 shrink-0" />
-          <span className="line-clamp-1 text-xs">
-            {apartment.district}, {apartment.city}
-          </span>
-        </div>
-
-        {/* DESCRIPTION */}
-        <p className="text-xs text-gray-500 line-clamp-2 grow">
-          {apartment.description}
-        </p>
-
-        {/* AMENITIES */}
-        <div className="flex items-center gap-2 text-xs text-gray-600 pt-1 border-t border-gray-100">
-          <div className="flex items-center gap-1.5 px-2 py-1 bg-gray-50 rounded">
-            <Users size={14} className="text-gray-600" />
-            <span>{apartment.maxOccupants} guests</span>
-          </div>
-          {apartment.isPetAllowed && (
-            <div className="flex items-center gap-1.5 px-2 py-1 bg-gray-50 rounded">
-              <PawPrint size={14} className="text-gray-600" />
+          {apartment.totalReviews > 0 && (
+            <div className="flex items-center gap-1 shrink-0 text-sm">
+              <Star size={14} className="fill-black text-black" />
+              <span>{apartment.averageRating.toFixed(1)}</span>
             </div>
           )}
         </div>
-      </div>
 
-      {/* FOOTER - BOOK NOW BUTTON */}
-      {/* <div className="p-4 border-t border-gray-100">
-        <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold">
-          View Details
-        </Button>
-      </div> */}
+        {/* LOCATION */}
+        <p className="text-sm text-gray-500 line-clamp-1 flex items-center gap-1">
+          <MapPin size={14} />
+          {apartment.district}, {apartment.city}
+        </p>
+
+        {/* GUEST */}
+        <p className="text-sm text-gray-500 flex items-center gap-1">
+          <Users size={14} />
+          {t("apartment.upToGuests", { maxOccupants: apartment.maxOccupants })}
+        </p>
+
+        {/* PET */}
+        {apartment.isPetAllowed && (
+          <p className="text-sm text-gray-500 flex items-center gap-1">
+            <PawPrint size={14} />
+            {t("apartment.petFriendly")}
+          </p>
+        )}
+
+        {/* PRICE */}
+        <div className="mt-2 text-sm">
+          <span className="font-bold text-black">
+            {min === max
+              ? min.toLocaleString("vi-VN")
+              : `${min.toLocaleString("vi-VN")} - ${max.toLocaleString("vi-VN")}`}
+            ₫
+          </span>
+          <span className="text-gray-500">
+            {" "}
+            {t("apartment.pricePerNightShort")}
+          </span>
+        </div>
+      </CardContent>
     </Card>
   );
 }

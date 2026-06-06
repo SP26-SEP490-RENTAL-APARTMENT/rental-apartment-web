@@ -75,17 +75,21 @@
     },
     "package": {
         "form": {
-            "name": "Package Name",
-            "namePlaceholder": "Enter package name",
-            "description": "Description",
-            "descriptionPlaceholder": "Enter package description",
+            "name": "Package Name (English)",
+            "namePlaceholder": "Enter package name in English",
+            "description": "Description (English)",
+            "descriptionVi": "Description (Vietnamese)",
+            "descriptionPlaceholder": "Enter package description in English",
+            "descriptionViPlaceholder": "Enter package description in Vietnamese",
             "price": "Price",
             "currency": "Currency",
             "active": "Active",
             "maxBookings": "Max Bookings",
             "yes": "Yes",
             "no": "No",
-            "createdAt": "Created At"
+            "createdAt": "Created At",
+            "nameVi": "Package Name (Vietnamese)",
+            "nameViPlaceholder": "Enter package name in Vietnamese"
         },
         "button": {
             "add": "Add Package",
@@ -153,7 +157,9 @@
         "addRoom": "Add Room",
         "addAmenity": "Add Amenity",
         "addAvailability": "Add Unavailable Dates",
-        "addPackageItems": "Add Items to Package"
+        "addPackageItems": "Add Items to Package",
+        "createPackage": "Create Package",
+        "viewAvailability": "View Unavailable Dates"
     },
     "booking": {
         "title": "Booking Management",
@@ -289,5 +295,26 @@
         "dispute": "Dispute",
         "overdue": "overdue",
         "disputed": "disputed"
+    },
+    "smartPricing": {
+        "title": "Smart Pricing",
+        "cardTitle": "Smart Pricing Suggestion",
+        "cardSubtitle": "Auto-generated pricing recommendation",
+        "startDate": "Start Date",
+        "endDate": "End Date",
+        "suggestedPrice": "Suggest Pricing",
+        "basePrice": "Base Price",
+        "suggestedPriceLabel": "Suggested Price",
+        "multiplier": "Multiplier",
+        "pricingPeriod": "Pricing Period",
+        "occupancyRate": "Occupancy Rate",
+        "pricingExplanation": "Pricing Explanation",
+        "applyPricing": "Apply Pricing",
+        "acceptedStatus": "Accepted",
+        "pendingStatus": "Pending",
+        "acceptSuccessMessage": "Smart pricing accepted successfully",
+        "acceptErrorMessage": "Failed to accept smart pricing",
+        "createdAt": "Created at",
+        "idLabel": "ID"
     }
 }
