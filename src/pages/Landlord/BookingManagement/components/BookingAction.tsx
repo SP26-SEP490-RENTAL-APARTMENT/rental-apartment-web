@@ -12,6 +12,7 @@ import {
   CheckCheck,
   Eye,
   FileDown,
+  HandCoins,
   LogOut,
   Plus,
   ScanEye,
@@ -51,6 +52,7 @@ export interface Props {
   onCheckOut: (bookingId: string, data: FormData) => void;
   onGetOccupantList: (bookingId: string) => Promise<void>;
   onAddOccupant: (bookingId: string) => void;
+  onGetOfflinePayment: (bookingId: string) => void;
 }
 function BookingAction({
   bookings,
@@ -58,6 +60,7 @@ function BookingAction({
   onCheckOut,
   onGetOccupantList,
   onAddOccupant,
+  onGetOfflinePayment,
 }: Props) {
   const { t } = useTranslation("landlord");
   const { t: statusT } = useTranslation("status");
@@ -410,6 +413,12 @@ function BookingAction({
             </div>
           </TooltipContent>
         </Tooltip>
+      )}
+
+      {bookings.status === "confirmed" && (
+        <Button size="sm" className="bg-green-500" onClick={() => onGetOfflinePayment(bookings.bookingId)}>
+          <HandCoins />
+        </Button>
       )}
 
       <CheckInDialog

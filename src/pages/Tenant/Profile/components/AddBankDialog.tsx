@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { bankList } from "@/constants/bankList";
 import { indentityApi } from "@/services/privateApi/tenantApi";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
 interface Props {
@@ -18,6 +19,7 @@ interface Props {
 }
 
 function AddBankDialog({ open, onClose, refetchProfile }: Props) {
+  const { t } = useTranslation("user");
   const [form, setForm] = useState({
     bankAccountNumber: "",
     bankBin: "",
@@ -33,12 +35,12 @@ function AddBankDialog({ open, onClose, refetchProfile }: Props) {
   const handleAddBank = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-        await indentityApi.addBankAcc(form)
-        toast.success("Bank account added successfully");
-        onClose();
-        refetchProfile();
+      await indentityApi.addBankAcc(form);
+      toast.success(t("bankDialog.successMessage"));
+      onClose();
+      refetchProfile();
     } catch (error) {
-        toast.error("Failed to add bank account. Please try again.");
+      toast.error(t("bankDialog.errorMessage"));
     }
   };
 
@@ -46,11 +48,11 @@ function AddBankDialog({ open, onClose, refetchProfile }: Props) {
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Add Bank Account</DialogTitle>
+          <DialogTitle>{t("bankDialog.title")}</DialogTitle>
         </DialogHeader>
         <form className="space-y-6" onSubmit={handleAddBank}>
           <div>
-            <Label className="mb-4 block">Select Bank</Label>
+            <Label className="mb-4 block">{t("bankDialog.selectBank")}</Label>
             <div className="grid grid-cols-4 gap-4 mb-6">
               {bankList.map((bank) => (
                 <button
@@ -79,10 +81,10 @@ function AddBankDialog({ open, onClose, refetchProfile }: Props) {
 
           {form.bankBin && (
             <div className="grid gap-2">
-              <Label>Bank Account Number</Label>
+              <Label>{t("bankDialog.bankAccountNumber")}</Label>
               <Input
                 type="number"
-                placeholder="Enter your bank account number"
+                placeholder={t("bankDialog.accountNumberPlaceholder")}
                 value={form.bankAccountNumber}
                 onChange={(e) =>
                   setForm({ ...form, bankAccountNumber: e.target.value })
@@ -97,13 +99,13 @@ function AddBankDialog({ open, onClose, refetchProfile }: Props) {
               onClick={onClose}
               className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md"
             >
-              Cancel
+              {t("bankDialog.cancelButton")}
             </button>
             <button
               type="submit"
               className="px-4 py-2 text-sm font-medium text-white bg-blue-500 hover:bg-blue-600 rounded-md"
             >
-              Add Bank Account
+              {t("bankDialog.addButton")}
             </button>
           </div>
         </form>

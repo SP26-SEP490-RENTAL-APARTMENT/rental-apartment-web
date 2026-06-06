@@ -8,7 +8,10 @@ import {
   Sparkles,
   CheckCircle2,
   XCircle,
+  TrendingDown,
+  BadgePercent,
 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
 interface SmartPricingProps {
@@ -17,6 +20,7 @@ interface SmartPricingProps {
 }
 
 export default function SmartPricingCard({ data, onClose }: SmartPricingProps) {
+  const { t } = useTranslation("landlord");
   const formatPrice = (value: number) => value.toLocaleString("vi-VN");
 
   console.log("SmartPricingCard received data:", data);
@@ -35,9 +39,9 @@ export default function SmartPricingCard({ data, onClose }: SmartPricingProps) {
         overridePrice: data.suggestedPrice,
       });
       onClose?.();
-      toast.success("Smart pricing accepted successfully");
+      toast.success(t("smartPricing.acceptSuccessMessage"));
     } catch (error) {
-      toast.error("Failed to accept smart pricing");
+      toast.error(t("smartPricing.acceptErrorMessage"));
     }
   };
 
@@ -53,11 +57,11 @@ export default function SmartPricingCard({ data, onClose }: SmartPricingProps) {
 
             <div>
               <h2 className="text-lg font-semibold text-slate-800">
-                Smart Pricing Suggestion
+                {t("smartPricing.cardTitle")}
               </h2>
 
               <p className="text-sm text-slate-500">
-                Auto-generated pricing recommendation
+                {t("smartPricing.cardSubtitle")}
               </p>
             </div>
           </div>
@@ -73,12 +77,12 @@ export default function SmartPricingCard({ data, onClose }: SmartPricingProps) {
           {data.acceptedByLandlord ? (
             <>
               <CheckCircle2 className="h-4 w-4" />
-              Accepted
+              {t("smartPricing.acceptedStatus")}
             </>
           ) : (
             <>
               <XCircle className="h-4 w-4" />
-              Pending
+              {t("smartPricing.pendingStatus")}
             </>
           )}
         </div>
@@ -87,28 +91,49 @@ export default function SmartPricingCard({ data, onClose }: SmartPricingProps) {
       {/* Price Section */}
       <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-3">
         <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
-          <p className="text-sm text-slate-500">Base Price</p>
+          <p className="text-sm text-slate-500">
+            {t("smartPricing.basePrice")}
+          </p>
 
           <h3 className="mt-2 text-2xl font-bold text-slate-800">
             {formatPrice(data.basePrice)} đ
           </h3>
         </div>
 
-        <div className="rounded-xl border border-violet-200 bg-violet-50 p-4">
-          <div className="flex items-center gap-2 text-violet-700">
-            <TrendingUp className="h-4 w-4" />
-            <span className="text-sm font-medium">Suggested Price</span>
-          </div>
+        {data.basePrice > data.suggestedPrice ? (
+          <div className="rounded-xl border border-red-200 bg-red-50 p-4">
+            <div className="flex items-center gap-2 text-red-700">
+              <TrendingDown className="h-4 w-4" />
+              <span className="text-sm font-medium">
+                {t("smartPricing.suggestedPriceLabel")}
+              </span>
+            </div>
 
-          <h3 className="mt-2 text-3xl font-bold text-violet-700">
-            {formatPrice(data.suggestedPrice)} đ
-          </h3>
-        </div>
+            <h3 className="mt-2 text-3xl font-bold text-red-700">
+              {formatPrice(data.suggestedPrice)} đ
+            </h3>
+          </div>
+        ) : (
+          <div className="rounded-xl border border-violet-200 bg-violet-50 p-4">
+            <div className="flex items-center gap-2 text-violet-700">
+              <TrendingUp className="h-4 w-4" />
+              <span className="text-sm font-medium">
+                {t("smartPricing.suggestedPriceLabel")}
+              </span>
+            </div>
+
+            <h3 className="mt-2 text-3xl font-bold text-violet-700">
+              {formatPrice(data.suggestedPrice)} đ
+            </h3>
+          </div>
+        )}
 
         <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
           <div className="flex items-center gap-2 text-slate-600">
             <Percent className="h-4 w-4" />
-            <span className="text-sm font-medium">Multiplier</span>
+            <span className="text-sm font-medium">
+              {t("smartPricing.multiplier")}
+            </span>
           </div>
 
           <h3 className="mt-2 text-2xl font-bold text-slate-800">
@@ -123,7 +148,9 @@ export default function SmartPricingCard({ data, onClose }: SmartPricingProps) {
           <div className="flex items-center gap-2 text-slate-700">
             <CalendarDays className="h-4 w-4" />
 
-            <span className="font-medium">Pricing Period</span>
+            <span className="font-medium">
+              {t("smartPricing.pricingPeriod")}
+            </span>
           </div>
 
           <p className="mt-2 text-sm text-slate-600">
@@ -133,9 +160,11 @@ export default function SmartPricingCard({ data, onClose }: SmartPricingProps) {
 
         <div className="rounded-xl border border-slate-200 p-4">
           <div className="flex items-center gap-2 text-slate-700">
-            <TrendingUp className="h-4 w-4" />
+            <BadgePercent className="h-4 w-4" />
 
-            <span className="font-medium">Occupancy Rate</span>
+            <span className="font-medium">
+              {t("smartPricing.occupancyRate")}
+            </span>
           </div>
 
           <p className="mt-2 text-sm text-slate-600">
@@ -146,7 +175,9 @@ export default function SmartPricingCard({ data, onClose }: SmartPricingProps) {
 
       {/* Reason */}
       <div className="mt-6 rounded-xl border border-slate-200 bg-slate-50 p-4">
-        <h4 className="font-semibold text-slate-800">Pricing Explanation</h4>
+        <h4 className="font-semibold text-slate-800">
+          {t("smartPricing.pricingExplanation")}
+        </h4>
 
         <p className="mt-2 whitespace-pre-line text-sm leading-6 text-slate-600">
           {data.reason}
@@ -156,15 +187,20 @@ export default function SmartPricingCard({ data, onClose }: SmartPricingProps) {
       {/* Footer */}
       <div className="mt-4 flex items-center justify-between border-t border-slate-100 pt-4 text-sm text-slate-500">
         <span>
-          Created at: {new Date(data.createdAt).toLocaleString("vi-VN")}
+          {t("smartPricing.createdAt")}:{" "}
+          {new Date(data.createdAt).toLocaleString("vi-VN")}
         </span>
 
-        <span>ID: {data.pricingId.slice(0, 8)}...</span>
+        <span>
+          {t("smartPricing.idLabel")}: {data.pricingId.slice(0, 8)}...
+        </span>
       </div>
 
       {!data.acceptedByLandlord && (
         <div className="flex justify-end mt-5">
-          <Button onClick={handleAcceptPricing}>Apply Pricing</Button>
+          <Button onClick={handleAcceptPricing}>
+            {t("smartPricing.applyPricing")}
+          </Button>
         </div>
       )}
     </div>

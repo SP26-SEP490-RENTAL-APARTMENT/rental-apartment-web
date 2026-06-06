@@ -17,6 +17,7 @@ export const BookingColumns = (
   onGetOccupantList: (bookingId: string) => Promise<void>,
   onAddOccupant: (bookingId: string) => void,
   getApartmentDetail: (apartmentId: string) => void,
+  onGetOfflinePayment: (bookingId: string) => void,
 ): ColumnDef<BookingHistory>[] => {
   const { t } = useTranslation("landlord");
   const { t: statusT } = useTranslation("status");
@@ -130,6 +131,7 @@ export const BookingColumns = (
             onCheckOut={onCheckOut}
             onGetOccupantList={onGetOccupantList}
             onAddOccupant={onAddOccupant}
+            onGetOfflinePayment={onGetOfflinePayment}
           />
         );
       },

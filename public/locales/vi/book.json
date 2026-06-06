@@ -17,7 +17,12 @@
         "infants": "em bé",
         "maxInfants": "Số em bé tối đa",
         "priceWarning": "Giá có thể thay đổi theo ngày",
-        "night": "đêm"
+        "night": "đêm",
+        "upToGuests": "Tối đa {{maxOccupants}} khách",
+        "petFriendly": "Chào đón thú cưng",
+        "pricePerNightShort": "/ đêm",
+        "bookingGracePeriod": "Khoảng thời gian chấp nhận trễ",
+        "noShowCancellation": "Đặt phòng của bạn sẽ bị hủy tự động nếu không check-in trong vòng {{hours}} giờ sau thời gian check-in."
     },
     "room": {
         "roomType": "Loại phòng",

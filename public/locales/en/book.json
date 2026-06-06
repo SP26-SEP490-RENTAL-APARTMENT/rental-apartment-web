@@ -17,7 +17,12 @@
         "infants": "infants",
         "maxInfants": "Maximum infants",
         "priceWarning": "Price may vary by date",
-        "night": "night"
+        "night": "night",
+        "upToGuests": "Up to {{maxOccupants}} guests",
+        "petFriendly": "Pet friendly",
+        "pricePerNightShort": "/ night",
+        "bookingGracePeriod": "Booking Grace Period",
+        "noShowCancellation": "Your booking will be automatically cancelled if not checked in {{hours}} hours after the check-in date."
     },
     "room": {
         "roomType": "Room type",

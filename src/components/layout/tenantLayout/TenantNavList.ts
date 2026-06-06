@@ -43,7 +43,7 @@ export const useTenantNavList = () => {
             icon: Album,
           },
           {
-            title: 'Outstanding Fees',
+            title: t("profile.outstandingFee"),
             url: "/tenant/outstanding-fees",
             icon: ClockAlert,
           },

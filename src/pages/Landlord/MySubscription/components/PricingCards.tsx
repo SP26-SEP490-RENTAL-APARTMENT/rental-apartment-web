@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Check } from "lucide-react";
 import type { SubscriptionPlan } from "@/types/subscriptionPlan";
+import { useTranslation } from "react-i18next";
 
 interface Props {
   plan: SubscriptionPlan;
@@ -38,6 +39,7 @@ export default function PricingCard({
   isCurrent,
   onSelectPlan,
 }: Props) {
+  const { i18n } = useTranslation();
   return (
     <Card
       className={`p-5 flex flex-col justify-between transition-all
@@ -52,8 +54,12 @@ export default function PricingCard({
       )}
 
       <CardHeader className="p-0 mb-4">
-        <CardTitle className="text-xl">{plan.name}</CardTitle>
-        <p className="text-sm text-muted-foreground">{plan.description}</p>
+        <CardTitle className="text-xl">
+          {i18n.language === "vi" ? plan.nameVi : plan.name}
+        </CardTitle>
+        <p className="text-sm text-muted-foreground">
+          {i18n.language === "vi" ? plan.descriptionVi : plan.description}
+        </p>
       </CardHeader>
 
       <CardContent className="p-0 space-y-5">
@@ -72,7 +78,7 @@ export default function PricingCard({
 
           <li className="flex items-center gap-2">
             <Check size={16} />
-            {plan.features}
+            {i18n.language === "vi" ? plan.featuresVi : plan.features}
           </li>
         </ul>
 

@@ -191,13 +191,13 @@ function PaymentCard({ payment }: { payment: PaymentHistory }) {
                 : "Pending"}
             </p>
             <p className="text-slate-400 text-xs mt-0.5">
-              Transaction ID: {payment.transactionId.slice(0, 12)}...
+              Transaction ID: {payment.transactionId?.slice(0, 12)}...
             </p>
           </div>
           <div className="text-right">
             <p className="text-slate-500 font-medium">Reference</p>
             <p className="text-slate-700 font-mono text-xs bg-slate-50 px-2.5 py-1.5 rounded border border-slate-200 mt-1">
-              #{payment.transactionId.slice(0, 8).toUpperCase()}
+              #{payment.transactionId?.slice(0, 8).toUpperCase()}
             </p>
           </div>
         </div>

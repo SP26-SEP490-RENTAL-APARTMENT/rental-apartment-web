@@ -28,6 +28,8 @@ export interface Apartment extends InspectionStatus {
   nearbyAttractions?: NearbyAttraction;
   noShowGraceHours: number;
   media: ApartmentMedia[];
+  totalReviews: number;
+  averageRating: number;
 }
 
 export interface ApartmentMedia {

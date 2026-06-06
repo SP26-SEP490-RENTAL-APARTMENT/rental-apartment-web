@@ -20,7 +20,10 @@
         "createdAt": "Ngày tạo",
         "profile": "Hồ sơ",
         "vietnam": "Việt Nam",
-        "other": "Khác"
+        "other": "Khác",
+        "bank": "Ngân hàng",
+        "bankAccountNumber": "Tài khoản ngân hàng",
+        "outstandingFee": "Phí chưa thanh toán"
     },
     "auth": {
         "password": "Mật khẩu",
@@ -174,5 +177,15 @@
         "success": "Sự cố đã được báo cáo thành công! Đội ngũ của chúng tôi sẽ xem xét báo cáo của bạn và phản hồi trong thời gian sớm nhất.",
         "failure": "Đã xảy ra lỗi khi gửi báo cáo sự cố. Vui lòng thử lại sau.",
         "payBalance": "Thanh toán số dư"
+    },
+    "bankDialog": {
+        "title": "Thêm Tài Khoản Ngân Hàng",
+        "selectBank": "Chọn Ngân Hàng",
+        "bankAccountNumber": "Số Tài Khoản Ngân Hàng",
+        "accountNumberPlaceholder": "Nhập số tài khoản ngân hàng của bạn",
+        "cancelButton": "Hủy",
+        "addButton": "Thêm Tài Khoản Ngân Hàng",
+        "successMessage": "Tài khoản ngân hàng đã được thêm thành công",
+        "errorMessage": "Không thể thêm tài khoản ngân hàng. Vui lòng thử lại."
     }
 }

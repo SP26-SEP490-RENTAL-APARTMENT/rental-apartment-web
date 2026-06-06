@@ -142,6 +142,16 @@ export const bookingManagementApi = {
       `/Booking/${bookingId}/occupants/${occupantOrder}`,
       data,
     ),
+  getOfflinePayment: (bookingId: string) =>
+    apiConfig.privateApi.get(`/Booking/${bookingId}/offline-payments`),
+  confirmOfflinePayment: (
+    bookingId: string,
+    data: { paymentId: string; approve: boolean; notes: string },
+  ) =>
+    apiConfig.privateApi.post(
+      `/Booking/${bookingId}/confirm-offline-payment`,
+      data,
+    ),
 };
 
 export const mySubscriptionApi = {

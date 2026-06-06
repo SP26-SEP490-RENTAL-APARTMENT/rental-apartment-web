@@ -17,6 +17,7 @@ import {
 import type { Notification } from "@/types/notification";
 import { notificationApi } from "@/services/privateApi/tenantApi";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 
 interface Props {
   data: Notification;
@@ -24,10 +25,12 @@ interface Props {
 }
 
 function NotifyItem({ data, onNotificationRead }: Props) {
+  const { i18n } = useTranslation();
+  
   const handleReadNotification = async () => {
     try {
       await notificationApi.markAsRead(data.notificationId);
-      toast.success("Notification marked as read");
+      toast.success(i18n.language === "vi" ? "Thông báo đã được đánh dấu là đã đọc" : "Notification marked as read");
       onNotificationRead?.();
     } catch (error) {
       toast.error("Failed to mark notification as read");
@@ -119,7 +122,7 @@ function NotifyItem({ data, onNotificationRead }: Props) {
               !data.isRead ? "font-semibold" : "font-medium"
             }`}
           >
-            {data.title}
+            {i18n.language === "vi" ? data.titleVi : data.title}
           </h4>
 
           <span className="text-xs text-muted-foreground whitespace-nowrap">
@@ -128,7 +131,7 @@ function NotifyItem({ data, onNotificationRead }: Props) {
         </div>
 
         <p className="text-sm text-muted-foreground line-clamp-2 mt-1">
-          {data.message}
+          {i18n.language === "vi" ? data.messageVi : data.message}
         </p>
       </div>
 

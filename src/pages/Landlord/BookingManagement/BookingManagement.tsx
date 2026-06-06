@@ -24,6 +24,8 @@ import { Button } from "@/components/ui/button";
 import { useTranslation } from "react-i18next";
 import BookingFilter from "./components/BookingFilter";
 import AddOccupantCCCD from "./components/AddOccupantCCCD";
+import type { OfflinePayment } from "@/types/offlinePayment";
+import GetOfflinePaymentDialog from "./components/OfflinePayment/GetOfflinePaymentDialog";
 
 function BookingManagement() {
   const { t } = useTranslation("common");
@@ -44,6 +46,10 @@ function BookingManagement() {
   const [selectedBookingId, setSelectedBookingId] = useState<string | null>(
     null,
   );
+  const [offlinePaymentDialog, setOfflinePaymentDialog] = useState(false);
+  const [offlinePaymentInfo, setOfflinePaymentInfo] = useState<
+    OfflinePayment[] | []
+  >([]);
 
   const fetchBookings = useCallback(async () => {
     setLoading(true);
@@ -103,6 +109,17 @@ function BookingManagement() {
       setApartment(response.data.data);
     } catch (error) {
       console.log(error);
+    }
+  };
+
+  const getOfflinePayment = async (bookingId: string) => {
+    setSelectedBookingId(bookingId);
+    try {
+      const response = await bookingManagementApi.getOfflinePayment(bookingId);
+      setOfflinePaymentInfo(response.data.data);
+      setOfflinePaymentDialog(true);
+    } catch (error) {
+      console.error("Failed to fetch offline payment info:", error);
     }
   };
 
@@ -204,6 +221,7 @@ function BookingManagement() {
                 fetchOccupantList,
                 triggerAddOccupant,
                 fetchApartmentDetails,
+                getOfflinePayment,
               )}
               data={bookings}
               limit={10}
@@ -234,6 +252,14 @@ function BookingManagement() {
         onClose={() => setOpen({ ...open, addOccupant: false })}
         open={open.addOccupant}
         bookingId={selectedBookingId!}
+      />
+
+      <GetOfflinePaymentDialog
+        open={offlinePaymentDialog}
+        onClose={() => setOfflinePaymentDialog(false)}
+        offlinePayments={offlinePaymentInfo}
+        bookingId={selectedBookingId!}
+        refetch={fetchBookings}
       />
 
       <Dialog open={!!apartment} onOpenChange={() => setApartment(null)}>

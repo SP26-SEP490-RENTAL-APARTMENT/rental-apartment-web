@@ -4,8 +4,10 @@ import { useEffect, useState } from "react";
 import type { Notification } from "@/types/notification";
 import { notificationApi } from "@/services/privateApi/tenantApi";
 import NotifyButton from "@/components/ui/notification/NotifyButton";
+import { useTranslation } from "react-i18next";
 
 function TenantLayout() {
+  const { t } = useTranslation("common");
   const [open, setOpen] = useState(false);
   const [tab, setTab] = useState<"unread" | "read">("unread");
   const [notifications, setNotifications] = useState<Notification[]>([]);
@@ -44,7 +46,7 @@ function TenantLayout() {
         <header className="bg-white shadow fixed top-0 right-0 left-64 z-10">
           <div className="m-6 flex items-center justify-between px-6">
             <h1 className="bg-linear-to-r from-blue-600 to-blue-700 bg-clip-text text-transparent text-3xl font-bold">
-              Account Center
+              {t("accountCenter")}
             </h1>
             <NotifyButton
               open={open}

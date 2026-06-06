@@ -75,18 +75,21 @@
     },
     "package": {
         "form": {
-            "title": "Tạo Gói Dịch Vụ",
-            "name": "Tên gói dịch vụ",
-            "namePlaceholder": "Nhập tên gói dịch vụ",
-            "description": "Mô tả",
-            "descriptionPlaceholder": "Nhập mô tả gói dịch vụ",
+            "name": "Tên gói dịch vụ (Tiếng Anh)",
+            "namePlaceholder": "Nhập tên gói dịch vụ trong tiếng Anh",
+            "description": "Mô tả (Tiếng Anh)",
+            "descriptionVi": "Mô tả (Tiếng Việt)",
+            "descriptionPlaceholder": "Nhập mô tả gói dịch vụ trong tiếng Anh",
+            "descriptionViPlaceholder": "Nhập mô tả gói dịch vụ trong tiếng Việt",
             "price": "Giá",
             "currency": "Đơn vị tiền tệ",
             "active": "Kích hoạt",
             "maxBookings": "Số lượng đặt tối đa",
             "yes": "Có",
             "no": "Không",
-            "createdAt": "Ngày Tạo"
+            "createdAt": "Ngày Tạo",
+            "nameVi": "Tên gói dịch vụ (Tiếng Việt)",
+            "nameViPlaceholder": "Nhập tên gói dịch vụ trong tiếng Việt"
         },
         "button": {
             "add": "Thêm gói dịch vụ",
@@ -154,7 +157,9 @@
         "addRoom": "Thêm phòng",
         "addAmenity": "Thêm tiện nghi",
         "addAvailability": "Thêm ngày không có sẵn",
-        "addPackageItems": "Thêm mục vào gói dịch vụ"
+        "addPackageItems": "Thêm mục vào gói dịch vụ",
+        "createPackage": "Tạo gói dịch vụ",
+        "viewAvailability": "Xem các ngày không có sẵn"
     },
     "booking": {
         "title": "Quản Lý Đặt Phòng",
@@ -290,5 +295,26 @@
         "dispute": "Tranh Chấp",
         "overdue": "quá hạn",
         "disputed": "tranh chấp"
+    },
+    "smartPricing": {
+        "title": "Giá thông minh",
+        "cardTitle": "Đề xuất giá thông minh",
+        "cardSubtitle": "Đề xuất giá tự động",
+        "startDate": "Ngày bắt đầu",
+        "endDate": "Ngày kết thúc",
+        "suggestedPrice": "Đề xuất giá",
+        "basePrice": "Giá cơ bản",
+        "suggestedPriceLabel": "Giá đề xuất",
+        "multiplier": "Hệ số nhân",
+        "pricingPeriod": "Khoảng thời gian định giá",
+        "occupancyRate": "Tỷ lệ chiếm dụng",
+        "pricingExplanation": "Giải thích giá",
+        "applyPricing": "Áp dụng giá",
+        "acceptedStatus": "Đã chấp nhận",
+        "pendingStatus": "Đang chờ xử lý",
+        "acceptSuccessMessage": "Giá thông minh đã được chấp nhận thành công",
+        "acceptErrorMessage": "Không thể chấp nhận giá thông minh",
+        "createdAt": "Tạo vào",
+        "idLabel": "ID"
     }
 }

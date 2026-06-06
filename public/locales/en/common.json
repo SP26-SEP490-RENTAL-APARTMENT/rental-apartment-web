@@ -1,4 +1,12 @@
 {
+    "accountCenter": "Account Center",
+    "notify": {
+        "title": "Notifications",
+        "unread": "Unread",
+        "read": "Read",
+        "noNotifications": "No notifications",
+        "markAllAsRead": "Mark all as read"
+    },
     "button": {
         "save": "Save",
         "cancel": "Cancel",

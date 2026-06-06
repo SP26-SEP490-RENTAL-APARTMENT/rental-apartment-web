@@ -58,20 +58,24 @@ function PackageForm({
     if (isCreate && apartment) {
       reset({
         name: "",
+        nameVi: "",
         description: "",
+        descriptionVi: "",
         price: 0,
         apartmentId: apartment?.apartmentId || "",
-        currency: "",
+        currency: "VND",
         maxBookings: 0,
         isActive: true,
       });
     } else if (packages) {
       reset({
         name: packages.name,
+        nameVi: packages.nameVi ?? "",
         description: packages.description,
+        descriptionVi: packages.descriptionVi ?? "",
         price: packages.price ?? 0,
         apartmentId: packages.apartmentId ?? "",
-        currency: packages.currency ?? "",
+        currency: packages.currency ?? "VND",
         maxBookings: packages.maxBookings ?? 0,
         isActive: packages.isActive ?? true,
       });
@@ -97,7 +101,7 @@ function PackageForm({
   };
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-106.25">
+      <DialogContent className="sm:max-w-3xl">
         <DialogHeader>
           <DialogTitle>
             {isCreate ? "Create Package" : "Edit Package"}
@@ -113,32 +117,61 @@ function PackageForm({
                 {errors.apartmentId.message}
               </p>
             )}
-
-            <div className="grid gap-2">
-              <Label>{t("package.form.name")}</Label>
-              <Input
-                type="text"
-                {...register("name")}
-                placeholder={t("package.form.namePlaceholder")}
-              />
-              {errors.name && (
-                <p className="text-sm text-destructive">
-                  {errors.name.message}
-                </p>
-              )}
+            <div className="grid grid-cols-2 gap-3">
+              <div className="grid gap-2">
+                <Label>{t("package.form.name")}</Label>
+                <Input
+                  type="text"
+                  {...register("name")}
+                  placeholder={t("package.form.namePlaceholder")}
+                />
+                {errors.name && (
+                  <p className="text-sm text-destructive">
+                    {errors.name.message}
+                  </p>
+                )}
+              </div>
+              <div className="grid gap-2">
+                <Label>{t("package.form.nameVi")}</Label>
+                <Input
+                  type="text"
+                  {...register("nameVi")}
+                  placeholder={t("package.form.nameViPlaceholder")}
+                />
+                {errors.nameVi && (
+                  <p className="text-sm text-destructive">
+                    {errors.nameVi.message}
+                  </p>
+                )}
+              </div>
             </div>
-            <div className="grid gap-2">
-              <Label>{t("package.form.description")}</Label>
-              <Input
-                type="text"
-                {...register("description")}
-                placeholder={t("package.form.descriptionPlaceholder")}
-              />
-              {errors.description && (
-                <p className="text-sm text-destructive">
-                  {errors.description.message}
-                </p>
-              )}
+            <div className="grid grid-cols-2 gap-3">
+              <div className="grid gap-2">
+                <Label>{t("package.form.description")}</Label>
+                <Input
+                  type="text"
+                  {...register("description")}
+                  placeholder={t("package.form.descriptionPlaceholder")}
+                />
+                {errors.description && (
+                  <p className="text-sm text-destructive">
+                    {errors.description.message}
+                  </p>
+                )}
+              </div>
+              <div className="grid gap-2">
+                <Label>{t("package.form.descriptionVi")}</Label>
+                <Input
+                  type="text"
+                  {...register("descriptionVi")}
+                  placeholder={t("package.form.descriptionViPlaceholder")}
+                />
+                {errors.descriptionVi && (
+                  <p className="text-sm text-destructive">
+                    {errors.descriptionVi.message}
+                  </p>
+                )}
+              </div>
             </div>
             <div className="grid gap-2">
               <Label>{t("package.form.price")}</Label>

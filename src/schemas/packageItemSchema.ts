@@ -2,7 +2,9 @@ import z from "zod";
 
 export const createPackageItemSchema = z.object({
   itemName: z.string(),
+  itemNameVi: z.string(),
   itemDescription: z.string().optional(),
+  itemDescriptionVi: z.string().optional(),
   quantity: z.number(),
   estimatedValue: z.number(),
   sortOrder: z.number().optional(),

@@ -12,6 +12,7 @@ import type { SmartPricing } from "@/types/smartPricing";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import SmartPricingCard from "./SmartPricingCard";
+import { useTranslation } from "react-i18next";
 
 interface Props {
   open: boolean;
@@ -20,7 +21,9 @@ interface Props {
 }
 
 function SmartPriceDialog({ open, onClose, apartmentId }: Props) {
+  const { t } = useTranslation("landlord");
   const [smartPrice, setSmartPrice] = useState<SmartPricing | null>(null);
+  const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({
     startDate: "",
     endDate: "",
@@ -35,6 +38,7 @@ function SmartPriceDialog({ open, onClose, apartmentId }: Props) {
   }, [apartmentId]);
 
   const handleUseSmartPricing = async () => {
+    setLoading(true);
     try {
       const ressponse = await priceChangeApi.useSmartPricing(form);
       setSmartPrice(ressponse.data.data);
@@ -42,6 +46,8 @@ function SmartPriceDialog({ open, onClose, apartmentId }: Props) {
     } catch (error) {
       console.log(error);
       toast.error("Failed to apply smart pricing");
+    } finally {
+      setLoading(false);
     }
   };
   return (
@@ -54,7 +60,7 @@ function SmartPriceDialog({ open, onClose, apartmentId }: Props) {
         <div className="space-y-6">
           <div className="grid grid-cols-2 gap-4">
             <div className="grid gap-2">
-              <Label>Start Date</Label>
+              <Label>{t("smartPricing.startDate")}</Label>
               <Input
                 type="date"
                 value={form.startDate}
@@ -64,7 +70,7 @@ function SmartPriceDialog({ open, onClose, apartmentId }: Props) {
               />
             </div>
             <div className="grid gap-2">
-              <Label>End Date</Label>
+              <Label>{t("smartPricing.endDate")}</Label>
               <Input
                 type="date"
                 value={form.endDate}
@@ -83,7 +89,9 @@ function SmartPriceDialog({ open, onClose, apartmentId }: Props) {
               />
             </div> */}
           <div className="flex justify-end">
-            <Button onClick={handleUseSmartPricing}>Suggest Pricing</Button>
+            <Button onClick={handleUseSmartPricing} disabled={loading}>
+              {t("smartPricing.suggestedPrice")}
+            </Button>
           </div>
         </div>
         {smartPrice && <SmartPricingCard data={smartPrice} onClose={onClose} />}
