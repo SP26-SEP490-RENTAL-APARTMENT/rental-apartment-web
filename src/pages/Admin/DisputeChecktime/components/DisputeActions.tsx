@@ -52,7 +52,7 @@ function DisputeActions({ data, onResolve }: Props) {
                 </div>
 
                 <Badge className="bg-green-100 text-green-700">
-                  Resolved In Favor Of Tenant
+                  {data.disputeResolutionStatus.toUpperCase()}
                 </Badge>
               </div>
             </CardHeader>
@@ -134,13 +134,15 @@ function DisputeActions({ data, onResolve }: Props) {
         </DialogContent>
       </Dialog>
 
-      <Button
-        size="sm"
-        variant="secondary"
-        onClick={() => onResolve(data.bookingId)}
-      >
-        <CircleEllipsis className="w-4 h-4" />
-      </Button>
+      {data.disputeResolutionStatus === "open" && (
+        <Button
+          size="sm"
+          variant="secondary"
+          onClick={() => onResolve(data.bookingId)}
+        >
+          <CircleEllipsis className="w-4 h-4" />
+        </Button>
+      )}
     </div>
   );
 }
