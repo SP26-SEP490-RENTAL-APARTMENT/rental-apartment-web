@@ -13,8 +13,16 @@ interface Props {
   onSubmit: () => void;
   note: string;
   setNote: (note: string) => void;
+  loading: boolean;
 }
-function PenaltyForm({ open, onClose, onSubmit, note, setNote }: Props) {
+function PenaltyForm({
+  open,
+  onClose,
+  onSubmit,
+  note,
+  setNote,
+  loading,
+}: Props) {
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent>
@@ -37,7 +45,9 @@ function PenaltyForm({ open, onClose, onSubmit, note, setNote }: Props) {
             />
           </div>
           <div className="flex justify-end">
-            <Button type="submit">Confirm Penalty</Button>
+            <Button type="submit" disabled={loading}>
+              {loading ? "Confirming..." : "Confirm Penalty"}
+            </Button>
           </div>
         </form>
       </DialogContent>
