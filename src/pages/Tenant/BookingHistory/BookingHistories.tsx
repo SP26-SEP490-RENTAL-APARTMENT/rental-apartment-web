@@ -13,10 +13,13 @@ import ManagementFilter, {
 } from "@/components/ui/managementFilter/ManagementFilter";
 import { BookingSortByList } from "@/constants/sortByList";
 import DetailDialog from "./components/CheckTime/DetailDialog";
+import type { Apartment } from "@/types/apartment";
+import { apartmentApi } from "@/services/publicApi/apartmentApi";
 
 function BookingHistories() {
   const { t } = useTranslation("user");
   const [bookingHistory, setBookingHistory] = useState<BookingHistory[]>([]);
+  const [apartment, setApartment] = useState<Apartment[]>([]);
   const [timeResponse, setTimeResponse] = useState(null);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
@@ -51,6 +54,18 @@ function BookingHistories() {
     }
   }, [page, filters]);
 
+  const fetchApartment = useCallback(async () => {
+    try {
+      const response = await apartmentApi.getApartments({
+        page: 1,
+        pageSize: 100,
+      });
+      setApartment(response.data.items);
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
+
   const handleCheckTime = async (bookingId: string) => {
     try {
       const response = await bookingApi.getChecktime(bookingId);
@@ -60,11 +75,12 @@ function BookingHistories() {
       console.log(error);
       setTimeDialogOpen(false);
     }
-  }
+  };
 
   useEffect(() => {
     fetchBookingHistory();
-  }, [fetchBookingHistory]);
+    fetchApartment();
+  }, [fetchBookingHistory, fetchApartment]);
 
   const handleCardClick = (booking: BookingHistory) => {
     setBookingDetail(booking);
@@ -115,6 +131,7 @@ function BookingHistories() {
                         onClick={handleCardClick}
                         onCheckTime={handleCheckTime}
                         refetch={fetchBookingHistory}
+                        apartments={apartment}
                       />
                     ))}
               </div>
@@ -165,7 +182,11 @@ function BookingHistories() {
         />
       )}
 
-      <DetailDialog data={timeResponse} onClose={() => setTimeDialogOpen(false)} open={timeDialogOpen} />
+      <DetailDialog
+        data={timeResponse}
+        onClose={() => setTimeDialogOpen(false)}
+        open={timeDialogOpen}
+      />
     </div>
   );
 }

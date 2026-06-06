@@ -12,6 +12,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useGetPaymentMode, useGetStatus } from "@/lib/utils";
 import {
+  Building,
   CalendarDays,
   ChevronDown,
   Clock3,
@@ -33,6 +34,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import OfflinePaymentDialog from "./OfflinePaymentDialog";
+import { useNavigate } from "react-router-dom";
+import { PUBLIC_ROUTES } from "@/constants/routes";
 
 export interface Props {
   open: boolean;
@@ -55,6 +58,7 @@ const formatDateTime = (date?: string | null) => {
 
 function BookingViewDialog({ open, onClose, booking }: Props) {
   const { t } = useTranslation("user");
+  const navigate = useNavigate();
   const [showReviewDialog, setShowReviewDialog] = useState(false);
   const [reportDialog, setReportDialog] = useState(false);
   const [offlinePaymentDialog, setOfflinePaymentDialog] = useState(false);
@@ -189,9 +193,7 @@ function BookingViewDialog({ open, onClose, booking }: Props) {
                       </p>
                     </div>
                   </div>
-
                   <Separator />
-
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2 text-muted-foreground">
                       <Moon className="h-4 w-4 text-indigo-500" />
@@ -202,7 +204,6 @@ function BookingViewDialog({ open, onClose, booking }: Props) {
                       {booking.nights} {t("booking.nightsUnit")}
                     </span>
                   </div>
-
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2 text-muted-foreground">
                       <CreditCard className="h-4 w-4 text-orange-500" />
@@ -212,6 +213,29 @@ function BookingViewDialog({ open, onClose, booking }: Props) {
                     <span className="font-medium">
                       {useGetPaymentMode(booking.paymentMode)}
                     </span>
+                  </div>
+
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2 text-muted-foreground">
+                      <Building className="h-4 w-4 text-indigo-500" />
+                      <span>Apartment</span>
+                    </div>
+
+                    <Button
+                      onClick={() =>
+                        navigate(
+                          PUBLIC_ROUTES.APARTMENT_DETAIL.replace(
+                            ":id",
+                            booking.apartmentId.toString(),
+                          ),
+                        )
+                      }
+                      variant="outline"
+                      size="sm"
+                      className="h-8 max-w-35 cursor-pointer"
+                    >
+                      {booking.apartmentId.slice(0, 8)}...
+                    </Button>
                   </div>
                 </CardContent>
               </Card>

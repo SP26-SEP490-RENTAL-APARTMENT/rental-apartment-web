@@ -7,12 +7,14 @@ import { useGetStatus } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import CancelBookingDialog from "./CancelBookingDialog";
+import type { Apartment } from "@/types/apartment";
 
 export interface Props {
   data: BookingHistory;
   onClick?: (booking: BookingHistory) => void;
   onCheckTime?: (bookingId: string) => void;
   refetch: () => void;
+  apartments: Apartment[];
 }
 
 const formatDate = (date: string) => new Date(date).toLocaleDateString("vi-VN");
@@ -44,7 +46,8 @@ export default function BookingHistoryCard({
   data,
   onClick,
   onCheckTime,
-  refetch
+  refetch,
+  apartments,
 }: Props) {
   const { t } = useTranslation("user");
   const [cancelDialog, setCancelDialog] = useState(false);
@@ -57,6 +60,10 @@ export default function BookingHistoryCard({
 
   const remainingAmount = data.totalPrice - (data.depositAmount || 0);
 
+  const apartment = apartments?.find(
+    (item) => item.apartmentId === data.apartmentId,
+  );
+
   return (
     <>
       <Card className="w-full hover:shadow-lg border-0 transition-all duration-300 group bg-white overflow-hidden">
@@ -68,11 +75,21 @@ export default function BookingHistoryCard({
                 <div className="p-2 bg-blue-50 rounded-lg group-hover:bg-blue-100 transition-colors">
                   <Home className="h-4 w-4 text-blue-600" />
                 </div>
-                <p className="font-semibold text-gray-900 text-lg">
-                  {t("booking.booking")} #
-                  {data.bookingId.slice(0, 8).toUpperCase()}
-                </p>
+
+                <div>
+                  <p className="font-semibold text-gray-900 text-lg">
+                    {t("booking.booking")} #
+                    {data.bookingId.slice(0, 8).toUpperCase()}
+                  </p>
+
+                  {apartment && (
+                    <p className="text-sm text-gray-600">
+                      {apartment.title}
+                    </p>
+                  )}
+                </div>
               </div>
+
               <p className="text-xs text-gray-500">
                 {t("booking.bookedOn")} {formatDate(data.createdAt)}
               </p>
