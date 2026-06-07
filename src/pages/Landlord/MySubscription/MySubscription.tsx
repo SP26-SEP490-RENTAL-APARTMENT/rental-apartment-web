@@ -15,6 +15,7 @@ function MySubscription() {
   const [form, setForm] = useState({
     renewalType: "",
     autoRenew: true,
+    devicePlatform: "web",
   });
   const [profile, setProfile] = useState<any>(null);
 
@@ -55,7 +56,7 @@ function MySubscription() {
         planId: selectedPlanId,
       });
       setOpen(false);
-      const paymentUrl = response.data.data.payUrl;
+      const paymentUrl = response.data.data.url;
       window.location.href = paymentUrl;
     } catch (error: any) {
       toast.error(error?.response?.data?.message || "Checkout failed");
