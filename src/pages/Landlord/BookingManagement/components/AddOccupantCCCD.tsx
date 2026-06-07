@@ -88,7 +88,7 @@ function AddOccupantCCCD({ open, onClose, bookingId }: Props) {
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Upload CCCD Front Image</DialogTitle>
+          <DialogTitle>Upload ID Card Front Image</DialogTitle>
         </DialogHeader>
 
         <div className="space-y-4">
